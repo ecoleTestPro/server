@@ -1,8 +1,9 @@
+import AppearanceToggleTab from '@/components/appearance-tabs';
 import { SharedData } from '@/types';
 import { IMainMenuItem } from '@/types/header.type';
 import { Link, usePage } from '@inertiajs/react';
 import { JSX } from 'react';
-import MainMenu from './main-menu';
+import NavMenu from './NavigationMenu';
 
 export default function Header() {
     const { auth } = usePage<SharedData>().props;
@@ -22,43 +23,63 @@ export default function Header() {
     // Liens du menu principal
     const mainMenu: IMainMenuItem[] = [
         {
+            id: 'formations',
             label: 'Formations',
             href: '/formations',
+            title: 'Formations',
+            description:
+                'Les formations vous préparent au passage de nombreuses certifications internationales. Validez vos compétences et accroissez votre employabilité ainsi que votre efficacité au sein de votre entreprise.',
             children: {
+                id: 'formations',
                 title: 'Formations',
-                description: 'Découvrez nos formations',
+                description: 'Découvrez nos formations et certifications.',
                 items: [
-                    { label: 'Formation 1', href: '/formations/formation-1' },
-                    { label: 'Formation 2', href: '/formations/formation-2' },
-                    { label: 'Formation 3', href: '/formations/formation-3' },
+                    {
+                        id: 'formation-1',
+                        label: 'Microsoft',
+                        href: '/formations/formation-1',
+                        subItems: [
+                            { id: 'azure', label: 'Azure', href: '/formations/formation-1/azure' },
+                            { id: 'microsoft-365', label: 'Microsoft 365', href: '/formations/formation-1/microsoft-365' },
+                            { id: 'windows-server', label: 'Windows Server', href: '/formations/formation-1/windows-server' },
+                            { id: 'sql-server', label: 'SQL Server', href: '/formations/formation-1/sql-server' },
+                            { id: 'power-platform', label: 'Power Platform', href: '/formations/formation-1/power-platform' },
+                            { id: 'sharepoint', label: 'SharePoint', href: '/formations/formation-1/sharepoint' },
+                            { id: 'microsoft-teams', label: 'Microsoft Teams', href: '/formations/formation-1/microsoft-teams' },
+                            { id: 'microsoft-dynamics', label: 'Microsoft Dynamics', href: '/formations/formation-1/microsoft-dynamics' },
+                        ],
+                    },
+                    {
+                        id: 'formation-2',
+                        label: 'Cybersecurity',
+                        href: '/formations/formation-2',
+                        subItems: [
+                            { id: 'cybersecurity-1', label: 'Cybersecurity 1', href: '/formations/formation-2/cybersecurity-1' },
+                            { id: 'cybersecurity-2', label: 'Cybersecurity 2', href: '/formations/formation-2/cybersecurity-2' },
+                            { id: 'cybersecurity-3', label: 'Cybersecurity 3', href: '/formations/formation-2/cybersecurity-3' },
+                            { id: 'cybersecurity-4', label: 'Cybersecurity 4', href: '/formations/formation-2/cybersecurity-4' },
+                        ],
+                    },
+                    { id: 'formation-3', label: 'Formation 3', href: '/formations/formation-3' },
                 ],
-                featured: [{ label: 'Formation vedette 1', href: '/formations/formation-vedette-1' }],
+                featured: [{ id: 'formation-vedette-1', label: 'Formation vedette 1', href: '/formations/formation-vedette-1' }],
             },
         },
         {
+            id: 'certifications',
             label: 'Certifications',
             href: '/certifications',
-            children: {
-                title: 'Certifications',
-                description: 'Découvrez nos certifications',
-                items: [
-                    { label: 'Certification 1', href: '/certifications/certification-1' },
-                    { label: 'Certification 2', href: '/certifications/certification-2' },
-                    { label: 'Certification 3', href: '/certifications/certification-3' },
-                    { label: 'Certification 4', href: '/certifications/certification-4' },
-                    { label: 'Certification 5', href: '/certifications/certification-5' },
-                ],
-                featured: [{ label: 'Certification vedette 1', href: '/certifications/certification-vedette-1' }],
-            },
+            title: 'Certifications',
+            description: 'Découvrez nos certifications qui valident vos compétences professionnelles.',
         },
-        { label: 'Offre pour entreprises', href: '/entreprise' },
-        { label: 'Événements', href: '/evenements' },
-        { label: 'Blog/News', href: '/blog' },
+        { id: 'entreprises', label: 'Offre pour entreprises', href: '/entreprise' },
+        { id: 'evenements', label: 'Événements', href: '/evenements' },
+        { id: 'blog', label: 'Blog/News', href: '/blog' },
     ];
 
     const mainMenuRight: IMainMenuItem[] = [
-        { label: 'À propos de EcoleTestProp', href: '/a-propos' },
-        { label: 'Contact', href: '/contact', isCta: true },
+        { id: 'a-propos', label: 'À propos de EcoleTestProp', href: '/a-propos' },
+        { id: 'contact', label: 'Contact', href: '/contact', isCta: true },
     ];
 
     // Icônes utilisateur
@@ -105,20 +126,20 @@ export default function Header() {
     ];
 
     return (
-        <header className="border-b bg-white shadow dark:border-gray-700 dark:bg-gray-800">
+        <header className="border-t-1 border-b bg-white shadow dark:border-gray-700 dark:bg-gray-800">
             {/* Top Bar */}
             <div className="mx-auto flex items-center justify-between p-4">
                 <Link href={logo.href} className="text-xl font-bold text-green-500">
                     {logo.text}
                 </Link>
 
+                {/* Search Form */}
                 <div className="flex items-center space-x-4">
-                    {/* Search Form */}
                     <form className="relative">
                         <input
                             type="text"
                             placeholder="Rechercher par formation, événement, ..."
-                            className="w-64 rounded border border-green-500 px-3 py-2"
+                            className="w-64 rounded-xl border border-green-500 px-3 py-2"
                         />
                         <button type="submit" className="absolute top-0 right-0 mt-3 mr-3 focus:outline-none" aria-label="Rechercher">
                             <svg
@@ -132,7 +153,9 @@ export default function Header() {
                             </svg>
                         </button>
                     </form>
+                </div>
 
+                <div className="flex items-center space-x-4">
                     {/* Language Selector */}
                     <div className="dropdown relative">
                         <button className="px-4 py-2 text-gray-700 hover:bg-gray-100 focus:ring-2 focus:ring-gray-200 focus:outline-none">
@@ -146,19 +169,17 @@ export default function Header() {
                             {icon}
                         </Link>
                     ))}
+
+                    <AppearanceToggleTab />
                 </div>
             </div>
 
             {/* Navigation Menu */}
             <nav className="mx-auto p-4">
-                <div className="grid grid-cols-5 grid-rows-5 gap-4">
+                <div className="grid grid-cols-5 gap-4">
                     {/* Main Menu */}
                     <div className="col-span-3">
-                        <ul className="flex space-x-4">
-                            {mainMenu.map((item, index) => (
-                                <MainMenu key={index} item={item} />
-                            ))}
-                        </ul>
+                        <NavMenu menu={mainMenu} />
                     </div>
 
                     {/* Menu Right */}

@@ -1,27 +1,30 @@
 export interface IMainMenuItem {
+    id: string;
     label: string;
-    href: string;
+    title?: string;
+    href?: string;
+    description?: string;
+    image?: string;
     isCta?: boolean;
     children?: MenuChildren;
 }
 
 export interface MenuChildren {
-    title: string;
+    id: string;
+    title?: string;
     description?: string;
     href?: string;
     image?: string;
-    items: MenuChildrenItem[];
-    featured?: MenuChildrenItem[];
+    items: MenuChildItem[];
+    featured?: MenuChildItem[];
 }
 
 
-interface MenuChildrenItem {
+interface MenuChildItem {
+    id: string;
     label: string;
     href: string;
     description?: string;
     image?: string;
-    featured?: {
-        label: string;
-        href: string;
-    }[];
+    subItems?: MenuChildItem[];
 }

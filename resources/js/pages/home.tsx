@@ -1,3 +1,4 @@
+import HeroHomePage from '@/components/hero/HeroHomePage';
 import DefaultLayout from '@/layouts/public/front.layout';
 import { type SharedData } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
@@ -7,10 +8,7 @@ export default function Welcome() {
 
     return (
         <DefaultLayout title="Welcome" description="Welcome">
-            <Head title="Welcome">
-                <link rel="preconnect" href="https://fonts.bunny.net" />
-                <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
-            </Head>
+            <HeroHomePage />
         </DefaultLayout>
     );
 }

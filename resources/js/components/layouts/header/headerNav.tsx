@@ -8,7 +8,7 @@ interface MainMenuProps {
     item: IMainMenuItem;
 }
 
-export default function MainMenu({ item }: PropsWithChildren<MainMenuProps>) {
+export default function HeaderNav({ item }: PropsWithChildren<MainMenuProps>) {
     return (
         <Menu as="li" className="relative">
             <Menu.Button className="flex cursor-pointer items-center rounded-md px-2 py-2 text-sm text-gray-700 transition hover:text-green-500">
