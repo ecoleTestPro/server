@@ -2,31 +2,35 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
+use Spatie\Permission\Traits\HasRoles;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, SoftDeletes, HasRoles;
 
     /**
      * The attributes that are mass assignable.
      *
-     * @var list<string>
+     * @var array<int, string>
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+    protected $guarded = ['id'];
 
     /**
      * The attributes that should be hidden for serialization.
      *
-     * @var list<string>
+     * @var array<int, string>
      */
     protected $hidden = [
         'password',
@@ -34,15 +38,145 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * The attributes that should be cast.
      *
-     * @return array<string, string>
+     * @var array<string, string>
      */
-    protected function casts(): array
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+    ];
+
+    // * setup for JWT */
+
+    /**
+     * Get the identifier that will be stored in the subject claim of the JWT.
+     */
+    public function getJWTIdentifier()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return $this->getKey();
+    }
+
+    /**
+     * Return a key value array, containing any custom claims to be added to the JWT.
+     *
+     * @return array
+     */
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
+
+    // * End of jwt setup */
+
+    public function profilePicture(): BelongsTo
+    {
+        return $this->belongsTo(Media::class, 'media_id');
+    }
+
+    public function profilePicturePath(): Attribute
+    {
+        $profilePicture = asset('media/blank-user.png');
+
+        if ($this->profilePicture && Storage::exists($this->profilePicture->src)) {
+            $profilePicture = Storage::url($this->profilePicture->src);
+        }
+
+        return Attribute::make(
+            get: fn() => $profilePicture,
+        );
+    }
+
+    // public function instructor(): HasOne
+    // {
+    //     return $this->hasOne(Instructor::class);
+    // }
+
+    // public function reviews(): HasMany
+    // {
+    //     return $this->hasMany(Review::class);
+    // }
+
+    // public function enrollments(): HasMany
+    // {
+    //     return $this->hasMany(Enrollment::class);
+    // }
+
+    // public function resetPasswords(): HasMany
+    // {
+    //     return $this->hasMany(ResetPassword::class);
+    // }
+
+    // public function blogs(): HasMany
+    // {
+    //     return $this->hasMany(Blog::class);
+    // }
+
+    // public function accountActivation(): HasOne
+    // {
+    //     return $this->hasOne(AccountActivation::class);
+    // }
+
+    // public function favouriteCourses(): BelongsToMany
+    // {
+    //     return $this->belongsToMany(Course::class, 'user_courses');
+    // }
+
+    // public function favouriteInstructors(): BelongsToMany
+    // {
+    //     return $this->belongsToMany(Instructor::class, 'user_instructors');
+    // }
+
+    // public function viewedContents(): HasMany
+    // {
+    //     return $this->hasMany(UserContentView::class);
+    // }
+
+    // public function transactions(): HasMany
+    // {
+    //     return $this->hasMany(Transaction::class);
+    // }
+
+    // public function fcmDeviceTokens(): HasMany
+    // {
+    //     return $this->hasMany(FcmDeviceToken::class);
+    // }
+
+    // public function examSessions(): HasMany
+    // {
+    //     return $this->hasMany(ExamSession::class);
+    // }
+
+    // public function answers(): HasMany
+    // {
+    //     return $this->hasMany(Answer::class);
+    // }
+
+    // public function courseProgresses()
+    // {
+    //     return $this->belongsToMany(Course::class, 'user_course_progresses')->withPivot('progress', 'course_id');
+    // }
+
+    // public function notificationInstances(): HasMany
+    // {
+    //     return $this->hasMany(NotificationInstance::class, 'recipient_id');
+    // }
+
+    // public function signature()
+    // {
+    //     return $this->belongsTo(Media::class, 'signature_id');
+    // }
+
+    public function signaturePath(): Attribute
+    {
+        $signature = asset('enrollment/upload.png');
+
+        if ($this->signature && Storage::exists($this->signature->src)) {
+            $signature = Storage::url($this->signature->src);
+        }
+
+        return Attribute::make(
+            get: fn() => $signature,
+        );
     }
 }

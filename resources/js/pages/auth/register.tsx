@@ -7,13 +7,14 @@ import TextLink from '@/components/text-link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import AuthLayout from '@/layouts/auth-layout';
+import AuthLayout from '@/layouts/auth/auth-layout';
 
 type RegisterForm = {
     name: string;
     email: string;
     password: string;
     password_confirmation: string;
+    phone: string;
 };
 
 export default function Register() {
@@ -22,12 +23,19 @@ export default function Register() {
         email: '',
         password: '',
         password_confirmation: '',
+        phone: '',
     });
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post(route('register'), {
-            onFinish: () => reset('password', 'password_confirmation'),
+        post(route('auth.register'), {
+            onFinish: () => {
+                // reset('password', 'password_confirmation');
+               window.location.href = route('auth.login');
+            },
+            onError: (errors) => {
+                console.error('Registration error:', errors);
+            },
         });
     };
 
@@ -65,6 +73,22 @@ export default function Register() {
                             onChange={(e) => setData('email', e.target.value)}
                             disabled={processing}
                             placeholder="email@example.com"
+                        />
+                        <InputError message={errors.email} />
+                    </div>
+
+                    <div className="grid gap-2">
+                        <Label htmlFor="email">Téléphone</Label>
+                        <Input
+                            id="phone"
+                            type="text"
+                            required
+                            tabIndex={2}
+                            autoComplete="tel"
+                            value={data.phone}
+                            onChange={(e) => setData('phone', e.target.value)}
+                            disabled={processing}
+                            placeholder="+33 6 12 34 56 78"
                         />
                         <InputError message={errors.email} />
                     </div>
@@ -109,7 +133,7 @@ export default function Register() {
 
                 <div className="text-muted-foreground text-center text-sm">
                     Already have an account?{' '}
-                    <TextLink href={route('login')} tabIndex={6}>
+                    <TextLink href={route('auth.login')} tabIndex={6}>
                         Log in
                     </TextLink>
                 </div>
