@@ -3,7 +3,7 @@ import { SharedData } from '@/types';
 import { IMainMenuItem } from '@/types/header.type';
 import { Link, usePage } from '@inertiajs/react';
 import { JSX } from 'react';
-import NavMenu from './NavigationMenu';
+import NavMenu from './navigationMenu';
 
 export default function Header() {
     const { auth } = usePage<SharedData>().props;

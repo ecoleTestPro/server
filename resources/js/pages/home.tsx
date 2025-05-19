@@ -1,7 +1,10 @@
+import AboutUsCard from '@/components/aboutUs/aboutUsCard';
+import Bestseller from '@/components/courses/bestseller';
+import FeaturesSection from '@/components/hero/featuresSection';
 import HeroHomePage from '@/components/hero/HeroHomePage';
 import DefaultLayout from '@/layouts/public/front.layout';
 import { type SharedData } from '@/types';
-import { Head, usePage } from '@inertiajs/react';
+import { usePage } from '@inertiajs/react';
 
 export default function Welcome() {
     const { auth } = usePage<SharedData>().props;
@@ -9,6 +12,9 @@ export default function Welcome() {
     return (
         <DefaultLayout title="Welcome" description="Welcome">
             <HeroHomePage />
+            <FeaturesSection />
+            <AboutUsCard />
+            <Bestseller />
         </DefaultLayout>
     );
 }

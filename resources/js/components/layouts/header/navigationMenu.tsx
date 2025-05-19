@@ -114,27 +114,29 @@ export default function NavMenu({ menu }: NavMenuProps) {
 
                                 {/* Colonne centrale (liste des liens) */}
                                 <div className="col-span-3">
-                                    {target.children.items.map((itemChild, index) => (
-                                        <div className="mb-4 flex" key={index}>
-                                            <div className="p-4">
-                                                {itemChild.label && (
-                                                    <a href="#">
-                                                        <h3 className="text-lg font-medium text-gray-900"> {itemChild.label} </h3>
-                                                    </a>
-                                                )}
+                                    <div className="flex">
+                                        {target.children.items.map((itemChild, index) => (
+                                            <div className="mb-4" key={index}>
+                                                <div className="p-4">
+                                                    {itemChild.label && (
+                                                        <span className="">
+                                                            {itemChild.label}
+                                                        </span>
+                                                    )}
+                                                </div>
+                                                <div>
+                                                    {itemChild.subItems &&
+                                                        itemChild.subItems.map((itemChildSubItem, index) => (
+                                                            <>
+                                                                <ListItem key={index} href={itemChildSubItem.href}>
+                                                                    {itemChildSubItem.label}
+                                                                </ListItem>
+                                                            </>
+                                                        ))}
+                                                </div>
                                             </div>
-                                            <div>
-                                                {itemChild.subItems &&
-                                                    itemChild.subItems.map((itemChildSubItem, index) => (
-                                                        <>
-                                                            <ListItem key={index} href={itemChildSubItem.href}>
-                                                                {itemChildSubItem.label}
-                                                            </ListItem>
-                                                        </>
-                                                    ))}
-                                            </div>
-                                        </div>
-                                    ))}
+                                        ))}
+                                    </div>
                                 </div>
 
                                 {/* Colonne droite (contenu supplémentaire) */}
@@ -152,7 +154,7 @@ export default function NavMenu({ menu }: NavMenuProps) {
 // Composant ListItem pour les éléments du sous-menu
 const ListItem = React.forwardRef<React.ElementRef<'a'>, React.ComponentPropsWithoutRef<'a'>>(({ className, title, children, ...props }, ref) => {
     return (
-        <li className="list-none p-2">
+        <li className="list-none px-2">
             {/* <NavigationMenuLink asChild> */}
             <a
                 ref={ref}
