@@ -42,47 +42,54 @@ class RegisteredUserController extends Controller
      */
     public function store(StudentRegisterRequest $request)
     {
-        $newUser = UserRepository::storeByStudentRequest($request);
-
         try {
-            $token = JWTAuth::fromUser($newUser);
-        } catch (JWTException $e) {
-            return ResponseService::error('Could not create token', 500);
-        }
 
-        if ($request->fcm_token) {
-            FcmDeviceTokenRepository::create([
-                'user_id' => $newUser->id,
-                'token'   => $request->fcm_token,
+
+            $newUser = UserRepository::storeByStudentRequest($request);
+
+            try {
+                $token = JWTAuth::fromUser($newUser);
+            } catch (JWTException $e) {
+                return redirect()->back()->with('error', 'Could not create token');
+            }
+
+            if ($request->fcm_token) {
+                FcmDeviceTokenRepository::create([
+                    'user_id' => $newUser->id,
+                    'token'   => $request->fcm_token,
+                ]);
+            }
+
+            $code = rand(1111, 9999);
+
+            AccountActivationRepository::create([
+                'user_id'     => $newUser->id,
+                'code'        => $code,
+                'valid_until' => now()->addHour(),
             ]);
-        }
 
-        $code = rand(1111, 9999);
+            try {
+                MailSendEvent::dispatch($code, $newUser->email);
+            } catch (\Throwable $th) {
+                //throw $th;
+            }
 
-        AccountActivationRepository::create([
-            'user_id'     => $newUser->id,
-            'code'        => $code,
-            'valid_until' => now()->addHour(),
-        ]);
+            if ($request->guest_id) {
+                $this->syncGuest($request->guest_id, $newUser);
+            }
 
-        try {
-            MailSendEvent::dispatch($code, $newUser->email);
+            $newUser->refresh();
+
+            // return ResponseService::created('Registration successful', [
+            //     'user'            => UserResource::make($newUser),
+            //     'token'           => $token,
+            //     'activation_code' => $code,
+            // ]);
+            // return Inertia::render('auth/login');
+            return Inertia::render('auth/verify-email');
         } catch (\Throwable $th) {
-            //throw $th;
+            return redirect()->back()->with('error', 'Internal sRegistration failed');
         }
-
-        if ($request->guest_id) {
-            $this->syncGuest($request->guest_id, $newUser);
-        }
-
-        $newUser->refresh();
-
-        // return ResponseService::created('Registration successful', [
-        //     'user'            => UserResource::make($newUser),
-        //     'token'           => $token,
-        //     'activation_code' => $code,
-        // ]);
-        return Inertia::render('auth/login');
     }
 
 

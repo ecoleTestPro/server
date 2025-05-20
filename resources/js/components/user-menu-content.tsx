@@ -27,7 +27,7 @@ export function UserMenuContent({ user }: UserMenuContentProps) {
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
                 <DropdownMenuItem asChild>
-                    <Link className="block w-full" href={route('auth.login')} as="button" prefetch onClick={cleanup}>
+                    <Link className="block w-full" href={route('login')} as="button" prefetch onClick={cleanup}>
                         <Settings className="mr-2" />
                         Dashboard
                     </Link>

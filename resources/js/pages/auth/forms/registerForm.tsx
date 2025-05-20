@@ -177,7 +177,7 @@ export default function RegisterForm() {
                 {/* Already have an account? */}
                 <div className="mt-4 text-center text-sm">
                     {t('register.alreadyHaveAccount')}{' '}
-                    <TextLink href={route('auth.login')} tabIndex={6}>
+                    <TextLink href={route('login')} tabIndex={6}>
                         {t('register.signIn')}
                     </TextLink>
                 </div>

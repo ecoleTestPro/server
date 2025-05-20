@@ -4,6 +4,7 @@ import { type PropsWithChildren } from 'react';
 // import { Icons } from '@/components/icons';
 import Footer from '../../components/layouts/footer/footer';
 import Header from '../../components/layouts/header/header';
+import FooterTwo from '@/components/layouts/footer/footerTwo';
 
 interface DefaultLayoutProps {
     name?: string;
@@ -18,6 +19,7 @@ export default function DefaultLayout({ children, title, description }: PropsWit
             <Header />
             {children}
             <Footer />
+            {/* <FooterTwo /> */}
         </div>
     );
 }

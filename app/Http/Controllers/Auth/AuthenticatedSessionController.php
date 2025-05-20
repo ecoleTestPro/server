@@ -33,10 +33,9 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): RedirectResponse
+    public function login(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
-
         $request->session()->regenerate();
 
         return redirect()->intended(route('home'));
@@ -48,7 +47,7 @@ class AuthenticatedSessionController extends Controller
      * @param Request $request
      * @return RedirectResponse
      */
-    public function login(Request $request)
+    public function loginAlt(Request $request)
     {
         $validatedData = $request->validate([
             'email' => 'required_without:phone',

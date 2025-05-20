@@ -35,7 +35,7 @@
         "signUp": "Créer un compte"
     },
     "verifyEmail": {
-        "title": "Vérifier votre adresse e-mail",
+        "title": "Vérification e-mail",
         "description": "Veuillez vérifier votre adresse e-mail en cliquant sur le lien que nous venons de vous envoyer par e-mail.",
         "headTitle": "Vérification de l'adresse e-mail",
         "linkSent": "Un nouveau lien de vérification a été envoyé à l'adresse e-mail que vous avez fournie lors de l'inscription.",

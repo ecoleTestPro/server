@@ -10,31 +10,31 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
-type ILoginForm = {
+type ILoginAdminForm = {
     email: string;
     password: string;
     remember: boolean;
 };
 
-interface LoginFormProps {
+interface LoginAdminFormProps {
     status?: string;
     canResetPassword: boolean;
     onCloseDialog?: () => void;
 }
 
-export default function LoginForm({ status, canResetPassword, onCloseDialog }: LoginFormProps) {
+export default function LoginAdminForm({ status, canResetPassword, onCloseDialog }: LoginAdminFormProps) {
     const { t, i18n } = useTranslation();
     const [loginError, setLoginError] = useState<string | null>(null);
-    const { data, setData, post, processing, errors, reset } = useForm<Required<ILoginForm>>({
-        email: '',
-        password: '',
+    const { data, setData, post, processing, errors, reset } = useForm<Required<ILoginAdminForm>>({
+        email: 'admin@exemple.com',
+        password: 'secret',
         remember: false,
     });
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
         setLoginError(null); // Reset error before submit
-        post(route('login'), {
+        post(route('admin.login.post'), {
             onFinish: () => reset('password'),
             onSuccess: () => {
                 if (onCloseDialog) {
@@ -108,13 +108,6 @@ export default function LoginForm({ status, canResetPassword, onCloseDialog }: L
                         {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
                         {t('login.loginButton', 'Log in')}
                     </Button>
-                </div>
-
-                <div className="text-muted-foreground text-center text-sm">
-                    {t('login.noAccount', "Don't have an account?")}{' '}
-                    <TextLink href={route('auth.register')} tabIndex={5}>
-                        {t('login.signUp', 'Sign up')}
-                    </TextLink>
                 </div>
             </form>
 

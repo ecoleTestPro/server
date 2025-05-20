@@ -47,7 +47,7 @@ function HeaderUserAction() {
                     />
                 </svg>
             ),
-            link: route('auth.login'),
+            link: route('login'),
         },
         {
             name: 'Panier',
@@ -60,7 +60,7 @@ function HeaderUserAction() {
                     />
                 </svg>
             ),
-            link: route('auth.login'),
+            link: route('login'),
         },
     ];
 
@@ -76,12 +76,12 @@ function HeaderUserAction() {
                     />
                 </svg>
             ),
-            link: route('auth.login'),
-            modalComponent: {
-                content: <LoginForm canResetPassword={false} onCloseDialog={() => setOpenModal(false)} />,
-                header: t('login.login'),
-                description: t('login.description'),
-            },
+            link: route('login'),
+            // modalComponent: {
+            //     content: <LoginForm canResetPassword={false} onCloseDialog={() => setOpenModal(false)} />,
+            //     header: t('login.login'),
+            //     description: t('login.description'),
+            // },
         },
         {
             name: t('register.register'),

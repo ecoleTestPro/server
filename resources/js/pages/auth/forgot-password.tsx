@@ -59,7 +59,7 @@ export default function ForgotPassword({ status }: { status?: string }) {
 
                 <div className="text-muted-foreground space-x-1 text-center text-sm">
                     <span>{t('forgot.orReturn', 'Or, return to')}</span>
-                    <TextLink href={route('auth.login')}>{t('forgot.login', 'log in')}</TextLink>
+                    <TextLink href={route('login')}>{t('forgot.login', 'log in')}</TextLink>
                 </div>
             </div>
         </AuthLayout>

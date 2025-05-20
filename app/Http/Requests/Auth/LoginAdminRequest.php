@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
-class LoginRequest extends FormRequest
+class LoginAdminRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -41,6 +41,7 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
+        // On tente d'authentifier l'utilisateur
         if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
@@ -50,7 +51,7 @@ class LoginRequest extends FormRequest
         }
 
         // Vérifie si l'utilisateur authentifié est bien admin
-        if (Auth::user() &&  Auth::user()->is_admin) {
+        if (! Auth::user() || ! Auth::user()->is_admin) {
             Auth::logout();
             throw ValidationException::withMessages([
                 // TODO : add translate
