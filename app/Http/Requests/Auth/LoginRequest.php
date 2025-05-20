@@ -49,6 +49,15 @@ class LoginRequest extends FormRequest
             ]);
         }
 
+        // Vérifie si l'utilisateur authentifié est bien admin
+        if (Auth::user() &&  Auth::user()->is_admin) {
+            Auth::logout();
+            throw ValidationException::withMessages([
+                // TODO : add translate
+                'email' => __('Vous n\'êtes pas autorisé à accéder à cette section.'),
+            ]);
+        }
+
         RateLimiter::clear($this->throttleKey());
     }
 
@@ -80,6 +89,6 @@ class LoginRequest extends FormRequest
      */
     public function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->string('email')).'|'.$this->ip());
+        return Str::transliterate(Str::lower($this->string('email')) . '|' . $this->ip());
     }
 }
