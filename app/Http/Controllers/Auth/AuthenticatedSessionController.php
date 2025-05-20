@@ -39,7 +39,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('/', absolute: false));
+        return redirect()->intended(route('home'));
     }
 
     /**
@@ -55,8 +55,6 @@ class AuthenticatedSessionController extends Controller
             'phone' => 'required_without:email',
             'password' => 'required',
         ]);
-
-        // $token = JWTAuth::attempt($validatedData);
 
         try {
             if (!$token = JWTAuth::attempt($validatedData)) {
@@ -74,7 +72,17 @@ class AuthenticatedSessionController extends Controller
         $user = JWTAuth::user(); // Fetch the authenticated user
 
         if ($user->is_admin || $user->hasRole('admin') || $user->instructor) {
-            return ResponseService::error('You are not a student, please sign up as a student', 403);
+            return redirect()->back()->withErrors([
+                'email' => 'You are not a student, please sign up as a student',
+            ]);
+        }
+
+        // Ajoute cette vérification juste ici
+        if (method_exists($user, 'hasVerifiedEmail') && !$user->hasVerifiedEmail()) {
+            // Déconnecte l'utilisateur si besoin
+            Auth::logout();
+            // Redirige vers la page de vérification d'email
+            return redirect()->route('verification.notice');
         }
 
         if ($request->fcm_token) {
@@ -99,11 +107,10 @@ class AuthenticatedSessionController extends Controller
             $this->syncGuest($request->guest_id, $user);
         }
 
-        // return $this->json('Login successful', [
-        //     'user'  => UserResource::make($user),
-        //     'token' => $token,
-        // ]);
-        return redirect()->intended(route('', absolute: false));
+        $request->authenticate();
+        $request->session()->regenerate();
+
+        return redirect()->intended(route('home'));
     }
 
     /**

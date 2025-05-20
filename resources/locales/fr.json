@@ -1,0 +1,54 @@
+{
+    "register": {
+        "register": "S'inscrire",
+        "title": "Créer un compte",
+        "description": "Vos connexions sont à quelques étapes.",
+        "fullName": "Nom complet",
+        "email": "Adresse e-mail",
+        "password": "Mot de passe",
+        "confirmPassword": "Confirmez le mot de passe",
+        "signUp": "S'inscrire",
+        "orSignUpWith": "Ou inscrivez-vous avec",
+        "signUpWithGoogle": "S'inscrire avec Google",
+        "alreadyHaveAccount": "Vous avez déjà un compte ?",
+        "signIn": "Se connecter",
+        "successMessage": "Inscription réussie !",
+        "errorMessage": "Erreur lors de l'inscription. Veuillez vérifier vos informations.",
+        "privacy": {
+            "privacyPolicy": "Politique de confidentialité",
+            "privacyText": "La confidentialité est une question de confiance, et votre confiance est importante pour nous. Nous respectons votre personne et votre vie privée. C'est pourquoi nous assurons la protection et le traitement légal de vos données personnelles.",
+            "privacyCheck": "Oui, j'accepte les termes et conditions."
+        }
+    },
+    "login": {
+        "login": "Se connecter",
+        "title": "Connexion à votre compte",
+        "description": "Entrez votre email et votre mot de passe ci-dessous pour vous connecter",
+        "email": "Adresse e-mail",
+        "emailPlaceholder": "email@exemple.com",
+        "password": "Mot de passe",
+        "passwordPlaceholder": "Mot de passe",
+        "forgotPassword": "Mot de passe oublié ?",
+        "rememberMe": "Se souvenir de moi",
+        "loginButton": "Se connecter",
+        "noAccount": "Vous n'avez pas de compte ?",
+        "signUp": "Créer un compte"
+    },
+    "verifyEmail": {
+        "title": "Vérifier votre adresse e-mail",
+        "description": "Veuillez vérifier votre adresse e-mail en cliquant sur le lien que nous venons de vous envoyer par e-mail.",
+        "headTitle": "Vérification de l'adresse e-mail",
+        "linkSent": "Un nouveau lien de vérification a été envoyé à l'adresse e-mail que vous avez fournie lors de l'inscription.",
+        "resendButton": "Renvoyer le lien de vérification",
+        "logout": "Se déconnecter"
+    },
+    "forgot": {
+        "title": "Mot de passe oublié",
+        "description": "Entrez votre email pour recevoir un lien de réinitialisation du mot de passe",
+        "emailLabel": "Adresse e-mail",
+        "emailPlaceholder": "email@exemple.com",
+        "submit": "Envoyer le lien de réinitialisation",
+        "orReturn": "Ou, retour à",
+        "login": "connexion"
+    }
+}

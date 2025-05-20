@@ -1,0 +1,54 @@
+{
+    "register": {
+        "register": "Sign Up",
+        "title": "Create Account",
+        "description": "Your connections are just a few steps away.",
+        "fullName": "Full Name",
+        "email": "Email Address",
+        "password": "Password",
+        "confirmPassword": "Confirm Password",
+        "signUp": "Sign Up",
+        "orSignUpWith": "Or sign up with",
+        "signUpWithGoogle": "Sign up with Google",
+        "alreadyHaveAccount": "Already have an account?",
+        "signIn": "Sign In",
+        "successMessage": "Registration successful!",
+        "errorMessage": "Registration failed. Please check your information.",
+        "privacy": {
+            "privacyPolicy": "Privacy Policy",
+            "privacyText": "Privacy is a matter of trust, and your trust is important to us. We respect you and your privacy. Therefore, we ensure the protection and legal handling of your personal data.",
+            "privacyCheck": "Yes, I agree to the terms and conditions."
+        },
+        "login": {
+            "login": "Login",
+            "title": "Connexion à votre compte",
+            "description": "Entrez votre email et votre mot de passe ci-dessous pour vous connecter",
+            "email": "Adresse e-mail",
+            "emailPlaceholder": "email@exemple.com",
+            "password": "Mot de passe",
+            "passwordPlaceholder": "Mot de passe",
+            "forgotPassword": "Mot de passe oublié ?",
+            "rememberMe": "Se souvenir de moi",
+            "loginButton": "Se connecter",
+            "noAccount": "Vous n'avez pas de compte ?",
+            "signUp": "Créer un compte"
+        },
+        "verifyEmail": {
+            "title": "Verify email",
+            "description": "Please verify your email address by clicking on the link we just emailed to you.",
+            "headTitle": "Email verification",
+            "linkSent": "A new verification link has been sent to the email address you provided during registration.",
+            "resendButton": "Resend verification email",
+            "logout": "Log out"
+        }
+    },
+    "forgot": {
+        "title": "Forgot password",
+        "description": "Enter your email to receive a password reset link",
+        "emailLabel": "Email address",
+        "emailPlaceholder": "email@example.com",
+        "submit": "Email password reset link",
+        "orReturn": "Or, return to",
+        "login": "log in"
+    }
+}

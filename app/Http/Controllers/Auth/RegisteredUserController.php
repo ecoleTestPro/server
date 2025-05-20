@@ -53,15 +53,15 @@ class RegisteredUserController extends Controller
         if ($request->fcm_token) {
             FcmDeviceTokenRepository::create([
                 'user_id' => $newUser->id,
-                'token' => $request->fcm_token,
+                'token'   => $request->fcm_token,
             ]);
         }
 
         $code = rand(1111, 9999);
 
         AccountActivationRepository::create([
-            'user_id' => $newUser->id,
-            'code' => $code,
+            'user_id'     => $newUser->id,
+            'code'        => $code,
             'valid_until' => now()->addHour(),
         ]);
 
