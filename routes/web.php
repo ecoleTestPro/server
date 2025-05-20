@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\Private\PrivateController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -9,9 +10,13 @@ Route::get('/', function () {
 })->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('dashboard', function () {
-        return Inertia::render('dashboard');
-    })->name('dashboard');
+    Route::get('dashboard', [PrivateController::class, 'index'])->name('dashboard.index');
+
+    Route::group([
+        'prefix' => 'courses',
+    ], function () {
+        Route::get('', [PrivateController::class, 'index'])->name('dashboard.index');
+    });
 });
 
 // Route::middleware('guest')->group(function () {
