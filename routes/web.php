@@ -9,20 +9,6 @@ Route::get('/', function () {
     return Inertia::render('home');
 })->name('home');
 
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('dashboard', [PrivateController::class, 'index'])->name('dashboard.index');
-
-    Route::group([
-        'prefix' => 'courses',
-    ], function () {
-        Route::get('', [PrivateController::class, 'index'])->name('dashboard.index');
-    });
-});
-
-// Route::middleware('guest')->group(function () {
-//     Route::get('register', [RegisteredUserController::class, 'create'])->name('auth.register');
-//     Route::post('register', [RegisteredUserController::class, 'store']);
-// });
-
+require __DIR__ . '/dashboard.php';
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';
