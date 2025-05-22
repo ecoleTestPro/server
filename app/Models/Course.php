@@ -27,20 +27,20 @@ class Course extends Model
     //     return $this->belongsTo(Instructor::class)->withTrashed();
     // }
 
-    public function chapters(): HasMany
-    {
-        return $this->hasMany(Chapter::class);
-    }
+    // public function chapters(): HasMany
+    // {
+    //     return $this->hasMany(Chapter::class);
+    // }
 
-    public function reviews(): HasMany
-    {
-        return $this->hasMany(Review::class)->withTrashed();
-    }
+    // public function reviews(): HasMany
+    // {
+    //     return $this->hasMany(Review::class)->withTrashed();
+    // }
 
-    public function enrollments(): HasMany
-    {
-        return $this->hasMany(Enrollment::class);
-    }
+    // public function enrollments(): HasMany
+    // {
+    //     return $this->hasMany(Enrollment::class);
+    // }
 
     public function media(): BelongsTo
     {
@@ -83,30 +83,30 @@ class Course extends Model
         return $this->belongsToMany(User::class, 'user_courses');
     }
 
-    public function favouriteGuests(): BelongsToMany
-    {
-        return $this->belongsToMany(Guest::class, 'guest_courses');
-    }
+    // public function favouriteGuests(): BelongsToMany
+    // {
+    //     return $this->belongsToMany(Guest::class, 'guest_courses');
+    // }
 
-    public function transactions(): HasMany
-    {
-        return $this->hasMany(Transaction::class);
-    }
+    // public function transactions(): HasMany
+    // {
+    //     return $this->hasMany(Transaction::class);
+    // }
 
-    public function exams(): HasMany
-    {
-        return $this->hasMany(Exam::class);
-    }
+    // public function exams(): HasMany
+    // {
+    //     return $this->hasMany(Exam::class);
+    // }
 
-    public function quizzes(): HasMany
-    {
-        return $this->hasMany(Quiz::class);
-    }
+    // public function quizzes(): HasMany
+    // {
+    //     return $this->hasMany(Quiz::class);
+    // }
 
-    public function questions(): HasMany
-    {
-        return $this->hasMany(Question::class);
-    }
+    // public function questions(): HasMany
+    // {
+    //     return $this->hasMany(Question::class);
+    // }
 
     public function userProgress()
     {

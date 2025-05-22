@@ -1,7 +1,7 @@
 import AppLayout from '@/layouts/dashboard/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
-import CourseForm from './courseForm';
+import CourseForm from '../../../components/courses/courseForm';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {

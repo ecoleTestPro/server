@@ -8,3 +8,11 @@ export interface ICourse {
     price: string | number;
     author: string;
 }
+
+
+export interface ICourseCategory {
+    id: number | string;
+    title: string;
+    is_featured: boolean;
+    color: string;
+}

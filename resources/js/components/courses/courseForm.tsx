@@ -25,16 +25,18 @@ type ICourseForm = {
     image: string;
 };
 
+const defaultValues: ICourseForm = {
+    title: '',
+    description: '',
+    duration: '',
+    lectures: '',
+    price: '',
+    author: '',
+    image: '',
+};
+
 function CourseForm() {
-    const { data, setData, post, processing, errors, reset } = useForm<ICourseForm>({
-        title: '',
-        description: '',
-        duration: '',
-        lectures: '',
-        price: '',
-        author: '',
-        image: '',
-    });
+    const { data, setData, post, processing, errors, reset } = useForm<ICourseForm>(defaultValues);
 
     const { t } = useTranslation();
 

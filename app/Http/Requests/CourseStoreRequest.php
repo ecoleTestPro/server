@@ -22,14 +22,16 @@ class CourseStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'category_id' => 'required|exists:categories,id',
-            'title' => 'required|min:5|max:500',
-            'media' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-            'video' => 'file|mimes:mp4,mpeg|max:1048576',
-            'description' => 'required|array|min:1',
+            'category_id'           => 'required|exists:categories,id',
+            'title'                 => 'required|min:5|max:500',
+            'media'                 => 'image|mimes:jpeg,png,jpg|max:2048',
+            'video'                 => 'file|mimes:mp4,mpeg|max:1048576',
+            'description'           => 'required|array|min:1',
             'description.*.heading' => 'required|string',
-            'description.*.body' => 'required|string',
-            'regular_price' => 'required|numeric|min:' . ((float) config('app.minimum_amount')),
+            'description.*.body'    => 'required|string',
+            'regular_price'         => 'required|numeric|min:' . ((float) config('app.minimum_amount')),
+            'instructor_id'         => 'required|exists:instructors,id',
+            'is_active'             => '',
             'price' => [
                 'nullable',
                 'numeric',
@@ -39,8 +41,6 @@ class CourseStoreRequest extends FormRequest
                     }
                 },
             ],
-            'instructor_id' => 'required|exists:instructors,id',
-            'is_active' => '',
         ];
     }
     /**

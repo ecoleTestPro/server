@@ -115,7 +115,8 @@ class CourseController extends Controller
             }
         }
 
-        return to_route('course.index')->with('success', 'Course created');
+        return back()->with('success', 'Course created');
+        // return to_route('course.index')->with('success', 'Course created');
     }
 
     public function edit(Course $course)

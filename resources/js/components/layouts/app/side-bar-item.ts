@@ -1,5 +1,5 @@
 import { NavItem } from "@/types";
-import { BookOpen, FileStack, Folder, LayoutGrid, List, ClipboardPlus, Settings2 } from 'lucide-react';
+import { BookOpen, FileStack, Folder, LayoutGrid, List, ClipboardPlus, Settings2, ListTodo } from 'lucide-react';
 
 
 export const MAIN_NAV_ITEMS: NavItem[] = [
@@ -22,6 +22,11 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
                 title: 'Créer une formation',
                 href: '/courses/create',
                 icon: ClipboardPlus,
+            },
+            {
+                title: 'Catégories',
+                href: '/categories',
+                icon: ListTodo,
             },
             {
                 title: 'Configuration',
