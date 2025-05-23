@@ -1,18 +1,17 @@
 import { Button } from '@/components/ui/button';
 import Drawer from '@/components/ui/drawer';
 import { CirclePlus } from 'lucide-react';
-import { useState } from 'react';
+import { JSX } from 'react';
 import { useTranslation } from 'react-i18next';
-import CategoryForm from './categoryForm';
 
-export default function CategoryToolBar() {
-    const [openCategory, setOpenCategory] = useState(false);
+interface ICategoryToolBarProps {
+    openCategory?: boolean;
+    setOpenCategory?: (open: boolean) => void;
+    FormComponent?: JSX.Element;
+}
 
+export default function CategoryToolBar({ FormComponent, openCategory, setOpenCategory }: ICategoryToolBarProps) {
     const { t, i18n } = useTranslation();
-
-    const handleCloseCategoryDrawer = () => {
-        setOpenCategory(false);
-    };
 
     return (
         <div>
@@ -23,7 +22,7 @@ export default function CategoryToolBar() {
                         {/* Add Category */}
                         <Button
                             className="cursor-pointer rounded bg-gray-600 p-2"
-                            onClick={() => setOpenCategory(true)}
+                            onClick={() => setOpenCategory && setOpenCategory(true)}
                             aria-label={t('course.category.add', 'Ajouter une catégorie')}
                         >
                             <CirclePlus className="h-5 w-5" />
@@ -33,12 +32,12 @@ export default function CategoryToolBar() {
             </header>
 
             {/* Category Drawer */}
-            {openCategory && (
+            {openCategory && FormComponent && (
                 <Drawer
                     title={t('course.category.add', 'Ajouter une catégorie')}
                     open={openCategory}
-                    setOpen={setOpenCategory}
-                    component={<CategoryForm closeDrawer={handleCloseCategoryDrawer} />}
+                    setOpen={setOpenCategory && setOpenCategory}
+                    component={FormComponent}
                 />
             )}
         </div>

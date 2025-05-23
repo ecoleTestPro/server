@@ -1,3 +1,5 @@
+import { IDataWithPagination } from ".";
+
 export interface ICourse {
     id: number | string;
     image: string;
@@ -11,8 +13,15 @@ export interface ICourse {
 
 
 export interface ICourseCategory {
-    id: number | string;
+    id?: number;
     title: string;
     is_featured: boolean;
-    color: string;
+    image?: string;
+    color?: string;
+}
+
+
+export interface ICourseSharedData {
+    course: ICourse[];
+    categories: IDataWithPagination<ICourseCategory>;
 }

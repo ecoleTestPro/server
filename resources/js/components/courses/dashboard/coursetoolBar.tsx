@@ -2,7 +2,7 @@ import Drawer from '@/components/ui/drawer';
 import { LayoutList } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import DashboardCategoryList from '../categories/dashboardCategoryList';
+// import DashboardCategoryList from '../categories/dashboardCategoryList';
 
 export default function CourseToolBar() {
     const [openCategory, setOpenCategory] = useState(false);
@@ -26,9 +26,9 @@ export default function CourseToolBar() {
             </header>
 
             {/* Category Drawer */}
-            {openCategory && (
+            {/* {openCategory && (
                 <Drawer title="Ajouter une catégorie" open={openCategory} setOpen={setOpenCategory} component={<DashboardCategoryList />} />
-            )}
+            )} */}
         </div>
     );
 }

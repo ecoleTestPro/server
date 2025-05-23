@@ -4,6 +4,7 @@ import { AppSidebar } from '@/components/layouts/app/app-sidebar';
 import { AppSidebarHeader } from '@/components/layouts/app/app-sidebar-header';
 import { type BreadcrumbItem } from '@/types';
 import { type PropsWithChildren } from 'react';
+import { Toaster } from 'react-hot-toast';
 
 export default function AppSidebarLayout({ children, breadcrumbs = [] }: PropsWithChildren<{ breadcrumbs?: BreadcrumbItem[] }>) {
     return (
@@ -12,6 +13,8 @@ export default function AppSidebarLayout({ children, breadcrumbs = [] }: PropsWi
             <AppContent variant="sidebar">
                 <AppSidebarHeader breadcrumbs={breadcrumbs} />
                 {children}
+
+                <Toaster position="top-right" toastOptions={{ duration: 4000 }} />
             </AppContent>
         </AppShell>
     );

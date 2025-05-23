@@ -10,16 +10,37 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 import { InputFile } from '@/components/ui/inputFile';
+import { ICourseCategory } from '@/types/course';
 import { lazy } from 'react';
 import 'react-quill/dist/quill.snow.css';
 
 // const ReactQuill = lazy(() => import('react-quill'));
 const ReactQuill = lazy(() => import('react-quill-new'));
 
-type ICategoryForm = {
+// export type ICategoryForm = {
+export type ICategoryForm = {
+    id?: number;
     title: string;
     is_featured: boolean;
     image: string;
+};
+
+export const categoryFormToICourseCategory = (category: ICategoryForm): ICourseCategory => {
+    return {
+        id: category.id,
+        title: category.title,
+        is_featured: category.is_featured,
+        image: category.image,
+    };
+};
+
+export const courseCategoryToCategoryForm = (category: ICourseCategory): ICategoryForm => {
+    return {
+        id: category.id,
+        title: category.title,
+        is_featured: category.is_featured,
+        image: category.image || '',
+    };
 };
 
 const defaultValues: ICategoryForm = {
@@ -34,24 +55,30 @@ interface CategoryFormProps {
 }
 
 function CategoryForm({ closeDrawer, initialData }: CategoryFormProps) {
-    const { data, setData, post, processing, errors, reset } = useForm<ICategoryForm>(defaultValues);
+    const { data, setData, post, processing, errors, reset } = useForm<ICategoryForm>(initialData || defaultValues);
 
     const { t } = useTranslation();
+
+    const onSuccess = () => {
+        toast.success(t('courses.category.updateSuccess', 'Catégorie mise à jour avec succès !'));
+        reset();
+        console.log('closeDrawer', closeDrawer);
+        closeDrawer && closeDrawer();
+    };
+
+    const onError = (errors: any) => {
+        toast.error(t('courses.category.updateError', 'Erreur lors de la mise à jour de la catégorie'));
+        console.error('Category update error:', errors);
+    };
 
     const submit: FormEventHandler = (e) => {
         console.log('Submitting category form');
         e.preventDefault();
-        post(route('category.store'), {
-            onSuccess: () => {
-                toast.success(t('courses.category.createSuccess', 'Catégorie créée avec succès !'));
-                reset();
-                console.log('closeDrawer', closeDrawer);
-                closeDrawer && closeDrawer();
-            },
-            onError: (errors) => {
-                toast.error(t('courses.category.createError', 'Erreur lors de la création de la catégorie'));
-                console.error('Category creation error:', errors);
-            },
+
+        const routeName = initialData?.id ? 'category.update' : 'category.store';
+        post(route(routeName), {
+            onSuccess: () => onSuccess(),
+            onError: (errors) => onError(errors),
         });
     };
 
@@ -99,7 +126,7 @@ function CategoryForm({ closeDrawer, initialData }: CategoryFormProps) {
 
             <Button type="submit" className="mt-2 w-full" disabled={processing}>
                 {processing && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
-                {t('courses.create', 'Créer la formation')}
+                {initialData?.id ? t('courses.update', 'Mettre à jour la catégorie') : t('courses.create', 'Créer la catégorie')}
             </Button>
         </form>
     );

@@ -17,15 +17,14 @@ class CategoryController extends Controller
         $search = $request->cat_search ? strtolower($request->cat_search) : null;
         $categories = CategoryRepository::query()->when($search, function ($query) use ($search) {
             $query->where('title', 'like', '%' . $search . '%');
-        })->withTrashed()->latest('id')->paginate(20)->withQueryString();
+        })->latest('id')->paginate(20)->withQueryString();
 
-        // return view('category.index', [
-        //     'categories' => $categories,
-        // ]);
-
-        return Inertia::render('dashboard/categories/index', [
+        $data = [
             'categories' => $categories,
-            'filters' => $request->only(['cat_search']),
+            'filters'    => $request->only(['cat_search']),
+        ];
+        return Inertia::render('dashboard/categories/index', [
+            'data' => $data,
         ]);
     }
 
@@ -37,7 +36,7 @@ class CategoryController extends Controller
     public function store(CategoryStoreRequest $request)
     {
         CategoryRepository::storeByRequest($request);
-        return to_route('category.index')->with('success', 'Category created');
+        return back()->with('success', 'Category created');
     }
 
     public function edit(Category $category)
@@ -47,18 +46,24 @@ class CategoryController extends Controller
         ]);
     }
 
-    public function update(CategoryUpdateRequest $request, Category $category)
+    public function update(CategoryUpdateRequest $request)
     {
+        $category = CategoryRepository::query()->find($request->id);
+        if (!$category) {
+            return back()->withErrors('Category not found');
+        }
         CategoryRepository::updateByRequest($request, $category);
-
-        return to_route('category.index')->withSuccess('Category updated');
+        return back()->withSuccess('Category updated');
     }
 
-    public function delete(Category $category)
+    public function delete(int $id)
     {
+        $category = CategoryRepository::query()->find($id);
+        if (!$category) {
+            return back()->withErrors('Category not found');
+        }
         $category?->delete();
-
-        return redirect()->route('category.index')->withSuccess('Category deleted');
+        return back()->withSuccess('Category deleted');
     }
 
     public function restore(int $id)
@@ -67,7 +72,6 @@ class CategoryController extends Controller
 
         return redirect()->route('category.index')->withSuccess('Category restored');
     }
-
 
     public function sort(Request $request)
     {
