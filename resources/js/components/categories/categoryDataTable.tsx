@@ -6,7 +6,6 @@ import { Button } from '../ui/button';
 import { Checkbox } from '../ui/checkbox';
 import { DataTable } from '../ui/dataTable';
 import CategoryActionBtn from './categoryActionBtn';
-import { ICategoryForm } from '../courses/categories/categoryForm';
 
 const categories: ICourseCategory[] = [
     { id: 1, title: 'Développement Web', color: 'blue', is_featured: true },
@@ -46,7 +45,18 @@ export default function CategoryDataTable({ categories, onEditRow, onDeleteRow }
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             ),
-            cell: ({ row }) => <div className="capitalize">{row.getValue('title')}</div>,
+            cell: ({ row }) => {
+                const category = row.original;
+                const title = category.title;
+                const imageUrl = category?.image?.src || null;
+
+                return (
+                    <div className="flex items-center gap-2">
+                        {imageUrl && <img src={imageUrl} alt={title} className="h-8 w-8 rounded object-cover" />}
+                        <span className="capitalize">{title}</span>
+                    </div>
+                );
+            },
         },
         {
             id: 'actions',

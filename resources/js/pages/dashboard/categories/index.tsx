@@ -45,7 +45,7 @@ export default function DashboardCategory() {
         setCategorySelected({
             ...row,
             id: typeof row.id == 'number' ? row.id : undefined,
-            image: '', // or provide a default/convert as needed
+            media: '', // or provide a default/convert as needed
         });
         setOpenCategory(true);
     };

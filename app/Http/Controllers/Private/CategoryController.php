@@ -15,9 +15,26 @@ class CategoryController extends Controller
     public function index(Request $request)
     {
         $search = $request->cat_search ? strtolower($request->cat_search) : null;
-        $categories = CategoryRepository::query()->when($search, function ($query) use ($search) {
-            $query->where('title', 'like', '%' . $search . '%');
-        })->latest('id')->paginate(99999)->withQueryString();
+        $categories = CategoryRepository::query()
+            ->when($search, function ($query) use ($search) {
+                $query->where('title', 'like', '%' . $search . '%');
+            })
+            ->latest('id')
+            ->with('image')
+            ->paginate(99999)
+            ->withQueryString();
+
+
+        // On mappe sur la collection de résultats (ici sur la propriété 'items' du paginator)
+        $categories->getCollection()->transform(function ($category) {
+            return [
+                ...$category->toArray(),
+                "image" => [
+                    "id" => $category->image?->id,
+                    "src" => $category->imagePath,
+                ]
+            ];
+        });
 
         $data = [
             'categories' => $categories,

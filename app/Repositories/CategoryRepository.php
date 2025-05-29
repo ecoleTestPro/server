@@ -30,10 +30,10 @@ class CategoryRepository extends Repository
         ) : null;
 
         return self::create([
-            'title' => $request->title,
-            'media_id' => $media ? $media->id : null,
+            'title'       => $request->title,
+            'media_id'    => $media ? $media->id : null,
             'is_featured' => $isFeatured,
-            'color' => $request->color
+            'color'       => $request->color
         ]);
     }
 

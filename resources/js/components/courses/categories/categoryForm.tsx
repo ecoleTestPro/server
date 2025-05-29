@@ -1,6 +1,6 @@
-import { useForm } from '@inertiajs/react';
+import { router, useForm } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
-import { FormEventHandler } from 'react';
+import React, { FormEventHandler } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
@@ -22,7 +22,7 @@ export type ICategoryForm = {
     id?: number;
     title: string;
     is_featured: boolean;
-    image: string;
+    media: string;
 };
 
 export const categoryFormToICourseCategory = (category: ICategoryForm): ICourseCategory => {
@@ -30,7 +30,7 @@ export const categoryFormToICourseCategory = (category: ICategoryForm): ICourseC
         id: category.id,
         title: category.title,
         is_featured: category.is_featured,
-        image: category.image,
+        media: category.media,
     };
 };
 
@@ -39,14 +39,14 @@ export const courseCategoryToCategoryForm = (category: ICourseCategory): ICatego
         id: category.id,
         title: category.title,
         is_featured: category.is_featured,
-        image: category.image || '',
+        media: category.media || '',
     };
 };
 
 const defaultValues: ICategoryForm = {
     title: '',
     is_featured: false,
-    image: '',
+    media: '',
 };
 
 interface CategoryFormProps {
@@ -55,30 +55,58 @@ interface CategoryFormProps {
 }
 
 function CategoryForm({ closeDrawer, initialData }: CategoryFormProps) {
+    const { t } = useTranslation();
+    const [file, setFile] = React.useState<File | null>(null);
+
     const { data, setData, post, processing, errors, reset } = useForm<ICategoryForm>(initialData || defaultValues);
 
-    const { t } = useTranslation();
-
-    const onSuccess = () => {
-        toast.success(t('courses.category.updateSuccess', 'Catégorie mise à jour avec succès !'));
-        reset();
-        console.log('closeDrawer', closeDrawer);
-        closeDrawer && closeDrawer();
-    };
-
-    const onError = (errors: any) => {
-        toast.error(t('courses.category.updateError', 'Erreur lors de la mise à jour de la catégorie'));
-        console.error('Category update error:', errors);
-    };
-
+    /**
+     * Soumet le formulaire pour créer ou mettre à jour une catégorie
+     *
+     * @param {React.FormEvent<HTMLFormElement>} e - L'événement de soumission du formulaire
+     *
+     * @remarks
+     * Si {@link initialData} est défini, la route `category.update` sera utilisée.
+     * Sinon, la route `category.store` sera utilisée.
+     *
+     * @throws {Error} Si l'image n'est pas définie et que {@link initialData} n'a pas de champ `media`
+     */
     const submit: FormEventHandler = (e) => {
-        console.log('Submitting category form');
         e.preventDefault();
 
+        if (!file && !initialData?.media) {
+            toast.error(t('courses.category.mediaRequired', 'Veuillez sélectionner une image.'));
+            return;
+        }
+
         const routeName = initialData?.id ? 'category.update' : 'category.store';
-        post(route(routeName), {
-            onSuccess: () => onSuccess(),
-            onError: (errors) => onError(errors),
+        const routeUrl = initialData?.id ? 'categories/update' : 'categories/store';
+
+        const formData = new FormData();
+        formData.append('title', data.title);
+        formData.append('is_featured', data.is_featured ? '1' : '0');
+        if (file) {
+            formData.append('media', file);
+        }
+
+        router.visit(routeUrl, {
+            method: 'post',
+            data: {
+                title: data.title,
+                is_featured: data.is_featured ? '1' : '0',
+                ...(file && { media: file }),
+            },
+            forceFormData: true, // Important pour envoyer des fichiers
+            onSuccess: () => {
+                toast.success(t('courses.category.updateSuccess', 'Catégorie mise à jour avec succès !'));
+                reset();
+                closeDrawer?.();
+            },
+            onError: (errors) => {
+                toast.error(t('courses.category.updateError', 'Erreur lors de la mise à jour de la catégorie'));
+                console.error('Category update error:', errors);
+            },
+            preserveScroll: true,
         });
     };
 
@@ -108,20 +136,30 @@ function CategoryForm({ closeDrawer, initialData }: CategoryFormProps) {
                     id="image"
                     onFilesChange={(files) => {
                         if (files && files.length > 0) {
-                            const file = files[0];
-                            const reader = new FileReader();
-                            reader.onloadend = () => {
-                                setData('image', reader.result as string);
-                            };
-                            reader.readAsDataURL(file);
+                            const selectedFile = files[0];
+                            // Validation locale basique
+                            const validTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+                            if (!validTypes.includes(selectedFile.type)) {
+                                toast.error(t('courses.category.invalidImageType', 'Le fichier doit être une image (jpg, jpeg ou png).'));
+                                setFile(null);
+                                return;
+                            }
+                            if (selectedFile.size > 2048 * 1024) {
+                                // 2MB
+                                toast.error(t('courses.category.imageTooBig', "L'image ne doit pas dépasser 2 Mo."));
+                                setFile(null);
+                                return;
+                            }
+                            setFile(selectedFile);
+                        } else {
+                            setFile(null);
                         }
                     }}
                     accept="image/*"
                     multiple={false}
-                    className="w-full"
                     disabled={processing}
                 />
-                <InputError message={errors.image} />
+                <InputError message={errors.media} />
             </div>
 
             <Button type="submit" className="mt-2 w-full" disabled={processing}>

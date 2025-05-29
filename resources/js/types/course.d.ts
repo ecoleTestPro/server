@@ -16,8 +16,17 @@ export interface ICourseCategory {
     id?: number;
     title: string;
     is_featured: boolean;
-    image?: string;
+    media?: string;
     color?: string;
+    image?: {
+        id: number;
+        src: string;
+        path: string;
+        extension: string;
+        type: string;
+        created_at: string;
+        updated_at: string;
+    };
 }
 
 
