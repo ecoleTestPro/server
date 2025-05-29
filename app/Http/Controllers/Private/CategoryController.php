@@ -17,7 +17,7 @@ class CategoryController extends Controller
         $search = $request->cat_search ? strtolower($request->cat_search) : null;
         $categories = CategoryRepository::query()->when($search, function ($query) use ($search) {
             $query->where('title', 'like', '%' . $search . '%');
-        })->latest('id')->paginate(20)->withQueryString();
+        })->latest('id')->paginate(99999)->withQueryString();
 
         $data = [
             'categories' => $categories,

@@ -22,6 +22,6 @@ export interface ICourseCategory {
 
 
 export interface ICourseSharedData {
-    course: ICourse[];
-    categories: IDataWithPagination<ICourseCategory>;
+    courses?: ICourse[];
+    categories?: IDataWithPagination<ICourseCategory>;
 }

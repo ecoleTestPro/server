@@ -15,7 +15,8 @@ import 'react-quill/dist/quill.snow.css';
 // const ReactQuill = lazy(() => import('react-quill'));
 const ReactQuill = lazy(() => import('react-quill-new'));
 
-type ICourseForm = {
+export type ICourseForm = {
+    id?: number;
     title: string;
     description: string;
     duration: string;
@@ -35,17 +36,27 @@ const defaultValues: ICourseForm = {
     image: '',
 };
 
-function CourseForm() {
-    const { data, setData, post, processing, errors, reset } = useForm<ICourseForm>(defaultValues);
+interface ICourseFormProps {
+    closeDrawer?: () => void;
+    initialData?: ICourseForm;
+}
+
+function CourseForm({ closeDrawer, initialData }: ICourseFormProps) {
+    const { data, setData, post, processing, errors, reset } = useForm<ICourseForm>(initialData || defaultValues);
 
     const { t } = useTranslation();
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post(route('courses.store'), {
+
+        console.log('data', data);
+
+        const routeName = initialData?.id ? 'course.update' : 'course.store';
+        post(route(routeName, initialData?.id), {
             onSuccess: () => {
                 toast.success(t('courses.createSuccess', 'Formation créée avec succès !'));
                 reset();
+                console.log('closeDrawer', closeDrawer);
             },
             onError: (errors) => {
                 toast.error(t('courses.createError', 'Erreur lors de la création de la formation'));

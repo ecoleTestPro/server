@@ -120,7 +120,9 @@ export default function DashboardCategory() {
                     />
 
                     <div className="container mx-auto flex h-full items-center justify-center">
-                        <CategoryDataTable categories={data.categories} onEditRow={handleOpenEditCategory} onDeleteRow={handleOnDeleteRow} />
+                        {data.categories && (
+                            <CategoryDataTable categories={data.categories} onEditRow={handleOpenEditCategory} onDeleteRow={handleOnDeleteRow} />
+                        )}
                     </div>
                 </div>
             </div>
