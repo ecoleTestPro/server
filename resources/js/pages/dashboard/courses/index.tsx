@@ -20,7 +20,6 @@ export default function Dashboard() {
     const { t } = useTranslation();
 
     const { data } = usePage<SharedData>().props;
-    console.log('Categories Data:', data?.courses);
 
     const [showConfirm, setShowConfirm] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
@@ -44,8 +43,6 @@ export default function Dashboard() {
             },
         });
     };
-
-    console.log('data', data);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -74,18 +71,6 @@ export default function Dashboard() {
                         onCancel={() => setShowConfirm(false)}
                         loading={isDeleting}
                     />
-
-                    {/* <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-                        <div className="border-sidebar-border/70 dark:border-sidebar-border relative aspect-video overflow-hidden rounded-xl border">
-                            <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                        </div>
-                        <div className="border-sidebar-border/70 dark:border-sidebar-border relative aspect-video overflow-hidden rounded-xl border">
-                            <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                        </div>
-                        <div className="border-sidebar-border/70 dark:border-sidebar-border relative aspect-video overflow-hidden rounded-xl border">
-                            <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                        </div>
-                    </div> */}
 
                     <div className="container mx-auto flex h-full items-center justify-center">
                         <CourseCardWrapper />

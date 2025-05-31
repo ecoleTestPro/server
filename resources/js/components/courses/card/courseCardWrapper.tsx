@@ -1,5 +1,7 @@
+import { SharedData } from '@/types';
 import { ICourse } from '@/types/course';
-import { useState } from 'react';
+import { usePage } from '@inertiajs/react';
+import { useEffect, useState } from 'react';
 import CourseList from './courseList';
 import Pagination from './coursePagination';
 
@@ -40,6 +42,8 @@ const coursesData: ICourse[] = Array.from({ length: 60 }, (_, index) => ({
 }));
 
 function CourseCardWrapper() {
+    const { data } = usePage<SharedData>().props;
+
     const [courses, setCourses] = useState(coursesData);
     const [currentPage, setCurrentPage] = useState(1);
     const coursesPerPage = 6;
@@ -47,7 +51,7 @@ function CourseCardWrapper() {
     // Fonction pour filtrer les cours par page
     const indexOfLastCourse = currentPage * coursesPerPage;
     const indexOfFirstCourse = indexOfLastCourse - coursesPerPage;
-    const currentCourses = courses.slice(indexOfFirstCourse, indexOfLastCourse);
+    // const currentCourses = courses.slice(indexOfFirstCourse, indexOfLastCourse);
 
     // Gestion de la pagination
     const totalPages = Math.ceil(courses.length / coursesPerPage);
@@ -56,7 +60,7 @@ function CourseCardWrapper() {
         <div className="flex items-center justify-center p-4">
             <div className="w-full max-w-6xl">
                 <main>
-                    <CourseList courses={currentCourses} />
+                    <CourseList courses={data.courses?.data || []} />
                 </main>
                 <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={(page) => setCurrentPage(page)} />
             </div>
@@ -65,3 +69,4 @@ function CourseCardWrapper() {
 }
 
 export default CourseCardWrapper;
+ 

@@ -37,27 +37,17 @@ class CourseController extends Controller
     public function index(Request $request)
     {
         $search = $request->cat_search ? strtolower($request->cat_search) : null;
-        $user = auth()->user;
-        $categorires = CategoryRepository::findAll();
-        $course = CourseRepository::query()
-            ->when(!$user->hasRole('admin'), function ($query) use ($user) {
-                $query->where('instructor_id', $user->instructor?->id);
-            })
-            ->when($search, function ($query) use ($search) {
-                $query->where('title', 'like', '%' . $search . '%')
-                    ->orWhereHas('instructor.user', function ($query) use ($search) {
-                        $query->where('name', 'like', '%' . $search . '%');
-                    });
-            })
-            ->latest('id')
-            ->withTrashed()
-            ->paginate(10)->withQueryString();
+        $user = auth()->user();
+
+        $categories = CategoryRepository::findAll();
+        // dd($categories   );
+
+        $course = CourseRepository::findAll($user, $search);
 
         $data = [
-            'courses' => $course,
-            'categories' => $categorires,
+            'courses'    => $course,
+            'categories' => $categories,
         ];
-
 
         return Inertia::render('dashboard/courses/index', [
             'data' => $data,
@@ -66,20 +56,19 @@ class CourseController extends Controller
 
     public function create()
     {
-        // $user = auth()->user();
-        // $instructors = InstructorRepository::query()
-        //     ->when(!$user->hasRole('admin') || !$user->is_admin, function ($query) use ($user) {
-        //         $query->where('user_id', $user->id);
-        //     })
-        //     ->withTrashed()
-        //     ->latest('id')
-        //     ->get();
+        $categories = CategoryRepository::findAll();
+        // dd($categories   );
 
-        return Inertia::render('dashboard/courses/create');
-        // return view('course.create', [
-        //     'categories' => CategoryRepository::query()->get(),
-        //     'instructors' => $instructors,
-        // ]);
+        $course = CourseRepository::findAll(auth()->user());
+
+        $data = [
+            'courses'    => $course,
+            'categories' => $categories,
+        ];
+
+        return Inertia::render('dashboard/courses/course-create', [
+            'data' => $data,
+        ]);
     }
     public function show(Course $course)
     {

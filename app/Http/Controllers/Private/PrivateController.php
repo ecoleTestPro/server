@@ -28,6 +28,6 @@ class PrivateController extends Controller
      */
     public function index(Request $request)
     {
-        return Inertia::render('dashboard/courses/index');
+        // return Inertia::render('dashboard/courses/index');
     }
 }

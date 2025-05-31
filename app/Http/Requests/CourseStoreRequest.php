@@ -30,7 +30,7 @@ class CourseStoreRequest extends FormRequest
             'media'                 => 'image|mimes:jpeg,png,jpg|max:2048',
             'video'                 => 'file|mimes:mp4,mpeg|max:1048576',
 
-            'description'           => 'string|min:1',
+            'description'           => 'json|min:1',
             // 'description.*.heading' => 'required|string',
             // 'description.*.body'    => 'required|string',
 

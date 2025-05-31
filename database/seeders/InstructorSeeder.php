@@ -19,21 +19,22 @@ class InstructorSeeder extends Seeder
     {
         // instructor User
         $instructor = UserRepository::create([
-            'name' => 'ECOLE TEST PRO',
-            'phone' => '+2250706915705',
-            'email' => 'info@ecoletestpro.com',
-            'is_active' => true,
-            'is_admin' => true,
+            'name'              => 'ECOLE TEST PRO',
+            'phone'             => '+2250706915705',
+            'email'             => 'info@ecoletestpro.com',
+            'is_active'         => true,
+            'is_admin'          => true,
             'email_verified_at' => now(),
-            'password' => Hash::make('secret'),
-            'remember_token' => Str::random(10),
+            'password'          => Hash::make('secret'),
+            'remember_token'    => Str::random(10),
         ]);
 
         InstructorRepository::create([
-            'user_id' => $instructor->id,
-            'title' => 'instructor',
+            'user_id'     => $instructor->id,
+            'title'       => 'instructor',
             'is_featured' => true,
-            'created_at' => now(),
+            'is_default'  => true,
+            'created_at'  => now(),
         ]);
 
         $instructor->assignRole('instructor');

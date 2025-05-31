@@ -68,9 +68,15 @@ class CategoryRepository extends Repository
         ]);
     }
 
+    /**
+     * Retrieve all categories, optionally filtered by a search term, with pagination.
+     * 
+     * @param string|null $search An optional search term to filter categories by title.
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator Paginated list of categories with transformed images.
+     */
     public static function findAll($search = null)
     {
-        $categories = CategoryRepository::query()
+        $categories = static::query()
             ->when($search, function ($query) use ($search) {
                 $query->where('title', 'like', '%' . $search . '%');
             })
@@ -90,5 +96,7 @@ class CategoryRepository extends Repository
                 ]
             ];
         });
+
+        return $categories;
     }
 }

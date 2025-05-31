@@ -17,6 +17,11 @@ class InstructorRepository extends Repository
         return Instructor::class;
     }
 
+    public static function getDefaultInstructor()
+    {
+        return self::model()::where('is_default', true)->first();
+    }
+
     public static function storeByRequest(InstructorStoreRequest $request, $userId)
     {
         $isFeatured = false;

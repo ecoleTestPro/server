@@ -10,13 +10,13 @@ use Illuminate\Support\Facades\Route;
  */
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('dashboard', [PrivateController::class, 'index'])->name('dashboard.index');
+    Route::get('dashboard', [CourseController::class, 'index'])->name('dashboard.index');
 
 
     Route::group([
         'prefix' => 'courses',
     ], function () {
-        Route::get('', [PrivateController::class, 'index'])->name('dashboard.index');
+        Route::get('', [CourseController::class, 'index'])->name('dashboard.index');
         Route::get('create', [CourseController::class, 'create'])->name('course.create');
         Route::post('create', [CourseController::class, 'store'])->name('course.store');
     });

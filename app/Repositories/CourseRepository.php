@@ -15,6 +15,35 @@ class CourseRepository extends Repository
         return Course::class;
     }
 
+    public static function findAll($user, $search = null)
+    {
+        try {
+            $query = static::query();
+
+            if ($user && $user->hasRole('admin')) {
+                $query = $query
+                    ->when(!$user->hasRole('admin'), function ($query) use ($user) {
+                        $query->where('instructor_id', $user->instructor?->id);
+                    });
+            }
+
+            return $query
+                ->when($search, function ($query) use ($search) {
+                    $query->where('title', 'like', '%' . $search . '%')
+                        ->orWhereHas('instructor.user', function ($query) use ($search) {
+                            $query->where('name', 'like', '%' . $search . '%');
+                        });
+                })
+                ->latest('id')
+                ->withTrashed()
+                ->paginate(10)
+                ->withQueryString();
+        } catch (\Exception $e) {
+            throw new \Exception('Error fetching courses: ' . $e->getMessage());
+            return [];
+        }
+    }
+
     public static function storeByRequest(CourseStoreRequest $request)
     {
         $isActive = false;
@@ -35,19 +64,20 @@ class CourseRepository extends Repository
             MediaTypeEnum::VIDEO
         ) : null;
 
-
+        // fix instructor_id
+        $instructor = InstructorRepository::getDefaultInstructor();
 
         $course = self::create([
-            'category_id' => $request->category_id,
-            'title' => $request->title,
-            'media_id' => $media ? $media->id : null,
-            'video_id' => $video ? $video->id : null,
-            'description' => json_encode($request->description),
+            'category_id'   => $request->category_id,
+            'title'         => $request->title,
+            'media_id'      => $media ? $media->id : null,
+            'video_id'      => $video ? $video->id : null,
+            'description'   => $request->description ?? "", // json_encode($request->description)
             'regular_price' => $request->regular_price,
-            'price' => $request->price,
-            'instructor_id' => $request->instructor_id,
-            'is_active' => $isActive,
-            'published_at' => $request->is_active ? now() : null
+            'price'         => $request->price,
+            'instructor_id' => $instructor ? $instructor->id : null, // $request->instructor_id,
+            'is_active'     => $isActive,
+            'published_at'  => $request->is_active ? now() : null
         ]);
 
         foreach ($request->chapters ?? [] as $requestChapter) {
