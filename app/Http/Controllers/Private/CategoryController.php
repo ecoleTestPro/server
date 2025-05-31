@@ -12,29 +12,16 @@ use Inertia\Inertia;
 
 class CategoryController extends Controller
 {
+    /**
+     * Show the categories index page.
+     *
+     * @param Request $request The incoming request with potential search parameters.
+     * @return \Inertia\Response The Inertia response for the categories index page.
+     */
     public function index(Request $request)
     {
         $search = $request->cat_search ? strtolower($request->cat_search) : null;
-        $categories = CategoryRepository::query()
-            ->when($search, function ($query) use ($search) {
-                $query->where('title', 'like', '%' . $search . '%');
-            })
-            ->latest('id')
-            ->with('image')
-            ->paginate(99999)
-            ->withQueryString();
-
-
-        // On mappe sur la collection de résultats (ici sur la propriété 'items' du paginator)
-        $categories->getCollection()->transform(function ($category) {
-            return [
-                ...$category->toArray(),
-                "image" => [
-                    "id" => $category->image?->id,
-                    "src" => $category->imagePath,
-                ]
-            ];
-        });
+        $categories = CategoryRepository::findAll($search);
 
         $data = [
             'categories' => $categories,
@@ -45,22 +32,16 @@ class CategoryController extends Controller
         ]);
     }
 
-    public function create()
-    {
-        return view('category.create');
-    }
-
+    /**
+     * Store a newly created category in storage.
+     *
+     * @param  \App\Http\Requests\CategoryStoreRequest  $request
+     * @return \Illuminate\Http\Response
+     */
     public function store(CategoryStoreRequest $request)
     {
         CategoryRepository::storeByRequest($request);
         return back()->with('success', 'Category created');
-    }
-
-    public function edit(Category $category)
-    {
-        return view('category.edit', [
-            'category' => $category,
-        ]);
     }
 
     public function update(CategoryUpdateRequest $request)

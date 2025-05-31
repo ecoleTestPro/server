@@ -1,5 +1,13 @@
 import { IDataWithPagination } from ".";
 
+
+export enum PeriodicityUnitEnum {
+    DAY = 'DAY',
+    WEEK = 'WEEK',
+    MONTH = 'MONTH',
+    YEAR = 'YEAR',
+}
+
 export interface ICourse {
     id: number | string;
     image: string;

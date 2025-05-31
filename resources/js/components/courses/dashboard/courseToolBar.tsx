@@ -34,7 +34,13 @@ export default function CourseToolBar({ FormComponent, open, setOpen }: ICategor
 
             {/* Category Drawer */}
             {open && FormComponent && (
-                <Drawer title={t('course.course.add', 'Ajouter une formation')} open={open} setOpen={setOpen && setOpen} component={FormComponent} />
+                <Drawer
+                    title={t('course.course.add', 'Ajouter une formation')}
+                    open={open}
+                    setOpen={setOpen && setOpen}
+                    component={FormComponent}
+                    maxWidth="max-w-3/4"
+                />
             )}
         </div>
     );

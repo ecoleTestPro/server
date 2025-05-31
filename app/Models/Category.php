@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Repositories\CategoryRepository;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -30,7 +31,7 @@ class Category extends Model
         }
 
         return Attribute::make(
-            get: fn () => $image,
+            get: fn() => $image,
         );
     }
 

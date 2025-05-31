@@ -23,15 +23,22 @@ class CourseStoreRequest extends FormRequest
     {
         return [
             'category_id'           => 'required|exists:categories,id',
+
             'title'                 => 'required|min:5|max:500',
+            'excerpt'               => 'required|string|min:5|max:5000',
+
             'media'                 => 'image|mimes:jpeg,png,jpg|max:2048',
             'video'                 => 'file|mimes:mp4,mpeg|max:1048576',
-            'description'           => 'required|string|min:1',
+
+            'description'           => 'string|min:1',
             // 'description.*.heading' => 'required|string',
             // 'description.*.body'    => 'required|string',
+
             // 'instructor_id'         => 'required|exists:instructors,id',
+
             'is_active'             => '',
-            'regular_price'         => 'required|numeric|min:' . ((float) config('app.minimum_amount')),
+
+            'regular_price'         => 'numeric|min:' . ((float) config('app.minimum_amount')),
             'price' => [
                 'nullable',
                 'numeric',
@@ -51,18 +58,20 @@ class CourseStoreRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'title.min' => 'The title must be at least 5 characters.',
-            'title.max' => 'The title may not be greater than 500 characters.',
-            'instructor_id.required' => 'The instructor field is required.',
-            'instructor_id.exists' => 'The selected instructor is invalid.',
-            'category_id.required' => 'The category field is required.',
-            'category_id.exists' => 'The selected category is invalid.',
-            'media.required' => 'The thumbnail field is required.',
-            'media.image' => 'The thumbnail must be an image.',
-            'media.mimes' => 'The thumbnail must be a file of type: jpeg, png, jpg',
-            'media.max' => 'The thumbnail may not be greater than 2 MB.',
-            'regular_price.min' => 'The regular price must be at least ' . config('app.minimum_amount'),
-            'price.min' => 'The price must be at least ' . config('app.minimum_amount'),
+            'title.min'              => 'Le titre doit comporter au moins 5 caractères.',
+            'title.max'              => 'Le titre ne peut pas dépasser 500 caractères.',
+            'instructor_id.required' => "Le champ formateur est obligatoire.",
+            'instructor_id.exists'   => "Le formateur sélectionné est invalide.",
+            'category_id.required'   => "Le champ catégorie est obligatoire.",
+            'category_id.exists'     => "La catégorie sélectionnée est invalide.",
+
+            'media.required'         => "L'image miniature est obligatoire.",
+            'media.image'            => "L'image miniature doit être une image.",
+            'media.mimes'            => "L'image miniature doit être un fichier de type : jpeg, png, jpg.",
+            'media.max'              => "L'image miniature ne doit pas dépasser 2 Mo.",
+
+            'regular_price.min'      => 'Le prix normal doit être au moins de ' . config('app.minimum_amount') . '.',
+            'price.min'              => 'Le prix doit être au moins de ' . config('app.minimum_amount') . '.',
         ];
     }
 }

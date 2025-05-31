@@ -23,10 +23,22 @@ use Inertia\Inertia;
 
 class CourseController extends Controller
 {
+    /**
+     * Display a listing of the courses.
+     *
+     * This method handles the display of courses based on the user's role and any search criteria.
+     * If the user is not an admin, only courses where the user is the instructor are displayed.
+     * Additionally, courses can be filtered by a search term that matches the course title or instructor name.
+     * The courses are paginated and include trashed records.
+     *
+     * @param Request $request The incoming request containing potential search parameters.
+     * @return \Inertia\Response The Inertia response for the courses index page.
+     */
     public function index(Request $request)
     {
         $search = $request->cat_search ? strtolower($request->cat_search) : null;
-        $user = auth()->user();
+        $user = auth()->user;
+        $categorires = CategoryRepository::findAll();
         $course = CourseRepository::query()
             ->when(!$user->hasRole('admin'), function ($query) use ($user) {
                 $query->where('instructor_id', $user->instructor?->id);
@@ -41,9 +53,14 @@ class CourseController extends Controller
             ->withTrashed()
             ->paginate(10)->withQueryString();
 
-
-        return view('course.index', [
+        $data = [
             'courses' => $course,
+            'categories' => $categorires,
+        ];
+
+
+        return Inertia::render('dashboard/courses/index', [
+            'data' => $data,
         ]);
     }
 
@@ -121,8 +138,7 @@ class CourseController extends Controller
 
     public function edit(Course $course)
     {
-
-        $user = auth()->user();
+        $user = auth()->user;
         $instructors = InstructorRepository::query()
             ->when(!$user->hasRole('admin') || !$user->is_admin, function ($query) use ($user) {
                 $query->where('user_id', $user->id);

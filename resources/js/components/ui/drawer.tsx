@@ -5,9 +5,11 @@ interface DrawerProps {
     open: boolean;
     setOpen?: (open: boolean) => void;
     component: JSX.Element;
+    maxWidth?: string; // Optional prop for max-width
+    
 }
 
-export default function Drawer({  title, open, setOpen, component }: DrawerProps) {
+export default function Drawer({  title, open, setOpen, component, maxWidth="max-w-1/2" }: DrawerProps) {
   if (!open) return null; // Optionally hide when not open
 
   const CloseBtn = () => {
@@ -29,10 +31,10 @@ export default function Drawer({  title, open, setOpen, component }: DrawerProps
       <div
         className="fixed inset-0 bg-black/30"
         aria-label="Fermer le drawer"
-        onClick={() => setOpen &&setOpen(false)}
+        // onClick retiré pour bloquer la fermeture par clic sur l'overlay
       />
       {/* Drawer panel */}
-      <div className="relative ml-auto h-full w-full max-w-1/2 bg-white shadow-xl transition-all">
+      <div className={`relative ml-auto h-full w-full ${maxWidth} bg-white shadow-xl transition-all`}>
         <CloseBtn />
 
         <div className="p-6">

@@ -2,7 +2,6 @@ import CourseCardWrapper from '@/components/courses/card/courseCardWrapper';
 import CourseForm, { ICourseForm } from '@/components/courses/courseForm';
 import CourseToolBar from '@/components/courses/dashboard/courseToolBar';
 import { ConfirmDialog } from '@/components/ui/confirmDialog';
-import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import AppLayout from '@/layouts/dashboard/app-layout';
 import { SharedData, type BreadcrumbItem } from '@/types';
 import { Head, router, usePage } from '@inertiajs/react';
@@ -46,6 +45,8 @@ export default function Dashboard() {
         });
     };
 
+    console.log('data', data);
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
@@ -74,7 +75,7 @@ export default function Dashboard() {
                         loading={isDeleting}
                     />
 
-                    <div className="grid auto-rows-min gap-4 md:grid-cols-3">
+                    {/* <div className="grid auto-rows-min gap-4 md:grid-cols-3">
                         <div className="border-sidebar-border/70 dark:border-sidebar-border relative aspect-video overflow-hidden rounded-xl border">
                             <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
                         </div>
@@ -84,7 +85,7 @@ export default function Dashboard() {
                         <div className="border-sidebar-border/70 dark:border-sidebar-border relative aspect-video overflow-hidden rounded-xl border">
                             <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
                         </div>
-                    </div>
+                    </div> */}
 
                     <div className="container mx-auto flex h-full items-center justify-center">
                         <CourseCardWrapper />
