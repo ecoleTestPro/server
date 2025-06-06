@@ -1,0 +1,21 @@
+services:
+  php-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: final
+    container_name: php-app
+    restart: unless-stopped
+    init: true
+    # Expose PHP-FPM port (for use with a web server like nginx)
+    ports:
+      - "9000:9000"
+    # env_file: ./.env  # Uncomment if .env file exists
+    networks:
+      - appnet
+    # If you use a database or cache, add depends_on here
+
+# Network for inter-service communication
+networks:
+  appnet:
+    driver: bridge
