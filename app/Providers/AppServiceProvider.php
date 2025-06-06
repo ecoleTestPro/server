@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Repositories\GeneralSettingRepository;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Schema;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +21,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        if(request()->ip() != '127.0.0.1'){
+            Schema::defaultStringLength(191);
+            if (!file_exists(base_path('storage/installed')) && !request()->is('install') && !request()->is('install/*')) {
+                header("Location: install");
+                exit;
+            }
+        }
     }
 }
