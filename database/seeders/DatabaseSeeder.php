@@ -17,6 +17,8 @@ class DatabaseSeeder extends Seeder
             PermissionSeeder::class,
             RoleSeeder::class,
             UserSeeder::class,
+            InstructorSeeder::class,
+            // GuestSeeder::class,
             // Other seeders can be added here
         ]);
     }

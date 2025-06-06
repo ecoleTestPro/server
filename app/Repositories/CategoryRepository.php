@@ -30,10 +30,10 @@ class CategoryRepository extends Repository
         ) : null;
 
         return self::create([
-            'title' => $request->title,
-            'media_id' => $media ? $media->id : null,
+            'title'       => $request->title,
+            'media_id'    => $media ? $media->id : null,
             'is_featured' => $isFeatured,
-            'color' => $request->color
+            'color'       => $request->color
         ]);
     }
 
@@ -66,5 +66,37 @@ class CategoryRepository extends Repository
             'is_featured' => $isFeatured,
             'color' => $request->color ?? $category->color
         ]);
+    }
+
+    /**
+     * Retrieve all categories, optionally filtered by a search term, with pagination.
+     * 
+     * @param string|null $search An optional search term to filter categories by title.
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator Paginated list of categories with transformed images.
+     */
+    public static function findAll($search = null)
+    {
+        $categories = static::query()
+            ->when($search, function ($query) use ($search) {
+                $query->where('title', 'like', '%' . $search . '%');
+            })
+            ->latest('id')
+            ->with('image')
+            ->paginate(99999)
+            ->withQueryString();
+
+
+        // On mappe sur la collection de résultats (ici sur la propriété 'items' du paginator)
+        $categories->getCollection()->transform(function ($category) {
+            return [
+                ...$category->toArray(),
+                "image" => [
+                    "id" => $category->image?->id,
+                    "src" => $category->imagePath,
+                ]
+            ];
+        });
+
+        return $categories;
     }
 }

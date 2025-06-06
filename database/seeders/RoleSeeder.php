@@ -28,6 +28,13 @@ class RoleSeeder extends Seeder
             $role->givePermissionTo($permission);
         }
 
+        Role::updateOrCreate(['name' => 'instructor']);
+        $permissions = Permission::all()->where('name', 'LIKE', 'course.%');
+        foreach ($permissions as $permission) {
+            $role = Role::where('name', 'instructor')->first();
+            $role->givePermissionTo($permission);
+        }
+
         // Role::updateOrCreate(['name' => 'instructor']);
         // $permissions = Permission::all()->skip(18)->take(47);
 

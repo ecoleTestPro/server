@@ -6,6 +6,7 @@ public function run(): void
     // Créer les rôles si non existants
     Role::firstOrCreate(['name' => 'admin']);
     Role::firstOrCreate(['name' => 'user']);
+    Role::firstOrCreate(['name' => 'instructor']);
 
     $localAdmin = UserRepository::query()->updateOrCreate(
         [

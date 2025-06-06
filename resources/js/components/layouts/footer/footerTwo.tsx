@@ -1,144 +1,191 @@
+import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
+import { Link } from '@inertiajs/react';
+
 export default function FooterTwo() {
     return (
-        <footer className="bg-black w-full flex justify-center items-center overflow-hidden">
-            <div className="bg-nature-600 w-full rounded-t-3xl text-white md:rounded-t-[40px] lg:rounded-t-[60px] xl:rounded-t-[80px] 2xl:rounded-t-[110px]">
-                <div className="container px-3 py-6 md:py-10 lg:py-14 xl:py-20 2xl:px-0 2xl:py-[100px]">
-                    <div className="flex flex-col gap-y-5 md:flex-row md:items-center md:justify-between">
-                        <h2 data-aos="fade-left" className="text-3xl font-bold tracking-tight md:text-4xl lg:text-5xl xl:leading-[64px]">
-                            Your home is as important to us <br />
-                            as our own
-                        </h2>
-                        <form data-aos="fade-right" className="max-w-[366px]">
-                            <div className="flex items-center gap-0">
-                                <input
-                                    type="email"
-                                    placeholder="Your email address"
-                                    className="text-nature-600 placeholder:font-poppins placeholder:text-nature-200 rounded-l-md rounded-r-none px-[20px] py-[17px] placeholder:text-sm"
-                                />
-                                <button type="submit" className="bg-primary rounded-l-none rounded-r-md px-[23px] py-[17px]">
-                                    <i className="fa-solid fa-magnifying-glass text-[22px]"></i>
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+        <>
+            <div className="mx-auto rounded-[25px] bg-secondary py-[70px] md:py-[90px] lg:py-[110px] xl:max-w-[1400px] xl:py-[135px] 2xl:max-w-[1680px] dark:bg-[#0a0e19]">
+                <div className="container mx-auto px-[12px] sm:max-w-[540px] md:max-w-[720px] lg:max-w-[960px] xl:max-w-[1308px]">
+                    <div className="grid grid-cols-1 gap-[25px] sm:grid-cols-2 lg:grid-cols-4">
+                        <div className="ltr:xl:-mr-[35px] rtl:xl:-ml-[35px]">
+                            <Link href="/" className="mb-[20px] inline-block max-w-[132px] md:mb-[23px]">
+                                {/* <Image src="/images/logo.svg" alt="logo" className="inline-block dark:hidden" width={132} height={34} /> */}
+                                {/* <Image src="/images/white-logo.svg" alt="logo" className="hidden dark:inline-block" width={132} height={34} /> */}
+                                <PlaceholderPattern className="inline-block  bg-gray-200 h-[34px] w-[132px] dark:hidden" />
+                                <PlaceholderPattern className="inline-block  bg-gray-200 h-[34px] w-[132px] dark:hidden" />
+                            </Link>
 
-                    <hr className="!bg-nature-500 my-6 h-px md:my-8 lg:my-12 xl:my-[60px]" />
-
-                    <div className="grid w-full grid-cols-2 gap-y-5 md:grid-cols-4">
-                        <div data-aos="zoom-in">
-                            <h5 className="mb-2.5 text-lg font-bold md:mb-3.5 md:text-xl lg:mb-5 lg:text-2xl xl:mb-7 xl:text-3xl">About Us</h5>
-                            <ul className="font-poppins text-new-200 grid gap-2 text-sm md:gap-3 md:text-base lg:gap-4">
-                                <li className="transition-all hover:text-white">
-                                    <a href="#">Press</a>
-                                </li>
-                                <li className="transition-all hover:text-white">
-                                    <a href="#">Resources and Policies</a>
-                                </li>
-                                <li className="transition-all hover:text-white">
-                                    <a href="#">Careers</a>
-                                </li>
-                                <li className="transition-all hover:text-white">
-                                    <a href="#">Content Integrity</a>
-                                </li>
-                                <li className="transition-all hover:text-white">
-                                    <a href="#">Investor Relations</a>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div data-aos="zoom-in">
-                            <h5 className="mb-2.5 text-lg font-bold md:mb-3.5 md:text-xl lg:mb-5 lg:text-2xl xl:mb-7 xl:text-3xl">
-                                Tour by Categories
-                            </h5>
-                            <ul className="font-poppins text-new-200 grid gap-2 text-sm md:gap-3 md:text-base lg:gap-4">
-                                <li className="transition-all hover:text-white">
-                                    <a href="#">Outdoor Activities</a>
-                                </li>
-                                <li className="transition-all hover:text-white">
-                                    <a href="#">City Tours </a>
-                                </li>
-                                <li className="transition-all hover:text-white">
-                                    <a href="#">Cultural & Thematic Tours</a>
-                                </li>
-                                <li className="transition-all hover:text-white">
-                                    <a href="#">Indulgence & Luxury Tours</a>
-                                </li>
-                                <li className="transition-all hover:text-white">
-                                    <a href="#">Family Friendly Tours</a>
-                                </li>
-                                <li className="transition-all hover:text-white">
-                                    <a href="#">Relaxation Tours</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div data-aos="zoom-in">
-                            <h5 className="mb-2.5 text-lg font-bold md:mb-3.5 md:text-xl lg:mb-5 lg:text-2xl xl:mb-7 xl:text-3xl">
-                                Tripadvisor Sites
-                            </h5>
-                            <ul className="font-poppins text-new-200 grid gap-2 text-sm md:gap-3 md:text-base lg:gap-4">
-                                <li className="transition-all hover:text-white">
-                                    <a href="#">Jetsetter</a>
-                                </li>
-                                <li className="transition-all hover:text-white">
-                                    <a href="#">Cruise Critic</a>
-                                </li>
-                                <li className="transition-all hover:text-white">
-                                    <a href="#">Seat Guru</a>
-                                </li>
-                                <li className="transition-all hover:text-white">
-                                    <a href="#">Holiday Lettings</a>
-                                </li>
-                                <li className="transition-all hover:text-white">
-                                    <a href="#">Vacation Home</a>
-                                </li>
-                                <li className="transition-all hover:text-white">
-                                    <a href="#">Rentals</a>
-                                </li>
-                                <li className="transition-all hover:text-white">
-                                    <a href="#">Reco Trip Designers</a>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div>
-                            <h5 className="mb-2.5 text-lg font-bold md:mb-3.5 md:text-xl lg:mb-5 lg:text-2xl xl:mb-7 xl:text-3xl">Get in touch</h5>
-
-                            <p className="font-poppins text-new-200 text-lg md:text-base">
-                                Intrigued such's narrow cloud <br />
-                                set upon can my sleeping <br />
-                                could't alarm.
+                            <p className="!leading-[1.6]">
+                                Empowering learners worldwide with expert-led online courses, flexible learning paths, and career-boosting
+                                certifications — anytime, anywhere.
                             </p>
 
-                            <div className="*:border-nature-400 mt-[30px] flex gap-x-2 text-sm *:flex *:size-8 *:shrink-0 *:items-center *:justify-center *:rounded-full *:border *:text-white md:gap-x-3 md:text-base lg:text-lg *:lg:size-10 xl:text-xl">
-                                <a rel="nofollow" target="_blank" href="#" className="transition-all hover:bg-white hover:text-[#1877F2]">
-                                    <i className="fa-brands fa-facebook-f"></i>
+                            <div className="mt-[20px] md:mt-[35px]">
+                                <a
+                                    href="https://www.facebook.com/"
+                                    target="_blank"
+                                    className="text-primary-600 hover:text-primary-500 inline-block text-[20px] leading-none transition-all ltr:mr-[8px] ltr:last:mr-0 rtl:ml-[8px] rtl:last:ml-0"
+                                >
+                                    <i className="ri-facebook-fill"></i>
                                 </a>
-
-                                <a rel="nofollow" target="_blank" href="#" className="transition-all hover:bg-white hover:text-[#131418]">
-                                    <i className="fa-brands fa-x-twitter"></i>
+                                <a
+                                    href="https://www.twitter.com/"
+                                    target="_blank"
+                                    className="text-primary-600 hover:text-primary-500 inline-block text-[20px] leading-none transition-all ltr:mr-[8px] ltr:last:mr-0 rtl:ml-[8px] rtl:last:ml-0"
+                                >
+                                    <i className="ri-twitter-x-fill"></i>
                                 </a>
-
-                                <a rel="nofollow" target="_blank" href="#" className="transition-all hover:bg-white hover:text-[#0A66C2]">
-                                    <i className="fa-brands fa-linkedin-in"></i>
+                                <a
+                                    href="https://www.linkedin.com/"
+                                    target="_blank"
+                                    className="text-primary-600 hover:text-primary-500 inline-block text-[20px] leading-none transition-all ltr:mr-[8px] ltr:last:mr-0 rtl:ml-[8px] rtl:last:ml-0"
+                                >
+                                    <i className="ri-linkedin-fill"></i>
                                 </a>
-
-                                <a rel="nofollow" target="_blank" href="#" className="transition-all hover:bg-white hover:text-[#E4405F]">
-                                    <i className="fa-brands fa-instagram"></i>
+                                <a
+                                    href="https://www.dribbble.com/"
+                                    target="_blank"
+                                    className="text-primary-600 hover:text-primary-500 inline-block text-[20px] leading-none transition-all ltr:mr-[8px] ltr:last:mr-0 rtl:ml-[8px] rtl:last:ml-0"
+                                >
+                                    <i className="ri-dribbble-fill"></i>
                                 </a>
                             </div>
                         </div>
+
+                        <div className="ltr:xl:pl-[130px] rtl:xl:pr-[130px]">
+                            <h3 className="!mb-[18px] !text-[16px] !leading-[1.2] !font-semibold !text-gray-700 md:!text-lg dark:!text-gray-100">
+                                Popular Categories
+                            </h3>
+                            <ul>
+                                <li className="mb-[10px] last:mb-0">
+                                    <Link
+                                        href="#"
+                                        className="hover:text-primary-600 inline-block text-gray-500 transition-all lg:text-[15px] xl:text-[16px] dark:text-gray-400"
+                                    >
+                                        Web Development
+                                    </Link>
+                                </li>
+                                <li className="mb-[10px] last:mb-0">
+                                    <Link
+                                        href="#"
+                                        className="hover:text-primary-600 inline-block text-gray-500 transition-all lg:text-[15px] xl:text-[16px] dark:text-gray-400"
+                                    >
+                                        Data Science
+                                    </Link>
+                                </li>
+                                <li className="mb-[10px] last:mb-0">
+                                    <Link
+                                        href="#"
+                                        className="hover:text-primary-600 inline-block text-gray-500 transition-all lg:text-[15px] xl:text-[16px] dark:text-gray-400"
+                                    >
+                                        Analysis & Reporting
+                                    </Link>
+                                </li>
+                                <li className="mb-[10px] last:mb-0">
+                                    <Link
+                                        href="#"
+                                        className="hover:text-primary-600 inline-block text-gray-500 transition-all lg:text-[15px] xl:text-[16px] dark:text-gray-400"
+                                    >
+                                        Business & Marketing
+                                    </Link>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div className="ltr:xl:pl-[130px] rtl:xl:pr-[130px]">
+                            <h3 className="!mb-[18px] !text-[16px] !leading-[1.2] !font-semibold !text-gray-700 md:!text-lg dark:!text-gray-100">
+                                Quick Links
+                            </h3>
+                            <ul>
+                                <li className="mb-[10px] last:mb-0">
+                                    <Link
+                                        href="/"
+                                        className="hover:text-primary-600 inline-block text-gray-500 transition-all lg:text-[15px] xl:text-[16px] dark:text-gray-400"
+                                    >
+                                        Home
+                                    </Link>
+                                </li>
+                                <li className="mb-[10px] last:mb-0">
+                                    <Link
+                                        href="#"
+                                        className="hover:text-primary-600 inline-block text-gray-500 transition-all lg:text-[15px] xl:text-[16px] dark:text-gray-400"
+                                    >
+                                        About Us
+                                    </Link>
+                                </li>
+                                <li className="mb-[10px] last:mb-0">
+                                    <Link
+                                        href="/pricing"
+                                        className="hover:text-primary-600 inline-block text-gray-500 transition-all lg:text-[15px] xl:text-[16px] dark:text-gray-400"
+                                    >
+                                        Pricing Plans
+                                    </Link>
+                                </li>
+                                <li className="mb-[10px] last:mb-0">
+                                    <Link
+                                        href="#"
+                                        className="hover:text-primary-600 inline-block text-gray-500 transition-all lg:text-[15px] xl:text-[16px] dark:text-gray-400"
+                                    >
+                                        Contact Us
+                                    </Link>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div className="ltr:xl:pl-[80px] rtl:xl:pr-[80px]">
+                            <h3 className="!mb-[18px] !text-[16px] !leading-[1.2] !font-semibold !text-gray-700 md:!text-lg dark:!text-gray-100">
+                                Get in Touch
+                            </h3>
+                            <ul>
+                                <li className="mb-[10px] text-gray-500 last:mb-0 lg:text-[15px] xl:text-[16px] dark:text-gray-400">
+                                    Email:{' '}
+                                    <a href="mailto:support@trezo.com" className="text-primary-500 hover:text-primary-800 transition-all">
+                                        support@trezo.com
+                                    </a>
+                                </li>
+                                <li className="mb-[10px] text-gray-500 last:mb-0 lg:text-[15px] xl:text-[16px] dark:text-gray-400">
+                                    Phone:{' '}
+                                    <a href="tell:+1(555)123-4567" className="text-primary-500 hover:text-primary-800 transition-all">
+                                        +1 (555) 123-4567
+                                    </a>
+                                </li>
+                                <li className="mb-[10px] text-gray-500 last:mb-0 lg:text-[15px] xl:text-[16px] dark:text-gray-400">
+                                    Location: <span className="font-semibold">123 Learning Ave, Knowledge City, USA</span>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
-
-                    <hr className="!bg-nature-500 my-6 h-px md:my-8 lg:my-12 xl:my-[60px]" />
-
-                    <p
-                        data-aos="fade-out"
-                        className="font-poppins text-primary-10 text-center text-sm tracking-tight md:text-base lg:text-lg xl:text-xl 2xl:text-2xl"
-                    >
-                        Copyright &copy;2024 Homelist, All right reserved.
-                    </p>
                 </div>
             </div>
-        </footer>
+
+            <div className="py-[25px] md:py-[30px]">
+                <div className="container mx-auto px-[12px] sm:max-w-[540px] md:max-w-[720px] lg:max-w-[960px] xl:max-w-[1308px]">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 xl:gap-[25px]">
+                        <div className="text-center ltr:lg:text-left rtl:lg:text-right">
+                            <p className="!leading-[1.6]">
+                                © <span className="text-purple-500">Trezo</span> is Proudly Owned by{' '}
+                                <a href="https://envytheme.com/" target="_blank" className="text-primary-500 transition-all hover:underline">
+                                    EnvyTheme
+                                </a>
+                            </p>
+                        </div>
+
+                        <div className="items-center justify-end gap-[15px] text-center lg:flex">
+                            <Link href="#" className="hover:text-primary-500 mx-[7px] mt-[10px] inline-block transition-all lg:mx-0 lg:mt-0">
+                                Terms of Service
+                            </Link>
+                            <div className="hidden h-[15px] w-[1px] bg-gray-200 lg:block dark:bg-gray-800"></div>
+                            <Link href="#" className="hover:text-primary-500 mx-[7px] mt-[10px] inline-block transition-all lg:mx-0 lg:mt-0">
+                                Privacy Policy
+                            </Link>
+                            <div className="hidden h-[15px] w-[1px] bg-gray-200 lg:block dark:bg-gray-800"></div>
+                            <Link href="#" className="hover:text-primary-500 mx-[7px] mt-[10px] inline-block transition-all lg:mx-0 lg:mt-0">
+                                Cookie Policy
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </>
     );
 }

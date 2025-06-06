@@ -23,7 +23,7 @@ class CategoryUpdateRequest extends FormRequest
     {
         return [
             'title' => 'string|max:50',
-            'color' => 'string|min:7|max:7',
+            // 'color' => 'string|min:7|max:7',
             'media' => "image|mimes:jpeg,png,jpg|max:2048",
             'is_featured' => '',
         ];
