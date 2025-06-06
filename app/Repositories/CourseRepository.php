@@ -44,6 +44,28 @@ class CourseRepository extends Repository
         }
     }
 
+    /**
+     * Get all courses by category id.
+     *
+     * @param int $categoryId
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public static function findAllByCategoryId($categoryId, $limit = 10)
+    {
+        try {
+
+            return static::query()
+                // ->whereNull('parent_id')
+                ->where('category_id', $categoryId)
+                ->latest('id')
+                // ->with('image')
+                ->take($limit)
+                ->get();
+        } catch (\Exception $e) {
+            throw new \Exception('Error fetching courses by category: ' . $e->getMessage());
+        }
+    }
+
     public static function storeByRequest(CourseStoreRequest $request)
     {
         $isActive = false;

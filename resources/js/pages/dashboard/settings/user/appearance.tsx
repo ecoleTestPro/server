@@ -10,7 +10,7 @@ import SettingsLayout from '@/layouts/dashboard/layout';
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Appearance settings',
-        href: '/settings/appearance',
+        href: 'dashboard/settings/appearance',
     },
 ];
 
