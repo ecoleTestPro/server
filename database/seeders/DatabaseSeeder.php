@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             InstructorSeeder::class,
 
             CategorySeeder::class,
+            CourseSeeder::class,
             // GuestSeeder::class,
             // Other seeders can be added here
         ]);

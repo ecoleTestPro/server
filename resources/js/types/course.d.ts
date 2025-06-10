@@ -22,11 +22,29 @@ export interface ICourse {
     id: number | string;
     image: string;
     title: string;
+    excerpt: string;
     description: string;
     duration: string;
     lectures: string | number;
-    price: string | number;
+    price: number;
+    regular_price: number;
     author: string;
+    is_featured: boolean;
+    is_published: boolean;
+    price_includes_tax: boolean;
+    location_mode: string;
+    attachment?: string;
+    attachment_media?: IMedia;
+    periodicity?: {
+        value: number;
+        unit: PeriodicityUnitEnum;
+    };
+    categories?: ICourseCategory[];
+    media?: IMedia[];
+    created_at?: string;
+    updated_at?: string;
+    slug?: string; // Optional slug for SEO-friendly URLs
+    // [key: string]: any; // Allows for additional properties
 }
 
 
