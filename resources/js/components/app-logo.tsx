@@ -1,14 +1,23 @@
 import AppLogoIcon from './app-logo-icon';
 
-export default function AppLogo() {
+interface AppLogoProps {
+    showText?: boolean;
+    width?: number;
+    height?: number;
+}
+
+export default function AppLogo({ showText = false, width = 52, height = 52 }: AppLogoProps) {
     return (
         <>
-            <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-md">
-                <AppLogoIcon className="size-5 fill-current text-white dark:text-black" />
+            <div className="cursor-pointer">
+                <AppLogoIcon width={width} height={height} className="cursor-pointer" />
             </div>
-            <div className="ml-1 grid flex-1 text-left text-sm">
-                <span className="mb-0.5 truncate leading-none font-semibold">Laravel Starter Kit</span>
-            </div>
+
+            {showText && (
+                <div className="ml-1 grid flex-1 text-left text-sm">
+                    <span className="mb-0.5 truncate leading-none font-semibold">Ecole test pro</span>
+                </div>
+            )}
         </>
     );
 }

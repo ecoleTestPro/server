@@ -1,0 +1,79 @@
+.bg-primary-50 {
+    background-color: oklch(0.98 0.04 144.16);
+}
+
+.bg-primary-100 {
+    background-color: oklch(0.96 0.05 144.16);
+}
+
+.bg-primary-200 {
+    background-color: oklch(0.94 0.06 144.16);
+}
+
+.bg-primary-300 {
+    background-color: oklch(0.92 0.07 144.16);
+}
+
+.bg-primary-400 {
+    background-color: oklch(0.9 0.09 144.16);
+}
+
+.bg-primary-500 {
+    background-color: oklch(0.84 0.11 144.16);
+}
+
+.bg-primary-600 {
+    background-color: oklch(0.52 0.13 144.16);
+}
+
+.bg-primary-700 {
+    background-color: oklch(0.52 0.13 144.16);
+}
+
+.bg-primary-800 {
+    background-color: oklch(0.52 0.13 144.16);
+}
+
+.bg-primary-900 {
+    background-color: oklch(0.52 0.13 144.16);
+}
+
+bg-secondary-50 {
+    background-color: oklch(0.98 0.06 253.28);
+}
+
+bg-secondary-100 {
+    background-color: oklch(0.96 0.07 253.28);
+}
+
+bg-secondary-200 {
+    background-color: oklch(0.94 0.08 253.28);
+}
+
+bg-secondary-300 {
+    background-color: oklch(0.92 0.09 253.28);
+}
+
+bg-secondary-400 {
+    background-color: oklch(0.9 0.11 253.28);
+}
+
+bg-secondary-500 {
+    background-color: oklch(0.84 0.13 253.28);
+}
+
+bg-secondary-600 {
+    background-color: oklch(0.56 0.16 253.28);
+}
+
+bg-secondary-700 {
+    background-color: oklch(0.56 0.16 253.28);
+}
+
+bg-secondary-800 {
+    background-color: oklch(0.56 0.16 253.28);
+}
+
+bg-secondary-900 {
+    background-color: oklch(0.56 0.16 253.28);
+}

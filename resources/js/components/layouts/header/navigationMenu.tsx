@@ -44,38 +44,39 @@ export default function NavMenu({ menu }: NavMenuProps) {
     };
     return (
         <>
-            <div className="flex w-full">
-                {menu.map((item, index) => (
-                    <div key={index}>
-                        <div
-                            className={`cursor-pointer border-b-2 ${isCurrent(item) ? 'border-primary' : 'border-transparent'}`}
-                            onClick={() => onClick(item)}
-                        >
-                            {/* <NavigationMenuTrigger> */}
-                            <span className="hover:text-accent-foreground focus:text-accent-foreground flex items-center rounded-md px-2 py-2 text-sm text-black transition">
-                                {item.label}
-                                {item.children && (
-                                    <span className="ml-1">
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            fill="none"
-                                            viewBox="0 0 24 24"
-                                            strokeWidth={1.5}
-                                            stroke="currentColor"
-                                            className={`size-4 ${isCurrent(item) ? 'text-primary' : 'text-gray-500'}`}
-                                            style={{
-                                                transform: isCurrent(item) ? 'rotate(180deg)' : 'rotate(0deg)',
-                                                transition: 'transform 0.3s ease',
-                                            }}
-                                        >
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                                        </svg>
-                                    </span>
-                                )}
-                            </span>
-                        </div>
-                    </div>
-                ))}
+            <div className="flex flex-1 items-center justify-end md:justify-between">
+                <nav aria-label="Global" className="hidden md:block">
+                    <ul className="flex items-center gap-6 text-sm">
+                        {menu.map((item, index) => (
+                            <li key={index}>
+                                <a
+                                    className={`cursor-pointer text-gray-500 transition hover:text-gray-500/75 ${isCurrent(item) ? 'border-primary' : 'border-transparent'}`}
+                                    onClick={() => onClick(item)}
+                                >
+                                    {item.label}
+                                    {item.children && (
+                                        <span className="ml-1">
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                strokeWidth={1.5}
+                                                stroke="currentColor"
+                                                className={`size-4 ${isCurrent(item) ? 'text-primary' : 'text-gray-500'}`}
+                                                style={{
+                                                    transform: isCurrent(item) ? 'rotate(180deg)' : 'rotate(0deg)',
+                                                    transition: 'transform 0.3s ease',
+                                                }}
+                                            >
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                                            </svg>
+                                        </span>
+                                    )}
+                                </a>
+                            </li>
+                        ))}
+                    </ul>
+                </nav>
             </div>
 
             {target && isOpen && (
@@ -117,13 +118,7 @@ export default function NavMenu({ menu }: NavMenuProps) {
                                     <div className="flex">
                                         {target.children.items.map((itemChild, index) => (
                                             <div className="mb-4" key={index}>
-                                                <div className="p-4">
-                                                    {itemChild.label && (
-                                                        <span className="">
-                                                            {itemChild.label}
-                                                        </span>
-                                                    )}
-                                                </div>
+                                                <div className="p-4">{itemChild.label && <span className="">{itemChild.label}</span>}</div>
                                                 <div>
                                                     {itemChild.subItems &&
                                                         itemChild.subItems.map((itemChildSubItem, index) => (
