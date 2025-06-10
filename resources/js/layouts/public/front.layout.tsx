@@ -5,6 +5,7 @@ import { type PropsWithChildren } from 'react';
 import Header from '@/components/layouts/header/header';
 import HeaderTwo from '@/components/layouts/header/headerTwo';
 import Footer from '../../components/layouts/footer/footer';
+import FooterTwo from '@/components/layouts/footer/footerTwo';
 
 interface DefaultLayoutProps {
     name?: string;
@@ -19,8 +20,8 @@ export default function DefaultLayout({ children, title, description }: PropsWit
             {/* <Header /> */}
             <HeaderTwo />
             {children}
-            <Footer />
-            {/* <FooterTwo /> */}
+            {/* <Footer /> */}
+            <FooterTwo />
         </div>
     );
 }
