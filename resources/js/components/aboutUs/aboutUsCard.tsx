@@ -1,6 +1,10 @@
 function AboutUsCard() {
     return (
-        <section className="body-font text-gray-600 dark:text-white dark:bg-[#0a0e19]">
+        <section className="body-font text-gray-600 dark:text-white dark:bg-[#0a0e19]"  style={{
+            backgroundImage: 'url(assets/images/pattern-15.png)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+        }} >
             <div className="py-[40px] md:py-[50px] lg:py-[60px] xl:py-[80px]">
                 <div className="relative z-[1] container mx-auto px-[12px] 2xl:max-w-[1320px]">
                     <div className="grid grid-cols-1 items-center gap-[25px] lg:grid-cols-2">
@@ -17,7 +21,7 @@ function AboutUsCard() {
                             <div className="absolute top-1/2 -mt-[15px] max-w-[120px] -translate-y-1/2 rounded-[4.294px] drop-shadow-xl md:-mt-[17px] md:max-w-[200px] lg:max-w-[219px] ltr:right-0 ltr:lg:right-[30px] rtl:left-0 rtl:lg:left-[30px]">
                                 <img
                                     src="assets/images/card-icon-1.png"
-                                    className="inline-block rounded-[4.294px]"
+                                    className="inline-block rounded-[4.294px] animate-image-flotting"
                                     alt="courses-sales-image"
                                     width={100}
                                     height={195}

@@ -46,7 +46,6 @@ function FeaturesSection() {
         },
     ];
 
-    // Pour la disposition personnalisée
     const gridStyles = [
         'col-span-2 row-span-2', // 1er élément : 2/3 largeur, 2 lignes
         'col-span-1 row-span-2', // 2e élément : 1/3 largeur, 2 lignes
@@ -57,26 +56,24 @@ function FeaturesSection() {
 
     return (
         <div className="relative overflow-hidden">
-            <section className="relative z-10 py-20 text-white">
-                <div className="container mx-auto">
-                    <div className="grid grid-cols-3 grid-rows-2 gap-6 md:grid-cols-3 md:grid-rows-2" style={{ minHeight: '600px' }}>
+            <section className="relative z-10 py-10 text-white md:py-20">
+                <div className="container mx-auto px-4">
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-3">
                         {features.map((feature, idx) => (
                             <div
                                 key={idx}
-                                className={` ${gridStyles[idx] || 'col-span-1 row-span-1'} ${
-                                    'flex flex-col justify-between ' +
-                                    'cursor-pointer bg-white p-6 text-black dark:text-neutral-100' +
-                                    'relative z-10 transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-xl'
-                                } `}
+                                className={`flex flex-col justify-between ${gridStyles[idx] || 'col-span-1 row-span-1'} ${'relative z-10 cursor-pointer bg-white p-4 text-black transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-xl md:p-6 dark:text-neutral-100'}`}
                                 style={{
-                                    minHeight: idx < 2 ? 340 : 180,
-                                    maxHeight: idx < 2 ? 420 : 260,
+                                    minHeight: idx < 2 ? '300px' : '180px',
+                                    maxHeight: idx < 2 ? '400px' : '260px',
                                 }}
                             >
-                                {feature.img && <img src={feature.img} alt={feature.alt} className="mb-4 h-16 w-16" />}
-                                <h3 className="mb-2 text-xl font-bold">{feature.title}</h3>
-                                <p className="text-black-600 dark:text-neutral-100">{feature.description}</p>
-                                <a href={feature.link} className="text-primary hover:underline">
+                                {feature.img && (
+                                    <img src={feature.img} alt={feature.alt} className="mb-2 h-12 w-12 object-cover md:mb-4 md:h-16 md:w-16" />
+                                )}
+                                <h3 className="mb-2 text-lg font-bold md:text-xl">{feature.title}</h3>
+                                <p className="text-black-600 text-sm md:text-base dark:text-neutral-100">{feature.description}</p>
+                                <a href={feature.link} className="text-primary text-sm hover:underline md:text-base">
                                     {feature.linkLabel}
                                 </a>
                             </div>
@@ -84,7 +81,6 @@ function FeaturesSection() {
                     </div>
                 </div>
             </section>
-            {/* Animation CSS pour l'image flottante */}
             <style>
                 {`
                 @keyframes floatSlow {

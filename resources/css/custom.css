@@ -161,6 +161,16 @@ border-secondary-900 {
 
 
 /* Animations personnalisées */
+
+
+/*
+ * Fade-in animations
+*/
+
+.animate-fade-in-down {
+    animation: fadeInDown 0.6s ease-out forwards;
+}
+
 @keyframes fadeInDown {
     0% {
         opacity: 0;
@@ -173,6 +183,11 @@ border-secondary-900 {
     }
 }
 
+
+.animate-fade-in-up {
+    animation: fadeInUp 0.6s ease-out forwards;
+}
+
 @keyframes fadeInUp {
     0% {
         opacity: 0;
@@ -183,6 +198,11 @@ border-secondary-900 {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+.animate-gradient {
+    background-size: 200% 200%;
+    animation: gradient 6s ease-in-out infinite;
 }
 
 @keyframes gradient {
@@ -199,19 +219,68 @@ border-secondary-900 {
     }
 }
 
-.animate-fade-in-down {
-    animation: fadeInDown 0.6s ease-out forwards;
-}
-
-.animate-fade-in-up {
-    animation: fadeInUp 0.6s ease-out forwards;
-}
-
-.animate-gradient {
-    background-size: 200% 200%;
-    animation: gradient 6s ease-in-out infinite;
-}
 
 .animation-delay-200 {
     animation-delay: 0.2s;
+}
+
+.animate-slide-up {
+    animation: slide-up 0.8s ease-out forwards;
+}
+
+@keyframes slide-up {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-pulse-scale {
+    animation: pulse-scale 2s infinite ease-in-out;
+}
+
+@keyframes pulse-scale {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+.animation-primary-text-color {
+    color: oklch(0.84 0.11 144.16);
+    animation: primary-text-color 2s infinite alternate ease-in-out;
+}
+
+@keyframes primary-text-color {
+    0% {
+        color: oklch(0.84 0.11 144.16);
+    }
+
+    100% {
+        color: oklch(0.52 0.13 144.16);
+    }
+}
+
+.animation-image-flotting {
+    animation: image-flotting 10s infinite alternate ease-in-out;
+}
+
+@keyframes image-flotting {
+    0% {
+        transform: translateY(0);
+    }
+
+    100% {
+        transform: translateY(-20px);
+    }
 }

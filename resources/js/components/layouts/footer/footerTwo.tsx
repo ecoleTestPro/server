@@ -2,6 +2,13 @@ import AppLogo from '@/components/app-logo';
 import NewsletterCTA from '@/components/newsletter/newletter-cta';
 import { useTranslation } from 'react-i18next';
 
+export const CONTACT_INFO = {
+    phone1: '+41 78 225 58 07',
+    phone2: '+225 0706915705',
+    address: "Siège social: 5ème étage de la Résidence Pacy En face de l'immeuble CGK, Cocody Angré Djibi - 9ème tranche, Abidjan Côte d'Ivoire",
+    email: 'info@ecoletestpro.com',
+};
+
 export default function FooterTwo() {
     const { t } = useTranslation();
 
@@ -32,13 +39,6 @@ export default function FooterTwo() {
         },
     ];
 
-    const contactInfo = {
-        phone1: '+41 78 225 58 07',
-        phone2: '+225 0706915705',
-        address: "Siège social: 5ème étage de la Résidence Pacy En face de l'immeuble CGK, Cocody Angré Djibi - 9ème tranche, Abidjan Côte d'Ivoire",
-        email: 'info@ecoletestpro.com',
-    };
-
     return (
         <>
             {/* CTA */}
@@ -59,7 +59,7 @@ export default function FooterTwo() {
                                     Boostez votre carrière avec TestPro !
                                 </h5>
 
-                                <p className='text-gray-600 dark:text-gray-400 text-left text-[20px] '>
+                                <p className="text-left text-[20px] text-gray-600 dark:text-gray-400">
                                     Formations certifiantes et sur-mesure, adaptées aux besoins du secteur éducatif et professionnel. Accédez à de
                                     nouvelles opportunités grâce à un enseignement de qualité et à des programmes de reconversion innovants.
                                 </p>
@@ -122,31 +122,31 @@ export default function FooterTwo() {
                             <ul>
                                 <li className="mb-[10px] text-gray-500 last:mb-0 lg:text-[15px] xl:text-[16px] dark:text-gray-400">
                                     Email:
-                                    <a href={`mailto:${contactInfo.email}`} className="text-gray-500 transition-all hover:text-gray-800">
-                                        {contactInfo.email}
+                                    <a href={`mailto:${CONTACT_INFO.email}`} className="text-gray-500 transition-all hover:text-gray-800">
+                                        {CONTACT_INFO.email}
                                     </a>
                                 </li>
                                 <li className="mb-[10px] text-gray-500 last:mb-0 lg:text-[15px] xl:text-[16px] dark:text-gray-400">
                                     Téléphone 1:
                                     <a href="tel:+41782255807" className="text-gray-500 transition-all hover:text-gray-800">
-                                        {contactInfo.phone1}
+                                        {CONTACT_INFO.phone1}
                                     </a>
                                 </li>
                                 <li className="mb-[10px] text-gray-500 last:mb-0 lg:text-[15px] xl:text-[16px] dark:text-gray-400">
                                     Téléphone 2:
-                                    <a href={`tel:${contactInfo.phone2}`} className="text-gray-500 transition-all hover:text-gray-800">
-                                        {contactInfo.phone2}
+                                    <a href={`tel:${CONTACT_INFO.phone2}`} className="text-gray-500 transition-all hover:text-gray-800">
+                                        {CONTACT_INFO.phone2}
                                     </a>
                                 </li>
                                 <li className="mb-[10px] text-gray-500 last:mb-0 lg:text-[15px] xl:text-[16px] dark:text-gray-400">
                                     Adresse:
-                                    <span className="font-semibold">{contactInfo.address}</span>
+                                    <span className="font-semibold">{CONTACT_INFO.address}</span>
                                 </li>
                             </ul>
                         </div>
                     </div>
                 </div>
-                <div className="absolute top-0 right-0 bottom-0 left-0 -z-[1] bg-gradient-to-br from-secondary-100 to-secondary-200 dark:hidden dark:from-gray-900 dark:to-gray-800" />
+                <div className="from-secondary-100 to-secondary-200 absolute top-0 right-0 bottom-0 left-0 -z-[1] bg-gradient-to-br dark:hidden dark:from-gray-900 dark:to-gray-800" />
             </div>
 
             <div className="py-[25px] md:py-[30px]">
