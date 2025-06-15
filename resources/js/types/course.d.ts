@@ -64,9 +64,18 @@ export interface ICourseCategory {
 
 
 export interface ICustomSharedData {
+    /**
+     * Paginated list of courses
+     */
     courses?: IDataWithPagination<ICourse>;
 
+    /**
+     * Paginated list of course categories
+     */
     categories?: IDataWithPagination<ICourseCategory>;
-    categoriesTree: ICourseCategory[];
+
+    /**
+     * List of course categories with their courses
+     */
     categoriesWithCourses: ICourseCategory[];
 }

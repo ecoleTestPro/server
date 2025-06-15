@@ -16,16 +16,6 @@ interface HeaderNavigationMenuItemProps {
 }
 
 export default function HeaderNavigationMenuItem({ menuItem }: HeaderNavigationMenuItemProps) {
-    // const mergeMenu = (): { left: IMainMenuItem[]; right: IMainMenuItem[] } => {
-    //     let leftInitial: IMainMenuItem[] = [...menu];
-    //     let rightInitial: IMainMenuItem[] = [];
-
-    //     if (menuRight && menuRight.length > 0) {
-    //         rightInitial = [...menuRight];
-    //     }
-    //     return { left: leftInitial, right: rightInitial };
-    // };
-
     if (!menuItem || !menuItem.id || !menuItem.label) {
         return null; // Si l'élément n'est pas valide, on ne rend rien
     }
@@ -37,10 +27,17 @@ export default function HeaderNavigationMenuItem({ menuItem }: HeaderNavigationM
                     {/* Si l'élément a des enfants, on utilise un Trigger et du contenu */}
                     {menuItem.children ? (
                         <>
-                            <NavigationMenuTrigger className="cursor-pointer"> {menuItem.label}</NavigationMenuTrigger>
-                            <NavigationMenuContent>
+                            <NavigationMenuTrigger
+                                className="cursor-pointer"
+                                onClick={(e) => e.preventDefault()} // Trigger on click
+                            >
+                                {menuItem.label}
+                            </NavigationMenuTrigger>
+                            <NavigationMenuContent className="z-50">
+                                {' '}
+                                {/* Increased z-index to 50 */}
                                 <ul
-                                    className={`grid gap-2 ${
+                                    className={`z-20 grid gap-2 ${
                                         menuItem.children.featured
                                             ? 'md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]'
                                             : 'w-[400px] md:w-[500px] md:grid-cols-2 lg:w-[600px]'

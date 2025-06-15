@@ -39,24 +39,28 @@ export default function HeaderTwo() {
     const updateCourseMenuPart = () => {
         const updatedMenu = mainMenu.map((item) => {
             if (data && data.categoriesWithCourses && item.id === 'formations') {
+                console.log('[CATEGORIES_WITH_COURSES]', data.categoriesWithCourses);
+
                 return {
                     ...item,
                     children: {
                         id: 'formations-children',
                         title: 'Formations',
                         description: 'Liste des formations',
-                        items: data.categoriesWithCourses.map((category) => ({
-                            id: category.id?.toString() || '',
-                            label: category.title,
-                            href: `/formations/${category.id}`,
-                            title: category.title,
-                            subItems:
-                                category.courses?.map((course) => ({
-                                    id: course.id.toString(),
-                                    label: course.title,
-                                    href: `/formations/${category.id}/courses/${course.id}`,
-                                })) || [],
-                        })),
+                        items: data.categoriesWithCourses
+                            .filter((c) => c.parent_id === null)
+                            .map((category) => ({
+                                id: category.id?.toString() || '',
+                                label: category.title,
+                                href: `/formations/${category.id}`,
+                                title: category.title,
+                                subItems:
+                                    category.courses?.map((course) => ({
+                                        id: course.id.toString(),
+                                        label: course.title,
+                                        href: `/formations/${category.id}/courses/${course.id}`,
+                                    })) || [],
+                            })),
                     },
                 };
             }
@@ -128,7 +132,13 @@ export default function HeaderTwo() {
                 </section>
             </header>
 
-            <HeaderNavTwoSidebar menu={mainMenu}  menuRight={mainMenuRight} isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} className="md:hidden" />
+            <HeaderNavTwoSidebar
+                menu={mainMenu}
+                menuRight={mainMenuRight}
+                isOpen={isSidebarOpen}
+                onClose={() => setIsSidebarOpen(false)}
+                className="md:hidden"
+            />
         </>
     );
 }
