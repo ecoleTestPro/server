@@ -1,10 +1,10 @@
 import AboutUsCard from '@/components/aboutUs/aboutUsCard';
 import AboutUsCardTwo from '@/components/aboutUs/aboutUsCardTwo';
-import ContactCard from '@/components/contactUs/ContactCard';
-import ContactUs from '@/components/contactUs/ContactUs';
 import OurCurrentCourses from '@/components/courses/list/our-current-courses';
+import Faq from '@/components/faq/Faq';
 import FeaturesSection from '@/components/hero/featuresSection';
 import HeroHomePage from '@/components/hero/HeroHomePage';
+import Testimonials from '@/components/testimonial/Testimonials';
 import DefaultLayout from '@/layouts/public/front.layout';
 import { type SharedData } from '@/types';
 import { usePage } from '@inertiajs/react';
@@ -21,7 +21,9 @@ export default function Welcome() {
                 <FeaturesSection />
                 <OurCurrentCourses />
                 <AboutUsCardTwo />
-                <ContactCard />
+                <Testimonials />
+                <Faq />
+                {/* <ContactCard /> */}
             </div>
         </DefaultLayout>
     );

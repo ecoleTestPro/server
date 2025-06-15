@@ -71,6 +71,7 @@ export default function HeaderTwo() {
 
     return (
         <>
+            {/* Top Header & Infos flash section */}
             <header className="bg-white shadow-sm">
                 <section className="px-4 py-3 sm:px-6 lg:px-8">
                     <div className="flex items-center justify-between bg-gray-50 px-4 py-2 text-sm text-gray-700 sm:px-6 dark:bg-gray-800 dark:text-white">

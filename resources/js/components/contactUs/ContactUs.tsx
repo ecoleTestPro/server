@@ -1,7 +1,7 @@
 import { CLASS_NAME } from '@/data/styles/style.constant';
 import { useTranslation } from 'react-i18next';
-import Badgene from '../ui/badge-one';
 import ContactForm from './ContactForm';
+import TitleBadgeOne from '../ui/badge-one';
 
 const ContactUs: React.FC = () => {
     const { t } = useTranslation();
@@ -17,7 +17,7 @@ const ContactUs: React.FC = () => {
 
                         <div>
                             <div className="mb-[25px] md:mb-[30px] md:max-w-[540px] lg:mb-[35px] lg:max-w-full xl:mb-[40px]">
-                                <Badgene title="Contact" />
+                                <TitleBadgeOne title="Contact" />
                                 <h2 className="!mb-0 !text-[24px] !leading-[1.2] -tracking-[.5px] md:!text-[28px] md:-tracking-[.6px] lg:!text-[34px] lg:-tracking-[.8px] xl:!text-[36px] xl:-tracking-[1px]">
                                     {t('CONTACT_US.TITLE', 'Comment pouvons-nous vous aider ? ')}
                                 </h2>

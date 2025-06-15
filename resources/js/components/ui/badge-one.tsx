@@ -1,12 +1,12 @@
 import React from 'react'
 
 
-interface BadgeneProps {
+interface TitleBadgeOneProps {
     title:string
     classNameColor?: string,
     bgColor?:string
 }
-export default function Badgene({ title, classNameColor, bgColor }: BadgeneProps) {
+export default function TitleBadgeOne({ title, classNameColor, bgColor }: TitleBadgeOneProps) {
   return (
     <div className="relative mt-[10px] mb-[20px] inline-block">
         <span className="bg-primary-600 absolute top-[4.5px] h-[5px] w-[5px] -rotate-[6.536deg] ltr:-left-[3.6px] rtl:-right-[3.6px]"></span>

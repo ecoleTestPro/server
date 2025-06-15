@@ -284,3 +284,33 @@ border-secondary-900 {
         transform: translateY(-20px);
     }
 }
+
+
+.animate-scroll {
+    animation: scrollText 10s linear infinite;
+    display: none;
+}
+
+.hover .animate-scroll {
+    display: block;
+}
+
+.hover .static-text {
+    display: none;
+}
+
+@keyframes scrollText {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+@media (min-width: 768px) {
+    .hover .animate-scroll {
+        display: block;
+    }
+}
