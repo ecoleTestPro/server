@@ -79,7 +79,7 @@ export default function Header() {
             {/* Top Header */}
             <div className="bg-secondary flex items-center justify-between px-4 py-2 text-sm text-white">
                 <div>
-                    <span>Bienvenue sur EcoleTestProp !</span>
+                    <span></span>
                 </div>
                 <div className="flex space-x-4">
                     <Link href="/a-propos" className="hover:underline">

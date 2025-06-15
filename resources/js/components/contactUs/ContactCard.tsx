@@ -1,4 +1,6 @@
+import { Link } from '@inertiajs/react';
 import { CONTACT_INFO } from '../layouts/footer/footerTwo';
+import { ROUTE_MAP } from '@/utils/route.util';
 
 export const TEAMS = [
     {
@@ -36,7 +38,7 @@ const ContactCard = () => {
                                     <h2 className="mt-2 text-4xl font-bold">Besoin d'informations ?</h2>
                                     <p className="mt-2 text-2xl">Notre équipe se tient à votre disposition pour vous accompagner dans vos projets.</p>
 
-                                    <div className="mt-4">
+                                    <div className="my-4">
                                         <p className="flex items-center">
                                             <span className="mr-2">✉️</span>
                                             <a href={`mailto:${CONTACT_INFO.email}`} className="text-lg font-semibold hover:underline">
@@ -60,15 +62,15 @@ const ContactCard = () => {
                                         </p>
                                     </div>
 
-                                    <button className="bg-secondary hover:bg-secondary-600 mt-4 cursor-pointer rounded-full px-4 py-2 font-semibold text-white transition duration-300 hover:underline hover:shadow-lg">
+                                    <Link href={ROUTE_MAP.contact.link} className=" bg-secondary hover:bg-secondary-600 mt-4 cursor-pointer rounded-full px-4 py-2 font-semibold text-white transition duration-300 hover:underline hover:shadow-lg">
                                         Nous contacter
-                                    </button>
+                                    </Link>
                                 </div>
 
                                 <div className="mt-4 w-full md:mt-0 md:ml-6 md:w-7/12">
                                     <div className="item-center flex h-fit flex-col">
                                         <h3 className="text-xl font-semibold">Notre équipe</h3>
-                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                                        <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-3">
                                             {TEAMS.map((teamMember, index) => (
                                                 <div key={index} className="flex flex-col items-center">
                                                     <img
@@ -87,12 +89,16 @@ const ContactCard = () => {
                             </div>
                         </div>
 
-                        <div className="absolute -top-[60px] -z-[1] blur-[150px] ltr:left-[65px] rtl:right-[65px]">
-                            <img src="assets/images/front-pages/shape4.png" alt="shape1" width={530} height={530} />
-                        </div>
-                        <div className="absolute -bottom-[30px] -z-[1] blur-[125px] ltr:right-[20px] rtl:left-[20px]">
-                            <img src="assets/images/card-icon-1.png" alt="shape1" width={447} height={453} />
-                        </div>
+                        {false && (
+                            <>
+                                <div className="absolute -top-[60px] -z-[1] blur-[150px] ltr:left-[65px] rtl:right-[65px]">
+                                    <img src="assets/images/front-pages/shape4.png" alt="shape1" width={530} height={530} />
+                                </div>
+                                <div className="absolute -bottom-[30px] -z-[1] blur-[125px] ltr:right-[20px] rtl:left-[20px]">
+                                    <img src="assets/images/card-icon-1.png" alt="shape1" width={447} height={453} />
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
             </section>

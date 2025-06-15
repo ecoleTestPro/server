@@ -19,7 +19,13 @@ abstract class PublicAbstractController extends Controller
         return $categories;
     }
 
-    protected function defaultData()
+    /**
+     * Get the default data including categories with their respective courses.
+     *
+     * @return array An associative array containing categories with their courses.
+     */
+
+    protected function getDefaultData()
     {
         return [
             'categoriesWithCourses' => $this->courseWithCategoryTree(),

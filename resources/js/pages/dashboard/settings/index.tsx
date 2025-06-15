@@ -65,7 +65,7 @@ export default function SettingPage({ mustVerifyEmail, status }: { mustVerifyEma
             },
             { id: 'entreprises', label: 'Offre pour entreprises', href: '/entreprise' },
             { id: 'evenements', label: 'Événements', href: '/evenements' },
-            { id: 'blog', label: 'Blog/News', href: '/blog' },
+            { id: 'blog', label: 'Blogs', href: '/blog' },
         ],
         mainMenuRight: headerConfig?.mainMenuRight || [
             { id: 'a-propos', label: 'À propos de EcoleTestProp', href: '/a-propos' },

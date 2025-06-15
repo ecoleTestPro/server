@@ -15,12 +15,152 @@ use Inertia\Inertia;
 
 class PublicController extends PublicAbstractController
 {
+
+    private $default_data = [];
+
+    public function __construct()
+    {
+        $this->default_data = $this->getDefaultData();
+    }
     public function index()
     {
-        $data = $this->defaultData();
+        $data = $this->default_data;
 
         return Inertia::render('home', [
             'data' => $data,
+        ]);
+    }
+
+    public function courses()
+    {
+        $data =  $this->default_data;
+
+        return Inertia::render('courses', [
+            'data' => $data,
+        ]);
+    }
+
+    public function courseCategory($categoryId)
+    {
+        $data =  $this->default_data;
+
+        return Inertia::render('course-category', [
+            'data' => $data,
+            'categoryId' => $categoryId,
+        ]);
+    }
+
+    public function courseDetail($categoryId, $courseId)
+    {
+        $data =  $this->default_data;
+
+        return Inertia::render('course-detail', [
+            'data' => $data,
+            'categoryId' => $categoryId,
+            'courseId' => $courseId,
+        ]);
+    }
+
+    public function consulting()
+    {
+        $data =  $this->default_data;
+
+        return Inertia::render('consulting', [
+            'data' => $data,
+        ]);
+    }
+
+    public function auditMaturity()
+    {
+        $data =  $this->default_data;
+
+        return Inertia::render('consulting-audit', [
+            'data' => $data,
+        ]);
+    }
+
+    public function consultingTesting()
+    {
+        // Conseil Testing
+        return view('consulting-testing');
+    }
+
+    public function services()
+    {
+        // Services
+        return view('services');
+    }
+
+    public function blogs()
+    {
+        // Blogs
+        return view('blogs');
+    }
+
+    public function careers()
+    {
+        // Carrières
+        return view('careers');
+    }
+
+    public function faqs()
+    {
+        return Inertia::render('public/faqs', [
+            ...$this->default_data,
+        ]);
+    }
+
+
+    public function aboutUs()
+    {
+        return Inertia::render('public/about-us', [
+            ...$this->default_data,
+        ]);
+    }
+
+    public function contact()
+    {
+        return Inertia::render('public/contact-us', [
+            ...$this->default_data,
+        ]);
+    }
+
+    public function contactSubmit()
+    {
+        // Handle the contact form submission
+        // Validate the request data
+        request()->validate([
+            'firstName' => 'required|string|max:255',
+            'lastName'  => 'required|string|max:255',
+            'email'     => 'required|email|max:255',
+            'phone'     => 'required|string|max:255',
+            'subject'   => 'required|string|max:225',
+            'message'   => 'required|string|max:1000',
+        ]);
+
+        // Here you would typically handle the contact form submission,
+        // such as sending an email or saving the message to the database.  
+
+
+        // For now, we just redirect back with a success message
+        // In a real application, you would send an email or save the message to the database
+        return back()->withSuccess('Your message has been sent successfully. We will get back to you soon.');
+        // Here you would typically handle the contact form submission,
+        // such as sending an email or saving the message to the database.
+        // For now, we just redirect back with a success message.
+    }
+
+    public function privacyPolicy()
+    {
+        return Inertia::render('public/cgu/privacy-policy', [
+            ...$this->default_data,
+        ]);
+    }
+
+    public function termsOfService()
+    {
+        return Inertia::render('public/cgu/terms', [
+            ...$this->default_data,
         ]);
     }
 

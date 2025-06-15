@@ -1,10 +1,11 @@
 import { IMainMenuItem } from "@/types/header.type";
+import { ROUTE_MAP } from "@/utils/route.util";
 
 export const DEFULAT_MAIN_MENU: IMainMenuItem[] = [
     {
         id: 'formations',
         label: 'Formations',
-        href: '/formations',
+        href: ROUTE_MAP.courses.link,
         title: 'Formations',
         description:
             'Les formations vous préparent au passage de nombreuses certifications internationales. Validez vos compétences et accroissez votre employabilité ainsi que votre efficacité au sein de votre entreprise.',
@@ -12,18 +13,17 @@ export const DEFULAT_MAIN_MENU: IMainMenuItem[] = [
     {
         id: 'certifications',
         label: 'Certifications',
-        href: '/certifications',
+        href: ROUTE_MAP.courses.link,
         title: 'Certifications',
         description: 'Découvrez nos certifications qui valident vos compétences professionnelles.',
     },
-    { id: 'entreprises', label: 'Offre pour entreprises', href: '/entreprise' },
-    { id: 'evenements', label: 'Événements', href: '/evenements' },
-    { id: 'blog', label: 'Blog/News', href: '/blog' },
+    { id: 'entreprises', label: 'Offre pour entreprises', href: ROUTE_MAP.services.link },
+    { id: 'blog', label: 'Blog/News', href: ROUTE_MAP.blogs.link },
 ];
 
 export const DEFULAT_MAIN_MENU_RIGHT: IMainMenuItem[] = [
-    { id: 'a-propos', label: 'À propos de EcoleTestProp', href: '/a-propos' },
-    { id: 'contact', label: 'Contact', href: '/contact', isCta: true }
+    { id: 'a-propos', label: 'À propos de nous', href: ROUTE_MAP.aboutUs.link },
+    { id: 'contact', label: 'Contact', href: ROUTE_MAP.contact.link, isCta: true }
 ];
 
 const FORMATION_MAIN_MENU_PART_CHILDREN = {

@@ -8,12 +8,13 @@ import { IMainMenuItem } from '@/types/header.type';
 
 interface NavigationMenuProps {
     menu: IMainMenuItem[];
+    menuRight?: IMainMenuItem[];
     isOpen: boolean;
     onClose: () => void;
     className?: string;
 }
 
-export function HeaderNavTwoSidebar({ menu, isOpen, onClose, className }: NavigationMenuProps) {
+export function HeaderNavTwoSidebar({ menu, menuRight, isOpen, onClose, className }: NavigationMenuProps) {
     const [openMenus, setOpenMenus] = useState<{ [key: string]: boolean }>({});
 
     const toggleMenu = (id: string) => {

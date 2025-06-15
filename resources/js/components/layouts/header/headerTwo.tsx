@@ -3,6 +3,7 @@ import AppearanceToggleDropdown from '@/components/appearance-dropdown';
 import { DEFULAT_MAIN_MENU, DEFULAT_MAIN_MENU_RIGHT } from '@/data/data.constant';
 import { SharedData } from '@/types';
 import { IMainMenuItem } from '@/types/header.type';
+import { ROUTE_MAP } from '@/utils/route.util';
 import { Link, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -28,16 +29,16 @@ export default function HeaderTwo() {
         setMainMenu(mainMenuInit);
         setMainMenuRight(mainMenuRightInit);
 
-        if (data.categoriesWithCourses) {
+        if (data && data.categoriesWithCourses && data.categoriesWithCourses.length > 0) {
             updateCourseMenuPart();
         }
 
-        console.log('[Header] data', data.categoriesWithCourses);
+        console.log('[Header] data', data);
     }, [data, page]);
 
     const updateCourseMenuPart = () => {
         const updatedMenu = mainMenu.map((item) => {
-            if (item.id === 'formations') {
+            if (data && data.categoriesWithCourses && item.id === 'formations') {
                 return {
                     ...item,
                     children: {
@@ -72,24 +73,23 @@ export default function HeaderTwo() {
     return (
         <>
             {/* Top Header & Infos flash section */}
-            <header className="bg-white shadow-sm">
-                <section className="px-4 py-3 sm:px-6 lg:px-8">
-                    <div className="flex items-center justify-between bg-gray-50 px-4 py-2 text-sm text-gray-700 sm:px-6 dark:bg-gray-800 dark:text-white">
-                        <span>{t('HEADER.WELCOME', 'Bienvenue sur EcoleTestProp !')}</span>
-                        <div className="flex space-x-4">
-                            <Link href="/a-propos" className="text-primary-600 dark:text-primary-400 hover:underline">
-                                {t('HEADER.ABOUT', 'À propos')}
-                            </Link>
-                            <Link href="/contact" className="text-primary-600 dark:text-primary-400 hover:underline">
-                                {t('HEADER.CONTACT', 'Contact')}
-                            </Link>
+            <header className="shadow-sm">
+                {false && (
+                    <section className="px-4 py-1 sm:px-6 lg:px-8">
+                        <div className="flex items-center justify-between bg-gray-50 px-4 py-2 text-sm text-gray-700 sm:px-6 dark:bg-gray-800 dark:text-white">
+                            <span>{t('HEADER.WELCOME', '')}</span>
+                            <div className="flex space-x-4">
+                                <Link href={ROUTE_MAP.aboutUs.link} className="text-primary-600 dark:text-primary-400 hover:underline">
+                                    {t('HEADER.CAREERS', 'Carrières')}
+                                </Link>
+                            </div>
                         </div>
-                    </div>
-                </section>
+                    </section>
+                )}
 
                 {/* sticky top-0 z-50 */}
-                <section className="px-4 py-3 sm:px-6 lg:px-8">
-                    <div className="flex items-center justify-between">
+                <section className="">
+                    <div className="flex items-center justify-between px-4 py-2 sm:px-6 lg:px-8">
                         <div className="flex flex-1">
                             <Link href={logo.href} className="flex items-center space-x-2">
                                 <AppLogo width={80} height={60} className="" />
@@ -122,13 +122,13 @@ export default function HeaderTwo() {
                         </div>
                     </div>
 
-                    <div className="hidden md:block">
-                        <HeaderNavTwo menu={mainMenu} />
+                    <div className="hidden px-4 py-2 md:block md:py-1 lg:px-8">
+                        <HeaderNavTwo menu={mainMenu} menuRight={mainMenuRight} />
                     </div>
                 </section>
             </header>
 
-            <HeaderNavTwoSidebar menu={mainMenu} isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} className="md:hidden" />
+            <HeaderNavTwoSidebar menu={mainMenu}  menuRight={mainMenuRight} isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} className="md:hidden" />
         </>
     );
 }

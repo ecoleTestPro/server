@@ -314,3 +314,21 @@ border-secondary-900 {
         display: block;
     }
 }
+
+@keyframes gradientAnimation {
+    0% {
+        background: var(--gradient-base);
+    }
+
+    50% {
+        background: var(--gradient-reverse);
+    }
+
+    100% {
+        background: var(--gradient-base);
+    }
+}
+
+.animate-gradient {
+    animation: gradientAnimation 10s ease-in-out infinite;
+}
