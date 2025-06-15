@@ -4,12 +4,13 @@ interface AppLogoProps {
     showText?: boolean;
     width?: number;
     height?: number;
+    className?: string;
 }
 
-export default function AppLogo({ showText = false, width = 52, height = 52 }: AppLogoProps) {
+export default function AppLogo({ showText = false, width = 52, height = 52, className }: AppLogoProps) {
     return (
         <>
-            <div className="cursor-pointer">
+            <div className={`cursor-pointer ${className}`}>
                 <AppLogoIcon width={width} height={height} className="cursor-pointer" />
             </div>
 

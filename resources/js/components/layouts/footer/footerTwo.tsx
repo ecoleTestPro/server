@@ -1,7 +1,10 @@
 import AppLogo from '@/components/app-logo';
 import NewsletterCTA from '@/components/newsletter/newletter-cta';
+import { useTranslation } from 'react-i18next';
 
 export default function FooterTwo() {
+    const { t } = useTranslation();
+
     const quickLinks = [
         {
             link: '/about',
@@ -47,15 +50,16 @@ export default function FooterTwo() {
 
             <div className="relative z-[1] py-[70px] md:py-[90px] lg:py-[110px] xl:py-[130px] 2xl:py-[150px] dark:bg-[#0a0e19]">
                 <div className="container mx-auto px-[12px] sm:max-w-[540px] md:max-w-[720px] lg:max-w-[960px] xl:max-w-[1308px]">
-                    <div className="grid grid-cols-1 gap-[25px] sm:grid-cols-2 lg:grid-cols-4">
+                    <div className="grid grid-cols-1 gap-[25px] sm:grid-cols-2 lg:grid-cols-3">
                         {/*  */}
                         <div className="ltr:xl:-mr-[35px] rtl:xl:-ml-[35px]">
                             <AppLogo />
                             <div>
-                                <h6 className="!mb-[10px] !text-xl !leading-[1.2] !font-medium !text-gray-900 dark:!text-white">
+                                <h5 className="!mb-[10px] !text-xl !leading-[1.2] !font-medium !text-gray-900 dark:!text-white">
                                     Boostez votre carrière avec TestPro !
-                                </h6>
-                                <p>
+                                </h5>
+
+                                <p className='text-gray-600 dark:text-gray-400 text-left text-[20px] '>
                                     Formations certifiantes et sur-mesure, adaptées aux besoins du secteur éducatif et professionnel. Accédez à de
                                     nouvelles opportunités grâce à un enseignement de qualité et à des programmes de reconversion innovants.
                                 </p>
@@ -91,6 +95,7 @@ export default function FooterTwo() {
                                 </a>
                             </div>
                         </div>
+
                         <div className="ltr:xl:pl-[130px] rtl:xl:pr-[130px]">
                             <h3 className="!mb-[18px] !text-[16px] !leading-[1.2] !font-semibold !text-gray-700 md:!text-lg dark:!text-gray-100">
                                 Quick Links
@@ -150,20 +155,20 @@ export default function FooterTwo() {
                         <div className="text-center ltr:lg:text-left rtl:lg:text-right">
                             <p>
                                 © <span className="text-gray-500">Ecole test pro </span>
-                                {new Date().getFullYear()} - All Rights Reserved.
+                                {new Date().getFullYear()} - {t('FOOTER.COPYRIGHT', 'Tous droits réservés.')}
                             </p>
                         </div>
                         <div className="items-center justify-end gap-[15px] text-center lg:flex">
                             <a href="#" className="mx-[7px] mt-[10px] inline-block transition-all hover:text-gray-500 lg:mx-0 lg:mt-0">
-                                Terms of Service
+                                {t('FOOTER.TERMS', 'Terms & Conditions')}
                             </a>
                             <div className="hidden h-[15px] w-[1px] bg-gray-200 lg:block dark:bg-gray-800"></div>
                             <a href="#" className="mx-[7px] mt-[10px] inline-block transition-all hover:text-gray-500 lg:mx-0 lg:mt-0">
-                                Privacy Policy
+                                {t('FOOTER.PRIVACY', 'Politique de Confidentialité')}
                             </a>
                             <div className="hidden h-[15px] w-[1px] bg-gray-200 lg:block dark:bg-gray-800"></div>
                             <a href="#" className="mx-[7px] mt-[10px] inline-block transition-all hover:text-gray-500 lg:mx-0 lg:mt-0">
-                                Cookie Policy
+                                {t('FOOTER.COOKIE', 'Politique de Cookies')}
                             </a>
                         </div>
                     </div>

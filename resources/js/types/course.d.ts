@@ -45,6 +45,7 @@ export interface ICourse {
     updated_at?: string;
     slug?: string; // Optional slug for SEO-friendly URLs
     // [key: string]: any; // Allows for additional properties
+    nextSession?: string; // Optional next session date
 }
 
 

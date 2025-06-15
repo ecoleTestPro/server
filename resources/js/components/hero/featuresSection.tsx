@@ -55,19 +55,9 @@ function FeaturesSection() {
         'col-span-1 row-span-1', // 5e élément : 1/3 largeur, 1 ligne
     ];
 
-    // Image flottante animée en arrière-plan
-    const floatingImageUrl = 'https://cdn.pixabay.com/photo/2017/01/06/19/15/soap-bubble-1958650_1280.png';
-
     return (
         <div className="relative overflow-hidden">
-            {/* Image flottante animée */}
-            <img
-                src={floatingImageUrl}
-                alt="Floating Bubble"
-                className="animate-float-slow pointer-events-none absolute top-10 left-1/2 z-0 w-96 opacity-20"
-                style={{ transform: 'translateX(-50%)' }}
-            />
-            <section className="bg-primary relative z-10 py-20 text-white">
+            <section className="relative z-10 py-20 text-white">
                 <div className="container mx-auto">
                     <div className="grid grid-cols-3 grid-rows-2 gap-6 md:grid-cols-3 md:grid-rows-2" style={{ minHeight: '600px' }}>
                         {features.map((feature, idx) => (

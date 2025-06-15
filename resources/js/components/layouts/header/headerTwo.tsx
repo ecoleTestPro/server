@@ -5,6 +5,8 @@ import { SharedData } from '@/types';
 import { IMainMenuItem } from '@/types/header.type';
 import { Link, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { HeaderNavTwoSidebar } from './HeaderNavTwoMobile';
 import { HeaderNavTwo } from './header-nav-two';
 import HeaderSearch from './header-search';
 import HeaderUserAction from './headerUserAction';
@@ -12,17 +14,15 @@ import HeaderUserAction from './headerUserAction';
 export default function HeaderTwo() {
     const { auth, data } = usePage<SharedData>().props;
     const page = usePage<SharedData>();
+    const { t } = useTranslation();
 
     const [mainMenu, setMainMenu] = useState<IMainMenuItem[]>(DEFULAT_MAIN_MENU);
     const [mainMenuRight, setMainMenuRight] = useState<IMainMenuItem[]>(DEFULAT_MAIN_MENU_RIGHT);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-    // Logo
-    const logo = {
-        href: '/',
-    };
+    const logo = { href: '/' };
 
     useEffect(() => {
-        // Initialize main menu and right menu when component mounts or data changes
         const mainMenuInit: IMainMenuItem[] = DEFULAT_MAIN_MENU;
         const mainMenuRightInit: IMainMenuItem[] = DEFULAT_MAIN_MENU_RIGHT;
         setMainMenu(mainMenuInit);
@@ -33,7 +33,7 @@ export default function HeaderTwo() {
         }
 
         console.log('[Header] data', data.categoriesWithCourses);
-    }, [data, page, data]);
+    }, [data, page]);
 
     const updateCourseMenuPart = () => {
         const updatedMenu = mainMenu.map((item) => {
@@ -65,69 +65,69 @@ export default function HeaderTwo() {
         setMainMenu(updatedMenu);
     };
 
+    const toggleSidebar = () => {
+        setIsSidebarOpen(!isSidebarOpen);
+    };
+
     return (
-        <div>
-            <section>
-                {/* Top Header */}
-                <div className="flex items-center justify-between bg-white px-4 py-2 text-sm text-white">
-                    <div>
-                        <span>Bienvenue sur EcoleTestProp !</span>
-                    </div>
-
-                    <div className="flex space-x-4">
-                        <Link href="/a-propos" className="text-primary hover:underline">
-                            À propos
-                        </Link>
-                        <Link href="/contact" className="text-primary hover:underline">
-                            Contact
-                        </Link>
-                    </div>
-                </div>
-            </section>
-
-            <section className="relative z-50 flex min-h-[65px] border-b border-gray-300 bg-white px-4 py-3 tracking-wide sm:px-10">
-                <div className="mx-auto flex w-full max-w-screen-xl flex-wrap items-center gap-4">
-                    <Link href={logo.href} className="flex items-center space-x-2">
-                        <div className="flex items-center">
-                            <AppLogo width={100} height={85} />
+        <>
+            <header className="bg-white shadow-sm">
+                <section className="px-4 py-3 sm:px-6 lg:px-8">
+                    <div className="flex items-center justify-between bg-gray-50 px-4 py-2 text-sm text-gray-700 sm:px-6 dark:bg-gray-800 dark:text-white">
+                        <span>{t('HEADER.WELCOME', 'Bienvenue sur EcoleTestProp !')}</span>
+                        <div className="flex space-x-4">
+                            <Link href="/a-propos" className="text-primary-600 dark:text-primary-400 hover:underline">
+                                {t('HEADER.ABOUT', 'À propos')}
+                            </Link>
+                            <Link href="/contact" className="text-primary-600 dark:text-primary-400 hover:underline">
+                                {t('HEADER.CONTACT', 'Contact')}
+                            </Link>
                         </div>
-                    </Link>
-
-                    <div className="ml-auto flex gap-4">
-                        <HeaderSearch />
                     </div>
-                </div>
-            </section>
+                </section>
 
-            <section className="bg-white">
-                <div className="mx-auto flex h-16 max-w-screen-xl items-center gap-8">
-                    <div className="flex flex-1 items-center justify-end md:justify-between">
-                        <HeaderNavTwo menu={mainMenu} />
-                        {/* <NavMenu menu={mainMenu} /> */}
+                {/* sticky top-0 z-50 */}
+                <section className="px-4 py-3 sm:px-6 lg:px-8">
+                    <div className="flex items-center justify-between">
+                        <div className="flex flex-1">
+                            <Link href={logo.href} className="flex items-center space-x-2">
+                                <AppLogo width={80} height={60} className="" />
+                            </Link>
 
-                        <div className="flex items-center gap-4">
-                            <HeaderUserAction />
+                            <div className="flex-1">
+                                <HeaderSearch className="hidden sm:block" />
+                            </div>
 
-                            {/* <AppearanceToggleTab /> */}
-                            <AppearanceToggleDropdown />
-
-                            <button className="block rounded-sm bg-gray-100 p-2.5 text-gray-600 transition hover:text-gray-600/75 md:hidden">
-                                <span className="sr-only">Toggle menu</span>
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className="size-5"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
+                            <div className="ml-auto flex items-center gap-3">
+                                <HeaderUserAction />
+                                <AppearanceToggleDropdown />
+                                <button
+                                    onClick={toggleSidebar}
+                                    aria-label={t('HEADER.TOGGLE_MENU', 'Ouvrir/fermer le menu')}
+                                    className="rounded-sm bg-gray-100 p-2 text-gray-600 hover:text-gray-800 md:hidden dark:bg-gray-700 dark:text-gray-300 dark:hover:text-white"
                                 >
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-                                </svg>
-                            </button>
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        className="size-5"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                    >
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </section>
-        </div>
+
+                    <div className="hidden md:block">
+                        <HeaderNavTwo menu={mainMenu} />
+                    </div>
+                </section>
+            </header>
+
+            <HeaderNavTwoSidebar menu={mainMenu} isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} className="md:hidden" />
+        </>
     );
 }

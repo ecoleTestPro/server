@@ -19,9 +19,10 @@ interface NavigationMenuProps {
     menu: IMainMenuItem[];
     className?: string;
     isMobile?: boolean;
+    mobile?: boolean;
 }
 
-export function HeaderNavTwo({ menu, className, isMobile }: NavigationMenuProps) {
+export function HeaderNavTwo({ menu, className, isMobile, mobile = false }: NavigationMenuProps) {
     // Icônes prédéfinies pour le menu "With Icon" ou pour d'autres cas si nécessaire
     const iconMap: { [key: string]: React.ReactNode } = {
         Backlog: <CircleHelpIcon />,
@@ -31,6 +32,10 @@ export function HeaderNavTwo({ menu, className, isMobile }: NavigationMenuProps)
 
     if (!menu) {
         return null; // Si le menu est vide ou non défini, on ne rend rien
+    }
+
+    if (mobile) {
+        return <div>......</div>;
     }
 
     return (
