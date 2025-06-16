@@ -52,6 +52,7 @@ export interface ICourse {
 export interface ICourseCategory {
     id?: number;
     title: string;
+    description?: string;
     is_featured: boolean;
     parent_id?: number | string; // Optional parent category ID
     parent?: ICourseCategory; // Optional parent category for nested categories

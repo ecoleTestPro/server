@@ -31,53 +31,83 @@ export default function Header() {
         setMainMenuRight(mainMenuRightInit);
 
         if (data && data.categoriesWithCourses && data.categoriesWithCourses.length > 0) {
+            console.log('[Header] categoriesWithCourses', data.categoriesWithCourses);
             updateCourseMenuPart(mainMenuInit, setMainMenu, data);
         }
-
-        console.log('[Header] data', data);
     }, [data, page]);
+
+    const buildCourseItems = (category: ICourseCategory): MenuChildItem[] => {
+        console.log('[buildCourseItems] category courses', category?.courses);
+        if (!category.courses || category.courses.length === 0) return [];
+
+        return category.courses.slice(0, 5).map((course) => ({
+            id: course.id?.toString() || '',
+            label: course.title || 'Cours sans titre',
+            href: ROUTE_MAP.courseDetail(category.id || 0, course.id || 0).link,
+            description: course.excerpt || '',
+            image: course.image || undefined,
+        }));
+    };
+
+    const buildCategoryItems = (categories: ICourseCategory[], parentId: number | null = null): MenuChildItem[] => {
+        // Filtrer les catégories dont le parent est `parentId`
+        const filteredCategories = categories.filter((category) => category); // .parent_id === parentId
+
+        const output: MenuChildItem[] = filteredCategories.map((category) => {
+            console.log('[buildCategoryItems] category title', category.title);
+
+            const defaultDescription =
+                'Les formations vous préparent au passage de nombreuses certifications internationales. Validez vos compétences et accroissez votre employabilité ainsi que votre efficacité au sein de votre entreprise.';
+
+            let childItems: MenuChildItem[] = [];
+
+            // Appeler récursivement uniquement sur les enfants directs
+            if (category.children && category.children.length > 0) {
+                console.log('[buildCategoryItems] category children', category.children);
+                childItems = buildCategoryItems(category.children, category.id || null);
+            } else {
+                childItems = buildCourseItems(category);
+            }
+
+            const menuChildItem: MenuChildItem = {
+                id: category.id?.toString() || '',
+                label: category.title || 'Catégorie sans titre',
+                description: category.description || defaultDescription,
+                href: ROUTE_MAP.courseCategory(category.id || 0).link,
+                image: category.image?.src || 'assets/images/bg-03.jpg',
+                subItems: childItems,
+            };
+
+            return menuChildItem;
+        });
+
+        // // TODO : ajouter dynamiquement
+        // output.push({
+        //     id: 'programmes-de-reconversion',
+        //     label: PROGRAMMES_DE_RECONVERSION.label,
+        //     href: PROGRAMMES_DE_RECONVERSION.href,
+        //     description: PROGRAMMES_DE_RECONVERSION.description,
+        //     image: PROGRAMMES_DE_RECONVERSION.image,
+        // });
+
+        return output;
+    };
+
+    const PROGRAMMES_DE_RECONVERSION: MenuChildItem = {
+        id: 'programmes-de-reconversion',
+        label: 'Programmes de reconversion',
+        href: '#',
+        description: 'Découvrez nos programmes de reconversion professionnelle.',
+        image: 'assets/images/bg-03.jpg',
+    };
 
     const updateCourseMenuPart = (
         mainMenu: IMainMenuItem[],
         setMainMenu: (menu: IMainMenuItem[]) => void,
         data: { categoriesWithCourses?: ICourseCategory[] },
     ) => {
-        return;
-        // Fonction pour construire les éléments de cours
-        const buildCourseItems = (category: ICourseCategory): MenuChildItem[] => {
-            if (!category.courses || category.courses.length === 0) return [];
-
-            return category.courses.map((course) => ({
-                id: course.id?.toString() || '',
-                label: course.title || 'Cours sans titre',
-                href: ROUTE_MAP.courseDetail(category.id || 0, course.id || 0).link,
-                description: course.excerpt || '',
-                image: course.image || undefined,
-            }));
-        };
-
-        // Fonction récursive pour construire les éléments de catégorie et leurs sous-catégories
-        const buildCategoryItems = (categories: ICourseCategory[], parentId: number | null = null): MenuChildItem[] => {
-            return categories
-                .filter((category) => (category.parent_id ?? null) === parentId)
-                .map((category) => {
-                    // Construire les sous-catégories récursivement
-                    const childItems = buildCategoryItems(categories, category.id || null);
-                    // Construire les cours de la catégorie
-                    const courseItems = buildCourseItems(category);
-
-                    return {
-                        id: category.id?.toString() || '',
-                        label: category.title || 'Catégorie sans titre',
-                        href: ROUTE_MAP.courseCategory(category.id || 0).link,
-                        image: category.image || undefined,
-                        subItems: [...childItems, ...courseItems].length > 0 ? [...childItems, ...courseItems] : undefined,
-                    };
-                }) as MenuChildItem[];
-        };
-
         // Mettre à jour le menu principal
-        const updatedMenu = mainMenu.map((item): IMainMenuItem => {
+        const updatedMenu: IMainMenuItem[] = mainMenu.map((item): IMainMenuItem => {
             if (item.id !== 'formations' || !data?.categoriesWithCourses) {
                 return item;
             }
@@ -94,6 +124,8 @@ export default function Header() {
                 },
             };
         });
+
+        console.log('[Header] Updated main menu with courses', updatedMenu);
 
         setMainMenu(updatedMenu);
     };

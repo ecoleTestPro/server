@@ -16,7 +16,6 @@ export interface MenuChildren {
     href?: string;
     image?: string;
     items: MenuChildItem[];
-    featured?: MenuChildItem[];
 }
 
 
@@ -27,4 +26,5 @@ export interface MenuChildItem {
     description?: string;
     image?: string;
     subItems?: MenuChildItem[];
+    subItemsFeatured?: MenuChildItem[];
 }
