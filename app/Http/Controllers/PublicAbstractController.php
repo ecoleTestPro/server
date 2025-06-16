@@ -7,16 +7,22 @@ use App\Repositories\CourseRepository;
 
 abstract class PublicAbstractController extends Controller
 {
-    protected function courseWithCategoryTree()
+    /**
+     * Indicates whether to include courses in the category tree.
+     *
+     * @var bool
+     */
+    protected bool $includeCourses = false;
+
+    /**
+     * Get the course categories with their respective courses in a recursive tree structure.
+     *
+     * @param bool $includeCourses Whether to include courses in the category tree.
+     * @return array An associative array representing the category tree with courses.
+     */
+    protected function courseWithCategoryTree($includeCourses = false)
     {
-        $categories = CategoryRepository::parents();
-        // dd($categories);
-
-        foreach ($categories as $category) {
-            $category->courses = CourseRepository::findAllByCategoryId($category->id);
-        }
-
-        return $categories;
+        return CategoryRepository::getRecursiveTree($includeCourses);
     }
 
     /**
@@ -24,11 +30,10 @@ abstract class PublicAbstractController extends Controller
      *
      * @return array An associative array containing categories with their courses.
      */
-
     protected function getDefaultData()
     {
         return [
-            'categoriesWithCourses' => $this->courseWithCategoryTree(),
+            'categoriesWithCourses' => $this->courseWithCategoryTree(true),
         ];
     }
 }

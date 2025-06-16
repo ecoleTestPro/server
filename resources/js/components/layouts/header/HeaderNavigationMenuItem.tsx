@@ -33,14 +33,14 @@ export default function HeaderNavigationMenuItem({ menuItem }: HeaderNavigationM
                             >
                                 {menuItem.label}
                             </NavigationMenuTrigger>
-                            <NavigationMenuContent className="z-50">
+                            <NavigationMenuContent className="z-50 bg-gray-50">
                                 {' '}
                                 {/* Increased z-index to 50 */}
                                 <ul
                                     className={`z-20 grid gap-2 ${
                                         menuItem.children.featured
-                                            ? 'md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]'
-                                            : 'w-[400px] md:w-[500px] md:grid-cols-2 lg:w-[600px]'
+                                            ? 'md:w-[400px] lg:w-[500px] lg:grid-cols-5'
+                                            : 'w-[400px] md:w-[500px] md:grid-cols-3 lg:w-[600px]'
                                     }`}
                                 >
                                     {/* Gestion des éléments en vedette (featured) */}
@@ -62,9 +62,7 @@ export default function HeaderNavigationMenuItem({ menuItem }: HeaderNavigationM
                                                         {menuItem.children.featured[0].label || menuItem.children.title}
                                                     </div>
                                                     <p className="text-muted-foreground text-sm leading-tight">
-                                                        {menuItem.children.featured[0].description ||
-                                                            menuItem.children.description ||
-                                                            'No description available.'}
+                                                        {menuItem.children.featured[0].description || menuItem.children.description || ''}
                                                     </p>
                                                 </a>
                                             </NavigationMenuLink>
@@ -73,7 +71,7 @@ export default function HeaderNavigationMenuItem({ menuItem }: HeaderNavigationM
                                     {/* Gestion des items normaux */}
                                     {menuItem.children.items.map((child) => (
                                         <ListItem key={child.id} title={child.label} href={child.href || '#'}>
-                                            {child.description || 'No description available.'}
+                                            {child.description || ''}
                                         </ListItem>
                                     ))}
                                     {/* Gestion des sous-items s'ils existent */}
@@ -83,7 +81,7 @@ export default function HeaderNavigationMenuItem({ menuItem }: HeaderNavigationM
                                                 child.subItems &&
                                                 child.subItems.map((subItem) => (
                                                     <ListItem key={subItem.id} title={subItem.label} href={subItem.href || '#'}>
-                                                        {subItem.description || 'No description available.'}
+                                                        {subItem.description || ''}
                                                     </ListItem>
                                                 )),
                                         )}

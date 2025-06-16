@@ -13,6 +13,9 @@ interface IRouteMap {
 export const ROUTE_MAP: {
     home: IRouteMap;
     courses: IRouteMap;
+    courseDetail: (categoryId: number, id: number) => IRouteMap;
+    courseCategories: IRouteMap;
+    courseCategory: (categoryId: number) => IRouteMap;
     consulting: IRouteMap;
     services: IRouteMap;
     blogs: IRouteMap;
@@ -44,6 +47,22 @@ export const ROUTE_MAP: {
                 title: 'Course',
             },
         ],
+    },
+    courseDetail: (categoryId: number, id: number) => {
+        return {
+            title: 'Détail de la formation',
+            link: `/courses/${categoryId}/courses/${id}`,
+        }
+    },
+    courseCategories: {
+        title: 'Catégories de formations',
+        link: '/courses/categories',
+    },
+    courseCategory: (categoryId: number) => {
+        return {
+            title: 'Catégorie de formation',
+            link: `/courses/categories/${categoryId}`,
+        }
     },
     consulting: {
         title: 'Consulting',

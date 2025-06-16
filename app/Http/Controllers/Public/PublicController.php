@@ -26,6 +26,8 @@ class PublicController extends PublicAbstractController
     {
         $data = $this->default_data;
 
+        // dd($data);
+
         return Inertia::render('home', [
             'data' => $data,
         ]);

@@ -2,7 +2,8 @@ import AppLogo from '@/components/app-logo';
 import AppearanceToggleDropdown from '@/components/appearance-dropdown';
 import { DEFULAT_MAIN_MENU, DEFULAT_MAIN_MENU_RIGHT } from '@/data/data.constant';
 import { SharedData } from '@/types';
-import { IMainMenuItem } from '@/types/header.type';
+import { ICourseCategory } from '@/types/course';
+import { IMainMenuItem, MenuChildItem } from '@/types/header.type';
 import { ROUTE_MAP } from '@/utils/route.util';
 import { Link, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
@@ -30,41 +31,68 @@ export default function HeaderTwo() {
         setMainMenuRight(mainMenuRightInit);
 
         if (data && data.categoriesWithCourses && data.categoriesWithCourses.length > 0) {
-            updateCourseMenuPart();
+            updateCourseMenuPart(mainMenuInit, setMainMenu, data);
         }
 
         console.log('[Header] data', data);
     }, [data, page]);
 
-    const updateCourseMenuPart = () => {
-        const updatedMenu = mainMenu.map((item) => {
-            if (data && data.categoriesWithCourses && item.id === 'formations') {
-                console.log('[CATEGORIES_WITH_COURSES]', data.categoriesWithCourses);
+    const updateCourseMenuPart = (
+        mainMenu: IMainMenuItem[],
+        setMainMenu: (menu: IMainMenuItem[]) => void,
+        data: { categoriesWithCourses?: ICourseCategory[] },
+    ) => {
+        return;
+        // Fonction pour construire les éléments de cours
+        const buildCourseItems = (category: ICourseCategory): MenuChildItem[] => {
+            if (!category.courses || category.courses.length === 0) return [];
 
-                return {
-                    ...item,
-                    children: {
-                        id: 'formations-children',
-                        title: 'Formations',
-                        description: 'Liste des formations',
-                        items: data.categoriesWithCourses
-                            .filter((c) => c.parent_id === null)
-                            .map((category) => ({
-                                id: category.id?.toString() || '',
-                                label: category.title,
-                                href: `/formations/${category.id}`,
-                                title: category.title,
-                                subItems:
-                                    category.courses?.map((course) => ({
-                                        id: course.id.toString(),
-                                        label: course.title,
-                                        href: `/formations/${category.id}/courses/${course.id}`,
-                                    })) || [],
-                            })),
-                    },
-                };
+            return category.courses.map((course) => ({
+                id: course.id?.toString() || '',
+                label: course.title || 'Cours sans titre',
+                href: ROUTE_MAP.courseDetail(category.id || 0, course.id || 0).link,
+                description: course.excerpt || '',
+                image: course.image || undefined,
+            }));
+        };
+
+        // Fonction récursive pour construire les éléments de catégorie et leurs sous-catégories
+        const buildCategoryItems = (categories: ICourseCategory[], parentId: number | null = null): MenuChildItem[] => {
+            return categories
+                .filter((category) => (category.parent_id ?? null) === parentId)
+                .map((category) => {
+                    // Construire les sous-catégories récursivement
+                    const childItems = buildCategoryItems(categories, category.id || null);
+                    // Construire les cours de la catégorie
+                    const courseItems = buildCourseItems(category);
+
+                    return {
+                        id: category.id?.toString() || '',
+                        label: category.title || 'Catégorie sans titre',
+                        href: ROUTE_MAP.courseCategory(category.id || 0).link,
+                        image: category.image || undefined,
+                        subItems: [...childItems, ...courseItems].length > 0 ? [...childItems, ...courseItems] : undefined,
+                    };
+                }) as MenuChildItem[];
+        };
+
+        // Mettre à jour le menu principal
+        const updatedMenu = mainMenu.map((item): IMainMenuItem => {
+            if (item.id !== 'formations' || !data?.categoriesWithCourses) {
+                return item;
             }
-            return item;
+
+            console.log('[CATEGORIES_WITH_COURSES]', data.categoriesWithCourses);
+
+            return {
+                ...item,
+                children: {
+                    id: 'formations-children',
+                    title: 'Formations',
+                    description: 'Liste des formations',
+                    items: buildCategoryItems(data.categoriesWithCourses),
+                },
+            };
         });
 
         setMainMenu(updatedMenu);

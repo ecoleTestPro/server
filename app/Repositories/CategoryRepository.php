@@ -18,7 +18,7 @@ class CategoryRepository extends Repository
     public static function parents($limit = 9999)
     {
         return static::query()
-            // ->whereNull('parent_id')
+            ->whereNull('parent_id')
             ->latest('id')
             ->with('image')
             ->take($limit)
@@ -139,7 +139,7 @@ class CategoryRepository extends Repository
      *
      * @return array
      */
-    public static function getRecursiveTree()
+    public static function getRecursiveTree($includeCourses = false)
     {
         $categories = static::query()
             ->with('image')
@@ -153,7 +153,7 @@ class CategoryRepository extends Repository
             $categoriesByParent[$parentId][] = $category;
         }
 
-        $buildTree = function ($parentId) use (&$buildTree, $categoriesByParent) {
+        $buildTree = function ($parentId) use (&$buildTree, $categoriesByParent, $includeCourses) {
             $tree = [];
             if (isset($categoriesByParent[$parentId])) {
                 foreach ($categoriesByParent[$parentId] as $category) {
@@ -163,6 +163,7 @@ class CategoryRepository extends Repository
                         'src' => $category->imagePath,
                     ];
                     $node['children'] = $buildTree($category->id);
+                    $node['courses'] = $includeCourses == true ? CourseRepository::findAllByCategoryId($category->id) : [];
                     $tree[] = $node;
                 }
             }

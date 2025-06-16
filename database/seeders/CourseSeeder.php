@@ -12,7 +12,7 @@ class CourseSeeder extends Seeder
     public function run()
     {
         try {
-            $course1_PSPO = CourseRepository::query()->updateOrCreate([
+            $course1_PSPO = [
                 'title'              => 'PSPO I Formation certifiante - Scrum Product Owner',
                 'slug'               => 'pspo-i-formation-certifiante-scrum-product-owner',
                 'excerpt'            => "Cette formation vous permettra d'explorer le rôle de gestionnaire de programme, de produits ou de développement IT agile au sein d'un environnement complexe. Vous serez également préparé à l'examen de certification Professional Scrum Product Owner™ I (PSPO I) proposé par scrum.org.",
@@ -34,9 +34,10 @@ class CourseSeeder extends Seeder
                 ]),
                 // 'is_active' => true,
                 // 'view_count' => 0
-            ]);
+            ];
+            // $course1_PSPO = CourseRepository::query()->updateOrCreate($course1_PSPO);
 
-            $course2_PSM = CourseRepository::query()->updateOrCreate([
+            $course2_PSM = [
                 'title' => 'Formation certifiante - Scrum Master',
                 'slug' => 'formation-certifiante-scrum-master',
 
@@ -45,6 +46,7 @@ class CourseSeeder extends Seeder
                 'is_published' => true,
                 'location_mode' => "En présentiel à Abidjan ou classe à distance",
                 'attachment' => 'Livre de référence',
+
                 'periodicity_unit' => 'DAY',
                 'periodicity_value' => 5,
                 'price_includes_tax' => false,
@@ -59,7 +61,8 @@ class CourseSeeder extends Seeder
                 ]),
                 'is_active' => true,
                 'view_count' => 0
-            ]);
+            ];
+            $course2_PSM = CourseRepository::query()->updateOrCreate($course2_PSM);
         } catch (\Exception $e) {
             Log::error('CourseSeeder failed: ' . $e->getMessage());
             // Optionally, you can rethrow the exception if you want it to bubble up

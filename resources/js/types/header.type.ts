@@ -20,7 +20,7 @@ export interface MenuChildren {
 }
 
 
-interface MenuChildItem {
+export interface MenuChildItem {
     id: string;
     label: string;
     href: string;

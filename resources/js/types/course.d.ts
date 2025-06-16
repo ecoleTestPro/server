@@ -19,7 +19,7 @@ export interface IMedia {
 }
 
 export interface ICourse {
-    id: number | string;
+    id: number;
     image: string;
     title: string;
     excerpt: string;
