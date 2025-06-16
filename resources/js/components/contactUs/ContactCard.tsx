@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { CONTACT_INFO } from '../layouts/footer/footerTwo';
+import { CONTACT_INFO } from '../layouts/footer/footer';
 import { ROUTE_MAP } from '@/utils/route.util';
 
 export const TEAMS = [
