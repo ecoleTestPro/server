@@ -62,7 +62,7 @@ class CourseSeeder extends Seeder
                 'is_active' => true,
                 'view_count' => 0
             ];
-            $course2_PSM = CourseRepository::query()->updateOrCreate($course2_PSM);
+            // $course2_PSM = CourseRepository::query()->updateOrCreate($course2_PSM);
         } catch (\Exception $e) {
             Log::error('CourseSeeder failed: ' . $e->getMessage());
             // Optionally, you can rethrow the exception if you want it to bubble up

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Public;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\PublicAbstractController;
 use App\Http\Requests\SettingUpdateRequest;
+use App\Repositories\CourseRepository;
 use App\Repositories\SettingRepository;
 use App\Repositories\SocialMediaRepository;
 use Exception;
@@ -25,8 +26,9 @@ class PublicController extends PublicAbstractController
     public function index()
     {
         $data = $this->default_data;
+        $data['featured_courses'] = CourseRepository::getFeaturedCourses();
 
-        // dd($data);
+        // dd($featuredCourses);
 
         return Inertia::render('home', [
             'data' => $data,

@@ -71,6 +71,11 @@ export interface ICustomSharedData {
     courses?: IDataWithPagination<ICourse>;
 
     /**
+     * List of featured courses
+     */
+    featured_courses?: ICourse[];
+
+    /**
      * Paginated list of course categories
      */
     categories?: IDataWithPagination<ICourseCategory>;
@@ -78,5 +83,5 @@ export interface ICustomSharedData {
     /**
      * List of course categories with their courses
      */
-    categoriesWithCourses: ICourseCategory[];
+    categories_with_courses: ICourseCategory[];
 }

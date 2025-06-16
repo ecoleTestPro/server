@@ -33,7 +33,7 @@ abstract class PublicAbstractController extends Controller
     protected function getDefaultData()
     {
         return [
-            'categoriesWithCourses' => $this->courseWithCategoryTree(true),
+            'categories_with_courses' => $this->courseWithCategoryTree(true),
         ];
     }
 }

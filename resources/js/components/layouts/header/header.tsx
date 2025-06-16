@@ -30,8 +30,8 @@ export default function Header() {
         setMainMenu(mainMenuInit);
         setMainMenuRight(mainMenuRightInit);
 
-        if (data && data.categoriesWithCourses && data.categoriesWithCourses.length > 0) {
-            console.log('[Header] categoriesWithCourses', data.categoriesWithCourses);
+        if (data && data.categories_with_courses && data.categories_with_courses.length > 0) {
+            console.log('[Header] categories_with_courses', data.categories_with_courses);
             updateCourseMenuPart(mainMenuInit, setMainMenu, data);
         }
     }, [data, page]);
@@ -104,15 +104,15 @@ export default function Header() {
     const updateCourseMenuPart = (
         mainMenu: IMainMenuItem[],
         setMainMenu: (menu: IMainMenuItem[]) => void,
-        data: { categoriesWithCourses?: ICourseCategory[] },
+        data: { categories_with_courses?: ICourseCategory[] },
     ) => {
         // Mettre à jour le menu principal
         const updatedMenu: IMainMenuItem[] = mainMenu.map((item): IMainMenuItem => {
-            if (item.id !== 'formations' || !data?.categoriesWithCourses) {
+            if (item.id !== 'formations' || !data?.categories_with_courses) {
                 return item;
             }
 
-            console.log('[CATEGORIES_WITH_COURSES]', data.categoriesWithCourses);
+            console.log('[CATEGORIES_WITH_COURSES]', data.categories_with_courses);
 
             return {
                 ...item,
@@ -120,7 +120,7 @@ export default function Header() {
                     id: 'formations-children',
                     title: 'Formations',
                     description: 'Liste des formations',
-                    items: buildCategoryItems(data.categoriesWithCourses),
+                    items: buildCategoryItems(data.categories_with_courses),
                 },
             };
         });
@@ -156,7 +156,7 @@ export default function Header() {
                     <div className="flex items-center justify-between px-4 py-2 sm:px-6 lg:px-8">
                         <div className="flex flex-1">
                             <Link href={logo.href} className="flex items-center space-x-2">
-                                <AppLogo width={80} height={60} className="" />
+                                <AppLogo width={150} height={60} className="" />
                             </Link>
 
                             <div className="flex-1">

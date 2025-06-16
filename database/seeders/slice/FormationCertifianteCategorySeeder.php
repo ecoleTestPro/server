@@ -17,19 +17,25 @@ class FormationCertifianteCategorySeeder extends AbstractCourseCategorySeeder
         $this->courses = [
             // fondation
             $this->buildCourse([
-                'title' => 'ISTQB Certified Tester Foundation Level',
-                'slug'  => 'istqb-certified-tester-foundation-level',
-                'level' => 'Fondation',
+                'title'       => 'ISTQB Certified Tester Foundation Level',
+                'slug'        => 'istqb-certified-tester-foundation-level',
+                'level'       => 'Fondation',
+                "is_featured" => true,
+                'excerpt'     => 'Le niveau Fondation est le premier niveau de certification ISTQB. Il est destiné à toute personne souhaitant acquérir les bases du test logiciel.',
             ]),
             $this->buildCourse([
                 'title' => 'ISTQB Certified Tester Foundation Level « Agile Tester »',
                 'slug' => 'istqb-certified-tester-foundation-level-agile-tester',
                 'level' => 'Fondation',
+                'excerpt' => 'Cette formation vous permettra d\'acquérir les compétences nécessaires pour devenir un testeur Agile certifié.',
+                'is_featured' => true,
             ]),
             $this->buildCourse([
                 'title' => 'A4Q Certified Selenium Tester Foundation',
                 'slug'  => 'a4q-certified-selenium-tester-foundation',
                 'level' => 'Fondation',
+                'excerpt' => 'Cette certification est destinée aux testeurs qui souhaitent acquérir des compétences en automatisation des tests avec Selenium.',
+                'is_featured' => true,
             ]),
 
             // avancé
