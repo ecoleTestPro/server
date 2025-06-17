@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Public;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\PublicAbstractController;
 use App\Http\Requests\SettingUpdateRequest;
+use App\Repositories\CategoryRepository;
 use App\Repositories\CourseRepository;
 use App\Repositories\SettingRepository;
 use App\Repositories\SocialMediaRepository;
@@ -37,20 +38,33 @@ class PublicController extends PublicAbstractController
 
     public function courses()
     {
-        $data =  $this->default_data;
+        $data = $this->default_data;
+        $data['category'] = CategoryRepository::findAll();
+        $data['courses'] = CourseRepository::findAll(auth()->user());
 
-        return Inertia::render('courses', [
+        // dd($featuredCourses);
+
+        return Inertia::render('public/courses/courses.page', [
             'data' => $data,
         ]);
     }
 
     public function courseCategory($categoryId)
     {
-        $data =  $this->default_data;
+        $data = $this->default_data;
+        $category = CategoryRepository::find($categoryId);
+        if (!$category) {
+            return redirect()->route('courses')->withErrors('Introuvable');
+        }
 
-        return Inertia::render('course-category', [
+        $course = CourseRepository::findAllByCategoryId($categoryId);
+        $data['category'] = $category;
+        $data['courses'] = $course;
+
+        // dd($featuredCourses);
+
+        return Inertia::render('public/courses/course-category.page', [
             'data' => $data,
-            'categoryId' => $categoryId,
         ]);
     }
 
@@ -76,10 +90,8 @@ class PublicController extends PublicAbstractController
 
     public function auditMaturity()
     {
-        $data =  $this->default_data;
-
-        return Inertia::render('consulting-audit', [
-            'data' => $data,
+        return Inertia::render('public/consulting/consulting-audit', [
+            ...$this->default_data,
         ]);
     }
 

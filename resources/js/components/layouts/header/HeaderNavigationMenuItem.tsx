@@ -56,14 +56,9 @@ export default function HeaderNavigationMenuItem({ menuItem }: HeaderNavigationM
                                                                 <p className="text-muted-foreground mb-2 text-sm leading-tight">
                                                                     {item.description || ''}
                                                                 </p>
-                                                                {!item.subItems || (
-                                                                    <a
-                                                                        className="mt-2 text-sm text-green-500 hover:underline"
-                                                                        href={item.href || '#'}
-                                                                    >
-                                                                        Détails
-                                                                    </a>
-                                                                )}
+                                                                <a className="mt-2 text-sm text-green-500 hover:underline" href={item.href || '#'}>
+                                                                    Détails
+                                                                </a>
                                                             </div>
                                                             <div className="col-span-12">
                                                                 <div>

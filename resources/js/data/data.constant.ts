@@ -17,7 +17,22 @@ export const DEFULAT_MAIN_MENU: IMainMenuItem[] = [
         title: 'Certifications',
         description: 'Découvrez nos certifications qui valident vos compétences professionnelles.',
     },
-    { id: 'entreprises', label: 'Offre pour entreprises', href: ROUTE_MAP.services.link },
+    {
+        id: 'servies', label: 'Offre pour entreprises', href: ROUTE_MAP.services.link, children: {
+            id: 'services',
+            title: 'Services',
+            description: 'Découvrez nos services pour les entreprises.',
+            items: [
+                {
+                    id: 'consulting-1',
+                    label: 'Audit de maturité de test',
+                    href: ROUTE_MAP.auditOfMaturityOfTests.link,
+                    image: 'https://placehold.co/512x512', description: "Découvrez les formations disponibles dès maintenant, organisées par catégories. Trouvez le cours qui correspond à vos besoins et inscrivez-vous pour progresser dans votre parcours professionnel."
+                },
+                { id: 'consulting-2', label: 'Conseil Testing', href: ROUTE_MAP.consultingTesting.link, image: 'https://placehold.co/512x512' },
+            ]
+        }
+    },
     { id: 'blog', label: 'Blog/News', href: ROUTE_MAP.blogs.link },
 ];
 

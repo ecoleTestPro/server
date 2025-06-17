@@ -15,9 +15,9 @@ use Inertia\Inertia;
  * * Dashboard Routes
  */
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () {
     // DASHBOARD HOME
-    Route::get('dashboard', [CourseController::class, 'index'])->name('dashboard.index');
+    Route::get('', [CourseController::class, 'index'])->name('dashboard.index');
 
 
     // COURSE MANAGEMENT
@@ -46,7 +46,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         'prefix' => 'settings',
     ], function () {
         Route::get('', [SettingController::class, 'index'])->name('settings.app.index');
-        
+
         // Route::redirect('', 'dashboard/settings/profile');
 
         Route::get('profile', [ProfileController::class, 'edit'])->name('profile.edit');

@@ -53,7 +53,7 @@ const widgetsData: Widget[] = [
                         {widgetsData.map((feature, index) => (
                             <div
                                 key={index}
-                                className="hover:bg-primary-100 bg-white/[.54] dark:bg-[#15203c] p-[15px] rounded-2xl text-center backdrop-blur-[5.400000095367432px] md:p-[25px] lg:p-[30px] ltr:lg:text-left rtl:lg:text-right"
+                                className="hover:bg-primary-100 rounded-2xl bg-white/[.54] p-[15px] text-center backdrop-blur-[5.400000095367432px] md:p-[25px] lg:p-[30px] ltr:lg:text-left rtl:lg:text-right dark:bg-[#15203c]"
                             >
                                 <div
                                     className={`mx-auto mb-[20px] flex h-[80px] w-[80px] items-center justify-center rounded-[10px] md:h-[85px] md:w-[85px] md:rounded-[17px] lg:mx-0 lg:mb-[22px] ${feature.bgColor}`}

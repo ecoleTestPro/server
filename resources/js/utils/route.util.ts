@@ -17,6 +17,8 @@ export const ROUTE_MAP: {
     courseCategories: IRouteMap;
     courseCategory: (categoryId: number) => IRouteMap;
     consulting: IRouteMap;
+    auditOfMaturityOfTests: IRouteMap;
+    consultingTesting: IRouteMap;
     services: IRouteMap;
     blogs: IRouteMap;
     careers: IRouteMap;
@@ -61,22 +63,20 @@ export const ROUTE_MAP: {
     courseCategory: (categoryId: number) => {
         return {
             title: 'Catégorie de formation',
-            link: `/courses/categories/${categoryId}`,
+            link: `/courses/${categoryId}`,
         }
     },
     consulting: {
         title: 'Consulting',
         link: '/consulting',
-        chjildren: [
-            {
-                link: '/consulting/audit-of-maturity-of-tests',
-                title: 'Audit de maturité de test',
-            },
-            {
-                link: '/consulting/consulting-testing',
-                title: 'Conseil Testing',
-            },
-        ]
+    },
+    auditOfMaturityOfTests: {
+        title: 'Audit de maturité de test',
+        link: '/consulting/audit-of-maturity-of-tests',
+    },
+    consultingTesting: {
+        title: 'Conseil Testing',
+        link: '/consulting/consulting-testing',
     },
     services: {
         title: 'Services',
