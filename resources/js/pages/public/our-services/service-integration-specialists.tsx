@@ -13,46 +13,40 @@ import { useTranslation } from 'react-i18next';
 
 const tests: StaticFeatureItem[] = [
     {
-        title: 'Processus de Test TMMi, TPI Next ',
+        title: 'TEST MANAGEMENT',
         description:
-            'Évaluer la maturité de test de l’organisation Homogénéiser les pratiques de test Optimiser les coûts et améliorer le TTM Professionnaliser le métier de test',
-        bgColor: 'bg-primary-100',
+            'Définition des politiques et stratégies de testSupervision des programmes d’améliorationManagement des projets de testIngénierie des exigencesAccompagnement aux méthodes & outils de test',
         image: '/assets/images/svgs/code.svg',
+        bgColor: 'bg-primary-100',
     },
     {
-        title: 'Outils de Test Management, Automatisation',
+        title: 'AUTOMATISATION DE TEST',
         description:
-            'Évaluer l’efficacité et l’efficience des outils existants Benchmark avec les outils du marché Optimiser les ressources d’exploitation Améliorer le ROI',
-        bgColor: 'bg-primary-200',
-        image: '/assets/images/svgs/stacks.svg',
-    },
-    {
-        title: 'Automatisation de Test Architecture, Solutions',
-        description:
-            'Évaluer la maintenabilité des scripts de test Améliorer la compatibilité des TAF avec le S.I. Assurer la conformité aux standards et bonnes pratiques Optimiser les ressources',
+            'Élaboration des stratégies d’automatisation des tests Automatisation des tests : fonctionnel, mobile, webservices, performance Mise en œuvre des environnements de test CI/CD Test des systèmes basés sur l’IA',
         bgColor: 'bg-primary-200',
         image: '/assets/images/svgs/stacks.svg',
     },
 ];
 
-export default function ConsultingAudit() {
+export default function ConsultingTest() {
     const { auth, data } = usePage<SharedData>().props;
     const { t } = useTranslation();
+    const pageTitle = t('PAGES.CONSULTING.CONSULTING-AUDIT', 'Conseil Testing');
 
     const breadcrumbItems: IHeroBreadcrumbItems[] = [
         { label: t('PAGES.HOME', 'Accueil'), href: ROUTE_MAP.home.link },
-        { label: t('PAGES.CONSULTING.CONSULTING-AUDIT', 'Audit de maturité de test'), href: '#' },
+        { label: pageTitle, href: '#' },
     ];
 
     const prevNextPage: IPrevNextPage = {
         prev: {
             title: t('PAGES.CONSULTING.CONSULTING-AUDIT', 'Consulting Audit'),
-            href: '#',
+            href: ROUTE_MAP.auditOfMaturityOfTests.link,
             description: 'Découvrez les formations disponibles dès maintenant',
         },
         next: {
             title: t('PAGES.CONSULTING.CONSULTING-TESTING', 'Conseil Testing'),
-            href: ROUTE_MAP.consultingTesting.link,
+            href: '#',
         },
     };
 
@@ -152,10 +146,10 @@ export default function ConsultingAudit() {
                             </h2>
                         </div>
 
-                        <div className="grid grid-cols-1 gap-[25px] md:grid-cols-3">
+                        <div className="grid grid-cols-1 gap-[25px] md:grid-cols-2">
                             {tests.map((feature, index) => (
-                                <div className="col-span1 md:col-span-1 lg:col-span-1 xl:col-span-1" key={index}>
-                                    <CardOne key={index} feature={feature} />
+                                <div className="col-span1" key={index}>
+                                    <CardOne gridClass="col-span-1" key={index} feature={feature} />
                                 </div>
                             ))}
                         </div>
@@ -166,10 +160,10 @@ export default function ConsultingAudit() {
     };
 
     return (
-        <DefaultLayout title={t('PAGES.CONSULTING.CONSULTING-AUDIT', 'Audit de maturité de test')}>
+        <DefaultLayout title={pageTitle}>
             <div className="bg-gray-100 dark:bg-[#0a0e19]">
                 <Hero
-                    title={t('PAGES.CONSULTING.CONSULTING-AUDIT', 'Audit de maturité de test')}
+                    title={pageTitle}
                     description={t('PAGES.CONSULTING.CONSULTING-AUDIT_DESCRIPTION', 'Nos Solutions de Test')}
                     breadcrumbItems={breadcrumbItems}
                 />

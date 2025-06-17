@@ -34,6 +34,7 @@ abstract class PublicAbstractController extends Controller
     {
         return [
             'categories_with_courses' => $this->courseWithCategoryTree(true),
+            'asset_path'              => asset(''),
         ];
     }
 }

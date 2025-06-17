@@ -25,5 +25,8 @@ Route::group(["prefix" => "/"], function () {
     Route::get('consulting/audit-of-maturity-of-tests', [PublicController::class, 'auditMaturity'])->name('consulting.audit');
     Route::get('consulting/consulting-testing', [PublicController::class, 'consultingTesting'])->name('consulting.testing');
 
+    Route::get('services/test-outsourcing-services', [PublicController::class, 'serviceTestOutsourcingServices'])->name('services.test.outsourcing');
+    Route::get('services/integration-of-specialists-on-your-premises-test-outsourcing-services', [PublicController::class, 'serviceIntegrationSpecialists'])->name('services.integration.specialists');
+
     // You can add more routes here for authenticated users
 });

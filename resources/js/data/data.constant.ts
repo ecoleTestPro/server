@@ -9,6 +9,8 @@ export const DEFULAT_MAIN_MENU: IMainMenuItem[] = [
         title: 'Formations',
         description:
             'Les formations vous préparent au passage de nombreuses certifications internationales. Validez vos compétences et accroissez votre employabilité ainsi que votre efficacité au sein de votre entreprise.',
+        gridClass: 'grid-cols-1 lg:grid-cols-3',
+        maxWidth: 'w-[900px]',
     },
     {
         id: 'certifications',
@@ -18,22 +20,85 @@ export const DEFULAT_MAIN_MENU: IMainMenuItem[] = [
         description: 'Découvrez nos certifications qui valident vos compétences professionnelles.',
     },
     {
-        id: 'servies', label: 'Offre pour entreprises', href: ROUTE_MAP.services.link, children: {
+        id: 'servies',
+        label: 'Offre pour entreprises',
+        href: ROUTE_MAP.services.link,
+        gridClass: 'grid-cols-1 lg:grid-cols-2',
+        maxWidth: 'w-[600px]',
+        children: {
             id: 'services',
             title: 'Services',
             description: 'Découvrez nos services pour les entreprises.',
             items: [
                 {
-                    id: 'consulting-1',
-                    label: 'Audit de maturité de test',
-                    href: ROUTE_MAP.auditOfMaturityOfTests.link,
-                    image: 'https://placehold.co/512x512', description: "Découvrez les formations disponibles dès maintenant, organisées par catégories. Trouvez le cours qui correspond à vos besoins et inscrivez-vous pour progresser dans votre parcours professionnel."
+                    id: 'consulting-subitem',
+                    label: 'Consulting',
+                    href: '#',
+                    image: '/assets/images/bg_menu_box.jpg',
+                    subItems: [
+                        {
+                            id: 'consulting-audit',
+                            label: 'Audit de maturité de test',
+                            href: ROUTE_MAP.auditOfMaturityOfTests.link,
+                            description: "Découvrez les formations disponibles dès maintenant, organisées par catégories. Trouvez le cours qui correspond à vos besoins et inscrivez-vous pour progresser dans votre parcours professionnel.",
+                            image: 'https://placehold.co/512x512',
+                            subItems: [
+                                {
+                                    id: 'consulting-audit',
+                                    label: 'Audit de maturité de test',
+                                    href: ROUTE_MAP.auditOfMaturityOfTests.link,
+                                    image: 'https://placehold.co/512x512',
+                                },
+                                {
+                                    id: 'consulting-testing',
+                                    label: 'Conseil Testing',
+                                    href: ROUTE_MAP.consultingTesting.link,
+                                    image: 'https://placehold.co/512x512'
+                                }
+                            ]
+                        },
+                    ]
                 },
-                { id: 'consulting-2', label: 'Conseil Testing', href: ROUTE_MAP.consultingTesting.link, image: 'https://placehold.co/512x512' },
+                {
+                    id: 'services-subitem',
+                    label: 'Services',
+                    href: '#',
+                    image: '/assets/images/businessmen-desk-scaled.jpg',
+                    subItems: [
+                        {
+                            id: 'consulting-audit',
+                            label: 'Audit de maturité de test',
+                            href: ROUTE_MAP.auditOfMaturityOfTests.link,
+                            description: "Découvrez les formations disponibles dès maintenant, organisées par catégories. Trouvez le cours qui correspond à vos besoins et inscrivez-vous pour progresser dans votre parcours professionnel.",
+                            image: 'https://placehold.co/512x512',
+                            subItems: [
+                                {
+                                    id: 'consulting-audit',
+                                    label: ROUTE_MAP.serviceTestOutsourcingServices.title ?? 'Audit de maturité de test',
+                                    href: ROUTE_MAP.serviceTestOutsourcingServices.link,
+                                    image: 'https://placehold.co/512x512',
+                                },
+                                {
+                                    id: 'consulting-testing',
+                                    label: ROUTE_MAP.serviceIntegrationSpecialists.title ?? "Intégration de spécialistes",
+                                    href: ROUTE_MAP.serviceIntegrationSpecialists.link,
+                                    image: 'https://placehold.co/512x512'
+                                }
+                            ]
+                        },
+                    ]
+                },
             ]
         }
     },
     { id: 'blog', label: 'Blog/News', href: ROUTE_MAP.blogs.link },
+    {
+        id: 'carreers',
+        label: 'Carrières',
+        href: ROUTE_MAP.careers.link,
+        title: 'Carrières',
+        description: 'Découvrez nos opportunités de carrière et rejoignez notre équipe. Nous recherchons des talents passionnés pour contribuer à notre succès.',
+    },
 ];
 
 export const DEFULAT_MAIN_MENU_RIGHT: IMainMenuItem[] = [

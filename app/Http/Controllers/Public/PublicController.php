@@ -91,14 +91,29 @@ class PublicController extends PublicAbstractController
     public function auditMaturity()
     {
         return Inertia::render('public/consulting/consulting-audit', [
-            ...$this->default_data,
+            'data'  => $this->default_data,
         ]);
     }
 
     public function consultingTesting()
     {
-        // Conseil Testing
-        return view('consulting-testing');
+        return Inertia::render('public/consulting/consulting-test', [
+            'data'  => $this->default_data,
+        ]);
+    }
+
+    public function serviceTestOutsourcingServices()
+    {
+        return Inertia::render('public/our-services/service-test-outsourcing', [
+            'data'  => $this->default_data,
+        ]);
+    }
+
+    public function serviceIntegrationSpecialists() 
+    {
+        return Inertia::render('public/our-services/service-integration-specialists', [
+            'data'  => $this->default_data,
+        ]);
     }
 
     public function services()

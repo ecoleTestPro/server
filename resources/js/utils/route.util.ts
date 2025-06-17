@@ -20,6 +20,8 @@ export const ROUTE_MAP: {
     auditOfMaturityOfTests: IRouteMap;
     consultingTesting: IRouteMap;
     services: IRouteMap;
+    serviceTestOutsourcingServices: IRouteMap
+    serviceIntegrationSpecialists: IRouteMap
     blogs: IRouteMap;
     careers: IRouteMap;
     faqs: IRouteMap;
@@ -81,6 +83,14 @@ export const ROUTE_MAP: {
     services: {
         title: 'Services',
         link: '/services',
+    },
+    serviceTestOutsourcingServices: {
+        title: 'Services d’externalisation de test',
+        link: '/services/test-outsourcing-services',
+    },
+    serviceIntegrationSpecialists: {
+        title: 'Intégration de Spécialistes dans Vos LocauxTest Outsourcing Services',
+        link: '/services/integration-of-specialists-on-your-premises-test-outsourcing-services',
     },
     blogs: {
         title: 'Blogs',

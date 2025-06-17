@@ -34,9 +34,10 @@ export default function HeaderNavigationMenuItem({ menuItem }: HeaderNavigationM
                                 {menuItem.label}
                             </NavigationMenuTrigger>
                             <NavigationMenuContent className="z-50 bg-gray-50">
-                                {' '}
                                 {/* Increased z-index to 50 */}
-                                <ul className={`z-20 grid gap-2 ${'w-[900px] grid-cols-3'}`}>
+                                <ul
+                                    className={`z-20 grid gap-2 ${menuItem.gridClass ? menuItem.gridClass : 'grid-cols-1'}  ${menuItem.maxWidth ? menuItem.maxWidth : 'min-w-[300px]'} p-4`}
+                                >
                                     {/* Gestion des éléments en vedette (featured) */}
                                     {menuItem.children.items.length &&
                                         menuItem.children.items.map((item) => (
@@ -56,38 +57,25 @@ export default function HeaderNavigationMenuItem({ menuItem }: HeaderNavigationM
                                                                 <p className="text-muted-foreground mb-2 text-sm leading-tight">
                                                                     {item.description || ''}
                                                                 </p>
-                                                                <a className="mt-2 text-sm text-green-500 hover:underline" href={item.href || '#'}>
-                                                                    Détails
-                                                                </a>
+                                                                {item.href && item.href !== '#' && (
+                                                                    <Link
+                                                                        className="mt-2 text-sm text-green-500 hover:underline"
+                                                                        href={item.href || '#'}
+                                                                    >
+                                                                        Détails
+                                                                    </Link>
+                                                                )}
                                                             </div>
                                                             <div className="col-span-12">
                                                                 <div>
                                                                     {item.subItems && item.subItems.length && (
-                                                                        <ul className="mt-4 space-y-2">
+                                                                        <ul className="space-y-2">
                                                                             {item.subItems.map((subItem) => (
                                                                                 <ListItem
                                                                                     className="font-normal"
                                                                                     key={subItem.id}
                                                                                     href={subItem.href || '#'}
                                                                                 >
-                                                                                    {/* <span className="flex items-center text-gray-500 hover:text-black hover:underline dark:text-white">
-                                                                                        <svg
-                                                                                            xmlns="http://www.w3.org/2000/svg"
-                                                                                            fill="none"
-                                                                                            viewBox="0 0 24 24"
-                                                                                            strokeWidth={1.5}
-                                                                                            stroke="currentColor"
-                                                                                            className="size-4"
-                                                                                        >
-                                                                                            <path
-                                                                                                strokeLinecap="round"
-                                                                                                strokeLinejoin="round"
-                                                                                                d="m8.25 4.5 7.5 7.5-7.5 7.5"
-                                                                                            />
-                                                                                        </svg>
-                                                                                        {subItem.label || ''}
-                                                                                    </span> */}
-
                                                                                     <ul className="ml-4 space-y-2">
                                                                                         {subItem.subItems &&
                                                                                             subItem.subItems.slice(0, 2).map((subItemCourse) => (

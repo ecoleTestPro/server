@@ -7,6 +7,8 @@ export interface IMainMenuItem {
     image?: string;
     isCta?: boolean;
     children?: MenuChildren;
+    gridClass?: string;
+    maxWidth?: string;
 }
 
 export interface MenuChildren {
