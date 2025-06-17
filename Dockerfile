@@ -1,81 +1,71 @@
-# syntax=docker/dockerfile:1
+# Use PHP 8.2 with Apache as the base image
+FROM php:8.2-apache
 
-# --- Build stage: install PHP dependencies ---
-FROM composer:2.7 AS vendor
-
+# Set working directory
 WORKDIR /app
+# WORKDIR /var/www/html
 
-# Copy only composer files first for better cache usage
-COPY --link composer.json composer.lock ./
-
-# Install PHP dependencies (vendor/)
-RUN composer install --no-dev --prefer-dist --no-interaction --no-scripts --optimize-autoloader
-
-# --- Build stage: build frontend assets ---
-FROM node:20-alpine AS frontend
-
-WORKDIR /app
-
-# Copy only package files first for better cache usage
-COPY --link package.json package-lock.json ./
-
-# Install node dependencies and build assets
-RUN npm ci
-
-# Copy the rest of the frontend source
-COPY --link resources/ ./resources/
-COPY --link vite.config.ts ./vite.config.ts
-COPY --link tsconfig.json ./tsconfig.json
-
-RUN npm run build
-
-# --- Final stage: production image ---
-FROM php:8.2-fpm-alpine AS final
-
-# Install system dependencies and PHP extensions
-RUN apk add --no-cache \
-    bash \
-    icu-dev \
-    libzip-dev \
-    oniguruma-dev \
-    sqlite-libs \
-    zlib-dev \
+# Install required system dependencies
+RUN apt-get update && apt-get install -y \
     libpng-dev \
-    jpeg-dev \
-    freetype-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    zip \
+    unzip \
     git \
     curl \
-    && docker-php-ext-install pdo pdo_mysql pdo_sqlite intl zip bcmath opcache \
+    libzip-dev \
+    mariadb-server \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd
+    && docker-php-ext-install gd pdo pdo_mysql bcmath zip
 
-# Install Composer (for artisan, if needed at runtime)
-COPY --from=composer:2.7 /usr/bin/composer /usr/bin/composer
+# Install Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Create non-root user
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+# Enable Apache mod_rewrite
+RUN a2enmod rewrite
+RUN a2enmod headers
+# Copy Laravel project files
+COPY . .
 
-WORKDIR /app
+# Set correct permissions
+# RUN chown -R www-data:www-data /var/www/html \
+#     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Copy application source (excluding files via .dockerignore)
-COPY --link . .
 
-# Copy vendor from build stage
-COPY --from=vendor /app/vendor ./vendor
+# Install Laravel dependencies
+RUN composer install --no-dev --optimize-autoloader
 
-# Copy built frontend assets
-COPY --from=frontend /app/resources/js/pages ./resources/js/pages
-COPY --from=frontend /app/public/build ./public/build
+# Install node js dependencies
+RUN apt-get install -y nodejs npm && \
+    npm install -g n && \
+    n stable && \
+    npm install && \
+    npm run build
 
-# Ensure storage and bootstrap/cache are writable
-RUN mkdir -p storage bootstrap/cache \
-    && chown -R appuser:appgroup storage bootstrap/cache \
-    && chmod -R ug+rw storage bootstrap/cache
+#RUN php artisan config:clear
+RUN php artisan config:clear \
+    && php artisan cache:clear \
+    && php artisan view:clear \
+    && php artisan config:cache
 
-USER appuser
+# Install phpMyAdmin
+RUN mkdir -p /usr/share/phpmyadmin && \
+    curl -sSL https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.tar.gz | tar -xz --strip-components=1 -C /usr/share/phpmyadmin && \
+    ln -s /usr/share/phpmyadmin /var/www/html/phpmyadmin && \
+    chown -R www-data:www-data /usr/share/phpmyadmin
 
-# Expose port 9000 for php-fpm
-EXPOSE 9000
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install gd mysqli pdo pdo_mysql bcmath zip
 
-# Entrypoint: php-fpm
-CMD ["php-fpm"]
+COPY config.inc.php /usr/share/phpmyadmin/config.inc.php
+# COPY 000-default.conxf /etc/apache2/sites-enabled/000-default.conf
+# RUN cat /etc/apache2/sites-enabled/000-default.conf
+
+RUN npm start dev
+
+# Expose ports
+EXPOSE 80
+
+# Start Apache and MySQL
+CMD apache2-foreground
