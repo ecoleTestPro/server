@@ -1,0 +1,119 @@
+
+
+
+interface IRouteMap {
+    link: string;
+    linkFile?: string;
+    title?: string;
+    chjildren?: IRouteMap[];
+}
+
+
+
+export const ROUTE_MAP: {
+    home: IRouteMap;
+    courses: IRouteMap;
+    courseDetail: (categoryId: number, id: number) => IRouteMap;
+    courseCategories: IRouteMap;
+    courseCategory: (categoryId: number) => IRouteMap;
+    consulting: IRouteMap;
+    auditOfMaturityOfTests: IRouteMap;
+    consultingTesting: IRouteMap;
+    services: IRouteMap;
+    serviceTestOutsourcingServices: IRouteMap
+    serviceIntegrationSpecialists: IRouteMap
+    blogs: IRouteMap;
+    careers: IRouteMap;
+    faqs: IRouteMap;
+    contact: IRouteMap;
+    aboutUs: IRouteMap;
+    privacyPolicy: IRouteMap;
+    termsOfService: IRouteMap;
+} = {
+    aboutUs: {
+        link: '/about-us',
+        title: 'A propos de nous',
+    },
+    home: {
+        link: '/',
+        title: 'Accueil',
+    },
+    courses: {
+        title: 'Formations',
+        link: '/courses',
+        chjildren: [
+            {
+                link: '/courses/:categoryId',
+                title: 'Category',
+            },
+            {
+                link: '/courses/:categoryId/courses/:courseId',
+                title: 'Course',
+            },
+        ],
+    },
+    courseDetail: (categoryId: number, id: number) => {
+        return {
+            title: 'Détail de la formation',
+            link: `/courses/${categoryId}/courses/${id}`,
+        }
+    },
+    courseCategories: {
+        title: 'Catégories de formations',
+        link: '/courses/categories',
+    },
+    courseCategory: (categoryId: number) => {
+        return {
+            title: 'Catégorie de formation',
+            link: `/courses/${categoryId}`,
+        }
+    },
+    consulting: {
+        title: 'Consulting',
+        link: '/consulting',
+    },
+    auditOfMaturityOfTests: {
+        title: 'Audit de maturité de test',
+        link: '/consulting/audit-of-maturity-of-tests',
+    },
+    consultingTesting: {
+        title: 'Conseil Testing',
+        link: '/consulting/consulting-testing',
+    },
+    services: {
+        title: 'Services',
+        link: '/services',
+    },
+    serviceTestOutsourcingServices: {
+        title: 'Services d’externalisation de test',
+        link: '/services/test-outsourcing-services',
+    },
+    serviceIntegrationSpecialists: {
+        title: 'Intégration de Spécialistes dans Vos LocauxTest Outsourcing Services',
+        link: '/services/integration-of-specialists-on-your-premises-test-outsourcing-services',
+    },
+    blogs: {
+        title: 'Blogs',
+        link: '/blogs',
+    },
+    careers: {
+        title: 'Carrières',
+        link: '/careers',
+    },
+    faqs: {
+        title: 'FAQs',
+        link: '/faqs',
+    },
+    contact: {
+        title: 'Nous contacter',
+        link: '/contact',
+    },
+    privacyPolicy: {
+        title: 'Politique de confidentialité',
+        link: '/privacy-policy',
+    },
+    termsOfService: {
+        title: 'Conditions d’utilisation',
+        link: '/terms-of-service',
+    },
+}

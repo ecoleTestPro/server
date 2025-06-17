@@ -35,6 +35,11 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
             },
         ],
     },
+    {
+        title: 'Paramètres',
+        href: '/settings',
+        icon: Settings2,
+    }
 ];
 
 export const FOOTER_NAV_ITEMS: NavItem[] = [

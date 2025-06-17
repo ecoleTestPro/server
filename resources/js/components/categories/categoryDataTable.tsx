@@ -1,4 +1,3 @@
-import { IDataWithPagination } from '@/types';
 import { ICourseCategory } from '@/types/course';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
@@ -14,7 +13,7 @@ const categories: ICourseCategory[] = [
 ];
 
 interface CategoryDataTableProps {
-    categories: IDataWithPagination<ICourseCategory>;
+    categories: ICourseCategory[];
     onEditRow?: (row: ICourseCategory) => void;
     onDeleteRow?: (row: ICourseCategory) => void;
 }
@@ -65,5 +64,5 @@ export default function CategoryDataTable({ categories, onEditRow, onDeleteRow }
         },
     ];
 
-    return <DataTable columns={columns} data={categories.data} filterColumn="title" />;
+    return <DataTable columns={columns} data={categories} filterColumn="title" />;
 }

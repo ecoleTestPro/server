@@ -1,0 +1,120 @@
+import { Link } from '@inertiajs/react';
+import { CONTACT_INFO } from '../layouts/footer/footer';
+import { ROUTE_MAP } from '@/utils/route.util';
+
+export const TEAMS = [
+    {
+        name: 'John Doe',
+        role: 'CEO & Founder',
+        image: 'assets/images/front-pages/user1.jpg',
+    },
+    {
+        name: 'Jane Smith',
+        role: 'Designer UI/UX',
+        image: 'assets/images/front-pages/user2.jpg',
+    },
+    {
+        name: 'Michael Johnson',
+        role: 'Developer',
+        image: 'assets/images/front-pages/user3.jpg',
+    },
+    {
+        name: 'Emily Davis',
+        role: 'Marketing Specialist',
+        image: 'assets/images/front-pages/user4.jpg',
+    },
+];
+
+const ContactCard = () => {
+    return (
+        <section>
+            <section className="body-font text-gray-600 dark:bg-[#0a0e19] dark:text-white">
+                <div className="relative z-[1] container mx-auto py-[40px] md:py-[50px] lg:py-[60px] xl:py-[80px] 2xl:max-w-[1320px]">
+                    <div className="flex items-center justify-center">
+                        <div className="py-[40px] md:py-[50px] lg:py-[60px] xl:py-[80px]">
+                            <div className="flex flex-col justify-between md:flex-row">
+                                <div className="mb-4 w-full md:mb-0 md:w-5/12">
+                                    <p className="text-primary text-xl">Contact & demandes de renseignements</p>
+                                    <h2 className="mt-2 text-4xl font-bold">Besoin d'informations ?</h2>
+                                    <p className="mt-2 text-2xl">Notre équipe se tient à votre disposition pour vous accompagner dans vos projets.</p>
+
+                                    <div className="my-4">
+                                        <p className="flex items-center">
+                                            <span className="mr-2">✉️</span>
+                                            <a href={`mailto:${CONTACT_INFO.email}`} className="text-lg font-semibold hover:underline">
+                                                {CONTACT_INFO.email}
+                                            </a>
+                                        </p>
+                                        <p className="flex items-center">
+                                            <span className="mr-2">📞</span>
+                                            <a href={`tel:${CONTACT_INFO.phone1}`} className="text-lg font-semibold hover:underline">
+                                                {CONTACT_INFO.phone1}
+                                            </a>
+                                        </p>
+                                        <p className="flex items-center">
+                                            <span className="mr-2">📞</span>
+                                            <a href={`tel:${CONTACT_INFO.phone2}`} className="text-lg font-semibold hover:underline">
+                                                {CONTACT_INFO.phone2}
+                                            </a>
+                                        </p>
+                                        <p className="mt-2">
+                                            <span className="mr-2 text-2xl">📍</span> {CONTACT_INFO.address}
+                                        </p>
+                                    </div>
+
+                                    <Link href={ROUTE_MAP.contact.link} className=" bg-secondary hover:bg-secondary-600 mt-4 cursor-pointer rounded-full px-4 py-2 font-semibold text-white transition duration-300 hover:underline hover:shadow-lg">
+                                        Nous contacter
+                                    </Link>
+                                </div>
+
+                                <div className="mt-4 w-full md:mt-0 md:ml-6 md:w-7/12">
+                                    <div className="item-center flex h-fit flex-col">
+                                        <h3 className="text-xl font-semibold">Notre équipe</h3>
+                                        <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-3">
+                                            {TEAMS.map((teamMember, index) => (
+                                                <div key={index} className="flex flex-col items-center">
+                                                    <img
+                                                        src={teamMember.image}
+                                                        alt={teamMember.name}
+                                                        className="h-32 w-32 rounded-full"
+                                                        style={{ objectFit: 'cover' }}
+                                                    />
+                                                    <p className="mt-2 text-sm font-medium">{teamMember.name}</p>
+                                                    <p className="text-xs">{teamMember.role}</p>
+                                                </div>
+                                            ))}
+                                        </div>{' '}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {false && (
+                            <>
+                                <div className="absolute -top-[60px] -z-[1] blur-[150px] ltr:left-[65px] rtl:right-[65px]">
+                                    <img src="assets/images/front-pages/shape4.png" alt="shape1" width={530} height={530} />
+                                </div>
+                                <div className="absolute -bottom-[30px] -z-[1] blur-[125px] ltr:right-[20px] rtl:left-[20px]">
+                                    <img src="assets/images/card-icon-1.png" alt="shape1" width={447} height={453} />
+                                </div>
+                            </>
+                        )}
+                    </div>
+                </div>
+            </section>
+
+            {false && (
+                <section
+                    className="min-h-[50px]"
+                    style={{
+                        backgroundImage: 'url(assets/images/cloud.png)',
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                    }}
+                ></section>
+            )}
+        </section>
+    );
+};
+
+export default ContactCard;

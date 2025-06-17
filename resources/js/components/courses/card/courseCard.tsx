@@ -11,6 +11,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
         return (
             <div className="mb-2 flex items-center justify-between">
                 <span className="text-sm text-green-500">COURS</span>
+                {course.is_featured && <span className="text-sm text-yellow-500">FEATURED</span>}
             </div>
         );
     };
@@ -20,7 +21,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
     };
 
     const CourseDescription = () => {
-        return <p className="mb-4 text-gray-500">{course.description}</p>;
+        return <p className="mb-4 text-gray-500">{course.excerpt}</p>;
     };
 
     const CourseDuration = () => {
@@ -32,20 +33,56 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
                 </div>
                 <div className="flex items-center">
                     <FaMapMarkerAlt className="mr-1 text-green-500" />
-                    {/* <span>{course.locations.join(', ')}</span> */}
+                    <span>{course.location_mode}</span>
                 </div>
             </div>
         );
     };
 
     const CourseFooter = () => {
+        const formatPrice = (price: number, includesTax: boolean) => {
+            const currency = 'XOF';
+            return includesTax ? `${price.toLocaleString()} ${currency} (Tax Incl.)` : `${price.toLocaleString()} ${currency} (Excl. Tax)`;
+        };
+
         return (
-            <div className="mb-2 flex items-center">
-                <span className="mr-2">{course.price}</span>
-                <button className="ml-auto rounded-md bg-green-500 px-4 py-2 text-white">Plus d'informations</button>
+            <div>
+                <div className="mb-2 flex items-center">
+                    <div className="mr-2">
+                        {course.regular_price > course.price && (
+                            <span className="mr-2 text-gray-500 line-through">{course.regular_price.toLocaleString()} XOF</span>
+                        )}
+                        <span className="text-lg font-semibold">{formatPrice(course.price, course.price_includes_tax)}</span>
+                    </div>
+                </div>
+
+                <button
+                    className="rounded-md border border-transparent bg-slate-800 px-4 py-2 text-center text-sm text-white shadow-md transition-all hover:bg-slate-700 hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                    type="button"
+                >
+                    Read more
+                </button>
             </div>
         );
     };
+
+    const CourseAttachment = () => {
+        return course.attachment ? (
+            <div className="mb-2 flex items-center">
+                <span className="text-sm text-gray-600">Attachment: {course.attachment}</span>
+            </div>
+        ) : null;
+    };
+
+    const CourseStatus = () => {
+        return (
+            <div className="mb-2 flex items-center">
+                <span className="text-sm text-gray-600">Status: {course.is_published ? 'Published' : 'Draft'}</span>
+                {course.is_published && <span className="ml-2 text-sm text-green-500">Active</span>}
+            </div>
+        );
+    };
+
     return (
         <div className="course-card w-full rounded-lg bg-white shadow-md dark:bg-gray-800">
             <div className="course-card-header p-4">
@@ -53,12 +90,13 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
                 <CourseTitle />
             </div>
             <div className="course-card-body p-4">
-                {/* <img src={course.image} alt={course.title} className="mb-4 h-32 w-full rounded-lg object-cover" /> */}
                 <div className="course-card-content">
                     <CourseDescription />
+                    <CourseAttachment />
+                    <CourseStatus />
                 </div>
             </div>
-            <div className="course-card-footer rounded-lg bg-green p-4">
+            <div className="course-card-footer bg-green rounded-lg p-4">
                 <CourseDuration />
                 <CourseFooter />
             </div>

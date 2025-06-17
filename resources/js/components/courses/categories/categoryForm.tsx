@@ -1,4 +1,4 @@
-import { router, useForm } from '@inertiajs/react';
+import { router, useForm, usePage } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 import React, { FormEventHandler } from 'react';
 import toast from 'react-hot-toast';
@@ -10,6 +10,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 import { InputFile } from '@/components/ui/inputFile';
+import SelectCustom from '@/components/ui/select-custom';
+import { SharedData } from '@/types';
 import { ICourseCategory } from '@/types/course';
 import { lazy } from 'react';
 import 'react-quill/dist/quill.snow.css';
@@ -23,6 +25,7 @@ export type ICategoryForm = {
     title: string;
     is_featured: boolean;
     media: string;
+    parent_id?: number | string; // Optional parent category ID
 };
 
 export const categoryFormToICourseCategory = (category: ICategoryForm): ICourseCategory => {
@@ -40,6 +43,7 @@ export const courseCategoryToCategoryForm = (category: ICourseCategory): ICatego
         title: category.title,
         is_featured: category.is_featured,
         media: category.media || '',
+        parent_id: category.parent_id || undefined, // Ensure parent_id is optional
     };
 };
 
@@ -55,6 +59,7 @@ interface CategoryFormProps {
 }
 
 function CategoryForm({ closeDrawer, initialData }: CategoryFormProps) {
+    const { data: catData } = usePage<SharedData>().props;
     const { t } = useTranslation();
     const [file, setFile] = React.useState<File | null>(null);
 
@@ -128,6 +133,25 @@ function CategoryForm({ closeDrawer, initialData }: CategoryFormProps) {
                     />
                     <InputError message={errors.title} />
                 </div>
+            </div>
+
+            <div className="grid gap-2">
+                <Label htmlFor="parent_id">{t('courses.parentCategory', 'Catégorie parente')}</Label>
+                <SelectCustom
+                    data={
+                        catData.categoriesTree &&
+                        catData.categoriesTree.map((category) => ({
+                            id: category.id!,
+                            title: category.title,
+                            value: category.id!.toString(),
+                        }))
+                    }
+                    selectLabel={t('courses.category', 'Catégorie')}
+                    processing={processing}
+                    onValueChange={(value) => setData('parent_id', value)}
+                    required
+                />
+                <InputError message={errors.parent_id} />
             </div>
 
             <div className="grid gap-2">

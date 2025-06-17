@@ -44,6 +44,48 @@ class CourseRepository extends Repository
         }
     }
 
+
+    /**
+     * Get featured courses
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public static function getFeaturedCourses()
+    {
+        try {
+            return static::query()
+                ->where('is_featured', true)
+                ->latest('id')
+                ->limit(6)
+                ->get();
+        } catch (\Exception $e) {
+            throw new \Exception('Error fetching featured courses: ' . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Get all courses by category id.
+     *
+     * @param int $categoryId
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public static function findAllByCategoryId($categoryId, $limit = 10)
+    {
+        try {
+
+            return static::query()
+                // ->whereNull('parent_id')
+                ->where('category_id', $categoryId)
+                ->latest('id')
+                // ->with('image')
+                ->take($limit)
+                ->get();
+        } catch (\Exception $e) {
+            throw new \Exception('Error fetching courses by category: ' . $e->getMessage());
+        }
+    }
+
     public static function storeByRequest(CourseStoreRequest $request)
     {
         $isActive = false;

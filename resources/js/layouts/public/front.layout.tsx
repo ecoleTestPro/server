@@ -2,9 +2,8 @@ import { Head } from '@inertiajs/react';
 import { type PropsWithChildren } from 'react';
 
 // import { Icons } from '@/components/icons';
-import Footer from '../../components/layouts/footer/footer';
-import Header from '../../components/layouts/header/header';
-import FooterTwo from '@/components/layouts/footer/footerTwo';
+import Footer from '@/components/layouts/footer/footer';
+import Header from '@/components/layouts/header/header';
 
 interface DefaultLayoutProps {
     name?: string;
@@ -17,9 +16,8 @@ export default function DefaultLayout({ children, title, description }: PropsWit
         <div className="">
             <Head title={title || ''}></Head>
             <Header />
-            {children}
+            <div className="">{children}</div>
             <Footer />
-            {/* <FooterTwo /> */}
         </div>
     );
 }

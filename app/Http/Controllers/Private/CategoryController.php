@@ -20,8 +20,9 @@ class CategoryController extends Controller
      */
     public function index(Request $request)
     {
-        $search = $request->cat_search ? strtolower($request->cat_search) : null;
-        $categories = CategoryRepository::findAll($search);
+        // $search = $request->cat_search ? strtolower($request->cat_search) : null;
+        // $categories = CategoryRepository::findAll($search);
+        $categories = CategoryRepository::getRecursiveTree();
 
         $data = [
             'categories' => $categories,
