@@ -13,7 +13,7 @@ interface IRouteMap {
 export const ROUTE_MAP: {
     home: IRouteMap;
     courses: IRouteMap;
-    courseDetail: (categoryId: number, id: number) => IRouteMap;
+    courseDetail: (categorySlug: string, slug: string) => IRouteMap;
     courseCategory: (categorySlug: string) => IRouteMap;
     consulting: IRouteMap;
     auditOfMaturityOfTests: IRouteMap;
@@ -41,10 +41,10 @@ export const ROUTE_MAP: {
         title: 'Formations',
         link: '/formations',
     },
-    courseDetail: (categoryId: number, id: number) => {
+    courseDetail: (categorySlug: string, slug: string) => {
         return {
             title: 'Détail de la formation',
-            link: `/formation/${categoryId}/course/${id}`,
+            link: `/formation/${categorySlug}/course/${slug}`,
         }
     },
     courseCategory: (categorySlug: string) => {

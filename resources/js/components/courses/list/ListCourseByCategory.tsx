@@ -11,7 +11,7 @@ export const ListCourseByCategory = ({ title, coursesList }: ListCourseByCategor
         <div className="mb-6">
             <h2 className="mb-4 text-2xl font-bold">{title}</h2>
             {coursesList.map((category) => (
-                <CourseTable courses={category.courses?.slice(0, 5) || []} />
+                <CourseTable courses={category.courses || []} />
             ))}
         </div>
     );

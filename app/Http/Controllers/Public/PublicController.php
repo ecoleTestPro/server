@@ -51,24 +51,27 @@ class PublicController extends PublicAbstractController
 
     public function courseCategory($category_slug)
     {
-        $data = $this->default_data;
-        $category = CategoryRepository::findBySlug($category_slug);
-        if (!$category) {
-            return redirect()->route('courses')->withErrors('Introuvable');
+        try {
+            $data = $this->default_data;
+            $category = CategoryRepository::findBySlug($category_slug);
+            if (!$category) {
+                return redirect()->route('courses')->withErrors('Introuvable');
+            }
+
+            // $course = CourseRepository::findAllByCategorySlug($category_slug);
+            if ($category) {
+                $category->children = CategoryRepository::getRecursiveTree(true, $category->id);
+                // dd($category);
+                $data['category'] = $category;
+            }
+
+            return Inertia::render('public/courses/course-category.page', [
+                'data' => $data,
+            ]);
+        } catch (Exception $e) {
+            Log::error("Error in courseCategory: {$e->getMessage()}");
+            return redirect()->route('courses')->withErrors('Une erreur est survenue lors de la récupération des données.');
         }
-
-        $childCategories = CategoryRepository::findChildrenByParentId($category->id, 99999);
-
-        $course = CourseRepository::findAllByCategorySlug($category_slug);
-        $data['category'] = $category;
-        $data['child_categories'] = $childCategories;
-        $data['courses'] = $course;
-
-        // dd($featuredCourses);
-
-        return Inertia::render('public/courses/course-category.page', [
-            'data' => $data,
-        ]);
     }
 
     public function courseDetail($categoryId, $courseId)

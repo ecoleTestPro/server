@@ -1,4 +1,6 @@
 import { ICourse } from '@/types/course';
+import { ROUTE_MAP } from '@/utils/route.util';
+import { Link } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 
 interface ICourseTableProps {
@@ -39,7 +41,14 @@ export default function CourseTable({ courses }: ICourseTableProps) {
                         {courses.map((item, index) => (
                             <tr key={index}>
                                 <td className="w-2/5 border-b border-gray-100 px-5 py-4 whitespace-nowrap ltr:text-left rtl:text-right dark:border-[#172036]">
-                                    {item.title}
+                                    <div className="text-pretty">
+                                        <Link
+                                            className="underline hover:text-primary hover:shadow-2xl transition-all duration-300"
+                                            href={ROUTE_MAP.courseDetail('#', 'item.slug').link}
+                                        >
+                                            {item.title}
+                                        </Link>
+                                    </div>
                                 </td>
                                 <td className="w-1/5 border-b border-gray-100 px-5 py-4 whitespace-nowrap ltr:text-left rtl:text-right dark:border-[#172036]">
                                     {item.nextSession ?? '23.06.25 - 25.06.25'}

@@ -27,29 +27,29 @@ export default function SidebarFilter({ courses, onFilterChange }: SidebarFilter
     }, [courses]);
 
     // Appliquer les filtres
-    useEffect(() => {
-        let filteredCourses = [...courses];
+    // useEffect(() => {
+    //     let filteredCourses = [...courses];
 
-        // Filtre par titre
-        if (title) {
-            filteredCourses = filteredCourses.filter((course) => course.title.toLowerCase().includes(title.toLowerCase()));
-        }
+    //     // Filtre par titre
+    //     if (title) {
+    //         filteredCourses = filteredCourses.filter((course) => course.title.toLowerCase().includes(title.toLowerCase()));
+    //     }
 
-        // Filtre par prix
-        filteredCourses = filteredCourses.filter((course) => course.price >= priceRange[0] && course.price <= priceRange[1]);
+    //     // Filtre par prix
+    //     filteredCourses = filteredCourses.filter((course) => course.price >= priceRange[0] && course.price <= priceRange[1]);
 
-        // Filtre par catégorie
-        if (selectedCategory) {
-            filteredCourses = filteredCourses.filter((course) => course.categories?.some((category) => category.id === Number(selectedCategory)));
-        }
+    //     // Filtre par catégorie
+    //     if (selectedCategory) {
+    //         filteredCourses = filteredCourses.filter((course) => course.categories?.some((category) => category.id === Number(selectedCategory)));
+    //     }
 
-        // Filtre par prochaine session
-        if (nextSession) {
-            filteredCourses = filteredCourses.filter((course) => course.nextSession && course.nextSession.includes(nextSession));
-        }
+    //     // Filtre par prochaine session
+    //     if (nextSession) {
+    //         filteredCourses = filteredCourses.filter((course) => course.nextSession && course.nextSession.includes(nextSession));
+    //     }
 
-        onFilterChange(filteredCourses);
-    }, [title, priceRange, selectedCategory, nextSession, courses, onFilterChange]);
+    //     onFilterChange(filteredCourses);
+    // }, [title, priceRange, selectedCategory, nextSession, courses, onFilterChange]);
 
     // Gestion des changements de la plage de prix
     const handlePriceChange = (index: number, value: string) => {

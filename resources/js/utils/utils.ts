@@ -27,12 +27,12 @@ const callBackCreateCoursesFromCategory = (category: ICourseCategory): ICourse[]
  * @param data - The ICustomSharedData object.
  * @returns A list of ICourseCategory with their courses populated.
  */
-export const createCoursesFromCategory = (data: ICustomSharedData) => {
+export const createCoursesFromCategory = (data: ICourseCategory[]) => {
     try {
-        if (data && data.categories_with_courses && data.categories_with_courses.length > 0) {
-            Logger.log('[OurCurrentCourses] categories_with_courses', data.categories_with_courses);
+        if (data && data.length > 0) {
+            Logger.log('[OurCurrentCourses] categories_with_courses', data);
 
-            const list: ICourseCategory[] = data.categories_with_courses.map((category) => {
+            const list: ICourseCategory[] = data.map((category) => {
                 const allCourses = callBackCreateCoursesFromCategory(category);
 
                 return {
