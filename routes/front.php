@@ -17,9 +17,9 @@ Route::group(["prefix" => "/"], function () {
     Route::get('terms-of-service', [PublicController::class, 'termsOfService'])->name('termsOfService');
 
 
-    Route::get('courses', [PublicController::class, 'courses'])->name('courses');
-    Route::get('courses/{categoryId}', [PublicController::class, 'courseCategory'])->name('courses.category');
-    Route::get('courses/{categoryId}/courses/{courseId}', [PublicController::class, 'courseDetail'])->name('courses.detail');
+    Route::get('formations', [PublicController::class, 'courses'])->name('courses');
+    Route::get('formation/{category_slug}', [PublicController::class, 'courseCategory'])->name('courses.category');
+    Route::get('formation/{categoryId}/course/{courseId}', [PublicController::class, 'courseDetail'])->name('courses.detail');
 
     Route::get('consulting', [PublicController::class, 'consulting'])->name('consulting');
     Route::get('consulting/audit-of-maturity-of-tests', [PublicController::class, 'auditMaturity'])->name('consulting.audit');

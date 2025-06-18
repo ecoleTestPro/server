@@ -52,6 +52,7 @@ export interface ICourse {
 export interface ICourseCategory {
     id?: number;
     title: string;
+    slug: string;
     description?: string;
     is_featured: boolean;
     parent_id?: number | string; // Optional parent category ID
@@ -84,4 +85,9 @@ export interface ICustomSharedData {
      * List of course categories with their courses
      */
     categories_with_courses: ICourseCategory[];
+
+    /**
+     * Current selected course category
+     */
+    category: ICourseCategory;
 }

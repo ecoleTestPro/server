@@ -14,8 +14,7 @@ export const ROUTE_MAP: {
     home: IRouteMap;
     courses: IRouteMap;
     courseDetail: (categoryId: number, id: number) => IRouteMap;
-    courseCategories: IRouteMap;
-    courseCategory: (categoryId: number) => IRouteMap;
+    courseCategory: (categorySlug: string) => IRouteMap;
     consulting: IRouteMap;
     auditOfMaturityOfTests: IRouteMap;
     consultingTesting: IRouteMap;
@@ -40,32 +39,18 @@ export const ROUTE_MAP: {
     },
     courses: {
         title: 'Formations',
-        link: '/courses',
-        chjildren: [
-            {
-                link: '/courses/:categoryId',
-                title: 'Category',
-            },
-            {
-                link: '/courses/:categoryId/courses/:courseId',
-                title: 'Course',
-            },
-        ],
+        link: '/formations',
     },
     courseDetail: (categoryId: number, id: number) => {
         return {
             title: 'Détail de la formation',
-            link: `/courses/${categoryId}/courses/${id}`,
+            link: `/formation/${categoryId}/course/${id}`,
         }
     },
-    courseCategories: {
-        title: 'Catégories de formations',
-        link: '/courses/categories',
-    },
-    courseCategory: (categoryId: number) => {
+    courseCategory: (categorySlug: string) => {
         return {
             title: 'Catégorie de formation',
-            link: `/courses/${categoryId}`,
+            link: `/formation/${categorySlug}`,
         }
     },
     consulting: {

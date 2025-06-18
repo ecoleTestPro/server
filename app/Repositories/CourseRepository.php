@@ -86,6 +86,29 @@ class CourseRepository extends Repository
         }
     }
 
+    /**
+     * Get all courses by category slug.
+     *
+     * @param string $categorySlug
+     * @return \Illuminate\Support\Collection
+     */
+    public static function findAllByCategorySlug($categorySlug, $limit = 10)
+    {
+        try {
+
+            return static::query()
+                ->whereHas('category', function ($query) use ($categorySlug) {
+                    $query->where('slug', $categorySlug);
+                })
+                ->latest('id')
+                // ->with('image')
+                ->take($limit)
+                ->get();
+        } catch (\Exception $e) {
+            throw new \Exception('Error fetching courses by category: ' . $e->getMessage());
+        }
+    }
+
     public static function storeByRequest(CourseStoreRequest $request)
     {
         $isActive = false;

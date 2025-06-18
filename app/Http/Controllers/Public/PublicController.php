@@ -49,16 +49,19 @@ class PublicController extends PublicAbstractController
         ]);
     }
 
-    public function courseCategory($categoryId)
+    public function courseCategory($category_slug)
     {
         $data = $this->default_data;
-        $category = CategoryRepository::find($categoryId);
+        $category = CategoryRepository::findBySlug($category_slug);
         if (!$category) {
             return redirect()->route('courses')->withErrors('Introuvable');
         }
 
-        $course = CourseRepository::findAllByCategoryId($categoryId);
+        $childCategories = CategoryRepository::findChildrenByParentId($category->id, 99999);
+
+        $course = CourseRepository::findAllByCategorySlug($category_slug);
         $data['category'] = $category;
+        $data['child_categories'] = $childCategories;
         $data['courses'] = $course;
 
         // dd($featuredCourses);
@@ -109,7 +112,7 @@ class PublicController extends PublicAbstractController
         ]);
     }
 
-    public function serviceIntegrationSpecialists() 
+    public function serviceIntegrationSpecialists()
     {
         return Inertia::render('public/our-services/service-integration-specialists', [
             'data'  => $this->default_data,

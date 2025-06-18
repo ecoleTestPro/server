@@ -73,8 +73,8 @@ export default function Header() {
                 id: category.id?.toString() || '',
                 label: category.title || 'Catégorie sans titre',
                 description: category.description || defaultDescription,
-                href: ROUTE_MAP.courseCategory(category.id || 0).link,
-                image: category.image?.src || 'assets/images/bg-03.jpg',
+                href: ROUTE_MAP.courseCategory(category.slug).link,
+                image: category.image?.src || '/assets/images/bg-03.jpg',
                 subItems: childItems,
             };
 
