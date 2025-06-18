@@ -5,6 +5,7 @@ export interface IMainMenuItem {
     href?: string;
     description?: string;
     image?: string;
+    featureImage?: string;
     isCta?: boolean;
     children?: MenuChildren;
     gridClass?: string;

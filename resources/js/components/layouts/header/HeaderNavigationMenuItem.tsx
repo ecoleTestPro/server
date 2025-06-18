@@ -31,20 +31,34 @@ export default function HeaderNavigationMenuItem({ menuItem }: HeaderNavigationM
                                 className="cursor-pointer"
                                 onClick={(e) => e.preventDefault()} // Trigger on click
                             >
-                                {menuItem.label}
+                                <Link href={menuItem.href ?? '#'} className="cursor-pointer hover:underline hover:text-primary">
+                                    {menuItem.label}
+                                </Link>
                             </NavigationMenuTrigger>
                             <NavigationMenuContent className="z-50 bg-gray-50">
                                 {/* Increased z-index to 50 */}
                                 <ul
                                     className={`z-20 grid gap-2 ${menuItem.gridClass ? menuItem.gridClass : 'grid-cols-1'}  ${menuItem.maxWidth ? menuItem.maxWidth : 'min-w-[300px]'} p-4`}
                                 >
+                                    {menuItem.featureImage && (
+                                        <li className="h-full col-span-1 mb-">
+                                            <div
+                                                className="min-h-full rounded-2xl bg-cover bg-center"
+                                                style={{
+                                                    backgroundImage: `url(${menuItem.featureImage})`,
+                                                }}
+                                            ></div>
+                                        </li>
+                                    )}
+
                                     {/* Gestion des éléments en vedette (featured) */}
                                     {menuItem.children.items.length &&
                                         menuItem.children.items.map((item) => (
                                             <li key={item.id} className="col-span-1">
                                                 <NavigationMenuLink asChild>
-                                                    <div className="p-[12px]">
-                                                        <div className="grid grid-cols-12 gap-5">
+                                                    <div className="">
+                                                        {/* Gestion des éléments */}
+                                                        <div className="grid grid-cols-12 gap-x-5">
                                                             <div className="col-span-12">
                                                                 {item.image && (
                                                                     <img
@@ -53,19 +67,20 @@ export default function HeaderNavigationMenuItem({ menuItem }: HeaderNavigationM
                                                                         className="mb-4 h-24 w-full rounded-2xl object-cover"
                                                                     />
                                                                 )}
-                                                                <div className="my-2 text-lg font-medium">{item.label}</div>
+                                                                <div className="my-2 text-lg font-medium">
+                                                                    <Link
+                                                                        href={item.href ?? '#'}
+                                                                        className="cursor-pointer hover:underline hover:text-primary"
+                                                                    >
+                                                                        {item.label}
+                                                                    </Link>
+                                                                </div>
                                                                 <p className="text-muted-foreground mb-2 text-sm leading-tight">
                                                                     {item.description || ''}
                                                                 </p>
-                                                                {item.href && item.href !== '#' && (
-                                                                    <Link
-                                                                        className="mt-2 text-sm text-green-500 hover:underline"
-                                                                        href={item.href || '#'}
-                                                                    >
-                                                                        Détails
-                                                                    </Link>
-                                                                )}
                                                             </div>
+
+                                                            {/* Gestion des sous éléments */}
                                                             <div className="col-span-12">
                                                                 <div>
                                                                     {item.subItems && item.subItems.length && (
@@ -76,7 +91,7 @@ export default function HeaderNavigationMenuItem({ menuItem }: HeaderNavigationM
                                                                                     key={subItem.id}
                                                                                     href={subItem.href || '#'}
                                                                                 >
-                                                                                    <ul className="ml-4 space-y-2">
+                                                                                    <ul className="space-y-2 text-pretty">
                                                                                         {subItem.subItems &&
                                                                                             subItem.subItems.slice(0, 2).map((subItemCourse) => (
                                                                                                 <ListItem
@@ -109,6 +124,18 @@ export default function HeaderNavigationMenuItem({ menuItem }: HeaderNavigationM
                                                                         </ul>
                                                                     )}
                                                                 </div>
+                                                            </div>
+
+                                                            {/* Voir plus */}
+                                                            <div className="col-span-12">
+                                                                {item.href && item.href !== '#' && (
+                                                                    <Link
+                                                                        className="mt-2 text-sm text-green-500 hover:underline"
+                                                                        href={item.href || '#'}
+                                                                    >
+                                                                        Voir plus
+                                                                    </Link>
+                                                                )}
                                                             </div>
                                                         </div>
                                                     </div>

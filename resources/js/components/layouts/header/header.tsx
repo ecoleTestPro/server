@@ -43,7 +43,7 @@ export default function Header() {
         return category.courses.slice(0, 5).map((course) => ({
             id: course.id?.toString() || '',
             label: course.title || 'Cours sans titre',
-            href: ROUTE_MAP.courseDetail(category.id || 0, course.id || 0).link,
+            href: ROUTE_MAP.courseDetail(category.slug || '', course.slug || '').link,
             description: course.excerpt || '',
             image: course.image || undefined,
         }));
