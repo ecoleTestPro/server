@@ -9,6 +9,24 @@ import { Link, usePage } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 
+const feature: { title: string; description: string; image: string }[] = [
+    {
+        title: 'Réduction des coûts',
+        description: 'Réduisez les coûts opérationnels en externalisant vos tests à nos experts, sans compromettre la qualité.',
+        image: '/assets/images/services/cost-efficiency.png',
+    },
+    {
+        title: 'Accès à l’expertise',
+        description: 'Bénéficiez de l’expertise de nos testeurs certifiés pour garantir des résultats fiables et précis.',
+        image: '/assets/images/services/access-expertise.png',
+    },
+    {
+        title: 'Évolutivité',
+        description: 'Adaptez facilement vos besoins de test en fonction de la taille et de la complexité de vos projets.',
+        image: '/assets/images/services/scalability.png',
+    },
+];
+
 export default function ServiceTestOutsourcing() {
     const { auth, data } = usePage<SharedData>().props;
     const { t } = useTranslation();
@@ -35,7 +53,11 @@ export default function ServiceTestOutsourcing() {
     const BlockOne = () => {
         return (
             <motion.section
-                className={`body-font ${CLASS_NAME.bgWhite}`}
+                className={`${CLASS_NAME.bgDefault} p-[20px] md:p-[30px] lg:p-[40px] xl:p-[60px]`}
+                style={{
+                    backgroundImage: 'url(/assets/images/pattern-15.png)',
+                    backgroundSize: 'cover',
+                }}
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.2 }}
@@ -54,11 +76,11 @@ export default function ServiceTestOutsourcing() {
                             <div className="relative">
                                 <motion.div
                                     className="max-w-full rounded-[7px] border border-white/[0.1] bg-white/[0.54] p-[15px] backdrop-blur-[5.4px] md:p-[25px] xl:py-[27px] dark:border-black/[0.1] dark:bg-black/[0.54]"
+                                    // variants={imageVariants}
                                 >
                                     <img
                                         src="/assets/images/pexels-thirdman-5319357.jpg"
-                                        loading="lazy"
-                                        className="inline-block h-auto w-[300px] mx-auto"
+                                        className="inline-block h-auto w-full"
                                         alt="order-summary-image"
                                     />
                                 </motion.div>
@@ -79,14 +101,28 @@ export default function ServiceTestOutsourcing() {
                                     viewport={{ once: true, amount: 0.2 }}
                                     variants={motionVariants.sectionVariants}
                                 >
-                                    <h2 className="!mb-[15px] text-2xl font-bold md:text-3xl">Centre de Service Testing</h2>
-                                    <h4 className="!mb-[15px]"></h4>
+                                    <h2 className="!mb-[15px]text-2xl font-bold md:text-3xl">Centre de Service Testing</h2>
                                 </motion.div>
 
                                 <p className="!mb-[15px] leading-[1.5]">
                                     Nous externalisons la réalisation de vos activités de test dans nos locaux en mode régie ou forfait, tout en
                                     garantissant les mêmes niveaux de services et de sécurité des données.
                                 </p>
+
+                                <h4 className="!mb-[15px] text-lg font-semibold">Notre Méthodologie de Test</h4>
+                                <div>
+                                    <p className="!mb-[15px] leading-[1.5]">Une approche structurée pour garantir des tests efficaces et complets.</p>
+
+                                    <p className="!mb-[15px] leading-[1.5]">
+                                        Planification Nous définissons des stratégies de test adaptées à vos besoins spécifiques.
+                                    </p>
+                                    <p className="!mb-[15px] leading-[1.5]">
+                                        Exécution Nos équipes réalisent des tests rigoureux pour identifier tout problème potentiel.
+                                    </p>
+                                    <p className="!mb-[15px] leading-[1.5]">
+                                        Rapport Recevez des rapports détaillés pour une transparence totale sur les résultats des tests
+                                    </p>
+                                </div>
 
                                 <Link
                                     href={ROUTE_MAP.contact.link}
@@ -124,7 +160,10 @@ export default function ServiceTestOutsourcing() {
                                 {t('PAGES.SERVICES.BENEFITS_OUTSOURCING', 'Avantages de l’Externalisation des Tests')}
                             </h2>
                             <p className="leading-[1.5] text-gray-600 dark:text-gray-300">
-                                {t('PAGES.SERVICES.BENEFITS_OUTSOURCING_DESC', 'Découvrez pourquoi externaliser vos tests peut transformer votre processus de développement.')}
+                                {t(
+                                    'PAGES.SERVICES.BENEFITS_OUTSOURCING_DESC',
+                                    'Découvrez pourquoi externaliser vos tests peut transformer votre processus de développement.',
+                                )}
                             </p>
                         </motion.div>
 
@@ -135,24 +174,15 @@ export default function ServiceTestOutsourcing() {
                             viewport={{ once: true, amount: 0.2 }}
                             variants={motionVariants.sectionVariants}
                         >
-                            <div className="p-[20px] rounded-[7px] bg-white/[0.54] dark:bg-black/[0.54] border border-white/[0.1] dark:border-black/[0.1]">
-                                <h4 className="text-lg font-semibold mb-[10px]">{t('Cost Efficiency', 'Réduction des coûts')}</h4>
-                                <p className="leading-[1.5]">
-                                    {t('PAGES.SERVICES.COST_EFFICIENCY_DESC', 'Réduisez les coûts opérationnels en externalisant vos tests à nos experts, sans compromettre la qualité.')}
-                                </p>
-                            </div>
-                            <div className="p-[20px] rounded-[7px] bg-white/[0.54] dark:bg-black/[0.54] border border-white/[0.1] dark:border-black/[0.1]">
-                                <h4 className="text-lg font-semibold mb-[10px]">{t('Access Expertise', 'Accès à l’expertise')}</h4>
-                                <p className="leading-[1.5]">
-                                    {t('PAGES.SERVICES.ACCESS_EXPERTISE_DESC', 'Bénéficiez de l’expertise de nos testeurs certifiés pour garantir des résultats fiables et précis.')}
-                                </p>
-                            </div>
-                            <div className="p-[20px] rounded-[7px] bg-white/[0.54] dark:bg-black/[0.54] border border-white/[0.1] dark:border-black/[0.1]">
-                                <h4 className="text-lg font-semibold mb-[10px]">{t('Scalability', 'Évolutivité')}</h4>
-                                <p className="leading-[1.5]">
-                                    {t('PAGES.SERVICES.SCALABILITY_DESC', 'Adaptez facilement vos besoins de test en fonction de la taille et de la complexité de vos projets.')}
-                                </p>
-                            </div>
+                            {feature.map((item, index) => (
+                                <div
+                                    key={index}
+                                    className="p-[20px] rounded-[7px] bg-gray-50 shadow-2xl dark:bg-black/[0.54] border border-white/[0.1] dark:border-black/[0.1]"
+                                >
+                                    <h4 className="text-lg font-semibold mb-[10px]">{t(item.title, item.title)}</h4>
+                                    <p className="leading-[1.5]">{t(item.description, item.description)}</p>
+                                </div>
+                            ))}
                         </motion.div>
                     </div>
                 </div>
@@ -182,7 +212,10 @@ export default function ServiceTestOutsourcing() {
                                 {t('PAGES.SERVICES.TESTING_METHODOLOGY', 'Notre Méthodologie de Test')}
                             </h2>
                             <p className="leading-[1.5] text-gray-600 dark:text-gray-300">
-                                {t('PAGES.SERVICES.TESTING_METHODOLOGY_DESC', 'Une approche structurée pour garantir des tests efficaces et complets.')}
+                                {t(
+                                    'PAGES.SERVICES.TESTING_METHODOLOGY_DESC',
+                                    'Une approche structurée pour garantir des tests efficaces et complets.',
+                                )}
                             </p>
                         </motion.div>
 
@@ -200,17 +233,21 @@ export default function ServiceTestOutsourcing() {
                                 </p>
                                 <h4 className="text-lg font-semibold mb-[10px]">{t('Execution', 'Exécution')}</h4>
                                 <p className="leading-[1.5] mb-[15px]">
-                                    {t('PAGES.SERVICES.EXECUTION_DESC', 'Nos équipes réalisent des tests rigoureux pour identifier tout problème potentiel.')}
+                                    {t(
+                                        'PAGES.SERVICES.EXECUTION_DESC',
+                                        'Nos équipes réalisent des tests rigoureux pour identifier tout problème potentiel.',
+                                    )}
                                 </p>
                                 <h4 className="text-lg font-semibold mb-[10px]">{t('Reporting', 'Rapport')}</h4>
                                 <p className="leading-[1.5]">
-                                    {t('PAGES.SERVICES.REPORTING_DESC', 'Recevez des rapports détaillés pour une transparence totale sur les résultats des tests.')}
+                                    {t(
+                                        'PAGES.SERVICES.REPORTING_DESC',
+                                        'Recevez des rapports détaillés pour une transparence totale sur les résultats des tests.',
+                                    )}
                                 </p>
                             </div>
                             <div className="relative">
-                                <motion.div
-                                    className="max-w-full rounded-[7px] border border-white/[0.1] bg-white/[0.54] p-[15px] backdrop-blur-[5.4px] md:p-[25px] xl:py-[27px] dark:border-black/[0.1] dark:bg-black/[0.54]"
-                                >
+                                <motion.div className="max-w-full rounded-[7px] border border-white/[0.1] bg-white/[0.54] p-[15px] backdrop-blur-[5.4px] md:p-[25px] xl:py-[27px] dark:border-black/[0.1] dark:bg-black/[0.54]">
                                     <img
                                         src="/assets/images/pexels-pixabay-270360.jpg"
                                         className="inline-block h-auto w-full"
@@ -243,11 +280,12 @@ export default function ServiceTestOutsourcing() {
                             viewport={{ once: true, amount: 0.2 }}
                             variants={motionVariants.sectionVariants}
                         >
-                            <h2 className="!mb-[15px] text-2xl font-bold md:text-3xl">
-                                {t('PAGES.SERVICES.CASE_STUDIES', 'Études de Cas')}
-                            </h2>
+                            <h2 className="!mb-[15px] text-2xl font-bold md:text-3xl">{t('PAGES.SERVICES.CASE_STUDIES', 'Études de Cas')}</h2>
                             <p className="leading-[1.5] text-gray-600 dark:text-gray-300">
-                                {t('PAGES.SERVICES.CASE_STUDIES_DESC', 'Découvrez comment nous avons aidé nos clients à réussir grâce à nos services de test.')}
+                                {t(
+                                    'PAGES.SERVICES.CASE_STUDIES_DESC',
+                                    'Découvrez comment nous avons aidé nos clients à réussir grâce à nos services de test.',
+                                )}
                             </p>
                         </motion.div>
 
@@ -261,24 +299,24 @@ export default function ServiceTestOutsourcing() {
                             <div className="p-[20px] rounded-[7px] bg-white/[0.54] dark:bg-black/[0.54] border border-white/[0.1] dark:border-black/[0.1]">
                                 <h4 className="text-lg font-semibold mb-[10px]">{t('Client A', 'Client A')}</h4>
                                 <p className="leading-[1.5] mb-[10px]">
-                                    {t('PAGES.SERVICES.CLIENT_A_DESC', 'Nous avons réduit les temps de test de 30% pour une application financière critique.')}
+                                    {t(
+                                        'PAGES.SERVICES.CLIENT_A_DESC',
+                                        'Nous avons réduit les temps de test de 30% pour une application financière critique.',
+                                    )}
                                 </p>
-                                <Link
-                                    href={ROUTE_MAP.contact.link}
-                                    className="text-green-500 hover:underline"
-                                >
+                                <Link href={ROUTE_MAP.contact.link} className="text-green-500 hover:underline">
                                     {t('Learn More', 'En savoir plus')}
                                 </Link>
                             </div>
                             <div className="p-[20px] rounded-[7px] bg-white/[0.54] dark:bg-black/[0.54] border border-white/[0.1] dark:border-black/[0.1]">
                                 <h4 className="text-lg font-semibold mb-[10px]">{t('Client B', 'Client B')}</h4>
                                 <p className="leading-[1.5] mb-[10px]">
-                                    {t('PAGES.SERVICES.CLIENT_B_DESC', 'Amélioration de la qualité logicielle pour une plateforme e-commerce grâce à des tests automatisés.')}
+                                    {t(
+                                        'PAGES.SERVICES.CLIENT_B_DESC',
+                                        'Amélioration de la qualité logicielle pour une plateforme e-commerce grâce à des tests automatisés.',
+                                    )}
                                 </p>
-                                <Link
-                                    href={ROUTE_MAP.contact.link}
-                                    className="text-green-500 hover:underline"
-                                >
+                                <Link href={ROUTE_MAP.contact.link} className="text-green-500 hover:underline">
                                     {t('Learn More', 'En savoir plus')}
                                 </Link>
                             </div>
@@ -297,12 +335,8 @@ export default function ServiceTestOutsourcing() {
                     description={t('PAGES.CONSULTING.CONSULTING-AUDIT_DESCRIPTION', 'Nos Solutions de Test')}
                     breadcrumbItems={breadcrumbItems}
                 />
-
                 <BlockOne />
                 <BlockTwo />
-                <BlockThree />
-                <BlockFour />
-
                 <PrevNextPage pages={prevNextPage} />
             </div>
         </DefaultLayout>

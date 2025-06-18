@@ -56,7 +56,7 @@ export default function PrevNextPage({ pages }: PrevNextPageProps) {
 
 
     return <motion.section
-        className={`body-font ${CLASS_NAME.bgAlt1}`}
+        className={`body-font ${CLASS_NAME.bgAlt1} border`}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.2 }}

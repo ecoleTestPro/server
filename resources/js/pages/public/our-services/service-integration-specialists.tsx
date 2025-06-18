@@ -1,6 +1,5 @@
 import Hero, { IHeroBreadcrumbItems } from '@/components/hero/hearo';
 import TitleBadgeOne from '@/components/ui/badge-one';
-import CardOne, { StaticFeatureItem } from '@/components/ui/card/card-one';
 import PrevNextPage, { IPrevNextPage } from '@/components/ui/prev-next-page';
 import { CLASS_NAME } from '@/data/styles/style.constant';
 import DefaultLayout from '@/layouts/public/front.layout';
@@ -11,27 +10,29 @@ import { Link, usePage } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 
-const tests: StaticFeatureItem[] = [
+const feature: { title: string; description: string; image: string }[] = [
     {
-        title: 'TEST MANAGEMENT',
-        description:
-            'Définition des politiques et stratégies de testSupervision des programmes d’améliorationManagement des projets de testIngénierie des exigencesAccompagnement aux méthodes & outils de test',
-        image: '/assets/images/svgs/code.svg',
-        bgColor: 'bg-primary-100',
+        title: 'Réduction des coûts',
+        description: 'Réduisez les coûts opérationnels en externalisant vos tests à nos experts, sans compromettre la qualité.',
+        image: '/assets/images/services/cost-efficiency.png',
     },
     {
-        title: 'AUTOMATISATION DE TEST',
-        description:
-            'Élaboration des stratégies d’automatisation des tests Automatisation des tests : fonctionnel, mobile, webservices, performance Mise en œuvre des environnements de test CI/CD Test des systèmes basés sur l’IA',
-        bgColor: 'bg-primary-200',
-        image: '/assets/images/svgs/stacks.svg',
+        title: 'Accès à l’expertise',
+        description: 'Bénéficiez de l’expertise de nos testeurs certifiés pour garantir des résultats fiables et précis.',
+        image: '/assets/images/services/access-expertise.png',
+    },
+    {
+        title: 'Évolutivité',
+        description: 'Adaptez facilement vos besoins de test en fonction de la taille et de la complexité de vos projets.',
+        image: '/assets/images/services/scalability.png',
     },
 ];
 
-export default function ConsultingTest() {
+export default function ServiceIntegrationSpecialists() {
     const { auth, data } = usePage<SharedData>().props;
     const { t } = useTranslation();
-    const pageTitle = t('PAGES.CONSULTING.CONSULTING-AUDIT', 'Conseil Testing');
+
+    const pageTitle = t('PAGES.SERVICES.INTEGRATION_SPECIALISTS', 'Intégration de Spécialistes dans Vos Locaux');
 
     const breadcrumbItems: IHeroBreadcrumbItems[] = [
         { label: t('PAGES.HOME', 'Accueil'), href: ROUTE_MAP.home.link },
@@ -40,12 +41,12 @@ export default function ConsultingTest() {
 
     const prevNextPage: IPrevNextPage = {
         prev: {
-            title: t('PAGES.CONSULTING.CONSULTING-AUDIT', 'Consulting Audit'),
-            href: ROUTE_MAP.auditOfMaturityOfTests.link,
+            title: 'Services d’Externalisation des Tests',
+            href: ROUTE_MAP.serviceTestOutsourcingServices.link,
             description: 'Découvrez les formations disponibles dès maintenant',
         },
         next: {
-            title: t('PAGES.CONSULTING.CONSULTING-TESTING', 'Conseil Testing'),
+            title: pageTitle,
             href: '#',
         },
     };
@@ -53,7 +54,11 @@ export default function ConsultingTest() {
     const BlockOne = () => {
         return (
             <motion.section
-                className={`body-font ${CLASS_NAME.bgWhite}`}
+                className={`${CLASS_NAME.bgDefault} p-[20px] md:p-[30px] lg:p-[40px] xl:p-[60px]`}
+                style={{
+                    backgroundImage: 'url(/assets/images/pattern-15.png)',
+                    backgroundSize: 'cover',
+                }}
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.2 }}
@@ -97,35 +102,25 @@ export default function ConsultingTest() {
                                     viewport={{ once: true, amount: 0.2 }}
                                     variants={motionVariants.sectionVariants}
                                 >
-                                    <h2 className="!mb-[15px]text-2xl font-bold md:text-3xl">Processus de Test TMMi, TPI Next</h2>
-                                    <h4 className="!mb-[15px]">
-                                        Nous associons notre Expertise, nos programmes de Certification et notre approche Pratique pour garantir une
-                                        qualité irréprochable de nos services
-                                    </h4>
+                                    <TitleBadgeOne title={t('PAGES.SERVICES.TESTING', 'Assistance Technique Régie')} />
+                                    <h2 className="!mb-[15px]text-2xl font-bold md:text-3xl">Centre de Ressources ATR</h2>
                                 </motion.div>
 
                                 <p className="!mb-[15px] leading-[1.5]">
-                                    Nous nous engageons à optimiser les processus de test logiciel pour assurer des performances fiables et une
-                                    qualité supérieure des produits. Grâce à des méthodologies éprouvées comme TMMi et TPI Next, nous aidons les
-                                    entreprises à structurer leurs pratiques de test.
-                                </p>
-                                <p className="!mb-[15px] leading-[1.5]">
-                                    Nos programmes de formation certifiants sont conçus pour doter les professionnels des compétences nécessaires pour
-                                    exceller dans l’industrie technologique. Nous mettons l’accent sur une approche pratique, avec des projets
-                                    concrets pour renforcer l’expertise.
-                                </p>
-                                <p className="!mb-[15px] leading-[1.5]">
-                                    En collaborant avec nos clients, nous proposons des solutions d’externalisation sur mesure, adaptées à leurs
-                                    besoins spécifiques. Notre objectif est d’accélérer la mise sur le marché tout en maintenant des standards élevés
-                                    d’innovation et de fiabilité.
+                                    Mettre à votre disposition une équipe dédiée avec une gestion des ressources groupée en mode régie, comprenant des
+                                    engagements de moyens.
                                 </p>
 
-                                <Link
-                                    href={ROUTE_MAP.contact.link}
-                                    className="mt-[20px] inline-block px-[15px] py-[10px] text-green-500 hover:underline"
-                                >
-                                    {t('PAGES.CONSULTING.CONSULTING-AUDIT', 'Contactez-nous pour en savoir plus')}
-                                </Link>
+                                <div className="flex justify-between">
+                                    <Link
+                                        href={ROUTE_MAP.contact.link}
+                                        className="mt-[20px] inline-block px-[15px] py-[10px] text-green-500 hover:underline"
+                                    >
+                                        {t('PAGES.CONSULTING.CONSULTING-AUDIT', 'Contactez-nous pour en savoir plus')}
+                                    </Link>
+
+                                    {/* <BtnSecondary label={t('PAGES.SERVICES.SERVICE_INTEGRATION_SPECIALISTS', 'Plus de détails')} /> */}
+                                </div>
                             </motion.div>
                         </motion.div>
                     </div>
@@ -136,23 +131,187 @@ export default function ConsultingTest() {
 
     const BlockTwo = () => {
         return (
-            <motion.section initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={motionVariants.sectionVariants}>
+            <motion.section
+                className={`body-font ${CLASS_NAME.bgWhite}`}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.2 }}
+                variants={motionVariants.sectionVariants}
+            >
                 <div className="pt-[40px] pb-[40px]">
-                    <div className="container mx-auto px-[12px] 2xl:max-w-[1320px]">
-                        <div className="mx-auto mb-[5vh] text-center md:max-w-[650px] lg:max-w-[810px] xl:max-w-[785px]">
-                            <TitleBadgeOne title="Solutions" />
-                            <h2 className="!mb-0 !text-[24px] !leading-[1.2] -tracking-[.5px] md:!text-[28px] md:-tracking-[.6px] lg:!text-[34px] lg:-tracking-[.8px] xl:!text-[36px] xl:-tracking-[1px]">
-                                Nos Solutions de Test
+                    <div className="relative z-[1] container mx-auto px-[12px] 2xl:max-w-[1320px]">
+                        <motion.div
+                            className="text-center mb-[40px]"
+                            initial="hidden"
+                            whileInView="visible"
+                            viewport={{ once: true, amount: 0.2 }}
+                            variants={motionVariants.sectionVariants}
+                        >
+                            <h2 className="!mb-[15px] text-2xl font-bold md:text-3xl">
+                                {t('PAGES.SERVICES.BENEFITS_OUTSOURCING', 'Avantages de l’Externalisation des Tests')}
                             </h2>
-                        </div>
+                            <p className="leading-[1.5] text-gray-600 dark:text-gray-300">
+                                {t(
+                                    'PAGES.SERVICES.BENEFITS_OUTSOURCING_DESC',
+                                    'Découvrez pourquoi externaliser vos tests peut transformer votre processus de développement.',
+                                )}
+                            </p>
+                        </motion.div>
 
-                        <div className="grid grid-cols-1 gap-[25px] md:grid-cols-2">
-                            {tests.map((feature, index) => (
-                                <div className="col-span1" key={index}>
-                                    <CardOne gridClass="col-span-1" key={index} feature={feature} />
+                        <motion.div
+                            className="grid grid-cols-1 gap-[25px] md:grid-cols-3"
+                            initial="hidden"
+                            whileInView="visible"
+                            viewport={{ once: true, amount: 0.2 }}
+                            variants={motionVariants.sectionVariants}
+                        >
+                            {feature.map((item, index) => (
+                                <div
+                                    key={index}
+                                    className="p-[20px] rounded-[7px] bg-gray-50 shadow-2xl dark:bg-black/[0.54] border border-white/[0.1] dark:border-black/[0.1]"
+                                >
+                                    <h4 className="text-lg font-semibold mb-[10px]">{t(item.title, item.title)}</h4>
+                                    <p className="leading-[1.5]">{t(item.description, item.description)}</p>
                                 </div>
                             ))}
-                        </div>
+                        </motion.div>
+                    </div>
+                </div>
+            </motion.section>
+        );
+    };
+
+    const BlockThree = () => {
+        return (
+            <motion.section
+                className={`body-font ${CLASS_NAME.bgWhite}`}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.2 }}
+                variants={motionVariants.sectionVariants}
+            >
+                <div className="pt-[40px] pb-[40px]">
+                    <div className="relative z-[1] container mx-auto px-[12px] 2xl:max-w-[1320px]">
+                        <motion.div
+                            className="text-center mb-[40px]"
+                            initial="hidden"
+                            whileInView="visible"
+                            viewport={{ once: true, amount: 0.2 }}
+                            variants={motionVariants.sectionVariants}
+                        >
+                            <h2 className="!mb-[15px] text-2xl font-bold md:text-3xl">
+                                {t('PAGES.SERVICES.TESTING_METHODOLOGY', 'Notre Méthodologie de Test')}
+                            </h2>
+                            <p className="leading-[1.5] text-gray-600 dark:text-gray-300">
+                                {t(
+                                    'PAGES.SERVICES.TESTING_METHODOLOGY_DESC',
+                                    'Une approche structurée pour garantir des tests efficaces et complets.',
+                                )}
+                            </p>
+                        </motion.div>
+
+                        <motion.div
+                            className="grid grid-cols-1 gap-[25px] lg:grid-cols-2"
+                            initial="hidden"
+                            whileInView="visible"
+                            viewport={{ once: true, amount: 0.2 }}
+                            variants={motionVariants.sectionVariants}
+                        >
+                            <div className="flex flex-col justify-center">
+                                <h4 className="text-lg font-semibold mb-[10px]">{t('Planning', 'Planification')}</h4>
+                                <p className="leading-[1.5] mb-[15px]">
+                                    {t('PAGES.SERVICES.PLANNING_DESC', 'Nous définissons des stratégies de test adaptées à vos besoins spécifiques.')}
+                                </p>
+                                <h4 className="text-lg font-semibold mb-[10px]">{t('Execution', 'Exécution')}</h4>
+                                <p className="leading-[1.5] mb-[15px]">
+                                    {t(
+                                        'PAGES.SERVICES.EXECUTION_DESC',
+                                        'Nos équipes réalisent des tests rigoureux pour identifier tout problème potentiel.',
+                                    )}
+                                </p>
+                                <h4 className="text-lg font-semibold mb-[10px]">{t('Reporting', 'Rapport')}</h4>
+                                <p className="leading-[1.5]">
+                                    {t(
+                                        'PAGES.SERVICES.REPORTING_DESC',
+                                        'Recevez des rapports détaillés pour une transparence totale sur les résultats des tests.',
+                                    )}
+                                </p>
+                            </div>
+                            <div className="relative">
+                                <motion.div className="max-w-full rounded-[7px] border border-white/[0.1] bg-white/[0.54] p-[15px] backdrop-blur-[5.4px] md:p-[25px] xl:py-[27px] dark:border-black/[0.1] dark:bg-black/[0.54]">
+                                    <img
+                                        src="/assets/images/pexels-pixabay-270360.jpg"
+                                        className="inline-block h-auto w-full"
+                                        alt="methodology-image"
+                                    />
+                                </motion.div>
+                            </div>
+                        </motion.div>
+                    </div>
+                </div>
+            </motion.section>
+        );
+    };
+
+    const BlockFour = () => {
+        return (
+            <motion.section
+                className={`body-font ${CLASS_NAME.bgWhite}`}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.2 }}
+                variants={motionVariants.sectionVariants}
+            >
+                <div className="pt-[40px] pb-[40px]">
+                    <div className="relative z-[1] container mx-auto px-[12px] 2xl:max-w-[1320px]">
+                        <motion.div
+                            className="text-center mb-[40px]"
+                            initial="hidden"
+                            whileInView="visible"
+                            viewport={{ once: true, amount: 0.2 }}
+                            variants={motionVariants.sectionVariants}
+                        >
+                            <h2 className="!mb-[15px] text-2xl font-bold md:text-3xl">{t('PAGES.SERVICES.CASE_STUDIES', 'Études de Cas')}</h2>
+                            <p className="leading-[1.5] text-gray-600 dark:text-gray-300">
+                                {t(
+                                    'PAGES.SERVICES.CASE_STUDIES_DESC',
+                                    'Découvrez comment nous avons aidé nos clients à réussir grâce à nos services de test.',
+                                )}
+                            </p>
+                        </motion.div>
+
+                        <motion.div
+                            className="grid grid-cols-1 gap-[25px] md:grid-cols-2"
+                            initial="hidden"
+                            whileInView="visible"
+                            viewport={{ once: true, amount: 0.2 }}
+                            variants={motionVariants.sectionVariants}
+                        >
+                            <div className="p-[20px] rounded-[7px] bg-white/[0.54] dark:bg-black/[0.54] border border-white/[0.1] dark:border-black/[0.1]">
+                                <h4 className="text-lg font-semibold mb-[10px]">{t('Client A', 'Client A')}</h4>
+                                <p className="leading-[1.5] mb-[10px]">
+                                    {t(
+                                        'PAGES.SERVICES.CLIENT_A_DESC',
+                                        'Nous avons réduit les temps de test de 30% pour une application financière critique.',
+                                    )}
+                                </p>
+                                <Link href={ROUTE_MAP.contact.link} className="text-green-500 hover:underline">
+                                    {t('Learn More', 'En savoir plus')}
+                                </Link>
+                            </div>
+                            <div className="p-[20px] rounded-[7px] bg-white/[0.54] dark:bg-black/[0.54] border border-white/[0.1] dark:border-black/[0.1]">
+                                <h4 className="text-lg font-semibold mb-[10px]">{t('Client B', 'Client B')}</h4>
+                                <p className="leading-[1.5] mb-[10px]">
+                                    {t(
+                                        'PAGES.SERVICES.CLIENT_B_DESC',
+                                        'Amélioration de la qualité logicielle pour une plateforme e-commerce grâce à des tests automatisés.',
+                                    )}
+                                </p>
+                                <Link href={ROUTE_MAP.contact.link} className="text-green-500 hover:underline">
+                                    {t('Learn More', 'En savoir plus')}
+                                </Link>
+                            </div>
+                        </motion.div>
                     </div>
                 </div>
             </motion.section>
@@ -167,11 +326,8 @@ export default function ConsultingTest() {
                     description={t('PAGES.CONSULTING.CONSULTING-AUDIT_DESCRIPTION', 'Nos Solutions de Test')}
                     breadcrumbItems={breadcrumbItems}
                 />
-
                 <BlockOne />
-
-                <BlockTwo />
-
+                {/* <BlockTwo /> */}
                 <PrevNextPage pages={prevNextPage} />
             </div>
         </DefaultLayout>

@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import BtnSecondary from '../ui/button/btn-secondary';
 
 export default function NewsletterCTA() {
     const { t } = useTranslation();
@@ -9,7 +10,7 @@ export default function NewsletterCTA() {
                 <div
                     className="bg-cover bg-center bg-no-repeat px-[20px] py-[70px] text-center md:py-[90px] lg:py-[110px] relative overflow-hidden"
                     style={{
-                        backgroundImage: 'url(assets/images/shape-2.png)',
+                        backgroundImage: 'url(/assets/images/shape-2.png)',
                         backgroundPosition: 'center center',
                         backgroundSize: 'cover',
                         backgroundRepeat: 'no-repeat',
@@ -21,9 +22,7 @@ export default function NewsletterCTA() {
                     <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 animate-gradient opacity-50"></div>
 
                     <div className="mx-auto md:max-w-[520px] px-[12px] py-[70px] md:py-[90px] lg:py-[110px] xl:py-[130px] 2xl:py-[150px] relative z-10">
-                        <h2
-                            className="!mb-[10px] !text-xl !leading-[1.2] !font-medium !text-white md:!text-3xl md:-tracking-[1px] lg:!mb-[12px] lg:!text-4xl xl:!text-5xl animate-fade-in-down"
-                        >
+                        <h2 className="!mb-[10px] !text-xl !leading-[1.2] !font-medium !text-white md:!text-3xl md:-tracking-[1px] lg:!mb-[12px] lg:!text-4xl xl:!text-5xl animate-fade-in-down">
                             {t('NEWSLETTER.CTA.TITLE', "Obtenir les derniers conseils en matière d'assistance")}
                         </h2>
                         <p className="lg:text-md text-white md:text-[15px] animate-fade-in-up animation-delay-200">
@@ -52,12 +51,7 @@ export default function NewsletterCTA() {
                                     className="fw-medium block h-[50px] w-full rounded-[100px] bg-gray-800 px-[52px] text-base text-white !outline-0 placeholder:text-gray-300 md:h-[70px] md:px-[70px] transition-all duration-300 focus:ring-2 focus:ring-blue-500 focus:scale-105"
                                     placeholder="Entrez votre adresse e-mail"
                                 />
-                                <button
-                                    type="button"
-                                    className="mt-[20px] inline-block cursor-pointer rounded-[100px] border border-gray-600 bg-gray-600 px-[25px] py-[9px] text-base font-medium text-white transition-all duration-300 hover:border-blue-500 hover:bg-blue-500 hover:scale-105 md:absolute md:top-[13px] md:mt-0 md:px-[30px] md:py-[10.5px] ltr:md:right-[13px] rtl:md:left-[13px]"
-                                >
-                                    S'inscrire
-                                </button>
+                                <BtnSecondary label="S'inscrire" />
                             </div>
                         </form>
                     </div>
