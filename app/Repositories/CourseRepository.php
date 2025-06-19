@@ -46,6 +46,22 @@ class CourseRepository extends Repository
         }
     }
 
+    public static function findAllBySearchText($searchText, $limit = 10)
+    {
+        try {
+            return static::queryBase()
+                ->where('title', 'like', '%' . $searchText . '%')
+                ->orWhereHas('instructor.user', function ($query) use ($searchText) {
+                    $query->where('name', 'like', '%' . $searchText . '%');
+                })
+                ->latest('id')
+                ->take($limit)
+                ->get();
+        } catch (\Exception $e) {
+            throw new \Exception('Error fetching courses by search text: ' . $e->getMessage());
+        }
+    }
+
 
     /**
      * Get featured courses

@@ -40,7 +40,7 @@ export default function Header() {
         console.log('[buildCourseItems] category courses', category?.courses);
         if (!category.courses || category.courses.length === 0) return [];
 
-        return category.courses.slice(0, 5).map((course) => ({
+        return category.courses.slice(0, 4).map((course) => ({
             id: course.id?.toString() || '',
             label: course.title || 'Cours sans titre',
             href: ROUTE_MAP.courseDetail(category.slug || '', course.slug || '').link,
@@ -161,7 +161,9 @@ export default function Header() {
                             </Link>
 
                             <div className="flex-1">
-                                <HeaderSearch className="hidden sm:block" />
+                                <div className=" h-[60px] flex justify-center items-center">
+                                    <HeaderSearch className="hidden sm:block" />
+                                </div>
                             </div>
 
                             <div className="ml-auto flex items-center gap-3">

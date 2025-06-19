@@ -13,7 +13,10 @@ use Exception;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
+
+use function Pest\Laravel\json;
 
 class PublicController extends PublicAbstractController
 {
@@ -34,6 +37,23 @@ class PublicController extends PublicAbstractController
         return Inertia::render('home', [
             'data' => $data,
         ]);
+    }
+
+    public function search(Request $request)
+    {
+        try {
+            $searchTerm = $request->input('search', '');
+            $data = [];
+            $data['courses'] = CourseRepository::findAllBySearchText($searchTerm);
+
+            return response()->json([
+                'search_result' => $data,
+                'searchTerm' => $searchTerm,
+            ]);
+        } catch (Exception $e) {
+            Log::error("Error in search: {$e->getMessage()}");
+            return response()->json(['error' => 'Une erreur est survenue lors de la recherche.'], 500);
+        }
     }
 
     public function courses()
@@ -171,15 +191,17 @@ class PublicController extends PublicAbstractController
 
     public function aboutUs()
     {
+        $data = $this->default_data;
         return Inertia::render('public/about-us', [
-            ...$this->default_data,
+            'data' => $data,
         ]);
     }
 
     public function contact()
     {
+        $data = $this->default_data;
         return Inertia::render('public/contact-us', [
-            ...$this->default_data,
+            'data' => $data,
         ]);
     }
 

@@ -154,4 +154,10 @@ export interface ICustomSharedData {
      * Current selected course category
      */
     category: ICourseCategory;
+
+    search: {
+        courses: ICourse[];
+        categories: ICourseCategory[];
+        blogs: any[]; // Assuming blogs is an array of objects, adjust type as needed
+    }
 }

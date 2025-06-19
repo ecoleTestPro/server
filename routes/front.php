@@ -19,6 +19,7 @@ Route::group(["prefix" => "/"], function () {
 
     Route::get('careers', [PublicController::class, 'careers'])->name('careers');
 
+    Route::post('search', [PublicController::class, 'search'])->name('search');
 
     Route::get('formations', [PublicController::class, 'courses'])->name('courses');
     Route::get('formation/{category_slug}', [PublicController::class, 'courseCategory'])->name('courses.category');

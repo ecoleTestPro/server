@@ -20,7 +20,7 @@ export const DEFULAT_MAIN_MENU: IMainMenuItem[] = [
         title: 'Formations',
         featureImage: '/assets/images/pexels-divinetechygirl-1181634.jpg',
         description:
-            'Les formations vous préparent au passage de nombreuses certifications internationales. Validez vos compétences et accroissez votre employabilité ainsi que votre efficacité au sein de votre entreprise.',
+            '',
         gridClass: 'grid-cols-1 lg:grid-cols-3',
         maxWidth: 'w-[900px]',
     },
@@ -37,7 +37,7 @@ export const DEFULAT_MAIN_MENU: IMainMenuItem[] = [
         href: ROUTE_MAP.services.link,
         featureImage: '/assets/images/feature_image.png',
         gridClass: 'grid-cols-1 lg:grid-cols-3',
-        maxWidth: 'w-[700px]',
+        maxWidth: 'w-[900px]',
         children: {
             id: 'services',
             title: 'Services',
