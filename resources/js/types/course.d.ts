@@ -23,7 +23,10 @@ export interface ICourse {
     image: string;
     title: string;
     excerpt: string;
-    description: string;
+    description: {
+        content: string
+        summary: string;
+    };
     duration: string;
     lectures: string | number;
     price: number;
@@ -35,16 +38,14 @@ export interface ICourse {
     location_mode: string;
     attachment?: string;
     attachment_media?: IMedia;
-    periodicity?: {
-        value: number;
-        unit: PeriodicityUnitEnum;
-    };
+    periodicity_unit: 'DAY' | 'WEEK' | 'MONTH' | 'YEAR';
+    periodicity_value: number;
+    category?: ICourseCategory;
     categories?: ICourseCategory[];
     media?: IMedia[];
     created_at?: string;
     updated_at?: string;
-    slug?: string; // Optional slug for SEO-friendly URLs
-    // [key: string]: any; // Allows for additional properties
+    slug?: string;
     nextSession?: string; // Optional next session date
 }
 
@@ -70,6 +71,11 @@ export interface ICustomSharedData {
      * Paginated list of courses
      */
     courses?: IDataWithPagination<ICourse>;
+
+    /**
+     * Single course
+     */
+    course?: ICourse;
 
     /**
      * List of featured courses

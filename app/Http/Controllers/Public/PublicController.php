@@ -41,6 +41,7 @@ class PublicController extends PublicAbstractController
         $data = $this->default_data;
         $data['category'] = CategoryRepository::findAll();
         $data['courses'] = CourseRepository::findAll(auth()->user());
+        // dd($data['courses']);
 
         // dd($featuredCourses);
 
@@ -49,19 +50,25 @@ class PublicController extends PublicAbstractController
         ]);
     }
 
+    /**
+     * Affiche la liste des cours appartenant à une catégorie.
+     * 
+     * @param string $category_slug Slug de la catégorie
+     * 
+     * @return \Inertia\Response
+     */
     public function courseCategory($category_slug)
     {
         try {
             $data = $this->default_data;
             $category = CategoryRepository::findBySlug($category_slug);
+            // dd($category);
             if (!$category) {
                 return redirect()->route('courses')->withErrors('Introuvable');
             }
 
-            // $course = CourseRepository::findAllByCategorySlug($category_slug);
             if ($category) {
                 $category->children = CategoryRepository::getRecursiveTree(true, $category->id);
-                // dd($category);
                 $data['category'] = $category;
             }
 
@@ -74,15 +81,29 @@ class PublicController extends PublicAbstractController
         }
     }
 
-    public function courseDetail($categoryId, $courseId)
+    public function courseDetail($categorySlug, $courseSlug)
     {
-        $data =  $this->default_data;
+        try {
+            $course = CourseRepository::findBySlug($courseSlug);
+            // dd($course);
+            if (!$course) {
+                return redirect()->route('courses')->withErrors('Introuvable');
+            }
 
-        return Inertia::render('course-detail', [
-            'data' => $data,
-            'categoryId' => $categoryId,
-            'courseId' => $courseId,
-        ]);
+            $data = $this->default_data;
+            $category = CategoryRepository::findBySlug($categorySlug);
+
+            $data['category'] = $category;
+            $data['course'] = $course;
+
+            return Inertia::render('public/courses/course-detail.page', [
+                'data' => $data,
+            ]);
+        } catch (Exception $e) {
+            dd($e);
+            Log::error("Error in courseCategory: {$e->getMessage()}");
+            return redirect()->route('courses')->withErrors('Une erreur est survenue lors de la récupération des données.');
+        }
     }
 
     public function consulting()

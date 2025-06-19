@@ -212,17 +212,17 @@ function AboutUsCardThree() {
         }[] = [
             {
                 title: 'Excellence Pédagogique',
-                svg: 'assets/images/svgs/digicomp_icon_bewertung.svg',
+                svg: 'assets/images/svgs/EcoleTest_icon_bewertung.svg',
                 description: 'Nous privilégions une approche basée sur les meilleures pratiques et les standards  internationaux.',
             },
             {
                 title: 'Flexibilité',
-                svg: 'assets/images/svgs/digicomp_icon_trainer.svg',
+                svg: 'assets/images/svgs/EcoleTest_icon_trainer.svg',
                 description: 'Nos programmes sont conçus pour s’adapter à vos contraintes et objectifs spécifiques.',
             },
             {
                 title: 'Engagement',
-                svg: 'assets/images/svgs/digicomp_icon_kurse.svg',
+                svg: 'assets/images/svgs/EcoleTest_icon_kurse.svg',
                 description: 'Nous croyons au pouvoir de l’éducation pour transformer les carrières et les vies.',
             },
         ];

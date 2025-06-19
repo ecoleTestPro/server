@@ -44,7 +44,7 @@ export const ROUTE_MAP: {
     courseDetail: (categorySlug: string, slug: string) => {
         return {
             title: 'Détail de la formation',
-            link: `/formation/${categorySlug}/course/${slug}`,
+            link: `/formation/${categorySlug}/${slug}`,
         }
     },
     courseCategory: (categorySlug: string) => {

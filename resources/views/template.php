@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digicomp</title>
+    <title>EcoleTest</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss @2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://unpkg.com/ @shadcn/ui@latest/styles/shadow-palette-light.css" rel="stylesheet">
 </head>
@@ -14,7 +14,7 @@
     <!-- Header -->
     <header class="bg-white shadow">
         <div class="container mx-auto flex items-center justify-between p-4">
-            <a href="#" class="text-green-500 text-xl font-bold">digicomp</a>
+            <a href="#" class="text-green-500 text-xl font-bold">EcoleTest</a>
             <div class="flex items-center space-x-4">
                 <form class="relative">
                     <input type="text" placeholder="Rechercher par formation, événement, ..." class="border border-green-500 rounded px-3 py-2 w-64">
@@ -41,7 +41,7 @@
                 <li><a href="#" class="text-gray-700 hover:text-green-500">Offre pour entreprises</a></li>
                 <li><a href="#" class="text-gray-700 hover:text-green-500">Événements</a></li>
                 <li><a href="#" class="text-gray-700 hover:text-green-500">Blog/News</a></li>
-                <li><a href="#" class="text-gray-700 hover:text-green-500">À propos de Digicomp</a></li>
+                <li><a href="#" class="text-gray-700 hover:text-green-500">À propos de EcoleTest</a></li>
                 <li><a href="#" class="bg-green-500 text-white px-4 py-2 rounded">Contact</a></li>
             </ul>
         </nav>
@@ -168,7 +168,7 @@
     <!-- Client Logos Section -->
     <section class="py-20 bg-gray-100">
         <div class="container mx-auto">
-            <h2 class="text-3xl font-bold mb-8 text-center">Plus de 300 entreprises font confiance à Digicomp</h2>
+            <h2 class="text-3xl font-bold mb-8 text-center">Plus de 300 entreprises font confiance à EcoleTest</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <img src="https://source.unsplash.com/random/100x50/?logo1 " alt="Logo 1" class="w-full h-10 object-cover">
                 <img src="https://source.unsplash.com/random/100x50/?logo2 " alt="Logo 2" class="w-full h-10 object-cover">
@@ -222,7 +222,7 @@
                 <a href="#" class="bg-green-500 text-white px-4 py-2 rounded">Nous contacter</a>
             </div>
             <div class="p-6">
-                <h2 class="text-xl font-bold mb-4">L'équipe Digicomp</h2>
+                <h2 class="text-xl font-bold mb-4">L'équipe EcoleTest</h2>
                 <div class="flex space-x-4">
                     <img src="https://source.unsplash.com/random/50x50/?person1 " alt="Person 1" class="w-12 h-12 rounded-full">
                     <img src="https://source.unsplash.com/random/50x50/?person2 " alt="Person 2" class="w-12 h-12 rounded-full">
@@ -232,7 +232,7 @@
                 <div class="mt-4">
                     <p><i class="fas fa-phone"></i> Genève : +41 022 738 80 80</p>
                     <p><i class="fas fa-phone"></i> Lausanne : +41 21 321 65 00</p>
-                    <p><i class="fas fa-envelope"></i> romandie@digicomp.ch</p>
+                    <p><i class="fas fa-envelope"></i> romandie@EcoleTest.ch</p>
                 </div>
             </div>
         </div>
@@ -244,8 +244,8 @@
             <div class="w-full md:w-1/3 p-4">
                 <h3 class="text-xl font-bold mb-4">Restez en contact</h3>
                 <p>Conseil personnalisé au<br>022 738 80 80 ou 021 321 65 00<br>du Lu au Ve, 08h00–17h00</p>
-                <p>romandie@digicomp.ch</p>
-                <p>Digicomp Academy SA<br>Rue de Monthoux 64 – 1201 Genève<br>Avenue de la Gare 50 - 1003 Lausanne</p>
+                <p>romandie@EcoleTest.ch</p>
+                <p>EcoleTest Academy SA<br>Rue de Monthoux 64 – 1201 Genève<br>Avenue de la Gare 50 - 1003 Lausanne</p>
             </div>
             <div class="w-full md:w-1/3 p-4">
                 <h3 class="text-xl font-bold mb-4">Top des éditeurs</h3>
@@ -261,7 +261,7 @@
                 <p>Location de salles</p>
             </div>
             <div class="w-full md:w-1/3 p-4">
-                <h3 class="text-xl font-bold mb-4">Digicomp</h3>
+                <h3 class="text-xl font-bold mb-4">EcoleTest</h3>
                 <p>Sites</p>
                 <p>Contact</p>
                 <p>Impressum</p>

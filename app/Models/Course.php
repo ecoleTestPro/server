@@ -22,10 +22,10 @@ class Course extends Model
         return $this->belongsTo(Category::class)->withTrashed();
     }
 
-    // public function instructor(): BelongsTo
-    // {
-    //     return $this->belongsTo(Instructor::class)->withTrashed();
-    // }
+    public function instructor(): BelongsTo
+    {
+        return $this->belongsTo(Instructor::class)->withTrashed();
+    }
 
     // public function chapters(): HasMany
     // {

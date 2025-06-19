@@ -6,7 +6,7 @@ import Footer from '@/components/layouts/footer/footer';
 import Header from '@/components/layouts/header/header';
 import PageLoading from '@/components/ui/page-loading';
 import { SharedData } from '@/types';
-import { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 
 interface DefaultLayoutProps {
     name?: string;
@@ -18,9 +18,17 @@ export default function DefaultLayout({ children, title, description }: PropsWit
     const { auth, data } = usePage<SharedData>().props;
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | false>(false);
+    // const [errors, setErrors] = useState<string | false>(false);
 
     useEffect(() => {
         setLoading(true);
+
+
+        // toast.success('Page loaded successfully!');
+
+        if (error) {
+            toast.error(error);
+        }
 
         if (!data) {
             setError('No data found');

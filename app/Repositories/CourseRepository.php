@@ -86,6 +86,18 @@ class CourseRepository extends Repository
         }
     }
 
+    public static function findBySlug($slug)
+    {
+        try {
+            return static::query()
+                ->where('slug', $slug)
+                ->with(['category', 'instructor.user', 'media', 'video'])
+                ->firstOrFail();
+        } catch (\Exception $e) {
+            throw new \Exception('Error fetching course by slug: ' . $e->getMessage());
+        }
+    }
+
     /**
      * Get all courses by category slug.
      *

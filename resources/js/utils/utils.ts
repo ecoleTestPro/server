@@ -51,3 +51,10 @@ export const createCoursesFromCategory = (data: ICourseCategory[]) => {
     }
 }
 
+
+export const formatPrice = (price: number): string => {
+    const CURRENCY : string = "FCFA"
+    // Assuming price is in cents, convert to dollars
+    const formattedPrice = (price / 100).toFixed(2);
+    return `${formattedPrice} ${CURRENCY}`; // Append the currency symbol
+}

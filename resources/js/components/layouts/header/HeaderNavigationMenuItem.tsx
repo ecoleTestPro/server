@@ -128,6 +128,7 @@ export default function HeaderNavigationMenuItem({ menuItem }: HeaderNavigationM
 
                                                             {/* Voir plus */}
                                                             <div className="col-span-12">
+                                                                <hr className="mt-2 mb-1 border-gray-200 dark:border-gray-700 w-1/4" />
                                                                 {item.href && item.href !== '#' && (
                                                                     <Link
                                                                         className="mt-2 text-sm text-green-500 hover:underline"

@@ -137,6 +137,7 @@ export default function Header() {
     return (
         <>
             {/* Top Header & Infos flash section */}
+            {/* sticky top-0 z-50  */}
             <header className="shadow-sm">
                 {false && (
                     <section className="px-4 py-1 sm:px-6 lg:px-8">
