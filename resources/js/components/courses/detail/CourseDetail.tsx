@@ -1,9 +1,13 @@
-import BtnSecondary from '@/components/ui/button/btn-secondary';
 import { CLASS_NAME } from '@/data/styles/style.constant';
 import { ICourse } from '@/types/course';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import CourseDetailAccordion from './CourseDetailAccordion';
+import CouseDetailMedia from './CouseDetailMedia';
+import CourseDetailChooseSection from './partial/CourseDetailChooseSection';
+import CourseDetailOverview from './partial/CourseDetailOverview';
+
+const email: string = 'info@ecoletestpro.com';
 
 interface CourseDetailProps {
     course: ICourse;
@@ -11,12 +15,19 @@ interface CourseDetailProps {
 
 const CourseDetail: React.FC<CourseDetailProps> = ({ course }) => {
     const { t } = useTranslation();
+    const registrationRef = useRef<HTMLDivElement>(null);
 
     const [isOpen, setIsOpen] = useState<Record<string, boolean>>({
         objectives: true,
+        overviewDetails: false,
         content: false,
         targetAudience: false,
         prerequisites: false,
+        evaluation: false,
+        pedagogical_objectives: false,
+        course_strengths: false,
+        exam: false,
+        download: false,
         questions: false,
     });
 
@@ -29,100 +40,136 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ course }) => {
             <div className="container mx-auto">
                 <h1 className="text-2xl font-bold mb-6 text-black dark:text-white">{course.title}</h1>
 
-                {/* Objectifs */}
-                <CourseDetailAccordion isOpen={isOpen} toggleSection={toggleSection} section={'objectives'} content={<div> {course.excerpt} </div>} />
-
-                {/* Contenu */}
-
-                <CourseDetailAccordion
-                    isOpen={isOpen}
-                    toggleSection={toggleSection}
-                    section={'content'}
-                    content={<div> {course.description.content} </div>}
-                />
-
-                {/* Public cible */}
-                <div className="mb-6">
-                    <button
-                        onClick={() => toggleSection('targetAudience')}
-                        className="flex justify-between items-center w-full text-lg font-medium text-black dark:text-white mb-2"
-                    >
-                        {t('COURSE.DETAIL.TARGET_AUDIENCE', 'Public cible')}
-                        <span className={`transform transition-transform ${isOpen.targetAudience ? 'rotate-180' : ''}`}>▼</span>
-                    </button>
-                    {isOpen.targetAudience && (
-                        <p className="text-gray-600 dark:text-gray-300">
-                            {t('COURSE.DETAIL.TARGET_AUDIENCE_DESC', 'Professionnels souhaitant utiliser SharePoint.')}
-                        </p>
-                    )}
-                </div>
-
-                {/* Prérequis */}
-                <div className="mb-6">
-                    <button
-                        onClick={() => toggleSection('prerequisites')}
-                        className="flex justify-between items-center w-full text-lg font-medium text-black dark:text-white mb-2"
-                    >
-                        {t('COURSE.DETAIL.PREREQUISITES', 'Prérequis')}
-                        <span className={`transform transition-transform ${isOpen.prerequisites ? 'rotate-180' : ''}`}>▼</span>
-                    </button>
-                    {isOpen.prerequisites && (
-                        <p className="text-gray-600 dark:text-gray-300">
-                            {t('COURSE.DETAIL.PREREQUISITES_DESC', 'Connaissances de base en informatique.')}
-                        </p>
-                    )}
-                </div>
-
-                {/* Téléchargement */}
-                <div className="mb-6">
-                    <button
-                        onClick={() => toggleSection('download')}
-                        className="flex justify-between items-center w-full text-lg font-medium text-black dark:text-white mb-2"
-                    >
-                        {t('COURSE.DETAIL.DOWNLOAD', 'Téléchargement')}
-                        <span className={`transform transition-transform ${isOpen.download ? 'rotate-180' : ''}`}>▼</span>
-                    </button>
-                    {isOpen.download && (
-                        <p className="text-gray-600 dark:text-gray-300">
-                            <a href="#" className="text-blue-500 underline">
-                                {t('COURSE.DETAIL.DOWNLOAD_PDF', 'Téléchargez les détails du cours au format PDF')}
-                            </a>
-                        </p>
-                    )}
-                </div>
-
-                {/* Questions sur le cours */}
-                <div className="mb-6">
-                    <button
-                        onClick={() => toggleSection('questions')}
-                        className="flex justify-between items-center w-full text-lg font-medium text-black dark:text-white mb-2"
-                    >
-                        {t('COURSE.DETAIL.QUESTIONS', 'Questions sur le cours')}
-                        <span className={`transform transition-transform ${isOpen.questions ? 'rotate-180' : ''}`}>▼</span>
-                    </button>
-                    {isOpen.questions && (
-                        <div className="text-gray-600 dark:text-gray-300">
-                            <p>{t('COURSE.DETAIL.HAVE_QUESTIONS', 'Avez-vous des questions ?')}</p>
-                            <p>{t('COURSE.DETAIL.RESERVE', "Je souhaite réserver ce cours en tant que cours d'entreprise")}</p>
-                        </div>
-                    )}
-                </div>
-
-                {/* Informations supplémentaires et bouton d'inscription */}
-                <div className="flex flex-col md:flex-row justify-between items-center bg-gray-50 dark:bg-[#0c1427] p-4 rounded-md mt-6">
-                    <div className="mb-4 md:mb-0">
-                        <p className="text-sm text-gray-600 dark:text-gray-300">
-                            {t('COURSE.DETAIL.NEXT_DATE', 'Prochaine date')} <span className="font-medium">23</span> |{' '}
-                            {t('COURSE.DETAIL.LOCATION', 'Lausanne, Français')} | {t('COURSE.DETAIL.PRICE', '900 FCFA')}
-                        </p>
-                        <p className="text-sm text-gray-600 dark:text-gray-300">
-                            {t('COURSE.DETAIL.DURATION', "Formation garantie. Plus de 5 jours avant le début de l'inscription avec 100%")}
-                        </p>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="toc-accordion col-span-1 md:col-span-2" id="tablesOfContentAccordion">
+                        <div className="">
+                            {/* Objectifs */}
+                            <CourseDetailAccordion
+                                isOpen={isOpen}
+                                toggleSection={toggleSection}
+                                section={'objectives'}
+                                sectionTitle="Objectifs"
+                                content={<div dangerouslySetInnerHTML={{ __html: course.excerpt }} />}
+                            />
+                            {/* Public cible */}
+                            {course.description?.target_audience && (
+                                <CourseDetailAccordion
+                                    isOpen={isOpen}
+                                    toggleSection={toggleSection}
+                                    section={'targetAudience'}
+                                    sectionTitle="A qui s'adresse cette formation ?"
+                                    content={<div dangerouslySetInnerHTML={{ __html: course.description.target_audience }} />}
+                                />
+                            )}
+                            {/* Détails de la formation */}
+                            {false && (
+                                <CourseDetailAccordion
+                                    isOpen={isOpen}
+                                    toggleSection={toggleSection}
+                                    section={'overviewDetails'}
+                                    sectionTitle="Détails de la formation"
+                                    content={<CourseDetailOverview course={course} />}
+                                />
+                            )}
+                            {/* Prérequis */}
+                            {course.description?.prerequisites && (
+                                <CourseDetailAccordion
+                                    isOpen={isOpen}
+                                    toggleSection={toggleSection}
+                                    section={'prerequisites'}
+                                    sectionTitle="Prérequis"
+                                    content={<div dangerouslySetInnerHTML={{ __html: course.description?.prerequisites ?? '' }} />}
+                                />
+                            )}
+                            {/* Contenu */}
+                            <CourseDetailAccordion
+                                isOpen={isOpen}
+                                toggleSection={toggleSection}
+                                sectionTitle="Contenu"
+                                section={'content'}
+                                content={<div dangerouslySetInnerHTML={{ __html: course.description?.content ?? '' }} />}
+                            />
+                            {/* Évaluation */}
+                            {course.description?.evaluation && (
+                                <CourseDetailAccordion
+                                    isOpen={isOpen}
+                                    toggleSection={toggleSection}
+                                    section={'evaluation'}
+                                    sectionTitle="Évaluation"
+                                    content={<div dangerouslySetInnerHTML={{ __html: course.description?.evaluation ?? '' }} />}
+                                />
+                            )}
+                            {/* Objectifs pédagogiques */}
+                            {course.description?.pedagogical_objectives && (
+                                <CourseDetailAccordion
+                                    isOpen={isOpen}
+                                    toggleSection={toggleSection}
+                                    section={'pedagogicalObjectives'}
+                                    sectionTitle="Objectifs pédagogiques"
+                                    content={<div dangerouslySetInnerHTML={{ __html: course.description?.pedagogical_objectives ?? '' }} />}
+                                />
+                            )}
+                            {/* Points forts du cours */}
+                            {course.description?.course_strengths && (
+                                <CourseDetailAccordion
+                                    isOpen={isOpen}
+                                    toggleSection={toggleSection}
+                                    section={'course_strengths'}
+                                    sectionTitle="Points forts du cours"
+                                    content={<div dangerouslySetInnerHTML={{ __html: course.description?.course_strengths ?? '' }} />}
+                                />
+                            )}
+                            {course.description?.exam && (
+                                <CourseDetailAccordion
+                                    isOpen={isOpen}
+                                    toggleSection={toggleSection}
+                                    section={'exam'}
+                                    sectionTitle="Détails de l'examen"
+                                    content={<div dangerouslySetInnerHTML={{ __html: course.description?.exam ?? '' }} />}
+                                />
+                            )}
+                            {/* Téléchargement */}
+                            <CourseDetailAccordion
+                                isOpen={isOpen}
+                                toggleSection={toggleSection}
+                                section={'download'}
+                                sectionTitle={t('COURSE.DETAIL.DOWNLOAD', 'Téléchargement')}
+                                content={
+                                    <p className="text-gray-600 dark:text-gray-300">
+                                        <a href="#" className="text-secondary underline">
+                                            {t('COURSE.DETAIL.DOWNLOAD_PDF', 'Téléchargez les détails du cours au format PDF')}
+                                        </a>
+                                    </p>
+                                }
+                            />
+                            {/* Questions sur le cours */}
+                            <CourseDetailAccordion
+                                isOpen={isOpen}
+                                toggleSection={toggleSection}
+                                section={'questions'}
+                                sectionTitle={t('COURSE.DETAIL.QUESTIONS', 'Questions sur le cours')}
+                                content={
+                                    <p className="text-gray-600 dark:text-gray-300">
+                                        Pour toute question, n'hésitez pas à contacter : {email}. Si vous souhaitez réserver ce cours en tant
+                                        qu'individu ou entreprise, merci de vous adresser à :{' '}
+                                        <a className="text-secondary underline" href={`mailto:${email}`}>
+                                            {email}
+                                        </a>
+                                        .
+                                    </p>
+                                }
+                            />
+                            {/* Informations supplémentaires et bouton d'inscription */}
+                            {/* Registration Section with ref */}
+                            <div ref={registrationRef}>
+                                <CourseDetailChooseSection course={course} registrationRef={registrationRef} />
+                            </div>
+                        </div>{' '}
                     </div>
-                    <BtnSecondary
-                        label={t('COURSE.DETAIL.REGISTER', 'Inscription')}
-                        className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-full"
-                    />
+
+                    <div className="col-span-1 md:col-span-1">
+                        <CouseDetailMedia course={course} />
+                    </div>
                 </div>
             </div>
         </section>

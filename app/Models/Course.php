@@ -15,6 +15,17 @@ class Course extends Model
 {
     protected $guarded = ['id'];
 
+    protected $casts = [
+        // 'description'        => 'array',
+        'is_featured'        => 'boolean',
+        'is_published'       => 'boolean',
+        'published_at'       => 'datetime',
+        'regular_price'      => 'float',
+        'price'              => 'float',
+        'price_includes_tax' => 'boolean',
+        'duration'           => 'integer',
+    ];
+
     use HasFactory, SoftDeletes;
 
     public function category(): BelongsTo

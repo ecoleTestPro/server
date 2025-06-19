@@ -47,7 +47,7 @@ const Hero = ({ title, description, breadcrumbItems, gradient = 'style-1', categ
                     </ol>
                 </nav>
                 <hr className="mb-4 w-1/6 border-gray-300 md:w-1/12" />
-                <div className="max-w-4xl">
+                <div className="max-w-4/5">
                     <h1 className="mb-4 text-4xl font-bold md:text-5xl">{title}</h1>
                     {description && <p className="text-lg text-gray-700 md:text-xl">{description}</p>}
                 </div>

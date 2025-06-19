@@ -31,8 +31,8 @@ export default function CourseCategoryPage() {
             if (data.category) {
                 setBreadcrumb([
                     { label: 'Home', href: ROUTE_MAP.home.link },
-                    { label: 'Formations', href: ROUTE_MAP.courses.link },
-                    { label: data.course?.title, href: ROUTE_MAP.courseCategory(data.course?.slug).link },
+                    { label: data.category?.title, href: ROUTE_MAP.courseCategory(data.category.slug).link },
+                    { label: data.course?.title, href: ROUTE_MAP.courseDetail(data.category?.slug, data.course?.slug).link },
                 ]);
             }
         }
@@ -43,7 +43,7 @@ export default function CourseCategoryPage() {
             <div className="bg-gray-100 dark:bg-[#0a0e19]">
                 {course && (
                     <>
-                        <Hero title={course.title} description={''} course={course} breadcrumbItems={breadcrumb} />
+                        <Hero title={course.title} description={''} course={course} breadcrumbItems={breadcrumb} gradient="style-2" />
                         {/* <OurCurrentCourses coursesData={category.children} showSidebar={true} /> */}
                         <CourseDetail course={course} />
                     </>

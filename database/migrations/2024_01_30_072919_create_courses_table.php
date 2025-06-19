@@ -17,21 +17,29 @@ return new class extends Migration
 
             $table->string('title');
             $table->string('slug')->unique();
-            
+
             $table->boolean('is_featured')->default(false);
             $table->boolean('is_published')->default(false);
             $table->timestamp('published_at')->nullable();
-            
+
             $table->text('level')->nullable();
             $table->text('excerpt')->nullable();
+
+            /**
+             * essential key : 
+             * content
+             * target_audience
+             * why_choose
+             * prerequisites
+             */
             $table->json('description');
-            
+
             $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete();
-            
+
             $table->foreignIdFor(Media::class)->nullable()->constrained()->nullOnDelete();
             $table->foreignId('video_id')->nullable()->constrained('media')->nullOnDelete();
-            
-            
+
+
             $table->text('location_mode')->nullable();
             $table->integer('duration')->nullable();
             $table->string('attachment')->nullable();

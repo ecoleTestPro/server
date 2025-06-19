@@ -15,25 +15,27 @@ class CourseRepository extends Repository
         return Course::class;
     }
 
-    public static function findAll($user, $search = null)
+    public static function queryBase()
     {
         try {
-            $query = static::query();
+            return static::query()
+                ->with(['category', 'instructor.user', 'media', 'video']);
+        } catch (\Exception $e) {
+            throw new \Exception('Error initializing course query: ' . $e->getMessage());
+        }
+    }
 
-            if ($user && $user->hasRole('admin')) {
-                $query = $query
-                    ->when(!$user->hasRole('admin'), function ($query) use ($user) {
-                        $query->where('instructor_id', $user->instructor?->id);
-                    });
-            }
-
-            return $query
+    public static function findAll($search = null)
+    {
+        try {
+            return static::query()
                 ->when($search, function ($query) use ($search) {
                     $query->where('title', 'like', '%' . $search . '%')
                         ->orWhereHas('instructor.user', function ($query) use ($search) {
                             $query->where('name', 'like', '%' . $search . '%');
                         });
                 })
+                ->with(['category', 'instructor', 'media', 'video'])
                 ->latest('id')
                 ->withTrashed()
                 ->paginate(10)
@@ -55,6 +57,7 @@ class CourseRepository extends Repository
         try {
             return static::query()
                 ->where('is_featured', true)
+                ->with(['category', 'instructor', 'media', 'video'])
                 ->latest('id')
                 ->limit(6)
                 ->get();
@@ -74,11 +77,9 @@ class CourseRepository extends Repository
     {
         try {
 
-            return static::query()
-                // ->whereNull('parent_id')
+            return static::queryBase()
                 ->where('category_id', $categoryId)
                 ->latest('id')
-                // ->with('image')
                 ->take($limit)
                 ->get();
         } catch (\Exception $e) {
@@ -86,13 +87,25 @@ class CourseRepository extends Repository
         }
     }
 
-    public static function findBySlug($slug)
+    /**
+     * Retrieve a course by its slug.
+     *
+     * @param string $slug The slug of the course.
+     * @return \App\Models\Course
+     * @throws \Exception If the course cannot be found by slug.
+     */
+    public static function findBySlug($slug): ?Course
     {
         try {
-            return static::query()
+            $course = static::queryBase()
                 ->where('slug', $slug)
-                ->with(['category', 'instructor.user', 'media', 'video'])
                 ->firstOrFail();
+
+            if ($course && isset($course->description)) {
+                $course->description = json_decode($course->description, true);
+            }
+
+            return $course;
         } catch (\Exception $e) {
             throw new \Exception('Error fetching course by slug: ' . $e->getMessage());
         }
@@ -113,7 +126,7 @@ class CourseRepository extends Repository
                     $query->where('slug', $categorySlug);
                 })
                 ->latest('id')
-                // ->with('image')
+                ->with(['category', 'instructor', 'media', 'video'])
                 ->take($limit)
                 ->get();
         } catch (\Exception $e) {

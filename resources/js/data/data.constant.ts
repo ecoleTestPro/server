@@ -24,13 +24,13 @@ export const DEFULAT_MAIN_MENU: IMainMenuItem[] = [
         gridClass: 'grid-cols-1 lg:grid-cols-3',
         maxWidth: 'w-[900px]',
     },
-    {
-        id: 'certifications',
-        label: 'Certifications',
-        href: ROUTE_MAP.courses.link,
-        title: 'Certifications',
-        description: 'Découvrez nos certifications qui valident vos compétences professionnelles.',
-    },
+    // {
+    //     id: 'certifications',
+    //     label: 'Certifications',
+    //     href: ROUTE_MAP.courses.link,
+    //     title: 'Certifications',
+    //     description: 'Découvrez nos certifications qui valident vos compétences professionnelles.',
+    // },
     {
         id: 'servies',
         label: 'Offre pour entreprises',
