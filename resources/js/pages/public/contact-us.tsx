@@ -12,7 +12,7 @@ export default function ContactUsPAge() {
 
     const breadcrumbItems: IHeroBreadcrumbItems[] = [
         { label: t('PAGES.HOME', 'Accueil'), href: ROUTE_MAP.home.link },
-        { label: t('PAGES.ABOUT_US', 'Nous contacter'), href: '#' },
+        { label: t('PAGES.CONTACT_US', 'Nous contacter'), href: '#' },
     ];
 
     return (
@@ -22,7 +22,7 @@ export default function ContactUsPAge() {
         >
             <div className="bg-gray-100 dark:bg-[#0a0e19]">
                 <Hero
-                    title={t('PAGES.ABOUT_US', 'A propos de nous')}
+                    title={t('PAGES.CONTACT_US', 'Nous contacter')}
                     description={t('PAGES.CONTACT_US_DESCRIPTION', "N'hésitez pas à nous contacter pour toute question ou demande d'information.")}
                     breadcrumbItems={breadcrumbItems}
                     gradient="style-2"

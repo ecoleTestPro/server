@@ -1,4 +1,7 @@
+import { ICourse, ICourseCategory } from '@/types/course';
 import { Link } from '@inertiajs/react';
+import HeroCategory from './hearoCategory';
+import HeroCourse from './HeroCourse';
 
 export interface IHeroBreadcrumbItems {
     label: string;
@@ -7,12 +10,14 @@ export interface IHeroBreadcrumbItems {
 
 interface HeroProps {
     title: string;
-    description: string;
+    description?: string;
     breadcrumbItems: IHeroBreadcrumbItems[];
     gradient?: 'style-1' | 'style-2' | 'style-3';
+    category?: ICourseCategory;
+    course?: ICourse;
 }
 
-const Hero = ({ title, description, breadcrumbItems, gradient = 'style-1' }: HeroProps) => {
+const Hero = ({ title, description, breadcrumbItems, gradient = 'style-1', category, course }: HeroProps) => {
     const getGradient = (style: string) => {
         switch (style) {
             case 'style-1':
@@ -42,10 +47,13 @@ const Hero = ({ title, description, breadcrumbItems, gradient = 'style-1' }: Her
                     </ol>
                 </nav>
                 <hr className="mb-4 w-1/6 border-gray-300 md:w-1/12" />
-                <div className="max-w-4xl">
+                <div className="max-w-4/5">
                     <h1 className="mb-4 text-4xl font-bold md:text-5xl">{title}</h1>
-                    <p className="text-lg text-gray-700 md:text-xl">{description}</p>
+                    {description && <p className="text-lg text-gray-700 md:text-xl">{description}</p>}
                 </div>
+
+                {category && <HeroCategory category={category} />}
+                {course && <HeroCourse course={course} />}
             </div>
         </section>
     );

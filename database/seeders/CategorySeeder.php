@@ -23,11 +23,13 @@ class CategorySeeder extends Seeder
              */
             $formationCertifiante = CategoryRepository::query()->updateOrCreate([
                 'title'       => 'Formations Certifiantes',
+                'slug'       => 'formations-certifiantes',
                 'is_featured' => true,
             ]);
-            
+
             $testLogiciel = CategoryRepository::query()->updateOrCreate([
                 'title'       => 'TEST LOGICIEL',
+                'slug'       => 'test-logiciel',
                 'parent_id'   => $formationCertifiante->id,
                 'is_featured' => false,
             ]);
@@ -36,6 +38,7 @@ class CategorySeeder extends Seeder
 
             $qualiteLogicielle = CategoryRepository::query()->updateOrCreate([
                 'title'       => 'QUALITÉ LOGICIELLE',
+                'slug'       => 'qualite-logicielle',
                 'parent_id'   => $formationCertifiante->id,
                 'is_featured' => false,
             ]);
@@ -43,6 +46,7 @@ class CategorySeeder extends Seeder
 
             $ingenierieDesExigences = CategoryRepository::query()->updateOrCreate([
                 'title'       => 'INGÉNIERIE DES EXIGENCES',
+                'slug'       => 'ingenierie-des-exigences',
                 'parent_id'   => $formationCertifiante->id,
                 'is_featured' => false,
             ]);
@@ -55,10 +59,12 @@ class CategorySeeder extends Seeder
              */
             $formationSurMesure = CategoryRepository::query()->updateOrCreate([
                 'title'       => 'Formations Sur Mesure',
+                'slug'       => 'formations-sur-mesure',
                 'is_featured' => true,
             ]);
             $outilDeTest = CategoryRepository::query()->updateOrCreate([
                 'title'       => 'OUTILS DE TEST',
+                'slug'       => 'outils-de-test',
                 'parent_id'   => $formationSurMesure->id,
                 'is_featured' => true,
             ]);
@@ -66,13 +72,15 @@ class CategorySeeder extends Seeder
 
             $methodologies = CategoryRepository::query()->updateOrCreate([
                 'title'       => 'METHODOLOGIES',
+                'slug'       => 'methodologies',
                 'parent_id'   => $formationSurMesure->id,
                 'is_featured' => true,
             ]);
             new MethodologiesCategorySeeder($methodologies)->run();
-            
+
             $developpement = CategoryRepository::query()->updateOrCreate([
                 'title'       => 'DEVELOPPEMENT',
+                'slug'       => 'developpement',
                 'parent_id'   => $formationSurMesure->id,
                 'is_featured' => true,
             ]);

@@ -10,7 +10,11 @@ import { type SharedData } from '@/types';
 import { usePage } from '@inertiajs/react';
 
 export default function Welcome() {
-    const { auth } = usePage<SharedData>().props;
+    const { auth, data } = usePage<SharedData>().props;
+    // const [loading, setLoading] = useState<boolean>(false);
+    // const [category, setCategory] = useState<ICourseCategory | null>(null);
+    // const [courses, setCourses] = useState<ICourse[]>([]);
+    // const [breadcrumb, setBreadcrumb] = useState<IHeroBreadcrumbItems[]>([]);
 
     return (
         <DefaultLayout title="Welcome" description="Welcome">
@@ -19,7 +23,7 @@ export default function Welcome() {
                 <AboutUsCard />
                 {/* <Bestseller /> */}
                 <FeaturesSection />
-                <OurCurrentCourses />
+                <OurCurrentCourses coursesData={data.categories_with_courses} />
                 <AboutUsCardTwo />
                 <Testimonials />
                 <Faq />

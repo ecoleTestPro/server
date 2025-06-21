@@ -15,6 +15,16 @@ class Category extends Model
 {
     protected $guarded = ['id'];
 
+    protected $fillable = [
+        'title',
+        'slug',
+        'level',
+        'media_id',
+        'parent_id',
+        'is_featured',
+        'color',
+    ];
+
     use HasFactory, SoftDeletes;
 
     /**

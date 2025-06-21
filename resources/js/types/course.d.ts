@@ -8,22 +8,84 @@ export enum PeriodicityUnitEnum {
     YEAR = 'YEAR',
 }
 
+export type mediaType = 'image' | 'video' | 'audio' | 'document' | 'other';
+
 export interface IMedia {
     id: number,
     src: string,
     path: string,
     extension: string,
-    type: string,
+    type: mediaType,
     created_at: string,
     updated_at: string
 }
+
+export type ICoursePeriodicity = 'DAY' | 'WEEK' | 'MONTH' | 'YEAR';
 
 export interface ICourse {
     id: number;
     image: string;
     title: string;
+    slug: string;
     excerpt: string;
-    description: string;
+    description: {
+        /**
+         * Detailed course content description
+         * This field can contain HTML or markdown formatted text.
+         * It should provide a comprehensive overview of the course content, including topics covered, methodologies used
+         */
+        content: string
+
+        /**
+         * Short description of the course
+         * This field should be a brief summary of the course, highlighting its main features and benefits.
+         * It can be used in course listings or previews.
+         */
+        target_audience?: string;
+
+        /**
+         * Overview details of the course
+         * This field should provide a high-level overview of the course, including its objectives, structure, and key takeaways.
+         * It can be used in course listings or previews.
+         */
+        summary?: string;
+
+        /**
+         * Pedagogical objectives of the course
+         * This field should outline the learning outcomes and skills that participants are expected to achieve upon completion of the course.
+         */
+        pedagogical_objectives?: string
+
+        /**
+         * Course strengths and unique selling points
+         * This field should highlight what makes the course stand out, such as unique teaching methods, expert instructors, or practical applications.
+         */
+        course_strengths?: string
+
+        /**
+         * Evaluation methods for the course
+         * This field should describe how participants will be assessed, such as through quizzes, projects, or exams.
+         */
+        evaluation?: string
+
+        /**
+         * Target audience for the course
+         * This field should specify who the course is intended for, such as beginners, professionals, or specific industries.
+         */
+        prerequisites?: string
+
+        /**
+         * Frequently asked questions about the course
+         * This field should address common queries or concerns that potential participants may have about the course.
+         */
+        why_choose?: string
+
+        /**
+         * Questions and answers related to the course
+         * This field should provide answers to common questions that participants may have about the course content, structure, or requirements.
+         */
+        exam?: string
+    };
     duration: string;
     lectures: string | number;
     price: number;
@@ -35,16 +97,13 @@ export interface ICourse {
     location_mode: string;
     attachment?: string;
     attachment_media?: IMedia;
-    periodicity?: {
-        value: number;
-        unit: PeriodicityUnitEnum;
-    };
+    periodicity_unit: ICoursePeriodicity;
+    periodicity_value: number;
+    category?: ICourseCategory;
     categories?: ICourseCategory[];
     media?: IMedia[];
     created_at?: string;
     updated_at?: string;
-    slug?: string; // Optional slug for SEO-friendly URLs
-    // [key: string]: any; // Allows for additional properties
     nextSession?: string; // Optional next session date
 }
 
@@ -52,6 +111,7 @@ export interface ICourse {
 export interface ICourseCategory {
     id?: number;
     title: string;
+    slug: string;
     description?: string;
     is_featured: boolean;
     parent_id?: number | string; // Optional parent category ID
@@ -71,6 +131,11 @@ export interface ICustomSharedData {
     courses?: IDataWithPagination<ICourse>;
 
     /**
+     * Single course
+     */
+    course?: ICourse;
+
+    /**
      * List of featured courses
      */
     featured_courses?: ICourse[];
@@ -84,4 +149,15 @@ export interface ICustomSharedData {
      * List of course categories with their courses
      */
     categories_with_courses: ICourseCategory[];
+
+    /**
+     * Current selected course category
+     */
+    category: ICourseCategory;
+
+    search: {
+        courses: ICourse[];
+        categories: ICourseCategory[];
+        blogs: any[]; // Assuming blogs is an array of objects, adjust type as needed
+    }
 }

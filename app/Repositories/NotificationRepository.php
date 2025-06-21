@@ -22,7 +22,7 @@ class NotificationRepository extends Repository
         }
 
         return self::update($notification, [
-            'content' => $request->content ?? $notification->content,
+            'content'    => $request->content ?? $notification->content,
             'is_enabled' => $isEnabled,
         ]);
     }

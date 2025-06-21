@@ -18,7 +18,7 @@ const testimonialsData: Testimonial[] = [
         role: 'Chef de Projet IT',
         feedback:
             "La formation ITIL® proposée ici m'a permis d'optimiser la coordination de nos projets IT. Les exemples concrets et les outils fournis ont fait toute la différence dans mon quotidien professionnel.",
-        image: 'assets/images/front-pages/user3.jpg',
+        image: '/assets/images/front-pages/user3.jpg',
         rating: 4,
     },
     {
@@ -26,7 +26,7 @@ const testimonialsData: Testimonial[] = [
         role: 'Consultant en IA',
         feedback:
             "Les modules d'intelligence artificielle sont d'une grande qualité. Ils m'ont aidé à mieux comprendre les applications pratiques et à conseiller mes clients avec confiance. Un excellent investissement !",
-        image: 'assets/images/front-pages/user4.jpg',
+        image: '/assets/images/front-pages/user4.jpg',
         rating: 4.5,
     },
     {
@@ -34,7 +34,7 @@ const testimonialsData: Testimonial[] = [
         role: 'Marketing Digital',
         feedback:
             'Les formations Adobe ont transformé ma manière de créer des campagnes visuelles. Le site est intuitif, et les ressources sont adaptées à tous les niveaux. Un vrai plus pour ma carrière !',
-        image: 'assets/images/front-pages/user5.jpg',
+        image: '/assets/images/front-pages/user5.jpg',
         rating: 5,
     },
 ];

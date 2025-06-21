@@ -15,6 +15,7 @@ return new class extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->string('title');
+            $table->string('slug')->unique();
             $table->string('level')->nullable();
             $table->foreignIdFor(Media::class)->nullable()->constrained()->nullOnDelete();
             $table->foreignId('parent_id')->nullable()->constrained('categories')->nullOnDelete();

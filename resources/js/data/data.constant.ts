@@ -1,30 +1,43 @@
 import { IMainMenuItem } from "@/types/header.type";
 import { ROUTE_MAP } from "@/utils/route.util";
 
+
+/**
+ * Default main menu items for the application.
+ * This includes links to formations, certifications, services, blog, and careers.
+ * Each item can have properties like id, label, href, title, description, and featureImage.
+ * The menu is structured to provide a clear navigation path for users.
+ * The `DEFULAT_MAIN_MENU` and `DEFULAT_MAIN_MENU_RIGHT` arrays define the main menu and right-side menu items respectively.
+ * The `FORMATIONS_MAIN_MENU_PART_CHILDREN` provides a structured view of the formations section with nested items.
+ * The `buildCourseItems` and `buildCategoryItems` functions are used to dynamically create menu items based on course categories and their courses.
+ * The `updateCourseMenuPart` function updates the main menu with course categories and their courses.
+ */
 export const DEFULAT_MAIN_MENU: IMainMenuItem[] = [
     {
         id: 'formations',
         label: 'Formations',
         href: ROUTE_MAP.courses.link,
         title: 'Formations',
+        featureImage: '/assets/images/pexels-divinetechygirl-1181634.jpg',
         description:
-            'Les formations vous préparent au passage de nombreuses certifications internationales. Validez vos compétences et accroissez votre employabilité ainsi que votre efficacité au sein de votre entreprise.',
+            '',
         gridClass: 'grid-cols-1 lg:grid-cols-3',
         maxWidth: 'w-[900px]',
     },
-    {
-        id: 'certifications',
-        label: 'Certifications',
-        href: ROUTE_MAP.courses.link,
-        title: 'Certifications',
-        description: 'Découvrez nos certifications qui valident vos compétences professionnelles.',
-    },
+    // {
+    //     id: 'certifications',
+    //     label: 'Certifications',
+    //     href: ROUTE_MAP.courses.link,
+    //     title: 'Certifications',
+    //     description: 'Découvrez nos certifications qui valident vos compétences professionnelles.',
+    // },
     {
         id: 'servies',
         label: 'Offre pour entreprises',
         href: ROUTE_MAP.services.link,
-        gridClass: 'grid-cols-1 lg:grid-cols-2',
-        maxWidth: 'w-[600px]',
+        featureImage: '/assets/images/feature_image.png',
+        gridClass: 'grid-cols-1 lg:grid-cols-3',
+        maxWidth: 'w-[900px]',
         children: {
             id: 'services',
             title: 'Services',

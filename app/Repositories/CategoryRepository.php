@@ -68,6 +68,109 @@ class CategoryRepository extends Repository
         return $categories;
     }
 
+    public static function findChildrenByParentId($parentId, $limit = 10)
+    {
+        return static::getRecursiveTree(true, $parentId);
+    }
+
+    /**
+     * Find a category by its slug.
+     * 
+     * @param string $slug The category slug to search for.
+     * @return \App\Models\Category|null The category if found, otherwise null.
+     */
+    public static function findBySlug($slug)
+    {
+        return static::query()
+            ->where('slug', $slug)
+            ->with('image')
+            ->first();
+    }
+
+    /**
+     * Récupère toutes les catégories organisées de parent à enfant de façon récursive.
+     *
+     * @param bool $includeCourses Indique si les cours doivent être inclus
+     * @param int|null $categoryId ID de la catégorie à récupérer (avec ses descendants)
+     * @return array
+     */
+    public static function getRecursiveTree($includeCourses = false, int|null $categoryId = null)
+    {
+        // Récupérer toutes les catégories avec leur image, triées par parent_id et id
+        $categories = static::query()
+            ->with('image')
+            ->orderBy('id');
+
+        // Si un categoryId est fourni, récupérer cette catégorie et ses descendants
+        if ($categoryId !== null) {
+            // Récupérer les IDs de la catégorie et de ses descendants
+            $categoryIds = static::getDescendantIds($categoryId);
+            $categoryIds[] = $categoryId; // Inclure la catégorie elle-même
+            $categories = $categories->whereIn('id', $categoryIds);
+        }
+
+        // Exécuter la requête
+        $categories = $categories->get();
+
+        // Organiser les catégories par parent_id
+        $categoriesByParent = [];
+        foreach ($categories as $category) {
+            $parentId = $category->parent_id ?? 0;
+            $categoriesByParent[$parentId][] = $category;
+        }
+
+        // Fonction récursive pour construire l'arbre
+        $buildTree = function ($parentId) use (&$buildTree, $categoriesByParent, $includeCourses) {
+            $tree = [];
+            if (isset($categoriesByParent[$parentId])) {
+                foreach ($categoriesByParent[$parentId] as $category) {
+                    $node = $category->toArray();
+                    $node['image'] = [
+                        'id' => $category->image?->id,
+                        'src' => $category->imagePath,
+                    ];
+                    $node['children'] = $buildTree($category->id);
+                    $node['courses'] = $includeCourses ? CourseRepository::findAllByCategoryId($category->id) : [];
+                    $tree[] = $node;
+                }
+            }
+            return $tree;
+        };
+
+        // Si un categoryId est fourni, retourner l'arbre à partir de cette catégorie
+        if ($categoryId !== null) {
+            return isset($categoriesByParent[$categoryId]) ? $buildTree($categoryId) : [];
+        }
+
+        // Sinon, retourner l'arbre complet à partir de la racine (parent_id = 0)
+        return $buildTree(0);
+    }
+
+    /**
+     * Récupère les IDs de tous les descendants d'une catégorie de manière récursive.
+     *
+     * @param int $categoryId
+     * @return array
+     */
+    protected static function getDescendantIds(int $categoryId): array
+    {
+        $descendantIds = [];
+        $categories = static::query()->select('id', 'parent_id')->get();
+
+        $findDescendants = function ($parentId) use (&$findDescendants, $categories, &$descendantIds) {
+            foreach ($categories as $category) {
+                if ($category->parent_id == $parentId) {
+                    $descendantIds[] = $category->id;
+                    $findDescendants($category->id);
+                }
+            }
+        };
+
+        $findDescendants($categoryId);
+        return $descendantIds;
+    }
+
+
     /**
      * Store a new category in storage.
      * 
@@ -132,44 +235,5 @@ class CategoryRepository extends Repository
             'is_featured' => $isFeatured,
             'color' => $request->color ?? $category->color
         ]);
-    }
-
-    /**
-     * Récupère toutes les catégories organisées de parent à enfant de façon récursive.
-     *
-     * @return array
-     */
-    public static function getRecursiveTree($includeCourses = false)
-    {
-        $categories = static::query()
-            ->with('image')
-            ->orderBy('parent_id')
-            ->orderBy('id')
-            ->get();
-
-        $categoriesByParent = [];
-        foreach ($categories as $category) {
-            $parentId = $category->parent_id ?? 0;
-            $categoriesByParent[$parentId][] = $category;
-        }
-
-        $buildTree = function ($parentId) use (&$buildTree, $categoriesByParent, $includeCourses) {
-            $tree = [];
-            if (isset($categoriesByParent[$parentId])) {
-                foreach ($categoriesByParent[$parentId] as $category) {
-                    $node = $category->toArray();
-                    $node['image'] = [
-                        'id' => $category->image?->id,
-                        'src' => $category->imagePath,
-                    ];
-                    $node['children'] = $buildTree($category->id);
-                    $node['courses'] = $includeCourses == true ? CourseRepository::findAllByCategoryId($category->id) : [];
-                    $tree[] = $node;
-                }
-            }
-            return $tree;
-        };
-
-        return $buildTree(0);
     }
 }

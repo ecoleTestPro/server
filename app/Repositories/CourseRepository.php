@@ -15,25 +15,44 @@ class CourseRepository extends Repository
         return Course::class;
     }
 
-    public static function findAll($user, $search = null)
+    public static function queryBase()
     {
         try {
-            $query = static::query();
+            return static::query()
+                ->with(['category', 'instructor.user', 'media', 'video']);
+        } catch (\Exception $e) {
+            throw new \Exception('Error initializing course query: ' . $e->getMessage());
+        }
+    }
 
-            if ($user && $user->hasRole('admin')) {
-                $query = $query
-                    ->when(!$user->hasRole('admin'), function ($query) use ($user) {
-                        $query->where('instructor_id', $user->instructor?->id);
-                    });
+    public static function findById($id)
+    {
+        try {
+            $course = static::queryBase()
+                ->where('id', $id)
+                ->firstOrFail();
+
+            if ($course && isset($course->description)) {
+                $course->description = json_decode($course->description, true);
             }
 
-            return $query
+            return $course;
+        } catch (\Exception $e) {
+            throw new \Exception('Error fetching course by ID: ' . $e->getMessage());
+        }
+    }
+
+    public static function findAll($search = null)
+    {
+        try {
+            return static::query()
                 ->when($search, function ($query) use ($search) {
                     $query->where('title', 'like', '%' . $search . '%')
                         ->orWhereHas('instructor.user', function ($query) use ($search) {
                             $query->where('name', 'like', '%' . $search . '%');
                         });
                 })
+                ->with(['category', 'instructor', 'media', 'video'])
                 ->latest('id')
                 ->withTrashed()
                 ->paginate(10)
@@ -41,6 +60,22 @@ class CourseRepository extends Repository
         } catch (\Exception $e) {
             throw new \Exception('Error fetching courses: ' . $e->getMessage());
             return [];
+        }
+    }
+
+    public static function findAllBySearchText($searchText, $limit = 10)
+    {
+        try {
+            return static::queryBase()
+                ->where('title', 'like', '%' . $searchText . '%')
+                ->orWhereHas('instructor.user', function ($query) use ($searchText) {
+                    $query->where('name', 'like', '%' . $searchText . '%');
+                })
+                ->latest('id')
+                ->take($limit)
+                ->get();
+        } catch (\Exception $e) {
+            throw new \Exception('Error fetching courses by search text: ' . $e->getMessage());
         }
     }
 
@@ -55,6 +90,7 @@ class CourseRepository extends Repository
         try {
             return static::query()
                 ->where('is_featured', true)
+                ->with(['category', 'instructor', 'media', 'video'])
                 ->latest('id')
                 ->limit(6)
                 ->get();
@@ -74,11 +110,56 @@ class CourseRepository extends Repository
     {
         try {
 
-            return static::query()
-                // ->whereNull('parent_id')
+            return static::queryBase()
                 ->where('category_id', $categoryId)
                 ->latest('id')
-                // ->with('image')
+                ->take($limit)
+                ->get();
+        } catch (\Exception $e) {
+            throw new \Exception('Error fetching courses by category: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Retrieve a course by its slug.
+     *
+     * @param string $slug The slug of the course.
+     * @return \App\Models\Course
+     * @throws \Exception If the course cannot be found by slug.
+     */
+    public static function findBySlug($slug): ?Course
+    {
+        try {
+            $course = static::queryBase()
+                ->where('slug', $slug)
+                ->firstOrFail();
+
+            if ($course && isset($course->description)) {
+                $course->description = json_decode($course->description, true);
+            }
+
+            return $course;
+        } catch (\Exception $e) {
+            throw new \Exception('Error fetching course by slug: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Get all courses by category slug.
+     *
+     * @param string $categorySlug
+     * @return \Illuminate\Support\Collection
+     */
+    public static function findAllByCategorySlug($categorySlug, $limit = 10)
+    {
+        try {
+
+            return static::query()
+                ->whereHas('category', function ($query) use ($categorySlug) {
+                    $query->where('slug', $categorySlug);
+                })
+                ->latest('id')
+                ->with(['category', 'instructor', 'media', 'video'])
                 ->take($limit)
                 ->get();
         } catch (\Exception $e) {

@@ -120,8 +120,8 @@ function FeaturesSection() {
         <div className="relative overflow-hidden">
             <section className="relative z-10 py-10 text-white md:py-20">
 
-                <div className="absolute inset-0 bg-gradient-to-r from-green-500 to-teal-500 opacity-50"></div>
-                <div className="animate-float-slow absolute inset-0 bg-gradient-to-r from-teal-500 to-yellow-500 opacity-50"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-green-100 to-teal-500 opacity-50"></div>
+                <div className="animate-float-slow absolute inset-0 bg-gradient-to-r from-gray-50 to-gray-200 opacity-50"></div>
                 <h2 className="">Bestseller</h2>
 
                 <div className="container mx-auto px-4">

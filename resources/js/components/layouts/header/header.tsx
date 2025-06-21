@@ -40,10 +40,10 @@ export default function Header() {
         console.log('[buildCourseItems] category courses', category?.courses);
         if (!category.courses || category.courses.length === 0) return [];
 
-        return category.courses.slice(0, 5).map((course) => ({
+        return category.courses.slice(0, 4).map((course) => ({
             id: course.id?.toString() || '',
             label: course.title || 'Cours sans titre',
-            href: ROUTE_MAP.courseDetail(category.id || 0, course.id || 0).link,
+            href: ROUTE_MAP.courseDetail(category.slug || '', course.slug || '').link,
             description: course.excerpt || '',
             image: course.image || undefined,
         }));
@@ -73,8 +73,8 @@ export default function Header() {
                 id: category.id?.toString() || '',
                 label: category.title || 'Catégorie sans titre',
                 description: category.description || defaultDescription,
-                href: ROUTE_MAP.courseCategory(category.id || 0).link,
-                image: category.image?.src || 'assets/images/bg-03.jpg',
+                href: ROUTE_MAP.courseCategory(category.slug).link,
+                image: category.image?.src || '/assets/images/bg-03.jpg',
                 subItems: childItems,
             };
 
@@ -137,6 +137,7 @@ export default function Header() {
     return (
         <>
             {/* Top Header & Infos flash section */}
+            {/* sticky top-0 z-50  */}
             <header className="shadow-sm">
                 {false && (
                     <section className="px-4 py-1 sm:px-6 lg:px-8">
@@ -160,7 +161,9 @@ export default function Header() {
                             </Link>
 
                             <div className="flex-1">
-                                <HeaderSearch className="hidden sm:block" />
+                                <div className=" h-[60px] flex justify-center items-center">
+                                    <HeaderSearch className="hidden sm:block" />
+                                </div>
                             </div>
 
                             <div className="ml-auto flex items-center gap-3">
