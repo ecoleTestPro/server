@@ -99,7 +99,7 @@ const OurCurrentCourses = ({ coursesData, showSidebar = false }: IOurCurrentCour
                 {/* Liste des cours */}
                 <div className="flex-1">
                     {filteredCourses.map((category) => (
-                        <ListCourseByCategory key={category.id} title={category.title} coursesList={[category]} />
+                        <ListCourseByCategory key={category.id} title={category.title} slug={category.slug} coursesList={[category]} />
                     ))}
                     {filteredCourses.length === 0 && (
                         <div className="text-center text-2xl text-gray-500 dark:text-gray-400">

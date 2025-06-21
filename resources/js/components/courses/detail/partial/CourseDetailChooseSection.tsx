@@ -85,7 +85,7 @@ export default function CourseDetailChooseSection({ course, registrationRef }: C
                 </div>
             </div>
 
-            <CourseInscriptionDialog course={course} isOpen={isDialogOpen} onOpenChange={setIsDialogOpen} onSubmit={handleSubmit} />
+            <CourseInscriptionDialog course={course} isOpen={isDialogOpen} onOpenChange={setIsDialogOpen} />
         </>
     );
 }

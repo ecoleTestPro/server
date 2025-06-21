@@ -25,6 +25,23 @@ class CourseRepository extends Repository
         }
     }
 
+    public static function findById($id)
+    {
+        try {
+            $course = static::queryBase()
+                ->where('id', $id)
+                ->firstOrFail();
+
+            if ($course && isset($course->description)) {
+                $course->description = json_decode($course->description, true);
+            }
+
+            return $course;
+        } catch (\Exception $e) {
+            throw new \Exception('Error fetching course by ID: ' . $e->getMessage());
+        }
+    }
+
     public static function findAll($search = null)
     {
         try {

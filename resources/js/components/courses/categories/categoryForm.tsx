@@ -139,8 +139,8 @@ function CategoryForm({ closeDrawer, initialData }: CategoryFormProps) {
                 <Label htmlFor="parent_id">{t('courses.parentCategory', 'Catégorie parente')}</Label>
                 <SelectCustom
                     data={
-                        catData.categoriesTree &&
-                        catData.categoriesTree.map((category) => ({
+                        catData.categories_with_courses &&
+                        catData.categories_with_courses.map((category) => ({
                             id: category.id!,
                             title: category.title,
                             value: category.id!.toString(),

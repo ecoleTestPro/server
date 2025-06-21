@@ -1,162 +1,234 @@
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'; // Assuming the Dialog components are exported to this path
-import { cn } from '@/lib/utils';
+import InputError from '@/components/input-error';
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { SharedData } from '@/types';
 import { ICourse } from '@/types/course';
+import { Logger } from '@/utils/console.util';
+import { useForm, usePage } from '@inertiajs/react';
+import axios from 'axios';
 import * as React from 'react';
+import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
-// Mock user type (replace with actual auth context type)
-interface User {
-    name?: string;
-    email?: string;
-}
-
-// Props interface
 interface CourseInscriptionDialogProps {
     course: ICourse;
     isOpen: boolean;
     onOpenChange: (open: boolean) => void;
-    user?: User; // Optional user object for logged-in users
-    onSubmit: (formData: FormData) => void; // Callback for form submission
+    onSubmit?: (formData: FormData) => void;
 }
 
-// Form data interface
-interface FormData {
+interface CourseEnrollmentForm {
     name: string;
     email: string;
-    phone?: string;
+    mode: 'online' | 'in-person';
+    phone: string;
     company?: string;
+    [key: string]: any; // <-- Add this line
 }
 
-const CourseInscriptionDialog: React.FC<CourseInscriptionDialogProps> = ({ course, isOpen, onOpenChange, user, onSubmit }) => {
+const CourseInscriptionDialog: React.FC<CourseInscriptionDialogProps> = ({ course, isOpen, onOpenChange, onSubmit }) => {
+    const { auth, data: sharedData } = usePage<SharedData>().props;
     const { t } = useTranslation();
-    const [formData, setFormData] = React.useState<FormData>({
-        name: user?.name || '',
-        email: user?.email || '',
-        phone: '',
+
+    const { data, setData, processing, errors, reset } = useForm<CourseEnrollmentForm>({
+        name: auth?.user?.name || '',
+        email: auth?.user?.email || '',
+        phone: auth?.user?.phone || '',
+        mode: 'online',
         company: '',
     });
-    const [errors, setErrors] = React.useState<Partial<Record<keyof FormData, string>>>({});
 
-    // Handle input changes
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
-        // Clear error for the field when user types
-        setErrors((prev) => ({ ...prev, [name]: undefined }));
-    };
-
-    // Validate form
     const validateForm = (): boolean => {
-        const newErrors: Partial<Record<keyof FormData, string>> = {};
-        if (!formData.name.trim()) {
+        const newErrors: Partial<Record<keyof CourseEnrollmentForm, string>> = {};
+
+        //
+        if (!data.name.trim()) {
             newErrors.name = t('COURSE.INSCRIPTION.ERROR.NAME_REQUIRED', 'Name is required');
         }
-        if (!formData.email.trim()) {
+
+        // ? mode validation
+        if (!data.email.trim()) {
             newErrors.email = t('COURSE.INSCRIPTION.ERROR.EMAIL_REQUIRED', 'Email is required');
-        } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
             newErrors.email = t('COURSE.INSCRIPTION.ERROR.EMAIL_INVALID', 'Invalid email format');
         }
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
+
+        // ? phone validation
+        // if (!data.phone.trim()) {
+        //     newErrors.phone = t('COURSE.INSCRIPTION.ERROR.PHONE_REQUIRED', 'Phone is required');
+        // } else if (!/^\+?[\d\s-]{8,}$/.test(data.phone)) {
+        //     newErrors.phone = t('COURSE.INSCRIPTION.ERROR.PHONE_INVALID', 'Invalid phone format');
+        // }
+
+        if (Object.keys(newErrors).length > 0) {
+            toast.error(Object.values(newErrors).join('. '), {
+                duration: 5000,
+                position: 'top-right',
+                style: {
+                    background: '#f8d7da',
+                    color: '#721c24',
+                },
+            });
+            return false;
+        }
+        return true;
     };
 
-    // Handle form submission
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (validateForm()) {
-            onSubmit(formData);
-            onOpenChange(false); // Close dialog on successful submission
-        }
+        if (!validateForm()) return;
+
+        const payload = {
+            course_id: course.id,
+            user_id: auth.user?.id,
+            name: data.name,
+            email: data.email,
+            phone: data.phone,
+            mode: data.mode,
+            company: data.company || undefined,
+        };
+
+        Logger.log('[Enrollment] submitting:', payload);
+
+        axios
+            .post(route('course.enrollment'), payload)
+            .then((response: { data: { search_result: { courses?: ICourse[] } } }) => {
+                Logger.log('[Enrollment] Course successfully enrolled:', response.data.search_result?.courses);
+                toast.success(t('courses.search', 'Votre inscription a été enregistrée avec succès, nous vous contacterons bientôt.'));
+                reset();
+                onOpenChange(false);
+            })
+            .catch((error) => {
+                toast.error(t('courses.search', 'Une erreur est survenue lors de l’inscription'));
+                Logger.error('[Enrollment] Error fetching search results:', error);
+            });
     };
+
+    if (!course) return null;
 
     return (
         <Dialog open={isOpen} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-md">
+            <DialogContent className="sm:max-w-md" aria-describedby="dialog-description">
                 <DialogHeader>
-                    <DialogTitle>{t('COURSE.INSCRIPTION.TITLE', 'Register for {{title}}', { title: course.title })}</DialogTitle>
-                    <DialogDescription>{t('COURSE.INSCRIPTION.DESCRIPTION', 'Fill out the form to enroll in this course.')}</DialogDescription>
+                    <DialogTitle>
+                        <span className="text-gray-500 dark:text-gray-300">{t('COURSE.INSCRIPTION.TITLE', 'Inscription')} </span> <br />
+                        <span className="text-black dark:text-white mt-2">{course.title}</span>
+                    </DialogTitle>
+                    <DialogDescription id="dialog-description">
+                        {t('COURSE.INSCRIPTION.DESCRIPTION', 'Remplissez le formulaire ci-dessous pour vous inscrire à cette formation.')}
+                    </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className="grid gap-4">
                     <div className="grid gap-2">
-                        <label htmlFor="name" className="text-sm font-medium">
-                            {t('COURSE.INSCRIPTION.NAME', 'Full Name')}
-                        </label>
-                        <input
+                        <Label htmlFor="mb-2">{t('COURSE.INSCRIPTION.MODE', 'Mode')}</Label>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="flex items-center gap-2">
+                                <Input
+                                    id="mode-online"
+                                    type="radio"
+                                    name="mode"
+                                    value="online"
+                                    checked={data.mode === 'online'}
+                                    onChange={() => setData('mode', 'online')}
+                                    className="cursor-pointer w-4 h-4"
+                                    required
+                                />
+                                <Label htmlFor="mode-online" className="cursor-pointer">
+                                    {t('enrollment.online', 'En ligne')}
+                                </Label>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <Input
+                                    id="mode-in-person"
+                                    type="radio"
+                                    name="mode"
+                                    value="in-person"
+                                    checked={data.mode === 'in-person'}
+                                    onChange={() => setData('mode', 'in-person')}
+                                    className="cursor-pointer w-4 h-4"
+                                    required
+                                />
+                                <Label htmlFor="mode-in-person" className="cursor-pointer">
+                                    {t('enrollment.inPerson', 'En présentiel')}
+                                </Label>
+                            </div>
+                        </div>
+                        {errors.mode && <InputError message={errors.mode} />}
+                    </div>
+
+                    <div className="grid gap-2">
+                        <Label htmlFor="name">{t('enrollment.name', 'Nom complet')}</Label>
+                        <Input
                             id="name"
-                            name="name"
                             type="text"
-                            value={formData.name}
-                            onChange={handleChange}
-                            className={cn(
-                                'border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50',
-                                errors.name && 'border-red-500',
-                            )}
-                            placeholder={t('COURSE.INSCRIPTION.NAME_PLACEHOLDER', 'Enter your full name')}
-                            disabled={!!user?.name} // Disable if user is logged in and name is pre-filled
+                            value={data.name}
+                            onChange={(e) => setData('name', e.target.value)}
+                            placeholder={t('enrollment.namePlaceholder', 'John Doe')}
+                            required
+                            autoComplete="name"
+                            autoFocus
                         />
-                        {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
+                        {errors.name && <InputError message={errors.name} />}
                     </div>
+
                     <div className="grid gap-2">
-                        <label htmlFor="email" className="text-sm font-medium">
-                            {t('COURSE.INSCRIPTION.EMAIL', 'Email')}
-                        </label>
-                        <input
+                        <Label htmlFor="email">{t('enrollment.email', 'Email')}</Label>
+                        <Input
                             id="email"
-                            name="email"
                             type="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            className={cn(
-                                'border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50',
-                                errors.email && 'border-red-500',
-                            )}
-                            placeholder={t('COURSE.INSCRIPTION.EMAIL_PLACEHOLDER', 'Enter your email')}
-                            disabled={!!user?.email} // Disable if user is logged in and email is pre-filled
+                            value={data.email}
+                            onChange={(e) => setData('email', e.target.value)}
+                            placeholder={t('enrollment.emailPlaceholder', 'email@example.com')}
+                            required
+                            autoComplete="email"
                         />
-                        {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+                        {errors.email && <InputError message={errors.email} />}
                     </div>
+
                     <div className="grid gap-2">
-                        <label htmlFor="phone" className="text-sm font-medium">
-                            {t('COURSE.INSCRIPTION.PHONE', 'Phone Number (Optional)')}
-                        </label>
-                        <input
+                        <Label htmlFor="phone">{t('enrollment.phone', 'Téléphone')}</Label>
+                        <Input
                             id="phone"
-                            name="phone"
                             type="tel"
-                            value={formData.phone}
-                            onChange={handleChange}
-                            className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-                            placeholder={t('COURSE.INSCRIPTION.PHONE_PLACEHOLDER', 'Enter your phone number')}
+                            value={data.phone}
+                            onChange={(e) => setData('phone', e.target.value)}
+                            placeholder={t('enrollment.phonePlaceholder', '+123-456-7890')}
+                            required
+                            autoComplete="tel"
                         />
+                        {errors.phone && <InputError message={errors.phone} />}
                     </div>
+
                     <div className="grid gap-2">
-                        <label htmlFor="company" className="text-sm font-medium">
-                            {t('COURSE.INSCRIPTION.COMPANY', 'Company (Optional)')}
-                        </label>
-                        <input
+                        <Label htmlFor="company">{t('enrollment.company', 'Société (Optionnel)')}</Label>
+                        <Input
                             id="company"
-                            name="company"
                             type="text"
-                            value={formData.company}
-                            onChange={handleChange}
-                            className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-                            placeholder={t('COURSE.INSCRIPTION.COMPANY_PLACEHOLDER', 'Enter your company name')}
+                            value={data.company}
+                            onChange={(e) => setData('company', e.target.value)}
+                            placeholder={t('enrollment.companyPlaceholder', 'Nom de votre société')}
+                            autoComplete="organization"
                         />
+                        {errors.company && <InputError message={errors.company} />}
                     </div>
+
                     <DialogFooter>
                         <DialogClose asChild>
                             <button
                                 type="button"
-                                className="bg-muted hover:bg-muted/80 text-muted-foreground inline-flex h-10 items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                                onClick={() => onOpenChange(false)}
+                                className="bg-muted hover:bg-muted/80 text-muted-foreground inline-flex h-10 items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                             >
-                                {t('COURSE.INSCRIPTION.CANCEL', 'Cancel')}
+                                {t('COURSE.INSCRIPTION.CANCEL', 'Annuler')}
                             </button>
                         </DialogClose>
                         <button
                             type="submit"
-                            className="bg-green-500 hover:bg-green-600 text-white inline-flex h-10 items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                            disabled={processing}
+                            className="cursor-pointer bg-green-500 hover:bg-green-600 text-white inline-flex h-10 items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:bg-green-300"
                         >
-                            {t('COURSE.INSCRIPTION.SUBMIT', 'Submit Registration')}
+                            {processing ? 'Submitting...' : t('COURSE.INSCRIPTION.SUBMIT', "S'inscrire")}
                         </button>
                     </DialogFooter>
                 </form>

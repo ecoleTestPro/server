@@ -46,8 +46,8 @@ return new class extends Migration
             $table->enum('periodicity_unit', ['DAY', 'WEEK', 'MONTH', 'YEAR'])->nullable();
             $table->integer('periodicity_value')->nullable();
 
-            $table->float('regular_price');
             $table->float('price');
+            $table->float('regular_price');
             $table->boolean('price_includes_tax')->default(false);
 
             $table->foreignId('instructor_id')->constrained('instructors')->cascadeOnDelete();

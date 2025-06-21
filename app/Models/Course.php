@@ -21,7 +21,7 @@ class Course extends Model
         'is_published'       => 'boolean',
         'published_at'       => 'datetime',
         'regular_price'      => 'float',
-        'price'              => 'float',
+        // 'price'              => 'float',
         'price_includes_tax' => 'boolean',
         'duration'           => 'integer',
     ];

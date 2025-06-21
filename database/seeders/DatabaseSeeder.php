@@ -19,9 +19,13 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             InstructorSeeder::class,
 
+            NotificationSeeder::class,
+
             CategorySeeder::class,
             CourseSeeder::class,
             // GuestSeeder::class,
+
+            EnrollmentSeeder::class,
             // Other seeders can be added here
         ]);
     }
