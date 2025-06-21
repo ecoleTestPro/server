@@ -6,12 +6,6 @@ import { Checkbox } from '../ui/checkbox';
 import { DataTable } from '../ui/dataTable';
 import CategoryActionBtn from './categoryActionBtn';
 
-const categories: ICourseCategory[] = [
-    { id: 1, title: 'Développement Web', color: 'blue', is_featured: true },
-    { id: 2, title: 'Design', color: 'red', is_featured: false },
-    { id: 3, title: 'Marketing', color: 'green', is_featured: true },
-];
-
 interface CategoryDataTableProps {
     categories: ICourseCategory[];
     onEditRow?: (row: ICourseCategory) => void;
