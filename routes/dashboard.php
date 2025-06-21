@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Private\CategoryController;
 use App\Http\Controllers\Private\CourseController;
+use App\Http\Controllers\Private\DashboardController;
 use App\Http\Controllers\Private\SettingController;
 
 use App\Http\Controllers\Settings\PasswordController;
@@ -17,7 +18,7 @@ use Inertia\Inertia;
 
 Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () {
     // DASHBOARD HOME
-    Route::get('', [CourseController::class, 'index'])->name('dashboard.index');
+    Route::get('', [DashboardController::class, 'index'])->name('dashboard.index');
 
 
     // COURSE MANAGEMENT

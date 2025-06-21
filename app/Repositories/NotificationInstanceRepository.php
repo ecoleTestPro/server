@@ -11,4 +11,14 @@ class NotificationInstanceRepository extends Repository
     {
         return NotificationInstance::class;
     }
+
+    /**
+     * Return the count of unread notifications.
+     *
+     * @return int
+     */
+    public static function unreadCount()
+    {
+        return self::query()->where('is_read', false)->count();
+    }
 }
