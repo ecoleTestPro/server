@@ -123,6 +123,20 @@ export interface ICourseCategory {
     courses?: ICourse[],
 }
 
+export const createCourseCategory = (): ICourseCategory => {
+    return {
+        title: '',
+        slug: '',
+        description: '',
+        is_featured: false,
+        parent_id: undefined,
+        media: '',
+        color: '',
+        image: undefined,
+        courses: [],
+    };
+}
+
 export interface ICourseEnrollment {
     user_id: number,
     course_id: number,
@@ -143,7 +157,8 @@ export interface ICustomSharedData {
      */
     courses?: {
         total?: number;
-        list?: IDataWithPagination<ICourse>;
+        list?: ICourse[];
+        list_with_pagination?: IDataWithPagination<ICourse>;
     }
 
     /**

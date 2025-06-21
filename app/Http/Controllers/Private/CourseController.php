@@ -37,15 +37,12 @@ class CourseController extends Controller
     public function index(Request $request)
     {
         $search = $request->cat_search ? strtolower($request->cat_search) : null;
-        $user = auth()->user();
 
         $categories = CategoryRepository::findAll();
-        // dd($categories   );
-
-        $course = CourseRepository::findAll($user, $search);
+        $courses = CourseRepository::findAll($search);
 
         $data = [
-            'courses'    => $course,
+            'courses'    => ["list" => $courses],
             'categories' => $categories,
         ];
 
@@ -54,15 +51,16 @@ class CourseController extends Controller
         ]);
     }
 
-    public function create()
+    public function create(string|null $slug = null)
     {
         $categories = CategoryRepository::findAll();
-        // dd($categories   );
-
-        $course = CourseRepository::findAll(auth()->user());
+        $course = null;
+        if ($slug) {
+            $course = CourseRepository::findBySlug($slug);
+        }
 
         $data = [
-            'courses'    => $course,
+            'course'     => $course,
             'categories' => $categories,
         ];
 

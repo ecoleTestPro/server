@@ -12,7 +12,7 @@ export default function EnrollmentRate() {
                         </div>
 
                         <div className="mt-10">
-                            <EnrollmentRateAreaChart />
+                            {/* <EnrollmentRateAreaChart /> */}
                         </div>
                     </div>
                 </div>

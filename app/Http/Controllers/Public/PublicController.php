@@ -60,7 +60,7 @@ class PublicController extends PublicAbstractController
     {
         $data = $this->default_data;
         $data['category'] = CategoryRepository::findAll();
-        $data['courses'] = CourseRepository::findAll();
+        $data['courses']['list'] = CourseRepository::findAll();
         // dd($data['courses']);
 
         // dd($featuredCourses);

@@ -1,4 +1,7 @@
 import { ICourse } from '@/types/course';
+import { ROUTE_MAP } from '@/utils/route.util';
+import { Link } from '@inertiajs/react';
+import { Edit2Icon, Trash2Icon } from 'lucide-react';
 import { FaClock, FaMapMarkerAlt } from 'react-icons/fa'; // Import icons
 import './CourseCard.css'; // Link to CSS file
 
@@ -10,7 +13,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
     const CourseHeader = () => {
         return (
             <div className="mb-2 flex items-center justify-between">
-                <span className="text-sm text-green-500">COURS</span>
+                <span className="text-sm text-green-500">Formation</span>
                 {course.is_featured && <span className="text-sm text-yellow-500">FEATURED</span>}
             </div>
         );
@@ -56,12 +59,28 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
                     </div>
                 </div>
 
-                <button
-                    className="rounded-md border border-transparent bg-slate-800 px-4 py-2 text-center text-sm text-white shadow-md transition-all hover:bg-slate-700 hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                    type="button"
-                >
-                    Read more
-                </button>
+                <div className="flex items-center justify-between">
+                    <div>
+                        {course && (
+                            <Link
+                                href={ROUTE_MAP.courseDetail(course?.category?.slug ?? '#', course.slug).link}
+                                className="rounded-md border border-transparent bg-slate-800 px-4 py-2 text-center text-sm text-white shadow-md transition-all hover:bg-primary hover:text-white  hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                                type="button"
+                            >
+                                Voir plus
+                            </Link>
+                        )}
+                    </div>
+
+                    <div className="flex gap-x-2">
+                        <Link href={ROUTE_MAP.editCourse(course.slug).link}  className="text-green-400 p-4 rounded-full hover:bg-green-400 hover:text-white" type="button">
+                            <Edit2Icon className="w-4 h-4  " />
+                        </Link>
+                        <button className="text-red-500 p-4 rounded-full hover:bg-red-400 hover:text-white" type="button">
+                            <Trash2Icon className="w-4 h-4" />
+                        </button>
+                    </div>
+                </div>
             </div>
         );
     };
@@ -85,7 +104,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
 
     return (
         <div className="course-card w-full rounded-lg bg-white shadow-md dark:bg-gray-800">
-            <div className="course-card-header p-4">
+            <div className="course-card-header px-4 pt-2">
                 <CourseHeader />
                 <CourseTitle />
             </div>
