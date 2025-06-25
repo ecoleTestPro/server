@@ -55,8 +55,7 @@ class CourseRepository extends Repository
                 ->with(['category', 'instructor', 'media', 'video'])
                 ->latest('id')
                 ->withTrashed()
-                ->paginate(10)
-                ->withQueryString();
+                ->get();
         } catch (\Exception $e) {
             throw new \Exception('Error fetching courses: ' . $e->getMessage());
             return [];

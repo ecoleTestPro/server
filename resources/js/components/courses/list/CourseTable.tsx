@@ -1,7 +1,9 @@
 import { ICourse } from '@/types/course';
 import { ROUTE_MAP } from '@/utils/route.util';
+import { getPeriodicity } from '@/utils/utils';
 import { Link } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
+import CourseDurationBlock from '../CourseDurationBlock';
 
 interface ICourseTableProps {
     courses: ICourse[];
@@ -51,10 +53,10 @@ export default function CourseTable({ courses }: ICourseTableProps) {
                                     </div>
                                 </td>
                                 <td className="w-1/5 border-b border-gray-100 px-5 py-4 whitespace-nowrap ltr:text-left rtl:text-right dark:border-[#172036]">
-                                    {item.nextSession ?? '23.06.25 - 25.06.25'}
+                                    <CourseDurationBlock location={item.location_mode} />
                                 </td>
                                 <td className="w-1/5 border-b border-gray-100 px-5 py-4 whitespace-nowrap ltr:text-left rtl:text-right dark:border-[#172036]">
-                                    {'FR'}
+                                    <CourseDurationBlock duration={getPeriodicity(item.periodicity_unit, item.periodicity_value)} />
                                 </td>
                                 <td className="w-1/5 border-b border-gray-100 px-5 py-4 whitespace-nowrap ltr:text-left rtl:text-right dark:border-[#172036]">
                                     <span className="block font-medium">FCFA {item.price / 100}</span>

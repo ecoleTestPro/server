@@ -123,12 +123,43 @@ export interface ICourseCategory {
     courses?: ICourse[],
 }
 
+export const createCourseCategory = (): ICourseCategory => {
+    return {
+        title: '',
+        slug: '',
+        description: '',
+        is_featured: false,
+        parent_id: undefined,
+        media: '',
+        color: '',
+        image: undefined,
+        courses: [],
+    };
+}
+
+export interface ICourseEnrollment {
+    user_id: number,
+    course_id: number,
+    user: User,
+    course: ICourse,
+    mode: string,
+    progress: number,
+    course_price: number,
+    discount_amount: number,
+    last_activity: string,
+    is_certificate_downloaded: boolean,
+}
+
 
 export interface ICustomSharedData {
     /**
      * Paginated list of courses
      */
-    courses?: IDataWithPagination<ICourse>;
+    courses?: {
+        total?: number;
+        list?: ICourse[];
+        list_with_pagination?: IDataWithPagination<ICourse>;
+    }
 
     /**
      * Single course
@@ -159,5 +190,27 @@ export interface ICustomSharedData {
         courses: ICourse[];
         categories: ICourseCategory[];
         blogs: any[]; // Assuming blogs is an array of objects, adjust type as needed
+    }
+
+    users?: {
+        total?: number;
+        last_30_days?: number;
+        list?: User[]
+    }
+
+    admin_users?: {
+        total?: number;
+        last_30_days?: number;
+        list?: User[]
+    }
+
+    enrollments?: {
+        total?: number;
+        last_30_days?: number;
+        list?: IDataWithPagination<ICourseEnrollment>
+    }
+
+    notifications?: {
+        unread_count?: number;
     }
 }

@@ -15,6 +15,7 @@ export const ROUTE_MAP: {
     courses: IRouteMap;
     courseDetail: (categorySlug: string, slug: string) => IRouteMap;
     courseCategory: (categorySlug: string) => IRouteMap;
+    editCourse: (slug: string) => IRouteMap;
     consulting: IRouteMap;
     auditOfMaturityOfTests: IRouteMap;
     consultingTesting: IRouteMap;
@@ -51,6 +52,12 @@ export const ROUTE_MAP: {
         return {
             title: 'Catégorie de formation',
             link: `/formation/${categorySlug}`,
+        }
+    },
+    editCourse: (slug: string) => {
+        return {
+            title: 'Modifier la formation',
+            link: `/dashboard/courses/edit/${slug}`,
         }
     },
     consulting: {
