@@ -6,7 +6,7 @@ import { ICourseCategory } from '@/types/course';
 import { IMainMenuItem, MenuChildItem } from '@/types/header.type';
 import { ROUTE_MAP } from '@/utils/route.util';
 import { Link, usePage } from '@inertiajs/react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { HeaderNavTwoSidebar } from './HeaderNavTwoMobile';
 import { HeaderNavTwo } from './header-nav-two';
@@ -18,11 +18,37 @@ export default function Header() {
     const page = usePage<SharedData>();
     const { t } = useTranslation();
 
+    const headerRef = useRef<HTMLDivElement>(null);
+    const [isVisible, setIsVisible] = useState(true);
+    const [lastScrollY, setLastScrollY] = useState(0);
+
     const [mainMenu, setMainMenu] = useState<IMainMenuItem[]>(DEFULAT_MAIN_MENU);
     const [mainMenuRight, setMainMenuRight] = useState<IMainMenuItem[]>(DEFULAT_MAIN_MENU_RIGHT);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     const logo = { href: '/' };
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const currentScrollY = window.scrollY;
+
+            if (currentScrollY > lastScrollY && currentScrollY > 50) {
+                // Scrolling vers le bas et au-delà de 50px
+                setIsVisible(false);
+            } else if (currentScrollY < lastScrollY) {
+                // Scrolling vers le haut
+                setIsVisible(true);
+            }
+
+            setLastScrollY(currentScrollY);
+        };
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, [lastScrollY]);
 
     useEffect(() => {
         const mainMenuInit: IMainMenuItem[] = DEFULAT_MAIN_MENU;
@@ -137,8 +163,10 @@ export default function Header() {
     return (
         <>
             {/* Top Header & Infos flash section */}
-            {/* sticky top-0 z-50  */}
-            <header className="shadow-sm">
+            <header
+                className={` top-0 left-0 w-full z-50 bg-white dark:bg-gray-900 transition-transform duration-300 ${lastScrollY > 200 ? 'fixed shadow-lg ' : 'relative'}  ${isVisible ? 'translate-y-0' : '-translate-y-full'}`}
+                ref={headerRef}
+            >
                 {false && (
                     <section className="px-4 py-1 sm:px-6 lg:px-8">
                         <div className="flex items-center justify-between bg-gray-50 px-4 py-2 text-sm text-gray-700 sm:px-6 dark:bg-gray-800 dark:text-white">

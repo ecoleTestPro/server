@@ -234,12 +234,10 @@ class PublicController extends PublicAbstractController
         // such as sending an email or saving the message to the database.  
 
 
-        // For now, we just redirect back with a success message
-        // In a real application, you would send an email or save the message to the database
-        return back()->withSuccess('Your message has been sent successfully. We will get back to you soon.');
-        // Here you would typically handle the contact form submission,
-        // such as sending an email or saving the message to the database.
-        // For now, we just redirect back with a success message.
+        return response()->json([
+            'success' => true,
+            'message' => 'Votre message a été envoyé avec succès.',
+        ]);
     }
 
     public function privacyPolicy()

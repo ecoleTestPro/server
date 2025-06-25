@@ -20,11 +20,30 @@ export default function NewsletterCTA() {
                         background-position: center top;
                     }
                 }
+
+                .animate-gradient {
+                    background-size: 200% 200%;
+                    animation: gradient 6s ease-in-out infinite;
+                }
+
+                @keyframes gradient {
+                    0% {
+                        background-position: 0% 50%;
+                    }
+
+                    50% {
+                        background-position: 100% 50%;
+                    }
+
+                    100% {
+                        background-position: 0% 50%;
+                    }
+                }
             `}</style>
 
             <div className="w-full">
                 <div
-                    className="animate-bg-position transition-all duration-1000 ease-in-out"
+                    className="relative animate-bg-position transition-all duration-1000 ease-in-out"
                     style={{
                         backgroundImage: 'url(/assets/images/shape-2.png)',
                         backgroundPosition: 'center center',
@@ -35,7 +54,7 @@ export default function NewsletterCTA() {
                     }}
                 >
                     {/* Gradient animé en fond */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 animate-gradient opacity-50"></div>
+                    <div className="relative inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 animate-gradient opacity-50"></div>
 
                     <div className="mx-auto md:max-w-[520px] px-[12px] py-[40px] md:py-[50px] lg:py-[60px] relative z-10">
                         <h2 className="!mb-[10px] !leading-[1.2] !font-medium !text-white text-lg md:text-3xl md:-tracking-[1px] lg:!mb-[12px] animate-fade-in-down">

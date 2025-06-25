@@ -1,7 +1,21 @@
-export default function ContactForm() {
+import { useForm } from '@inertiajs/react';
+import { useTranslation } from 'react-i18next';
+import InputError from '../input-error';
+import { Input } from '../ui/input';
+import { Label } from '../ui/label';
+import { ContactFormData } from './ContactUs';
+
+interface ContactFormProps {
+    handleSubmit: (data: ContactFormData, e: React.FormEvent) => void;
+}
+
+export default function ContactForm({ handleSubmit }: ContactFormProps) {
+    const { t } = useTranslation();
+    const { data, setData, post, processing, errors, reset } = useForm<ContactFormData>();
+
     return (
         <div>
-            <form className="animate-form-container">
+            <form onSubmit={(e) => handleSubmit(data, e)} className="animate-form-container">
                 <h2 className="mb-6 text-2xl font-bold text-black dark:text-white">Contactez nous</h2>
 
                 <div className="col-span-1 lg:col-span-8"></div>
@@ -10,68 +24,86 @@ export default function ContactForm() {
                 <div className="col-span-1 lg:col-span-2"></div>
 
                 <div className="grid grid-cols-1 gap-4 lg:grid-cols-8">
-                    <div className="col-span-1 lg:col-span-5">
-                        <div className="animate-form-field mb-[20px] md:mb-[25px]" style={{ animationDelay: '0.1s' }}>
-                            <label className="mb-[10px] block font-medium text-black dark:text-white">Prénom</label>
-                            <input
-                                type="text"
-                                className="focus:border-primary-500 block h-[50px] w-full rounded-md border border-gray-200 bg-gray-50 px-[15px] text-black outline-0 transition-all placeholder:text-gray-500 md:h-[55px] md:px-[17px] dark:border-[#172036] dark:bg-[#0a0e19] dark:text-white dark:placeholder:text-gray-400"
-                                placeholder="Votre prénom"
-                            />
-                        </div>
-                    </div>
-                    <div className="col-span-1 lg:col-span-3">
-                        <div className="animate-form-field mb-[20px] md:mb-[25px]">
-                            <label className="mb-[10px] block font-medium text-black dark:text-white">
-                                Nom <span className="text-red-500">*</span>
-                            </label>
-                            <input
+                    <div className="col-span-1 lg:col-span-4">
+                        <div className="grid gap-2">
+                            <Label htmlFor="lastName">Nom</Label>
+                            <Input
+                                id="lastName"
                                 type="text"
                                 required
-                                className="focus:border-primary-500 block h-[50px] w-full rounded-md border border-gray-200 bg-gray-50 px-[15px] text-black outline-0 transition-all placeholder:text-gray-500 md:h-[55px] md:px-[17px] dark:border-[#172036] dark:bg-[#0a0e19] dark:text-white dark:placeholder:text-gray-400"
-                                placeholder="Votre nom"
+                                value={data.lastName}
+                                onChange={(e) => setData('lastName', e.target.value)}
+                                disabled={processing}
+                                placeholder={t('courses.lastName', 'Nom')}
+                                autoComplete="on"
                             />
+                            <InputError message={errors.lastName} />
+                        </div>
+                    </div>
+                    <div className="col-span-1 lg:col-span-4">
+                        <div className="grid gap-2">
+                            <Label htmlFor="firstName">Prénom</Label>
+                            <Input
+                                id="firstName"
+                                type="text"
+                                required
+                                value={data.firstName}
+                                onChange={(e) => setData('firstName', e.target.value)}
+                                disabled={processing}
+                                placeholder={t('courses.firstName', 'Prénom')}
+                                autoComplete="on"
+                            />
+                            <InputError message={errors.firstName} />
                         </div>
                     </div>
 
                     <div className="col-span-1 lg:col-span-4">
-                        <div className="animate-form-field mb-[20px] md:mb-[25px]" style={{ animationDelay: '0.2s' }}>
-                            <label className="mb-[10px] block font-medium text-black dark:text-white">
-                                Email <span className="text-red-500">*</span>
-                            </label>
-                            <input
+                        <div className="grid gap-2">
+                            <Label htmlFor="email">Email</Label>
+                            <Input
+                                id="email"
                                 type="email"
                                 required
-                                className="focus:border-primary-500 block h-[50px] w-full rounded-md border border-gray-200 bg-gray-50 px-[15px] text-black outline-0 transition-all placeholder:text-gray-500 md:h-[55px] md:px-[17px] dark:border-[#172036] dark:bg-[#0a0e19] dark:text-white dark:placeholder:text-gray-400"
-                                placeholder="Votre adresse email"
+                                value={data.email}
+                                onChange={(e) => setData('email', e.target.value)}
+                                disabled={processing}
+                                placeholder={t('courses.email', 'Email')}
+                                autoComplete="on"
                             />
+                            <InputError message={errors.email} />
                         </div>
                     </div>
                     <div className="col-span-1 lg:col-span-4">
-                        <div className="animate-form-field mb-[20px] md:mb-[25px]" style={{ animationDelay: '0.3s' }}>
-                            <label className="mb-[10px] block font-medium text-black dark:text-white">
-                                Téléphone <span className="text-red-500">*</span>
-                            </label>
-                            <input
+                        <div className="grid gap-2">
+                            <Label htmlFor="phone">Téléphone</Label>
+                            <Input
+                                id="phone"
                                 type="tel"
                                 required
-                                className="focus:border-primary-500 block h-[50px] w-full rounded-md border border-gray-200 bg-gray-50 px-[15px] text-black outline-0 transition-all placeholder:text-gray-500 md:h-[55px] md:px-[17px] dark:border-[#172036] dark:bg-[#0a0e19] dark:text-white dark:placeholder:text-gray-400"
-                                placeholder="Votre numéro de téléphone"
+                                value={data.phone}
+                                onChange={(e) => setData('phone', e.target.value)}
+                                disabled={processing}
+                                placeholder={t('courses.phone', 'Téléphone')}
+                                autoComplete="on"
                             />
+                            <InputError message={errors.phone} />
                         </div>
                     </div>
 
                     <div className="col-span-1 lg:col-span-8">
-                        <div className="animate-form-field mb-[20px] md:mb-[25px]" style={{ animationDelay: '0.4s' }}>
-                            <label className="mb-[10px] block font-medium text-black dark:text-white">
-                                Sujet <span className="text-red-500">*</span>
-                            </label>
-                            <input
+                        <div className="animate-form-field mb-[20px] md:mb-[25px]" style={{ animationDelay: '0.2s' }}>
+                            <Label htmlFor="subject">Sujet</Label>
+                            <Input
+                                id="subject"
                                 type="text"
                                 required
-                                className="focus:border-primary-500 block h-[50px] w-full rounded-md border border-gray-200 bg-gray-50 px-[15px] text-black outline-0 transition-all placeholder:text-gray-500 md:h-[55px] md:px-[17px] dark:border-[#172036] dark:bg-[#0a0e19] dark:text-white dark:placeholder:text-gray-400"
-                                placeholder="Sujet de votre message"
+                                value={data.subject}
+                                onChange={(e) => setData('subject', e.target.value)}
+                                disabled={processing}
+                                placeholder="Entrez le sujet de votre message"
+                                autoComplete="on"
                             />
+                            <InputError message={errors.subject} />
                         </div>
                         <div className="animate-form-field mb-[20px] md:mb-[25px]" style={{ animationDelay: '0.5s' }}>
                             <label className="mb-[10px] block font-medium text-black dark:text-white">
@@ -81,6 +113,7 @@ export default function ContactForm() {
                                 required
                                 className="focus:border-primary-500 block h-[140px] w-full rounded-md border border-gray-200 bg-gray-50 p-[15px] text-black outline-0 transition-all placeholder:text-gray-500 md:p-[17px] dark:border-[#172036] dark:bg-[#0a0e19] dark:text-white dark:placeholder:text-gray-400"
                                 placeholder="Écrivez votre message..."
+                                onChange={(e) => setData('message', e.target.value)}
                             ></textarea>
                         </div>{' '}
                     </div>
