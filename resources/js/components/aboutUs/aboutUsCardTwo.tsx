@@ -1,3 +1,5 @@
+import TitleBadgeOne from '../ui/badge-one';
+
 interface Widget {
     title: string;
     description: string;
@@ -32,15 +34,7 @@ const widgetsData: Widget[] = [
             <div className="py-[40px] md:py-[50px] lg:py-[60px] xl:py-[80px]">
                 <div className="container mx-auto px-[12px] 2xl:max-w-[1320px]">
                     <div className="mx-auto mb-[35px] text-center md:mb-[50px] md:max-w-[650px] lg:mb-[65px] lg:max-w-[810px] xl:mb-[90px] xl:max-w-[785px]">
-                        <div className="relative mt-[10px] mb-[20px] inline-block">
-                            <span className="bg-primary-600 absolute top-[4.5px] h-[5px] w-[5px] -rotate-[6.536deg] ltr:-left-[3.6px] rtl:-right-[3.6px]"></span>
-                            <span className="bg-primary-600 absolute -top-[9.5px] h-[5px] w-[5px] -rotate-[6.536deg] ltr:right-0 rtl:left-0"></span>
-                            <span className="border-primary-600 text-primary-600 relative inline-block -rotate-[6.536deg] border px-[17.2px] py-[5.5px]">
-                                Key Features
-                                <span className="bg-primary-600 absolute -bottom-[2.5px] h-[5px] w-[5px] -rotate-[6.536deg] ltr:-left-[3.5px] rtl:-right-[3.5px]"></span>
-                                <span className="bg-primary-600 absolute -bottom-[2.5px] h-[5px] w-[5px] -rotate-[6.536deg] ltr:-right-[3.5px] rtl:-left-[3.5px]"></span>
-                            </span>
-                        </div>
+                        <TitleBadgeOne title="Notre Engagement" />
                         <h2 className="!mb-0 !text-[24px] !leading-[1.2] -tracking-[.5px] md:!text-[28px] md:-tracking-[.6px] lg:!text-[34px] lg:-tracking-[.8px] xl:!text-[36px] xl:-tracking-[1px]">
                             Nous associons notre Expertise, nos programmes de Certification et notre approche Pratique pour garantir une qualité
                             irréprochable de nos services
