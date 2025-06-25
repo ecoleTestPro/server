@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Public;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\PublicAbstractController;
 use App\Http\Requests\SettingUpdateRequest;
+use App\Repositories\BlogCategoryRepository;
+use App\Repositories\BlogRepository;
 use App\Repositories\CategoryRepository;
 use App\Repositories\CourseRepository;
 use App\Repositories\SettingRepository;
@@ -31,9 +33,9 @@ class PublicController extends PublicAbstractController
     {
         $data = $this->default_data;
         $data['featured_courses'] = CourseRepository::getFeaturedCourses();
+        $data['popular_courses'] = CourseRepository::getPopularCourses();
 
-        // dd($featuredCourses);
-
+        // dd($data);
         return Inertia::render('home', [
             'data' => $data,
         ]);
@@ -171,6 +173,16 @@ class PublicController extends PublicAbstractController
 
     public function blogs()
     {
+        $data = $this->default_data;
+        $data['blogs']['list'] = BlogRepository::getAll();
+        $data['blogs']['categories'] = BlogCategoryRepository::getAll();
+        return Inertia::render('public/blogs/blogs', [
+            'data'  => $data,
+        ]);
+    }
+
+    public function blogDetail(string $slug)
+    {
         // Blogs
         return view('blogs');
     }
@@ -222,12 +234,10 @@ class PublicController extends PublicAbstractController
         // such as sending an email or saving the message to the database.  
 
 
-        // For now, we just redirect back with a success message
-        // In a real application, you would send an email or save the message to the database
-        return back()->withSuccess('Your message has been sent successfully. We will get back to you soon.');
-        // Here you would typically handle the contact form submission,
-        // such as sending an email or saving the message to the database.
-        // For now, we just redirect back with a success message.
+        return response()->json([
+            'success' => true,
+            'message' => 'Votre message a été envoyé avec succès.',
+        ]);
     }
 
     public function privacyPolicy()

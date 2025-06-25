@@ -23,7 +23,7 @@ export default function Welcome() {
                 <AboutUsCard />
                 {/* <Bestseller /> */}
                 <FeaturesSection />
-                <OurCurrentCourses coursesData={data.categories_with_courses} />
+                <OurCurrentCourses coursesData={data.categories_with_courses} coursesDataSlice={5} />
                 <AboutUsCardTwo />
                 <Testimonials />
                 <Faq />

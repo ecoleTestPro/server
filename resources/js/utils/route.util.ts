@@ -23,6 +23,7 @@ export const ROUTE_MAP: {
     serviceTestOutsourcingServices: IRouteMap
     serviceIntegrationSpecialists: IRouteMap
     blogs: IRouteMap;
+    blogDetail:  (slug: string) => IRouteMap;
     careers: IRouteMap;
     faqs: IRouteMap;
     contact: IRouteMap;
@@ -87,6 +88,12 @@ export const ROUTE_MAP: {
     blogs: {
         title: 'Blogs',
         link: '/blogs',
+    },
+    blogDetail: (slug: string) => {
+        return {
+            title: 'Détail du blog',
+            link: `/blog/${slug}`,
+        }
     },
     careers: {
         title: 'Carrières',

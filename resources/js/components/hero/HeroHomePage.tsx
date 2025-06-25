@@ -1,76 +1,23 @@
 import { CLASS_NAME } from '@/data/styles/style.constant';
+import { SharedData } from '@/types';
 import { ICourse } from '@/types/course';
-
-const course: ICourse[] = [
-    {
-        id: 1,
-        image: '',
-        title: 'PSPO I Formation certifiante - Scrum Product Owner',
-        excerpt: '',
-        description: '',
-        duration: '',
-        lectures: '',
-        price: 0,
-        regular_price: 0,
-        author: '',
-        is_featured: false,
-        is_published: false,
-        price_includes_tax: false,
-        location_mode: '',
-    },
-    {
-        id: 2, // Corrected duplicate ID
-        image: '',
-        title: 'PSM I Formation certifiante - Scrum Master',
-        excerpt: '',
-        description: '',
-        duration: '',
-        lectures: '',
-        price: 0,
-        regular_price: 0,
-        author: '',
-        is_featured: false,
-        is_published: false,
-        price_includes_tax: false,
-        location_mode: '',
-    },
-    {
-        id: 3, // Corrected duplicate ID
-        image: '',
-        title: 'PSM I Formation certifiante - Scrum Master - CI',
-        excerpt: '',
-        description: '',
-        duration: '',
-        lectures: '',
-        price: 0,
-        regular_price: 0,
-        author: '',
-        is_featured: false,
-        is_published: false,
-        price_includes_tax: false,
-        location_mode: '',
-    },
-    {
-        id: 4, // Corrected duplicate ID
-        image: '',
-        title: 'IQBBA Certified Professional for Requirements Engineering Foundation Level for Business Analyst',
-        excerpt: '',
-        description: '',
-        duration: '',
-        lectures: '',
-        price: 0,
-        regular_price: 0,
-        author: '',
-        is_featured: false,
-        is_published: false,
-        price_includes_tax: false,
-        location_mode: '',
-    },
-];
+import { ROUTE_MAP } from '@/utils/route.util';
+import { Link, usePage } from '@inertiajs/react';
+import { useEffect, useState } from 'react';
 
 export default function HeroHomePage() {
+    const { data } = usePage<SharedData>().props;
+    const [courses, setCourses] = useState<ICourse[]>([]);
+
+    useEffect(() => {
+        // Check if data and data.popular_courses are defined before accessing them
+        if (data && data.popular_courses) {
+            setCourses(data.popular_courses);
+        }
+    }, [data]);
+
     const style = {
-        formationItem: `text-black rounded px-4 py-2 dark:text-neutral-100 ${CLASS_NAME.bgDefault}`,
+        formationItem: `text-black col-span-2 md:col-span-1 rounded px-4 py-2 dark:text-neutral-100 ${CLASS_NAME.bgDefault}`,
     };
 
     return (
@@ -107,17 +54,24 @@ export default function HeroHomePage() {
                     <p className="mb-8 text-white dark:text-white">
                         Boostez votre carrière et propulsez votre entreprise vers le succès avec nos formations certifiantes.
                     </p>
-                    <h2 className="mb-4 text-3xl font-bold text-white underline dark:text-white">Nos formations garanties</h2>
-                    <div className="grid grid-cols-2 gap-4">
-                        {course.map((item, index) => (
-                            <a key={item.id} href="#" className={style.formationItem}>
-                                {item.title}
-                            </a>
-                        ))}
-                    </div>
+                    {courses.length > 0 && (
+                        <div>
+                            <h2 className="mb-4 text-3xl font-bold text-white underline dark:text-white">Les formations les plus populaires</h2>
+                            <div className="grid grid-cols-2 gap-4">
+                                {courses.map((item, index) => (
+                                    <Link
+                                        key={item.id}
+                                        href={ROUTE_MAP.courseDetail(item.category?.slug ?? '#', item.slug).link}
+                                        className={style.formationItem}
+                                    >
+                                        {item.title}
+                                    </Link>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
         </section>
     );
 }
- 

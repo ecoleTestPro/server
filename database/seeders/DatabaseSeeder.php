@@ -26,6 +26,9 @@ class DatabaseSeeder extends Seeder
             // GuestSeeder::class,
 
             EnrollmentSeeder::class,
+
+            BlogCategorySeeder::class,
+            BlogSeeder::class,
             // Other seeders can be added here
         ]);
     }

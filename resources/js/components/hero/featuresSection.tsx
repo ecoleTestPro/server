@@ -1,6 +1,9 @@
 import { SharedData } from '@/types';
 import { ICourse } from '@/types/course';
-import { usePage } from '@inertiajs/react';
+import { motionVariants } from '@/utils/motion.util';
+import { ROUTE_MAP } from '@/utils/route.util';
+import { Link, router, usePage } from '@inertiajs/react';
+import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 
 interface Feature {
@@ -74,22 +77,30 @@ function FeaturesSection() {
         console.log('[FeaturesSection] data', data);
 
         if (data && data.featured_courses && data.featured_courses.length > 0) {
-            let featrues: Feature[] = data.featured_courses.map((course: ICourse) => {
-                return {
-                    img: course.image || 'https://placehold.co/512x512',
-                    alt: course.title || 'Featured Course',
-                    title: course.title || 'Titre du cours',
-                    description: course.excerpt,
-                    link: `/courses/${course.id}`, // Assuming the link is to the course detail page
-                    linkLabel: 'Voir le cours',
-                };
-            });
-            setFeatureCourses(featrues);
+            let features: Feature[] = data.featured_courses.map((course: ICourse) => buildFeatureItem(course));
+            setFeatureCourses(features);
         }
 
         setLoading(false);
     }, [data]);
 
+    const buildFeatureItem = (course: ICourse): Feature => {
+        return {
+            img: course.image || 'https://placehold.co/512x512',
+            alt: course.title || 'Featured Course',
+            title: course.title || 'Titre du cours',
+            description: course.excerpt,
+            link: ROUTE_MAP.courseDetail(course.category?.slug || '', course.slug).link, // Assuming the link is to the course detail page
+            linkLabel: 'Voir le cours',
+        };
+    };
+
+    /**
+     *  Styles for the grid layout of the feature courses.
+     *  The first element takes 2/3 of the width and spans 2 rows,
+     *  the second element takes 1/3 of the width and spans 2 rows,
+     *  and the remaining elements take 1/3 of the width and span 1 row each.
+     */
     const gridStyles = [
         'col-span-2 row-span-2', // 1er élément : 2/3 largeur, 2 lignes
         'col-span-1 row-span-2', // 2e élément : 1/3 largeur, 2 lignes
@@ -118,17 +129,27 @@ function FeaturesSection() {
 
     return (
         <div className="relative overflow-hidden">
-            <section className="relative z-10 py-10 text-white md:py-20">
-
-                <div className="absolute inset-0 bg-gradient-to-r from-green-100 to-teal-500 opacity-50"></div>
-                <div className="animate-float-slow absolute inset-0 bg-gradient-to-r from-gray-50 to-gray-200 opacity-50"></div>
-                <h2 className="">Bestseller</h2>
-
+            <motion.section
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.2 }}
+                variants={motionVariants.sectionVariants}
+                className="relative z-10 py-10 text-white md:py-20"
+            >
                 <div className="container mx-auto px-4">
+                    <div className="flex items-center justify-end">
+                        <div>
+                            {/* <TitleBadgeOne title="Nos formations phares" /> */}
+                            <h2 className="text-black text-2xl font-bold md:text-4xl mb-4   ">Formations Mises en avant</h2>
+                        </div>
+                    </div>
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-3">
                         {featureCourses.map((feature, idx) => (
                             <div
                                 key={idx}
+                                onClick={() => {
+                                    router.visit(feature.link, { preserveState: true, preserveScroll: true });
+                                }}
                                 className={`flex flex-col justify-between ${gridStyles[idx] || 'col-span-1 row-span-1'} ${'relative z-10 cursor-pointer bg-white p-4 text-black transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-xl md:p-6 dark:text-neutral-100'}`}
                             >
                                 {feature.img && (
@@ -136,14 +157,18 @@ function FeaturesSection() {
                                 )}
                                 <h3 className="mb-2 text-lg font-bold md:text-xl">{feature.title}</h3>
                                 <p className="text-black-600 text-sm md:text-base dark:text-neutral-100">{feature.description}</p>
-                                <a href={feature.link} className="text-primary text-sm hover:underline md:text-base">
+                                <Link href={feature.link} className="text-primary text-sm hover:underline md:text-base">
                                     {feature.linkLabel}
-                                </a>
+                                </Link>
                             </div>
                         ))}
                     </div>
                 </div>
-            </section>
+
+                {/* Background gradient */}
+                <div className="absolute inset-0 bg-gradient-to-r from-green-100 to-teal-500 opacity-50"></div>
+                <div className="animate-float-slow absolute inset-0 bg-gradient-to-r from-gray-50 to-gray-200 opacity-50"></div>
+            </motion.section>
             <style>
                 {`
                 @keyframes floatSlow {

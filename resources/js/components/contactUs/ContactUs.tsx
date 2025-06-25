@@ -1,10 +1,68 @@
 import { CLASS_NAME } from '@/data/styles/style.constant';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import TitleBadgeOne from '../ui/badge-one';
 import ContactForm from './ContactForm';
 
+import { SharedData } from '@/types';
+import { Logger } from '@/utils/console.util';
+import { usePage } from '@inertiajs/react';
+import axios from 'axios';
+import PageLoading from '../ui/page-loading';
+import ContactSuccessSubmited from './ContactSuccessSubmited';
+
+export interface ContactFormData {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    subject: string;
+    message: string;
+    [key: string]: any; // <-- Add this line
+}
+
 const ContactUs: React.FC = () => {
     const { t } = useTranslation();
+
+    const [loading, setLoading] = useState<boolean>(false);
+    const [success, setSuccess] = useState<boolean>(false);
+
+    const { data: dataShared } = usePage<SharedData>().props;
+
+    const handleSubmit = (data: ContactFormData, e: React.FormEvent) => {
+        e.preventDefault();
+        setLoading(true);
+
+        axios
+            .post(route('contact.post'), data)
+            .then((response) => {
+                if (response.data.success) {
+                    setSuccess(true);
+                } else {
+                    // Handle error case
+                    Logger.error('Error submitting contact form:', response.data.message);
+                }
+                setLoading(false);
+            })
+            .catch((error) => {
+                // Handle network or server error
+                Logger.error('Error submitting contact form:', error);
+                setLoading(false);
+            });
+    };
+
+    useEffect(() => {
+        Logger.log('[DATA_SHARED]', dataShared);
+        return;
+    });
+
+    if (loading) {
+        return <PageLoading />;
+    }
+
+    if (success) {
+        return <ContactSuccessSubmited />;
+    }
 
     return (
         <section
@@ -29,19 +87,19 @@ const ContactUs: React.FC = () => {
                                     </p>
                                 </div>
 
-                                <ContactForm />
+                                <ContactForm handleSubmit={handleSubmit} />
                             </div>
                         </div>
 
-                        <div className="col-span-1 hidden md:col-span-2 lg:col-span-6 lg:block">
-                            <div className="rounded-[7px] border border-white/[.13] bg-white/[.31] p-[15px] backdrop-blur-[5.099999904632568px] md:p-[20px] lg:px-[20px] lg:py-[30px] ltr:xl:mr-[50px] rtl:xl:ml-[50px] dark:border-black/[.13] dark:bg-black/[.54]">
+                        <div className="">
+                            <div className="rounded-[7px] border  p-[15px] backdrop-blur-[5.099999904632568px] md:p-[20px] lg:px-[20px] lg:py-[30px] ltr:xl:mr-[50px] rtl:xl:ml-[50px] dark:border-black/[.13] dark:bg-black/[.54]">
                                 {/* <img
-                                src="assets/images/Formation-en-ligne-.jpeg"
-                                alt="contact-image"
-                                className="rounded-[7px]"
-                                width={554}
-                                height={724}
-                            /> */}
+                                    src="/assets/images/Formation-en-ligne-.jpeg"
+                                    alt="contact-image"
+                                    className="rounded-[7px]"
+                                    width={554}
+                                    height={724}
+                                /> */}
                             </div>
                         </div>
                     </div>

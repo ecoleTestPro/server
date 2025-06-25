@@ -7,7 +7,7 @@ import CourseInscriptionDialog from './CourseInscriptionDialog';
 
 interface CourseDetailChooseSectionProps {
     course: ICourse;
-    registrationRef: RefObject<HTMLDivElement | null>; // Add ref prop
+    registrationRef?: RefObject<HTMLDivElement | null>; // Add ref prop
 }
 
 export default function CourseDetailChooseSection({ course, registrationRef }: CourseDetailChooseSectionProps) {
@@ -29,13 +29,13 @@ export default function CourseDetailChooseSection({ course, registrationRef }: C
         );
 
         // Observe the registration section
-        if (registrationRef.current) {
+        if (registrationRef?.current) {
             observer.observe(registrationRef.current);
         }
 
         // Cleanup observer on unmount
         return () => {
-            if (registrationRef.current) {
+            if (registrationRef?.current) {
                 observer.unobserve(registrationRef.current);
             }
         };
