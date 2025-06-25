@@ -6,9 +6,25 @@ export default function NewsletterCTA() {
 
     return (
         <section className="body-font text-gray-600 dark:bg-[#0a0e19] dark:text-white">
+            <style>{`
+                .animate-bg-position {
+                    background-position: center center;
+                    animation: bgPosition 10s infinite linear;
+                }
+
+                @keyframes bgPosition {
+                    0% {
+                        background-position: center center;
+                    }
+                    100% {
+                        background-position: center top;
+                    }
+                }
+            `}</style>
+
             <div className="w-full">
                 <div
-                    className="bg-cover bg-center bg-no-repeat px-[20px] py-[70px] text-center md:py-[90px] lg:py-[110px] relative overflow-hidden"
+                    className="animate-bg-position transition-all duration-1000 ease-in-out"
                     style={{
                         backgroundImage: 'url(/assets/images/shape-2.png)',
                         backgroundPosition: 'center center',
@@ -21,8 +37,8 @@ export default function NewsletterCTA() {
                     {/* Gradient animé en fond */}
                     <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 animate-gradient opacity-50"></div>
 
-                    <div className="mx-auto md:max-w-[520px] px-[12px] py-[70px] md:py-[90px] lg:py-[110px] xl:py-[130px] 2xl:py-[150px] relative z-10">
-                        <h2 className="!mb-[10px] !text-xl !leading-[1.2] !font-medium !text-white md:!text-3xl md:-tracking-[1px] lg:!mb-[12px] lg:!text-4xl xl:!text-5xl animate-fade-in-down">
+                    <div className="mx-auto md:max-w-[520px] px-[12px] py-[40px] md:py-[50px] lg:py-[60px] relative z-10">
+                        <h2 className="!mb-[10px] !leading-[1.2] !font-medium !text-white text-lg md:text-3xl md:-tracking-[1px] lg:!mb-[12px] animate-fade-in-down">
                             {t('NEWSLETTER.CTA.TITLE', "Obtenir les derniers conseils en matière d'assistance")}
                         </h2>
                         <p className="lg:text-md text-white md:text-[15px] animate-fade-in-up animation-delay-200">

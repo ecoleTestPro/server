@@ -84,17 +84,31 @@ class CourseRepository extends Repository
      *
      * @return \Illuminate\Support\Collection
      */
-    public static function getFeaturedCourses()
+    public static function getFeaturedCourses($limit = 6)
     {
         try {
             return static::query()
                 ->where('is_featured', true)
                 ->with(['category', 'instructor', 'media', 'video'])
                 ->latest('id')
-                ->limit(6)
+                ->limit($limit)
                 ->get();
         } catch (\Exception $e) {
             throw new \Exception('Error fetching featured courses: ' . $e->getMessage());
+            return [];
+        }
+    }
+
+    public static function getPopularCourses($limit = 6)
+    {
+        try {
+            return static::query()
+                ->with(['category', 'instructor', 'media', 'video'])
+                ->latest('view_count')
+                ->limit($limit)
+                ->get();
+        } catch (\Exception $e) {
+            throw new \Exception('Error fetching popular courses: ' . $e->getMessage());
             return [];
         }
     }

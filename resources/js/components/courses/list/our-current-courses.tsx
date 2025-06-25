@@ -13,10 +13,11 @@ import SidebarFilter from './SidebarFilter';
 
 interface IOurCurrentCoursesProps {
     coursesData?: ICourseCategory[];
+    coursesDataSlice?: number;
     showSidebar?: boolean;
 }
 
-const OurCurrentCourses = ({ coursesData, showSidebar = false }: IOurCurrentCoursesProps) => {
+const OurCurrentCourses = ({ coursesData, showSidebar = false, coursesDataSlice }: IOurCurrentCoursesProps) => {
     const { t } = useTranslation();
     const { auth, data } = usePage<SharedData>().props;
 
@@ -47,7 +48,7 @@ const OurCurrentCourses = ({ coursesData, showSidebar = false }: IOurCurrentCour
         setCourses([]);
         setError(null);
 
-        const newCourses = createCoursesFromCategory(coursesData ?? []);
+        const newCourses = createCoursesFromCategory(coursesData, coursesDataSlice);
         setCourses(newCourses);
         setFilteredCourses(newCourses);
 

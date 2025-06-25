@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Public;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\PublicAbstractController;
 use App\Http\Requests\SettingUpdateRequest;
+use App\Repositories\BlogCategoryRepository;
+use App\Repositories\BlogRepository;
 use App\Repositories\CategoryRepository;
 use App\Repositories\CourseRepository;
 use App\Repositories\SettingRepository;
@@ -31,9 +33,9 @@ class PublicController extends PublicAbstractController
     {
         $data = $this->default_data;
         $data['featured_courses'] = CourseRepository::getFeaturedCourses();
+        $data['popular_courses'] = CourseRepository::getPopularCourses();
 
-        // dd($featuredCourses);
-
+        // dd($data);
         return Inertia::render('home', [
             'data' => $data,
         ]);
@@ -170,6 +172,16 @@ class PublicController extends PublicAbstractController
     }
 
     public function blogs()
+    {
+        $data = $this->default_data;
+        $data['blogs']['list'] = BlogRepository::getAll();
+        $data['blogs']['categories'] = BlogCategoryRepository::getAll();
+        return Inertia::render('public/blogs/blogs', [
+            'data'  => $data,
+        ]);
+    }
+
+    public function blogDetail(string $slug)
     {
         // Blogs
         return view('blogs');

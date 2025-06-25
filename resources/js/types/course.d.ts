@@ -1,4 +1,5 @@
 import { IDataWithPagination } from ".";
+import { IBlog, IBlogCategory } from "./blogs";
 
 
 export enum PeriodicityUnitEnum {
@@ -167,6 +168,11 @@ export interface ICustomSharedData {
     course?: ICourse;
 
     /**
+     * List of popular courses
+     */
+    popular_courses?: ICourse[];
+
+    /**
      * List of featured courses
      */
     featured_courses?: ICourse[];
@@ -212,5 +218,12 @@ export interface ICustomSharedData {
 
     notifications?: {
         unread_count?: number;
+    }
+
+    blogs?: {
+        total?: number;
+        list?: IBlog[];
+        categories?: IBlogCategory[];
+        single: IBlog
     }
 }
