@@ -1,6 +1,7 @@
 import AppLogo from '@/components/app-logo';
 import NewsletterCTA from '@/components/newsletter/newletter-cta';
 import { ROUTE_MAP } from '@/utils/route.util';
+import { Link } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 
 export const CONTACT_INFO = {
@@ -109,12 +110,12 @@ export default function Footer() {
                                     .filter((link) => link != undefined)
                                     .map((link, index) => (
                                         <li key={index} className="mb-[10px] last:mb-0">
-                                            <a
+                                            <Link
                                                 href={link.link}
                                                 className="inline-block text-gray-500 transition-all hover:text-gray-600 lg:text-[15px] xl:text-[16px] dark:text-gray-400"
                                             >
                                                 {link.label}
-                                            </a>
+                                            </Link>
                                         </li>
                                     ))}
                             </ul>
@@ -166,21 +167,26 @@ export default function Footer() {
                         </div>
                         <div className="items-center justify-end gap-[15px] text-center lg:flex">
                             <div className="hidden h-[15px] w-[1px] bg-gray-200 lg:block dark:bg-gray-800"></div>
-                            <a
+                            <Link
                                 href={ROUTE_MAP.privacyPolicy.link}
                                 className="mx-[7px] mt-[10px] inline-block transition-all hover:text-gray-500 lg:mx-0 lg:mt-0"
                             >
                                 {t('FOOTER.PRIVACY', 'Politique de Confidentialité')}
-                            </a>
+                            </Link>
                             <div className="hidden h-[15px] w-[1px] bg-gray-200 lg:block dark:bg-gray-800"></div>
-                            <a
+                            <Link
                                 href={ROUTE_MAP.termsOfService.link}
                                 className="mx-[7px] mt-[10px] inline-block transition-all hover:text-gray-500 lg:mx-0 lg:mt-0"
                             >
                                 {t('FOOTER.TERMS_AND_CONDITIONS', 'Conditions Générales d’Utilisation')}
-                            </a>
+                            </Link>
                         </div>
                     </div>
+                </div>
+            </div>
+            <div className="bg-black flex justify-end items-center text-white ">
+                <div className='container mx-auto' >
+                    <Link href={ROUTE_MAP.auth.adminLogin.link}>{t('FOOTER.LOGIN', 'Connexion')}</Link>
                 </div>
             </div>
         </>

@@ -189,8 +189,10 @@ class PublicController extends PublicAbstractController
 
     public function careers()
     {
-        // Carrières
-        return view('careers');
+        $data = $this->default_data;
+        return Inertia::render('public/careers/careers', [
+            'data' => $data,
+        ]);
     }
 
     public function faqs()

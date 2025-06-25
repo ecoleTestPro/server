@@ -23,13 +23,21 @@ export const ROUTE_MAP: {
     serviceTestOutsourcingServices: IRouteMap
     serviceIntegrationSpecialists: IRouteMap
     blogs: IRouteMap;
-    blogDetail:  (slug: string) => IRouteMap;
+    blogDetail: (slug: string) => IRouteMap;
     careers: IRouteMap;
     faqs: IRouteMap;
     contact: IRouteMap;
     aboutUs: IRouteMap;
     privacyPolicy: IRouteMap;
     termsOfService: IRouteMap;
+    auth: {
+        login: IRouteMap;
+        register: IRouteMap;
+        forgotPassword: IRouteMap;
+        resetPassword: IRouteMap;
+        verifyEmail: IRouteMap;
+        adminLogin: IRouteMap;
+    }
 } = {
     aboutUs: {
         link: '/about-us',
@@ -115,4 +123,30 @@ export const ROUTE_MAP: {
         title: 'Conditions d’utilisation',
         link: '/terms-of-service',
     },
+    auth: {
+        login: {
+            link: '/login',
+            title: 'Connexion',
+        },
+        register: {
+            link: '/register',
+            title: 'Inscription',
+        },
+        forgotPassword: {
+            link: '/forgot-password',
+            title: 'Mot de passe oublié',
+        },
+        resetPassword: {
+            link: '/reset-password',
+            title: 'Réinitialiser le mot de passe',
+        },
+        verifyEmail: {
+            link: '/verify-email',
+            title: 'Vérifier l’email',
+        },
+        adminLogin: {
+            link: '/admin/login',
+            title: 'Connexion Admin',
+        },
+    }
 }
