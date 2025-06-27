@@ -18,11 +18,11 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
                 href: route('dashboard.course.index'),
                 icon: List,
             },
-            {
-                title: 'Créer une formation',
-                href: route('dashboard.course.create'),
-                icon: ClipboardPlus,
-            },
+            // {
+            //     title: 'Créer une formation',
+            //     href: route('dashboard.course.create'),
+            //     icon: ClipboardPlus,
+            // },
             {
                 title: 'Catégories',
                 href: route('dashboard.category.index'),
@@ -35,6 +35,11 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
             },
         ],
     },
+    // {
+    //     title: 'temoignages',
+    //     href: route('dashboard.testimonial.index'),
+    //     icon: BookOpen,
+    // },
     {
         title: 'Paramètres',
         href: route('settings.app.index'),
