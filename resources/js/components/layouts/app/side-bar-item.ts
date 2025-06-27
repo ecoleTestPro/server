@@ -1,5 +1,5 @@
 import { NavItem } from "@/types";
-import { BookOpen, FileStack, Folder, HomeIcon, LayoutGrid, List, ClipboardPlus, Settings2, ListTodo } from 'lucide-react';
+import { BookOpen, FileStack, Folder, HomeIcon, LayoutGrid, List, ClipboardPlus, Settings2, ListTodo, BookAIcon } from 'lucide-react';
 
 
 export const MAIN_NAV_ITEMS: NavItem[] = [
@@ -35,11 +35,16 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
             },
         ],
     },
-    // {
-    //     title: 'temoignages',
-    //     href: route('dashboard.testimonial.index'),
-    //     icon: BookOpen,
-    // },
+    {
+        title: 'Témoignages',
+        href: route('dashboard.testimonial.index'),
+        icon: BookAIcon,
+    },
+    {
+        title: 'Faqs',
+        href: route('dashboard.faqs.index'),
+        icon: BookOpen,
+    },
     {
         title: 'Paramètres',
         href: route('settings.app.index'),

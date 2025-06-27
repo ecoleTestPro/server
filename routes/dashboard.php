@@ -3,8 +3,9 @@
 use App\Http\Controllers\Private\CategoryController;
 use App\Http\Controllers\Private\CourseController;
 use App\Http\Controllers\Private\DashboardController;
+use App\Http\Controllers\Private\FaqController;
 use App\Http\Controllers\Private\SettingController;
-
+use App\Http\Controllers\Private\TestimonialController;
 use App\Http\Controllers\Settings\PasswordController;
 use App\Http\Controllers\Settings\ProfileController;
 
@@ -27,7 +28,7 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
     ], function () {
         Route::get('',               [CourseController::class, 'index'])->name('dashboard.course.index');
         Route::get('create',         [CourseController::class, 'create'])->name('dashboard.course.create');
-        Route::get('edit/{slug}',    [CourseController::class, 'create'])->name('dashboard.course.edit'); // For editing existing course
+        Route::get('edit/{slug}',    [CourseController::class, 'create'])->name('dashboard.course.edit');
         Route::post('create',        [CourseController::class, 'store'])->name('dashboard.course.store');
     });
 
@@ -69,5 +70,24 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
             // Route::get('', [SettingController::class, 'index'])->name('settings.app.index');
             // Route::patch('settings', [SettingsController::class, 'update'])->name('settings.update');
         });
+    });
+
+    // TESTIMONIALS
+    Route::group([
+        'prefix' => 'testimonials',
+    ], function () {
+        Route::get('',               [TestimonialController::class, 'index'])->name('dashboard.testimonial.index');
+        Route::get('create',         [TestimonialController::class, 'create'])->name('dashboard.testimonial.create');
+        Route::get('edit/{slug}',    [TestimonialController::class, 'edit'])->name('dashboard.testimonial.edit');
+        Route::post('create',        [TestimonialController::class, 'store'])->name('dashboard.testimonial.store');
+    });
+
+
+    // FAQS
+    Route::group([
+        'prefix' => 'faqs',
+    ], function () {
+        Route::get('',               [FaqController::class, 'index'])->name('dashboard.faqs.index');
+        Route::post('create',        [FaqController::class, 'store'])->name('dashboard.faqs.store');
     });
 });

@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\Public\ContactUsController;
 use App\Http\Controllers\Public\EnrollController;
 use App\Http\Controllers\Public\PublicController;
+use App\Http\Controllers\Public\PublicFormationController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -19,10 +21,12 @@ Route::group(["prefix" => "/"], function () {
     Route::get('about-us', [PublicController::class, 'aboutUs'])->name('aboutUs');
     Route::get('services', [PublicController::class, 'services'])->name('services');
     Route::get('faqs', [PublicController::class, 'faqs'])->name('faqs');
-    Route::get('contact', [PublicController::class, 'contact'])->name('contact');
-    Route::post('contact', [PublicController::class, 'contactSubmit'])->name('contact.post');
+
     Route::get('privacy-policy', [PublicController::class, 'privacyPolicy'])->name('privacyPolicy');
     Route::get('terms-of-service', [PublicController::class, 'termsOfService'])->name('termsOfService');
+
+    Route::get('contact', [ContactUsController::class, 'contact'])->name('contact');
+    Route::post('contact', [ContactUsController::class, 'contactSubmit'])->name('contact.post');
 
     /**
      * Consulting routes
@@ -63,8 +67,8 @@ Route::group(["prefix" => "/"], function () {
      * These routes handle course listings, categories, and details.
      * They are used to display courses, allow enrollment, and provide course details.
      */
-    Route::get('formations',                            [PublicController::class, 'courses'])->name('courses');
-    Route::get('formation/{category_slug}',             [PublicController::class, 'courseCategory'])->name('courses.category');
-    Route::get('formation/{categorySlug}/{courseSlug}', [PublicController::class, 'courseDetail'])->name('courses.detail');
+    Route::get('formations',                            [PublicFormationController::class, 'courses'])->name('courses');
+    Route::get('formation/{category_slug}',             [PublicFormationController::class, 'courseCategory'])->name('courses.category');
+    Route::get('formation/{categorySlug}/{courseSlug}', [PublicFormationController::class, 'courseDetail'])->name('courses.detail');
     Route::post('formation/enrollment',                 [EnrollController::class, 'registerEnrollment'])->name('course.enrollment');
 });
