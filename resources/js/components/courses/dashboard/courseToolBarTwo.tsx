@@ -23,7 +23,7 @@ interface ICategoryToolBarProps {
 export default function CourseToolBarTwo({ setSearchTerm, searchTerm, viewMode, handleChangeViewMode, courses, setCourses }: ICategoryToolBarProps) {
     const { t, i18n } = useTranslation();
 
-    const filters: { id: 'all' | 'published' | 'featured'; label: string; labelColor: string; onClick: () => void; isSelected: boolean }[] = [
+    const filters: { id: 'all' | 'published' | 'featured' | 'no-published'; label: string; labelColor: string; onClick: () => void; isSelected: boolean }[] = [
         {
             id: 'all',
             label: t('course.category.dashboard.filters.all', `Tous (${courses.length})`),
@@ -44,6 +44,19 @@ export default function CourseToolBarTwo({ setSearchTerm, searchTerm, viewMode, 
                 setCourses && setCourses(courses ? courses.filter((course) => course.is_published) : []);
                 filters.forEach((filter) => {
                     filter.isSelected = filter.id === 'published';
+                });
+            },
+            isSelected: false,
+        },
+
+        {
+            id: 'no-published',
+            label: t('course.category.dashboard.filters.no-published', `Non publié (${courses.filter((course) => !course.is_published).length})`),
+            labelColor: 'text-red-600',
+            onClick: () => {
+                setCourses && setCourses(courses ? courses.filter((course) => !course.is_published) : []);
+                filters.forEach((filter) => {
+                    filter.isSelected = filter.id === 'no-published';
                 });
             },
             isSelected: false,
@@ -103,16 +116,6 @@ export default function CourseToolBarTwo({ setSearchTerm, searchTerm, viewMode, 
                                             onValueChange={handleOnChangeValueFilter}
                                         />
                                     </div>
-                                    {/* {filters.map((filter) => (
-                                        <button
-                                            className={`text-sm font-medium ${filter.labelColor} bg-gray-50 p-2 hover:text-gray-800 ${filter.isSelected ? 'border-2 border-secondary' : ''}`}
-                                            key={filter.label}
-                                            onClick={filter.onClick}
-                                            type="button"
-                                        >
-                                            {filter.label}
-                                        </button>
-                                    ))} */}
                                 </div>
                             </div>
                         </div>

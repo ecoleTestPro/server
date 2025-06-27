@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/button/button';
 import Drawer from '@/components/ui/drawer';
 import { Link } from '@inertiajs/react';
 import { CirclePlus } from 'lucide-react';

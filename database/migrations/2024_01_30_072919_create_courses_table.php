@@ -53,7 +53,6 @@ return new class extends Migration
             $table->foreignId('instructor_id')->constrained('instructors')->cascadeOnDelete();
 
             $table->integer('view_count')->default(0);
-            // $table->boolean('is_active')->default(false);
             $table->softDeletes();
             $table->timestamps();
         });

@@ -7,7 +7,7 @@ import { lazy, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import 'react-quill/dist/quill.snow.css';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '../../ui/select';
-import { ICourseForm, PERIODICITY_UNIT } from '../courseForm';
+import { ICourseForm, PERIODICITY_UNIT } from './course.form.util';
 
 // const ReactQuill = lazy(() => import('react-quill'));
 const ReactQuill = lazy(() => import('react-quill-new'));

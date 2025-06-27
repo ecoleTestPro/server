@@ -1,5 +1,5 @@
 import EnrollmentRate from '@/components/charts/EnrollmentRate';
-import { ICourseForm } from '@/components/courses/courseForm';
+import { ICourseForm } from '@/components/courses/form/edit-course.form';
 import DashboardWidget from '@/components/widgets/DashboardWidget';
 import AppLayout from '@/layouts/dashboard/app-layout';
 import { SharedData, type BreadcrumbItem } from '@/types';

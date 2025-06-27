@@ -1,3 +1,4 @@
+import { ConfirmDialog } from '@/components/ui/confirmDialog';
 import PageLoading from '@/components/ui/page-loading';
 import { DashbordCourseView } from '@/pages/dashboard/courses';
 import { SharedData } from '@/types';
@@ -5,9 +6,13 @@ import { ICourse } from '@/types/course';
 import { Logger } from '@/utils/console.util';
 import { usePage } from '@inertiajs/react';
 import { useState } from 'react';
+import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 import CourseTable from '../list/CourseTable';
 import CourseList from './courseList';
 import Pagination from './coursePagination';
+
+import axios from 'axios';
 
 interface ICourseCardWrapperProps {
     viewMode: DashbordCourseView;
@@ -15,11 +20,17 @@ interface ICourseCardWrapperProps {
     loading?: boolean;
     setLoading?: (loading: boolean) => void;
     courses?: ICourse[];
-    setCourses?: (courses: ICourse[]) => void;
+    // setCourses?: (courses: ICourse[]) => void;
+    handleGetAllCourses?: () => void;
 }
 
-function CourseCardWrapper({ searchTerm, viewMode, loading, setLoading, courses, setCourses }: ICourseCardWrapperProps) {
+function CourseCardWrapper({ searchTerm, viewMode, loading, setLoading, courses, handleGetAllCourses }: ICourseCardWrapperProps) {
+    const { t } = useTranslation();
     const { data } = usePage<SharedData>().props;
+
+    const [showConfirm, setShowConfirm] = useState(false);
+    const [courseToDelete, setCourseToDelete] = useState<ICourse | null>(null);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     const [currentPage, setCurrentPage] = useState(1);
     const coursesPerPage = 8;
@@ -84,6 +95,42 @@ function CourseCardWrapper({ searchTerm, viewMode, loading, setLoading, courses,
         return courses.slice(start, end);
     };
 
+    const handleDelete = () => {
+        if (!courseToDelete) {
+            return;
+        }
+        // Call the delete function here
+        Logger.log('Deleting course with ID:', courseToDelete?.id);
+        axios
+            .delete(route('dashboard.course.delete', courseToDelete?.id))
+            .then(() => {
+                setShowConfirm(false);
+                setIsDeleting(false);
+                setCourseToDelete(null);
+                toast.success(t('courses.delete', 'Formation supprimée avec succès !'));
+                handleGetAllCourses?.();
+            })
+            .catch((error) => {
+                Logger.error('Error deleting course:', error);
+                toast.error(t('courses.delete_error', 'Erreur lors de la suppression de la formation.'));
+            });
+
+        // router.delete(route('dashboard.course.delete', courseToDelete?.id), {
+        //     onSuccess: () => {
+        //         setShowConfirm(false);
+        //         setIsDeleting(false);
+        //         setCourseToDelete(null);
+        //         toast.success(t('courses.delete', 'Formation supprimée avec succès !'));
+        //     },
+        // });
+    };
+
+    const handleOpenConfirmDialog = (course: ICourse) => {
+        setCourseToDelete(course);
+        setShowConfirm(true);
+        setIsDeleting(false);
+    };
+
     if (loading) {
         return (
             <div className="flex justify-center items-center h-full w-full">
@@ -98,7 +145,7 @@ function CourseCardWrapper({ searchTerm, viewMode, loading, setLoading, courses,
                 <div>
                     <div className="overflow-y-auto max-h-[65vh]">
                         {data.courses?.list && data.courses?.list.length > 0 && viewMode == 'card' ? (
-                            <CourseList courses={sliceCourses()} />
+                            <CourseList courses={sliceCourses()} onDelete={handleOpenConfirmDialog} />
                         ) : (
                             <div className="flex flex-col md:flex-row gap-4">
                                 {/* Liste des cours */}
@@ -111,6 +158,17 @@ function CourseCardWrapper({ searchTerm, viewMode, loading, setLoading, courses,
                     <Pagination currentPage={currentPage} totalPages={totalPages()} onPageChange={handleChangePage} />
                 </div>
             </div>
+
+            <ConfirmDialog
+                open={showConfirm}
+                title="Supprimer la formation"
+                description="Voulez-vous vraiment supprimer cette formation ? Cette action est irréversible."
+                confirmLabel="Supprimer"
+                cancelLabel="Annuler"
+                onConfirm={handleDelete}
+                onCancel={() => setShowConfirm(false)}
+                loading={isDeleting}
+            />
         </div>
     );
 }

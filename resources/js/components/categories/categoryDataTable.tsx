@@ -1,7 +1,7 @@
 import { ICourseCategory } from '@/types/course';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
-import { Button } from '../ui/button';
+import { Button } from '../ui/button/button';
 import { Checkbox } from '../ui/checkbox';
 import { DataTable } from '../ui/dataTable';
 import CategoryActionBtn from './categoryActionBtn';

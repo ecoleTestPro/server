@@ -8,9 +8,10 @@ import './CourseCard.css'; // Link to CSS file
 
 interface CourseCardProps {
     course: ICourse;
+    onDelete?: (course: ICourse) => void;
 }
 
-const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
+const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete }) => {
     const { auth } = usePage<SharedData>().props;
 
     const CourseHeader = () => {
@@ -86,7 +87,11 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
                         >
                             <Edit2Icon className="w-4 h-4  " />
                         </Link>
-                        <button className="text-red-500 p-4 rounded-full hover:bg-red-400 hover:text-white" type="button">
+                        <button
+                            onClick={() => onDelete && onDelete(course)}
+                            className="text-red-500 p-4 rounded-full hover:bg-red-400 hover:text-white"
+                            type="button"
+                        >
                             <Trash2Icon className="w-4 h-4" />
                         </button>
                     </div>

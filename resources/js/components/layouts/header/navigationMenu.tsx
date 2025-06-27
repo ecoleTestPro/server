@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/button/button';
 import { CLASS_NAME } from '@/data/styles/style.constant';
 import { cn } from '@/lib/utils';
 import { IMainMenuItem } from '@/types/header.type';

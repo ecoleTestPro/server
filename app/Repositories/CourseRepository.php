@@ -206,6 +206,7 @@ class CourseRepository extends Repository
         $course = self::create([
             'category_id'   => $request->category_id,
             'title'         => $request->title,
+            'slug'          => str($request->title)->slug(),
             'media_id'      => $media ? $media->id : null,
             'video_id'      => $video ? $video->id : null,
             'description'   => $request->description ?? "", // json_encode($request->description)
@@ -288,16 +289,17 @@ class CourseRepository extends Repository
         }
 
         return self::update($course, [
-            'category_id' => $request->category_id ?? $course->category_id,
-            'title' => $request->title ?? $course->title,
-            'media_id' => $media ? $media->id : $course->media->id,
-            'video_id' => $video ? $video->id : null,
-            'description' => json_encode($request->description) ?? $course->description,
+            'category_id'   => $request->category_id ?? $course->category_id,
+            'title'         => $request->title ?? $course->title,
+            'slug'          => str($request->title)->slug(),
+            'media_id'      => $media ? $media->id : $course->media->id,
+            'video_id'      => $video ? $video->id : null,
+            'description'   => json_encode($request->description) ?? $course->description,
             'regular_price' => $request->regular_price ?? null,
-            'price' => $request->price,
+            'price'         => $request->price,
             'instructor_id' => $request->instructor_id ?? $course->instructor_id,
-            'is_active' => $isActive,
-            'published_at' => $request->is_active == 'on' ? now() : null
+            'is_active'     => $isActive,
+            'published_at'  => $request->is_active == 'on' ? now() : null
         ]);
     }
 }

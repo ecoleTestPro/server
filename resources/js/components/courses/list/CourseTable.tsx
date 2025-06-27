@@ -9,6 +9,7 @@ import CourseInscriptionDialog from '../detail/partial/CourseInscriptionDialog';
 
 interface ICourseTableProps {
     courses: ICourse[];
+    onDelete?: (course: ICourse) => void;
 }
 
 export default function CourseTable({ courses }: ICourseTableProps) {

@@ -26,10 +26,13 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
     Route::group([
         'prefix' => 'courses',
     ], function () {
-        Route::get('',               [CourseController::class, 'index'])->name('dashboard.course.index');
-        Route::get('create',         [CourseController::class, 'create'])->name('dashboard.course.create');
-        Route::get('edit/{slug}',    [CourseController::class, 'create'])->name('dashboard.course.edit');
-        Route::post('create',        [CourseController::class, 'store'])->name('dashboard.course.store');
+        Route::get('',                  [CourseController::class, 'index'])->name('dashboard.course.index');
+        Route::get('all',               [CourseController::class, 'allCourses'])->name('dashboard.course.all');
+        Route::get('edit/{slug}',       [CourseController::class, 'create'])->name('dashboard.course.edit');
+        Route::get('create',            [CourseController::class, 'create'])->name('dashboard.course.create');
+        Route::post('create',           [CourseController::class, 'store'])->name('dashboard.course.store');
+        Route::put('update/{slug}',     [CourseController::class, 'update'])->name('dashboard.course.update');
+        Route::delete('delete/{id}',    [CourseController::class, 'delete'])->name('dashboard.course.delete');
     });
 
     // CATEGORY COURSE MANAGEMENT
