@@ -1,0 +1,31 @@
+version: '3.3'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: test_ecole_pro_app
+    ports:
+      - "8053:80"
+    depends_on:
+      - db
+    environment:
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_PORT: 3307
+      DB_DATABASE: root
+      DB_USERNAME: jerry_clexcellence
+      DB_PASSWORD: root
+
+  db:
+    image: mysql:8.0
+    container_name: tes_ecole_mysql_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: root
+      MYSQL_USER: jerry_clexcellence
+      MYSQL_PASSWORD: root
+    ports:
+      - "3307:3306"

@@ -20,10 +20,10 @@ export default function Login({ status, canResetPassword }: LoginProps) {
 
     return (
         <AuthAdminLayout
-            title={t('login.title', 'Log in to your account')}
-            description={t('login.description', 'Enter your email and password below to log in')}
+            title={t('login.title', 'Se connecter à votre compte')}
+            description={t('login.description', 'Entrez votre adresse e-mail et votre mot de passe ci-dessous pour vous connecter')}
         >
-            <Head title={t('login.title', 'Log in')} />
+            <Head title={t('login.title', 'Se connecter')} />
 
             <LoginAdminForm status={status} canResetPassword={canResetPassword} />
 

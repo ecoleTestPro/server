@@ -1,41 +1,30 @@
 import { Link } from '@inertiajs/react';
 import { JSX } from 'react';
 
-interface BtnLinkCustomProps {
+interface IconLinkProps {
     href: string;
-    text: string;
-    icon?: JSX.Element;
-    iconPosition?: 'left' | 'right';
-    iconSize?: number;
+    icon: JSX.Element;
+    title: string; // Pour l'accessibilité (aria-label)
+    size?: number; // Taille de l'icône en rem (par défaut: 1.5rem)
     className?: string;
 }
 
 export function BtnLinkCustom({
-    className,
-    text,
     href,
     icon,
-    iconPosition = 'left',
-    iconSize = 4,
-}: BtnLinkCustomProps) {
+    title,
+    size = 1.5,
+    className = '',
+}: IconLinkProps) {
     return (
         <Link
             href={href}
-            className={`group relative inline-flex h-10 items-center justify-center overflow-hidden rounded-md border border-primary font-medium ${className || ''}`}
+            className={`inline-flex items-center justify-center rounded-full p-2 text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 transition-all duration-200 ease-in-out hover:scale-110 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 ${className}`}
+            aria-label={title}
         >
-            {/* Normal State */}
-            <div className="inline-flex h-10 translate-y-0 items-center justify-center bg-white dark:bg-neutral-900 px-6 text-primary transition group-hover:-translate-y-[150%]">
-                {icon && iconPosition === 'left' && <span className="mr-2">{icon}</span>}
-                {text}
-                {icon && iconPosition === 'right' && <span className="ml-2">{icon}</span>}
-            </div>
-
-            {/* Hover State */}
-            <div className="absolute inline-flex h-10 w-full translate-y-[100%] items-center justify-center bg-primary px-6 text-neutral-50 dark:bg-primary dark:text-neutral-950 transition duration-300 group-hover:translate-y-0">
-                {icon && iconPosition === 'left' && <span className="mr-2">{icon}</span>}
-                {text}
-                {icon && iconPosition === 'right' && <span className="ml-2">{icon}</span>}
-            </div>
+            <span style={{ fontSize: `${size}rem` }} className="inline-block">
+                {icon}
+            </span>
         </Link>
     );
 }

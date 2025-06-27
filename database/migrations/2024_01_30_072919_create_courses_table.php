@@ -15,30 +15,45 @@ return new class extends Migration
         Schema::create('courses', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete();
-
             $table->string('title');
+            $table->string('slug')->unique();
+
+            $table->boolean('is_featured')->default(false);
+            $table->boolean('is_published')->default(false);
+            $table->timestamp('published_at')->nullable();
+
+            $table->text('level')->nullable();
+            $table->text('excerpt')->nullable();
+
+            /**
+             * essential key : 
+             * content
+             * target_audience
+             * why_choose
+             * prerequisites
+             */
             $table->json('description');
 
-            $table->text('excerpt')->nullable();
+            $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete();
 
             $table->foreignIdFor(Media::class)->nullable()->constrained()->nullOnDelete();
             $table->foreignId('video_id')->nullable()->constrained('media')->nullOnDelete();
 
 
+            $table->text('location_mode')->nullable();
             $table->integer('duration')->nullable();
             $table->string('attachment')->nullable();
             $table->enum('periodicity_unit', ['DAY', 'WEEK', 'MONTH', 'YEAR'])->nullable();
             $table->integer('periodicity_value')->nullable();
 
-            $table->float('regular_price');
             $table->float('price');
+            $table->float('regular_price');
+            $table->boolean('price_includes_tax')->default(false);
 
             $table->foreignId('instructor_id')->constrained('instructors')->cascadeOnDelete();
 
             $table->integer('view_count')->default(0);
-            $table->timestamp('published_at')->nullable();
-            $table->boolean('is_active')->default(false);
+            // $table->boolean('is_active')->default(false);
             $table->softDeletes();
             $table->timestamps();
         });

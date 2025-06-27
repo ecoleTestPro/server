@@ -18,7 +18,17 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             UserSeeder::class,
             InstructorSeeder::class,
+
+            NotificationSeeder::class,
+
+            CategorySeeder::class,
+            CourseSeeder::class,
             // GuestSeeder::class,
+
+            EnrollmentSeeder::class,
+
+            BlogCategorySeeder::class,
+            BlogSeeder::class,
             // Other seeders can be added here
         ]);
     }

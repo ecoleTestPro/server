@@ -1,4 +1,3 @@
-import { IDataWithPagination } from '@/types';
 import { ICourseCategory } from '@/types/course';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
@@ -7,14 +6,8 @@ import { Checkbox } from '../ui/checkbox';
 import { DataTable } from '../ui/dataTable';
 import CategoryActionBtn from './categoryActionBtn';
 
-const categories: ICourseCategory[] = [
-    { id: 1, title: 'Développement Web', color: 'blue', is_featured: true },
-    { id: 2, title: 'Design', color: 'red', is_featured: false },
-    { id: 3, title: 'Marketing', color: 'green', is_featured: true },
-];
-
 interface CategoryDataTableProps {
-    categories: IDataWithPagination<ICourseCategory>;
+    categories: ICourseCategory[];
     onEditRow?: (row: ICourseCategory) => void;
     onDeleteRow?: (row: ICourseCategory) => void;
 }
@@ -65,5 +58,5 @@ export default function CategoryDataTable({ categories, onEditRow, onDeleteRow }
         },
     ];
 
-    return <DataTable columns={columns} data={categories.data} filterColumn="title" />;
+    return <DataTable columns={columns} data={categories} filterColumn="title" />;
 }

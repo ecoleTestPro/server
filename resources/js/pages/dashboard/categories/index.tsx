@@ -6,7 +6,7 @@ import AppLayout from '@/layouts/dashboard/app-layout';
 import { SharedData, type BreadcrumbItem } from '@/types';
 import { ICourseCategory } from '@/types/course';
 import { Head, router, usePage } from '@inertiajs/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
@@ -26,8 +26,16 @@ export default function DashboardCategory() {
     const [showConfirm, setShowConfirm] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
 
+    const [categories, setCategories] = useState<ICourseCategory[]>([]);
+
     const [openCategory, setOpenCategory] = useState(false);
     const [categorySelected, setCategorySelected] = useState<ICategoryForm | undefined>(undefined);
+
+    useEffect(() => {
+        if (data && data.categories_with_courses) {
+            setCategories(data.categories_with_courses);
+        }
+    }, [data]);
 
     const handleOpenCategory = () => {
         setOpenCategory(true);
@@ -121,7 +129,11 @@ export default function DashboardCategory() {
 
                     <div className="container mx-auto flex h-full items-center justify-center">
                         {data.categories && (
-                            <CategoryDataTable categories={data.categories} onEditRow={handleOpenEditCategory} onDeleteRow={handleOnDeleteRow} />
+                            <CategoryDataTable
+                                categories={categories  }
+                                onEditRow={handleOpenEditCategory}
+                                onDeleteRow={handleOnDeleteRow}
+                            />
                         )}
                     </div>
                 </div>

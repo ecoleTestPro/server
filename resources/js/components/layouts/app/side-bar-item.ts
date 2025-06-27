@@ -1,5 +1,5 @@
 import { NavItem } from "@/types";
-import { BookOpen, FileStack, Folder, LayoutGrid, List, ClipboardPlus, Settings2, ListTodo } from 'lucide-react';
+import { BookOpen, FileStack, Folder, HomeIcon, LayoutGrid, List, ClipboardPlus, Settings2, ListTodo } from 'lucide-react';
 
 
 export const MAIN_NAV_ITEMS: NavItem[] = [
@@ -10,42 +10,42 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
     },
     {
         title: 'Formations',
-        href: '/courses',
+        href: route('dashboard.course.index'),
         icon: FileStack,
         children: [
             {
                 title: 'Liste',
-                href: '/courses',
+                href: route('dashboard.course.index'),
                 icon: List,
             },
             {
                 title: 'Créer une formation',
-                href: '/courses/create',
+                href: route('dashboard.course.create'),
                 icon: ClipboardPlus,
             },
             {
                 title: 'Catégories',
-                href: '/categories',
+                href: route('dashboard.category.index'),
                 icon: ListTodo,
             },
             {
                 title: 'Configuration',
-                href: '/courses/settings',
+                href: "#",
                 icon: Settings2,
             },
         ],
     },
+    {
+        title: 'Paramètres',
+        href: route('settings.app.index'),
+        icon: Settings2,
+    }
 ];
 
 export const FOOTER_NAV_ITEMS: NavItem[] = [
     {
-        title: 'Repository',
-        href: 'https://github.com/laravel/react-starter-kit',
-        icon: Folder,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#react',
-        icon: BookOpen,
+        title: 'Accueil',
+        href: route('home'),
+        icon: HomeIcon,
     },
 ];
