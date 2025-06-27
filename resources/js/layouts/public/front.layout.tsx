@@ -23,7 +23,6 @@ export default function DefaultLayout({ children, title, description }: PropsWit
     useEffect(() => {
         setLoading(true);
 
-
         // toast.success('Page loaded successfully!');
 
         if (error) {
@@ -72,7 +71,6 @@ export default function DefaultLayout({ children, title, description }: PropsWit
             <TopAlert />
             <Header />
             <div className="">{children}</div>
-
             <Toaster position="top-right" toastOptions={{ duration: 4000 }} />
             <Footer />
         </div>

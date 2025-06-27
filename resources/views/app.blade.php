@@ -31,7 +31,7 @@
         }
     </style>
 
-    <title inertia>{{ config('app.name', 'Laravel') }}</title>
+    <title inertia>{{ config('app.name', 'École TestPro') }}</title>
 
     <link rel="icon" href="/favicon.ico" sizes="any">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -46,6 +46,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
 
     {{-- custom css --}}
+
+    {{-- AOS --}}
+    <script src="bower_components/aos/dist/aos.js"></script>
+    <link rel="stylesheet" href="bower_components/aos/dist/aos.css" />
+
 
     @routes
     @viteReactRefresh

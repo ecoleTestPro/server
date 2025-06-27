@@ -1,17 +1,22 @@
+import TitleBadgeOne from '../ui/badge-one';
+
 function AboutUsCard() {
     return (
-        <section className="body-font text-gray-600 dark:text-white dark:bg-[#0a0e19]"  style={{
-            backgroundImage: 'url(assets/images/pattern-15.png)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-        }} >
+        <section
+            className="body-font text-gray-600 dark:text-white dark:bg-[#0a0e19]"
+            style={{
+                backgroundImage: 'url(assets/images/pattern-15.png)',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+            }}
+        >
             <div className="py-[40px] md:py-[50px] lg:py-[60px] xl:py-[80px]">
                 <div className="relative z-[1] container mx-auto px-[12px] 2xl:max-w-[1320px]">
                     <div className="grid grid-cols-1 items-center gap-[25px] lg:grid-cols-2">
                         <div className="relative">
-                            <div className="rounded-[7px] border border-white/[.10] bg-white/[.54] p-[15px] backdrop-blur-[5.400000095367432px] md:max-w-[600px] md:p-[25px] lg:max-w-[400px] xl:max-w-[510px] xl:px-[34px] xl:py-[27px] dark:border-black/[.10] dark:bg-black/[.54]">
+                            <div className="rounded-[7px] p-[15px] backdrop-blur-[5.400000095367432px] ">
                                 <img
-                                    src="assets/images/Formation-en-ligne-.jpeg"
+                                    src="/assets/images/Benefices-de-la-formation-en-entrepreneuriat-scaled-1.jpg"
                                     className="inline-block"
                                     alt="order-summary-image"
                                     width={540}
@@ -20,7 +25,7 @@ function AboutUsCard() {
                             </div>
                             <div className="absolute top-1/2 -mt-[15px] max-w-[120px] -translate-y-1/2 rounded-[4.294px] drop-shadow-xl md:-mt-[17px] md:max-w-[200px] lg:max-w-[219px] ltr:right-0 ltr:lg:right-[30px] rtl:left-0 rtl:lg:left-[30px]">
                                 <img
-                                    src="assets/images/card-icon-1.png"
+                                    src="/assets/images/card-icon-1.png"
                                     className="inline-block rounded-[4.294px] animate-image-flotting"
                                     alt="courses-sales-image"
                                     width={100}
@@ -30,6 +35,7 @@ function AboutUsCard() {
                         </div>
 
                         <div>
+                            <TitleBadgeOne title="Ecole TestPro " />
                             <h2 className="!mb-[15px] !text-[24px] !leading-[1.2] !-tracking-[.5px] md:!text-[28px] md:!-tracking-[.6px] lg:!text-[34px] lg:!-tracking-[.8px] xl:!text-[36px] xl:!-tracking-[1px]">
                                 Des formations pour un succès durable !
                             </h2>
