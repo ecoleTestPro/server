@@ -63,7 +63,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
                     <div>
                         {course && (
                             <Link
-                                href={ROUTE_MAP.courseDetail(course?.category?.slug ?? '#', course.slug).link}
+                                href={ROUTE_MAP.public.courses.detail(course?.category?.slug ?? '#', course.slug).link}
                                 className="rounded-md border border-transparent bg-slate-800 px-4 py-2 text-center text-sm text-white shadow-md transition-all hover:bg-primary hover:text-white  hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                                 type="button"
                             >
@@ -73,7 +73,11 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
                     </div>
 
                     <div className="flex gap-x-2">
-                        <Link href={ROUTE_MAP.editCourse(course.slug).link}  className="text-green-400 p-4 rounded-full hover:bg-green-400 hover:text-white" type="button">
+                        <Link
+                            href={ROUTE_MAP.dashboard.course.edit(course.slug).link}
+                            className="text-green-400 p-4 rounded-full hover:bg-green-400 hover:text-white"
+                            type="button"
+                        >
                             <Edit2Icon className="w-4 h-4  " />
                         </Link>
                         <button className="text-red-500 p-4 rounded-full hover:bg-red-400 hover:text-white" type="button">

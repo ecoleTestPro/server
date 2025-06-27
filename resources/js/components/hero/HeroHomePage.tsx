@@ -61,7 +61,7 @@ export default function HeroHomePage() {
                                 {courses.map((item, index) => (
                                     <Link
                                         key={item.id}
-                                        href={ROUTE_MAP.courseDetail(item.category?.slug ?? '#', item.slug).link}
+                                        href={ROUTE_MAP.public.courses.detail(item.category?.slug ?? '#', item.slug).link}
                                         className={style.formationItem}
                                     >
                                         {item.title}

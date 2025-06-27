@@ -35,7 +35,7 @@ export default function ServiceIntegrationSpecialists() {
     const pageTitle = t('PAGES.SERVICES.INTEGRATION_SPECIALISTS', 'Intégration de Spécialistes dans Vos Locaux');
 
     const breadcrumbItems: IHeroBreadcrumbItems[] = [
-        { label: t('PAGES.HOME', 'Accueil'), href: ROUTE_MAP.home.link },
+        { label: t('PAGES.HOME', 'Accueil'), href: ROUTE_MAP.public.home.link },
         { label: pageTitle, href: '#' },
     ];
 
@@ -113,7 +113,7 @@ export default function ServiceIntegrationSpecialists() {
 
                                 <div className="flex justify-between">
                                     <Link
-                                        href={ROUTE_MAP.contact.link}
+                                        href={ROUTE_MAP.public.contact.link}
                                         className="mt-[20px] inline-block px-[15px] py-[10px] text-green-500 hover:underline"
                                     >
                                         {t('PAGES.CONSULTING.CONSULTING-AUDIT', 'Contactez-nous pour en savoir plus')}
@@ -295,7 +295,7 @@ export default function ServiceIntegrationSpecialists() {
                                         'Nous avons réduit les temps de test de 30% pour une application financière critique.',
                                     )}
                                 </p>
-                                <Link href={ROUTE_MAP.contact.link} className="text-green-500 hover:underline">
+                                <Link href={ROUTE_MAP.public.contact.link} className="text-green-500 hover:underline">
                                     {t('Learn More', 'En savoir plus')}
                                 </Link>
                             </div>
@@ -307,7 +307,7 @@ export default function ServiceIntegrationSpecialists() {
                                         'Amélioration de la qualité logicielle pour une plateforme e-commerce grâce à des tests automatisés.',
                                     )}
                                 </p>
-                                <Link href={ROUTE_MAP.contact.link} className="text-green-500 hover:underline">
+                                <Link href={ROUTE_MAP.public.contact.link} className="text-green-500 hover:underline">
                                     {t('Learn More', 'En savoir plus')}
                                 </Link>
                             </div>

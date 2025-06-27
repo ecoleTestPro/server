@@ -19,17 +19,17 @@ export default function AboutUsServices() {
     const services: IService[] = [
         {
             title: 'Consulting',
-            link: ROUTE_MAP.consulting.link,
+            link: ROUTE_MAP.public.services.consulting.index.link,
             services: [
                 {
                     title: 'Audit de maturité des tests',
-                    link: ROUTE_MAP.auditOfMaturityOfTests.link,
+                    link: ROUTE_MAP.public.services.consulting.auditOfMaturityOfTests.link,
                     description:
                         'Évaluez et optimisez vos processus de test grâce à nos audits approfondis, identifiant les lacunes et les opportunités d’amélioration.',
                 },
                 {
                     title: 'Conseil en stratégie de test',
-                    link: ROUTE_MAP.consultingTesting.link,
+                    link: ROUTE_MAP.public.services.consulting.consultingTesting.link,
                     description:
                         'Développez des stratégies de test robustes, adaptées à vos objectifs commerciaux, pour garantir qualité et performance à chaque étape.',
                 },
@@ -37,17 +37,17 @@ export default function AboutUsServices() {
         },
         {
             title: 'Services de test',
-            link: ROUTE_MAP.serviceTestOutsourcingServices.link,
+            link: ROUTE_MAP.public.services.testSerivces.index.link,
             services: [
                 {
                     title: 'Externalisation des tests',
-                    link: ROUTE_MAP.serviceTestOutsourcingServices.link,
+                    link: ROUTE_MAP.public.services.testSerivces.integrationSpecialists.link,
                     description:
                         'Confiez vos besoins de test à nos équipes expertes pour des résultats de haute qualité, tout en vous concentrant sur vos activités principales.',
                 },
                 {
                     title: 'Intégration de spécialistes sur site',
-                    link: ROUTE_MAP.serviceTestOutsourcingServices.link,
+                    link: ROUTE_MAP.public.services.testSerivces.testOutsourcingServices.link,
                     description:
                         'Intégrez nos professionnels qualifiés au sein de vos équipes pour une collaboration fluide et une exécution optimale des projets.',
                 },
@@ -75,7 +75,7 @@ export default function AboutUsServices() {
                                     Faites-nous confiance pour être votre partenaire dans votre transformation numérique. Nos solutions de test
                                     garantissent qualité, efficacité et innovation pour mener vos projets au succès.
                                 </p>
-                                <BtnSecondary href={ROUTE_MAP.services.link} label="En savoir plus sur nous" />
+                                <BtnSecondary href={ROUTE_MAP.public.services.testSerivces.index.link} label="En savoir plus sur nous" />
                                 <div
                                     className="grid grid-cols-1 lg:grid-cols-2 gap-6"
                                     data-aos="fade-right"

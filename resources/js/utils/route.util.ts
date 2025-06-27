@@ -29,34 +29,91 @@ const createIRouteMap = (link: string, title?: string, linkFile?: string): IRout
     }
 }
 
-export const ROUTE_MAP = {
-    aboutUs: createIRouteMap('/about-us', 'À propos de nous'),
-    home: createIRouteMap('/', 'Accueil'),
-    courses: createIRouteMap('/formations', 'Formations'),
-    courseDetail: (categorySlug: string, slug: string) => {
-        return createIRouteMap(`/formation/${categorySlug}/${slug}`, 'Détail de la formation');
+interface IROUTE_MAP {
+    public: {
+        home: IRouteMap;
+        aboutUs: IRouteMap;
+        careers: IRouteMap;
+        faqs: IRouteMap;
+        contact: IRouteMap;
+        privacyPolicy: IRouteMap;
+        termsOfService: IRouteMap;
+        courses: {
+            list: IRouteMap;
+            byCategory: (categorySlug: string) => IRouteMap;
+            detail: (categorySlug: string, slug: string) => IRouteMap;
+        };
+        services: {
+            consulting: {
+                index: IRouteMap;
+                auditOfMaturityOfTests: IRouteMap;
+                consultingTesting: IRouteMap;
+            },
+            testSerivces: {
+                index: IRouteMap;
+                testOutsourcingServices: IRouteMap;
+                integrationSpecialists: IRouteMap;
+            }
+        }
+        blogs: {
+            list: IRouteMap;
+            detail: (slug: string) => IRouteMap;
+        }
+    }
+    auth: {
+        login: IRouteMap,
+        register: IRouteMap,
+        forgotPassword: IRouteMap,
+        resetPassword: IRouteMap,
+        verifyEmail: IRouteMap,
+        adminLogin: IRouteMap,
     },
-    courseCategory: (categorySlug: string) => {
-        return createIRouteMap(`/formation/${categorySlug}`, 'Catégorie de formation');
+    dashboard: {
+        dashboard: IRouteMap,
+        course: {
+            list: IRouteMap,
+            create: IRouteMap,
+            edit: (slug: string) => IRouteMap
+        },
+    }
+}
+
+export const ROUTE_MAP: IROUTE_MAP = {
+    public: {
+        home: createIRouteMap(route('home'), 'Accueil'),
+        aboutUs: createIRouteMap(route('aboutUs'), 'À propos de nous'),
+        careers: createIRouteMap(route('careers'), 'Carrières'),
+        faqs: createIRouteMap(route('faqs'), 'FAQs'),
+        contact: createIRouteMap(route('contact'), 'Nous contacter'),
+        privacyPolicy: createIRouteMap(route('privacyPolicy'), 'Politique de confidentialité'),
+        termsOfService: createIRouteMap(route('termsOfService'), 'Conditions d’utilisation'),
+        courses: {
+            list: createIRouteMap('/formations', 'Liste des formations'),
+            byCategory: (categorySlug: string) => {
+                return createIRouteMap(`/formation/${categorySlug}`, 'Formations par catégorie');
+            },
+            detail: (categorySlug: string, slug: string) => {
+                return createIRouteMap(`/formation/${categorySlug}/${slug}`, 'Détail de la formation');
+            }
+        },
+        services: {
+            consulting: {
+                index: createIRouteMap('/services/consulting', 'Consulting'),
+                auditOfMaturityOfTests: createIRouteMap('/services/consulting/audit-of-maturity-of-tests', 'Audit de maturité de tests'),
+                consultingTesting: createIRouteMap('/services/consulting/consulting-testing', 'Conseil Testing'),
+            },
+            testSerivces: {
+                index: createIRouteMap('/services/test-services', 'Services de test'),
+                testOutsourcingServices: createIRouteMap('/services/test-services/test-outsourcing-services', 'Services d’externalisation de test'),
+                integrationSpecialists: createIRouteMap('/services/test-services/integration-of-specialists-on-your-premises-test-outsourcing-services', 'Intégration de Spécialistes dans Vos LocauxTest Outsourcing Services'),
+            }
+        },
+        blogs: {
+            list: createIRouteMap('/blogs', 'Blogs'),
+            detail: (slug: string) => createIRouteMap(`/blog/${slug}`, 'Détail du blog')
+
+        },
     },
-    editCourse: (slug: string) => {
-        return createIRouteMap(`/dashboard/courses/edit/${slug}`, 'Modifier la formation');
-    },
-    consulting: createIRouteMap('/consulting', 'Consulting'),
-    auditOfMaturityOfTests: createIRouteMap('/consulting/audit-of-maturity-of-tests', 'Audit de maturité de test'),
-    consultingTesting: createIRouteMap('/consulting/consulting-testing', 'Conseil Testing'),
-    services: createIRouteMap('/services', 'Services'),
-    serviceTestOutsourcingServices: createIRouteMap('/services/test-outsourcing-services', 'Services d’externalisation de test'),
-    serviceIntegrationSpecialists: createIRouteMap('/services/integration-of-specialists-on-your-premises-test-outsourcing-services', 'Intégration de Spécialistes dans Vos LocauxTest Outsourcing Services'),
-    blogs: createIRouteMap('/blogs', 'Blogs'),
-    blogDetail: (slug: string) => {
-        return createIRouteMap(`/blog/${slug}`, 'Détail du blog');
-    },
-    careers: createIRouteMap('/careers', 'Carrières'),
-    faqs: createIRouteMap('/faqs', 'FAQs'),
-    contact: createIRouteMap('/contact', 'Nous contacter'),
-    privacyPolicy: createIRouteMap('/privacy-policy', 'Politique de confidentialité'),
-    termsOfService: createIRouteMap('/terms-of-service', 'Conditions d’utilisation'),
     auth: {
         login: createIRouteMap(route('login'), 'Connexion'),
         register: createIRouteMap(route('auth.register'), 'Inscription'),

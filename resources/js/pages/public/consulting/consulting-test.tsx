@@ -34,7 +34,7 @@ export default function ConsultingTest() {
     const pageTitle = t('PAGES.CONSULTING.CONSULTING-AUDIT', 'Conseil Testing');
 
     const breadcrumbItems: IHeroBreadcrumbItems[] = [
-        { label: t('PAGES.HOME', 'Accueil'), href: ROUTE_MAP.home.link },
+        { label: t('PAGES.HOME', 'Accueil'), href: ROUTE_MAP.public.home.link },
         { label: pageTitle, href: '#' },
     ];
 
@@ -121,7 +121,7 @@ export default function ConsultingTest() {
                                 </p>
 
                                 <Link
-                                    href={ROUTE_MAP.contact.link}
+                                    href={ROUTE_MAP.public.contact.link}
                                     className="mt-[20px] inline-block px-[15px] py-[10px] text-green-500 hover:underline"
                                 >
                                     {t('PAGES.CONSULTING.CONSULTING-AUDIT', 'Contactez-nous pour en savoir plus')}

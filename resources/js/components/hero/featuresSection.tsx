@@ -90,7 +90,7 @@ function FeaturesSection() {
             alt: course.title || 'Featured Course',
             title: course.title || 'Titre du cours',
             description: course.excerpt,
-            link: ROUTE_MAP.courseDetail(course.category?.slug || '', course.slug).link, // Assuming the link is to the course detail page
+            link: ROUTE_MAP.public.courses.detail(course.category?.slug || '', course.slug).link, // Assuming the link is to the course detail page
             linkLabel: 'Voir le cours',
         };
     };
