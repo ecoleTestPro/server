@@ -56,7 +56,9 @@ export default function Footer() {
                         {/*  */}
                         <div className="col-span-1 lg:col-span-2">
                             <div className="ltr:xl:-mr-[35px] rtl:xl:-ml-[35px]">
-                                <AppLogo />
+                                <div  className='mb-4'>
+                                    <AppLogo width={180} />
+                                </div>
                                 <div>
                                     <h5 className="!mb-[10px] !text-xl !leading-[1.2] !font-medium !text-gray-900 dark:!text-white">
                                         Boostez votre carrière avec TestPro !

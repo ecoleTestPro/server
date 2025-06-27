@@ -2,7 +2,7 @@ import React from 'react'
 
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue ,SelectLabel} from '../ui/select';
 
-interface ISelectItem {
+export interface ISelectItem {
     id: number
     title: string
     value: string

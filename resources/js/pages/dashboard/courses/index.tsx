@@ -5,8 +5,10 @@ import CourseToolBarTwo from '@/components/courses/dashboard/courseToolBarTwo';
 import { ConfirmDialog } from '@/components/ui/confirmDialog';
 import AppLayout from '@/layouts/dashboard/app-layout';
 import { SharedData, type BreadcrumbItem } from '@/types';
+import { ICourse } from '@/types/course';
+import { Logger } from '@/utils/console.util';
 import { Head, router, usePage } from '@inertiajs/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
@@ -27,6 +29,10 @@ export default function Dashboard() {
     const { t } = useTranslation();
 
     const { data } = usePage<SharedData>().props;
+
+    const [loading, setLoading] = useState<boolean>(false);
+    const [coursesInitial, setCoursesInitial] = useState<ICourse[]>([]);
+    const [courses, setCourses] = useState<ICourse[]>([]);
 
     const [showConfirm, setShowConfirm] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
@@ -57,6 +63,17 @@ export default function Dashboard() {
             },
         });
     };
+
+    useEffect(() => {
+        Logger.log('CourseCardWrapper useEffect', data);
+        if (data && data.courses && data.courses.list) {
+            setCoursesInitial(data.courses.list);
+            setCourses(data.courses.list);
+        } else {
+            setCoursesInitial([]);
+            setCourses([]);
+        }
+    }, [data]);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -90,9 +107,23 @@ export default function Dashboard() {
                         </>
                     )}
 
-                    <CourseToolBarTwo setSearchTerm={setSearchTerm} searchTerm={searchTerm} viewMode={viewMode} handleChangeViewMode={handleChangeViewMode} />
+                    <CourseToolBarTwo
+                        setSearchTerm={setSearchTerm}
+                        searchTerm={searchTerm}
+                        viewMode={viewMode}
+                        handleChangeViewMode={handleChangeViewMode}
+                        setCourses={setCourses}
+                        courses={coursesInitial}
+                    />
 
-                    <CourseCardWrapper searchTerm={searchTerm} viewMode={viewMode} />
+                    <CourseCardWrapper
+                        searchTerm={searchTerm}
+                        viewMode={viewMode}
+                        courses={courses}
+                        setCourses={setCourses}
+                        setLoading={setLoading}
+                        loading={loading}
+                    />
                 </div>
             </div>
         </AppLayout>

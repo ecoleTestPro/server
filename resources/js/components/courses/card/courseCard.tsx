@@ -1,6 +1,7 @@
+import { SharedData } from '@/types';
 import { ICourse } from '@/types/course';
 import { ROUTE_MAP } from '@/utils/route.util';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { Edit2Icon, Trash2Icon } from 'lucide-react';
 import { FaClock, FaMapMarkerAlt } from 'react-icons/fa'; // Import icons
 import './CourseCard.css'; // Link to CSS file
@@ -10,11 +11,16 @@ interface CourseCardProps {
 }
 
 const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
+    const { auth } = usePage<SharedData>().props;
+
     const CourseHeader = () => {
         return (
             <div className="mb-2 flex items-center justify-between">
                 <span className="text-sm text-green-500">Formation</span>
-                {course.is_featured && <span className="text-sm text-yellow-500">FEATURED</span>}
+                <div>
+                    {auth?.user?.is_admin && <span className="bg-yellow-500 rounded-full p-2 text-sm italic"> #{course.id} </span>}
+                    {course.is_featured && <span className="text-sm text-yellow-500">FEATURED</span>}
+                </div>
             </div>
         );
     };

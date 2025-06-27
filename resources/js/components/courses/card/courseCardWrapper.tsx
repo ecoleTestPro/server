@@ -4,7 +4,7 @@ import { SharedData } from '@/types';
 import { ICourse } from '@/types/course';
 import { Logger } from '@/utils/console.util';
 import { usePage } from '@inertiajs/react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import CourseTable from '../list/CourseTable';
 import CourseList from './courseList';
 import Pagination from './coursePagination';
@@ -12,13 +12,15 @@ import Pagination from './coursePagination';
 interface ICourseCardWrapperProps {
     viewMode: DashbordCourseView;
     searchTerm?: string;
+    loading?: boolean;
+    setLoading?: (loading: boolean) => void;
+    courses?: ICourse[];
+    setCourses?: (courses: ICourse[]) => void;
 }
 
-function CourseCardWrapper({ searchTerm, viewMode }: ICourseCardWrapperProps) {
+function CourseCardWrapper({ searchTerm, viewMode, loading, setLoading, courses, setCourses }: ICourseCardWrapperProps) {
     const { data } = usePage<SharedData>().props;
 
-    const [loading, setLoading] = useState<boolean>(false);
-    const [courses, setCourses] = useState<ICourse[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const coursesPerPage = 8;
 
@@ -28,7 +30,12 @@ function CourseCardWrapper({ searchTerm, viewMode }: ICourseCardWrapperProps) {
     // const currentCourses = courses.slice(indexOfFirstCourse, indexOfLastCourse);
 
     // Gestion de la pagination
-    const totalPages = Math.ceil(courses.length / coursesPerPage);
+    const totalPages = () => {
+        if (!courses || courses.length === 0) {
+            return 1; // Si pas de cours, on retourne 1 page pour éviter les erreurs
+        }
+        return Math.ceil(courses.length / coursesPerPage);
+    };
 
     /**
      * Handles the change of the current page in pagination.
@@ -38,7 +45,12 @@ function CourseCardWrapper({ searchTerm, viewMode }: ICourseCardWrapperProps) {
      * @param page - The page number to navigate to.
      */
     const handleChangePage = (page: number) => {
-        if (page < 1 || page > totalPages) return; // Validation de la page
+        if (!setLoading) {
+            Logger.error('setLoading function is not provided');
+            return;
+        }
+
+        if (page < 1 || page > totalPages()) return; // Validation de la page
 
         setLoading(true);
         setCurrentPage(page);
@@ -72,15 +84,6 @@ function CourseCardWrapper({ searchTerm, viewMode }: ICourseCardWrapperProps) {
         return courses.slice(start, end);
     };
 
-    useEffect(() => {
-        Logger.log('CourseCardWrapper useEffect', data);
-        if (data && data.courses && data.courses.list) {
-            setCourses(data.courses.list);
-        } else {
-            setCourses([]);
-        }
-    }, [data]);
-
     if (loading) {
         return (
             <div className="flex justify-center items-center h-full w-full">
@@ -105,7 +108,7 @@ function CourseCardWrapper({ searchTerm, viewMode }: ICourseCardWrapperProps) {
                             </div>
                         )}
                     </div>
-                    <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handleChangePage} />
+                    <Pagination currentPage={currentPage} totalPages={totalPages()} onPageChange={handleChangePage} />
                 </div>
             </div>
         </div>

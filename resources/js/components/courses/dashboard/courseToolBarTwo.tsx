@@ -1,9 +1,11 @@
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import SelectCustom, { ISelectItem } from '@/components/ui/select-custom';
 import { CLASS_NAME } from '@/data/styles/style.constant';
 import { DashbordCourseView } from '@/pages/dashboard/courses';
 import { ICourse } from '@/types/course';
 import { Link } from '@inertiajs/react';
-import { LayoutGrid, PlusSquare, TableOfContents } from 'lucide-react';
+import { Filter, LayoutGrid, PlusSquare, TableOfContents } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 // import DashboardCategoryList from '../categories/dashboardCategoryList';
 
@@ -13,59 +15,110 @@ interface ICategoryToolBarProps {
 
     viewMode: DashbordCourseView;
     handleChangeViewMode: (mode: DashbordCourseView) => void;
+
+    courses: ICourse[];
+    setCourses?: (courses: ICourse[]) => void;
 }
 
-export default function CourseToolBarTwo({ setSearchTerm, searchTerm, viewMode, handleChangeViewMode }: ICategoryToolBarProps) {
+export default function CourseToolBarTwo({ setSearchTerm, searchTerm, viewMode, handleChangeViewMode, courses, setCourses }: ICategoryToolBarProps) {
     const { t, i18n } = useTranslation();
 
-    const filters: { label: string; labelColor: string; condition: () => ICourse[] }[] = [
+    const filters: { id: 'all' | 'published' | 'featured'; label: string; labelColor: string; onClick: () => void; isSelected: boolean }[] = [
         {
-            label: t('course.category.dashboard.filters.all', 'Tous'),
+            id: 'all',
+            label: t('course.category.dashboard.filters.all', `Tous (${courses.length})`),
             labelColor: 'text-gray-600',
-            condition: () => [],
+            onClick: () => {
+                setCourses && setCourses(courses ?? []);
+                filters.forEach((filter) => {
+                    filter.isSelected = filter.id === 'all';
+                });
+            },
+            isSelected: true,
         },
         {
-            label: t('course.category.dashboard.filters.published', 'Publié'),
+            id: 'published',
+            label: t('course.category.dashboard.filters.published', `Publié (${courses.filter((course) => course.is_published).length})`),
             labelColor: 'text-green-600',
-            condition: () => [],
+            onClick: () => {
+                setCourses && setCourses(courses ? courses.filter((course) => course.is_published) : []);
+                filters.forEach((filter) => {
+                    filter.isSelected = filter.id === 'published';
+                });
+            },
+            isSelected: false,
         },
         {
-            label: t('course.category.dashboard.filters.archived', 'Mise en avant'),
+            id: 'featured',
+            label: t('course.category.dashboard.filters.featured', `Mise en avant (${courses.filter((course) => course.is_featured).length})`),
             labelColor: 'text-blue-600',
-            condition: () => [],
+            onClick: () => {
+                setCourses && setCourses(courses ? courses.filter((course) => course.is_featured) : []);
+                filters.forEach((filter) => {
+                    filter.isSelected = filter.id === 'featured';
+                });
+            },
+            isSelected: false,
         },
     ];
+
+    const filterSelectList: ISelectItem[] = filters.map((filter) => ({
+        id: filter.id.toString(),
+        title: filter.label,
+        value: filter.id.toString(),
+    }));
+
+    const handleOnChangeValueFilter = (value: string) => {
+        const selectedFilter = filters.find((filter) => filter.id === value);
+        if (selectedFilter) {
+            selectedFilter.onClick();
+        }
+    };
 
     return (
         <div>
             <header className="mb-4 rounded-lg p-4">
                 <div className="flex items-center justify-between">
-                    <div className="">
-                        {/* <h1 className="text-xl font-bold">{t('course.category.dashboard.title', 'Formations')}</h1> */}
-                        <div>
-                            <div className={`mb-4 w-full mx-auto`}>
-                                <div className="flex">
-                                    <div className={`${CLASS_NAME.bgWhite} lg:min-w-[300px]`}>
-                                        <Input
-                                            type="text"
-                                            placeholder="Rechercher par titre..."
-                                            value={searchTerm}
-                                            onChange={(e) => setSearchTerm(e.target.value)}
+                    <div className="lex items-center justify-start">
+                        <div className={`w-full mx-auto`}>
+                            <div className="flex">
+                                <div className={`${CLASS_NAME.bgWhite} lg:min-w-[300px]`}>
+                                    <Input
+                                        type="text"
+                                        placeholder="Rechercher par titre..."
+                                        value={searchTerm}
+                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                    />
+                                </div>
+
+                                <div className="flex items-center space-x-2">
+                                    <div className="space-x-2 flex items-center ml-3">
+                                        <Label>
+                                            <Filter className="h-5 w-5" />
+                                        </Label>
+                                        <SelectCustom
+                                            selectLabel="Filtrer par"
+                                            data={filterSelectList}
+                                            processing={false}
+                                            onValueChange={handleOnChangeValueFilter}
                                         />
                                     </div>
-
-                                    <div className="flex items-center space-x-2">
-                                        {filters.map((filter) => (
-                                            <button className={`text-sm font-medium ${filter.labelColor} bg-gray-50 p-2 hover:text-gray-800`} key={filter.label}>
-                                                {filter.label}
-                                            </button>
-                                        ))}
-                                    </div>
+                                    {/* {filters.map((filter) => (
+                                        <button
+                                            className={`text-sm font-medium ${filter.labelColor} bg-gray-50 p-2 hover:text-gray-800 ${filter.isSelected ? 'border-2 border-secondary' : ''}`}
+                                            key={filter.label}
+                                            onClick={filter.onClick}
+                                            type="button"
+                                        >
+                                            {filter.label}
+                                        </button>
+                                    ))} */}
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div className="mt-2 flex justify-end space-x-2">
+
+                    <div className="flex items-center justify-end space-x-2">
                         <button onClick={() => handleChangeViewMode(viewMode === 'card' ? 'list' : 'card')}>
                             {viewMode === 'card' ? <TableOfContents className="h-5 w-5" /> : <LayoutGrid className="h-5 w-5" />}
                         </button>
