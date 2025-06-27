@@ -29,9 +29,9 @@ export default function HeroHomePage() {
                 muted
                 playsInline
                 className="absolute inset-0 h-full w-full object-cover"
-                poster="assets/images/Benefices-de-la-formation-en-entrepreneuriat-scaled-1.jpg" // Fallback image
+                poster="/assets/images/Benefices-de-la-formation-en-entrepreneuriat-scaled-1.jpg" // Fallback image
             >
-                <source src="assets/videos/hero-background-2.mp4" type="video/mp4" />
+                <source src="/assets/videos/hero-background-2.mp4" type="video/mp4" />
                 Your browser does not support the video tag.
             </video>
 
