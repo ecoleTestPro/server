@@ -134,8 +134,14 @@ export function DataTable<TData, TValue>({
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} className="px-6 py-4 text-sm">
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      {row.getIsExpanded && row.getIsExpanded() && (
+                        <Button variant="link" onClick={() => onRowAction?.(row.original)}>
+                          {t('viewDetails', 'Voir les détails')}
+                        </Button>
+                      )}
                     </TableCell>
                   ))}
+
                 </TableRow>
               ))
             ) : (

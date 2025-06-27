@@ -24,6 +24,7 @@ class CategoryStoreRequest extends FormRequest
         return [
             'title'       => 'required|string|max:50', // |unique:categories
             'media'       => "image|mimes:jpeg,png,jpg|max:2048",
+            'parent_id'   => 'nullable|exists:categories,id',
             'is_featured' => '',
             // 'color' => 'required|string|min:7|max:7',
         ];

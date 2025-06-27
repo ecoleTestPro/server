@@ -63,7 +63,7 @@ function HeaderUserAction() {
         },
     ];
 
-    const userActionNotLogged = useMemo(
+    const userActionNotLogged: UserAction[] = useMemo(
         () => [
             {
                 name: t('login.login', 'Se connecter'),
@@ -159,7 +159,7 @@ function HeaderUserAction() {
                                 <BtnHoverEffect text={name} icon={icon} />
                             </button>
                         ) : (
-                            <BtnLinkCustom key={name} text={name} icon={icon} href={link} />
+                            <BtnLinkCustom key={name} icon={icon} href={link} title={name} />
                         ),
                     )}
                 </div>

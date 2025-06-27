@@ -5,8 +5,11 @@ export interface IMainMenuItem {
     href?: string;
     description?: string;
     image?: string;
+    featureImage?: string;
     isCta?: boolean;
     children?: MenuChildren;
+    gridClass?: string;
+    maxWidth?: string;
 }
 
 export interface MenuChildren {
@@ -16,15 +19,15 @@ export interface MenuChildren {
     href?: string;
     image?: string;
     items: MenuChildItem[];
-    featured?: MenuChildItem[];
 }
 
 
-interface MenuChildItem {
+export interface MenuChildItem {
     id: string;
     label: string;
     href: string;
     description?: string;
     image?: string;
     subItems?: MenuChildItem[];
+    subItemsFeatured?: MenuChildItem[];
 }

@@ -9,6 +9,14 @@ interface CourseListProps {
 const CourseList: React.FC<CourseListProps> = ({ courses }) => {
     const { t, i18n } = useTranslation();
 
+    if (!courses || courses.length === 0) {
+        return (
+            <div className="col-span-3 flex h-[60vh] items-center justify-center text-center">
+                <p className="text-gray-500">{t('courses.no_courses', 'Aucun cours disponible')}</p>
+            </div>
+        );
+    }
+
     return (
         <>
             {courses.length === 0 ? (
@@ -16,7 +24,7 @@ const CourseList: React.FC<CourseListProps> = ({ courses }) => {
                     <p className="text-gray-500">{t('courses.no_courses', 'Aucun cours disponible')}</p>
                 </div>
             ) : (
-                <div className="grid w-full grid-cols-1 justify-items-center gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     {courses.map((course) => (
                         <CourseCard key={course.id} course={course} />
                     ))}

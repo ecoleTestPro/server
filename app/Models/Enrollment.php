@@ -12,6 +12,18 @@ class Enrollment extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $fillable = [
+        'user_id',
+        'course_id',
+        // 'coupon_id',
+        'mode',
+        'progress',
+        'course_price',
+        'discount_amount',
+        'last_activity',
+        'is_certificate_downloaded',
+    ];
+
     protected $guarded = ['id'];
 
     public function user(): BelongsTo
@@ -24,13 +36,13 @@ class Enrollment extends Model
         return $this->belongsTo(Course::class);
     }
 
-    public function coupon(): BelongsTo
-    {
-        return $this->belongsTo(Coupon::class);
-    }
+    // public function coupon(): BelongsTo
+    // {
+    //     return $this->belongsTo(Coupon::class);
+    // }
 
-    public function transactions(): HasMany
-    {
-        return $this->hasMany(Transaction::class);
-    }
+    // public function transactions(): HasMany
+    // {
+    //     return $this->hasMany(Transaction::class);
+    // }
 }

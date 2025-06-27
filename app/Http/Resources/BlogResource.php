@@ -15,13 +15,13 @@ class BlogResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'user' => UserResource::make($this->user),
-            'thumbnail' => $this->mediaPath,
-            'title' => $this->title,
+            'id'          => $this->id,
+            'user'        => UserResource::make($this->user),
+            'thumbnail'   => $this->mediaPath,
+            'title'       => $this->title,
             'description' => $this->description,
-            'status' => $this->status,
-            'updated_at' => $this->updated_at?->format('d F, Y'),
+            'status'      => $this->status,
+            'updated_at'  => $this->updated_at?->format('d F, Y'),
         ];
     }
 }

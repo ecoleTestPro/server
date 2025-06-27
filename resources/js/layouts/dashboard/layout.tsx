@@ -6,7 +6,15 @@ import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
 import { type PropsWithChildren } from 'react';
 
-const sidebarNavItems: NavItem[] = [
+const topSidebarNavItems: NavItem[] = [
+    {
+        title: 'Configuration',
+        href: '/settings',
+        icon: null,
+    },
+];
+
+const bottomSidebarNavItems: NavItem[] = [
     {
         title: 'Profile',
         href: '/settings/profile',
@@ -37,9 +45,28 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
             <Heading title="Settings" description="Manage your profile and account settings" />
 
             <div className="flex flex-col space-y-8 lg:flex-row lg:space-y-0 lg:space-x-12">
-                <aside className="w-full max-w-xl lg:w-48">
+                <aside className="flex w-full max-w-xl flex-col lg:w-48">
                     <nav className="flex flex-col space-y-1 space-x-0">
-                        {sidebarNavItems.map((item, index) => (
+                        {topSidebarNavItems.map((item, index) => (
+                            <Button
+                                key={`${item.href}-${index}`}
+                                size="sm"
+                                variant="ghost"
+                                asChild
+                                className={cn('w-full justify-start', {
+                                    'bg-muted': currentPath === item.href,
+                                })}
+                            >
+                                <Link href={item.href} prefetch>
+                                    {item.title}
+                                </Link>
+                            </Button>
+                        ))}
+                    </nav>
+
+                    <hr className="my-6" />
+                    <nav className="flex flex-col space-y-1 space-x-0">
+                        {bottomSidebarNavItems.map((item, index) => (
                             <Button
                                 key={`${item.href}-${index}`}
                                 size="sm"

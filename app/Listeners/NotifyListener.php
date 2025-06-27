@@ -39,11 +39,11 @@ class NotifyListener
             // Create notification instance
             NotificationInstanceRepository::create([
                 'notification_id' => $notification?->id,
-                'recipient_id' => $enrollment?->user?->id,
-                'course_id' => $event?->currentCourseId,
-                'metadata' => json_encode($event?->metadata),
-                'heading' => $notification?->heading,
-                'content' => $notificationContent,
+                'recipient_id'    => $enrollment?->user?->id,
+                'course_id'       => $event?->currentCourseId,
+                'metadata'        => json_encode($event?->metadata),
+                'heading'         => $notification?->heading,
+                'content'         => $notificationContent,
             ]);
 
             $tokens = $enrollment?->user?->fcmDeviceTokens()->pluck('token')->toArray();

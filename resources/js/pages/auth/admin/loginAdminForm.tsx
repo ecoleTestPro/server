@@ -26,7 +26,7 @@ export default function LoginAdminForm({ status, canResetPassword, onCloseDialog
     const { t, i18n } = useTranslation();
     const [loginError, setLoginError] = useState<string | null>(null);
     const { data, setData, post, processing, errors, reset } = useForm<Required<ILoginAdminForm>>({
-        email: 'admin@exemple.com',
+        email: 'admin@example.com',
         password: 'secret',
         remember: false,
     });
@@ -44,7 +44,7 @@ export default function LoginAdminForm({ status, canResetPassword, onCloseDialog
             onError: (errors) => {
                 console.log('Login error:', errors);
                 // Stocke le message d'erreur principal (ex: email ou password)
-                setLoginError(errors.email || errors.password || t('login.error', 'Login failed. Please try again.'));
+                setLoginError(errors.email || errors.password || t('login.error', 'Echec de la connexion. Veuillez réessayer.'));
             },
         });
     };
@@ -54,7 +54,7 @@ export default function LoginAdminForm({ status, canResetPassword, onCloseDialog
             <form className="flex flex-col gap-6" onSubmit={submit}>
                 <div className="grid gap-6">
                     <div className="grid gap-2">
-                        <Label htmlFor="email">{t('login.email', 'Email address')}</Label>
+                        <Label htmlFor="email">{t('login.email', 'Adresse e-mail')}</Label>
                         <Input
                             id="email"
                             type="email"
@@ -71,10 +71,10 @@ export default function LoginAdminForm({ status, canResetPassword, onCloseDialog
 
                     <div className="grid gap-2">
                         <div className="flex items-center">
-                            <Label htmlFor="password">{t('login.password', 'Password')}</Label>
+                            <Label htmlFor="password">{t('login.password', 'Mot de passe')}</Label>
                             {canResetPassword && (
                                 <TextLink href={route('password.request')} className="ml-auto text-sm" tabIndex={5}>
-                                    {t('login.forgotPassword', 'Forgot password?')}
+                                    {t('login.forgotPassword', 'Mot de passe oublié?')}
                                 </TextLink>
                             )}
                         </div>
@@ -86,7 +86,7 @@ export default function LoginAdminForm({ status, canResetPassword, onCloseDialog
                             autoComplete="current-password"
                             value={data.password}
                             onChange={(e) => setData('password', e.target.value)}
-                            placeholder={t('login.passwordPlaceholder', 'Password')}
+                            placeholder={t('login.passwordPlaceholder', 'Mot de passe')}
                         />
                         {/* <InputError message={errors.password} /> */}
                     </div>
@@ -99,14 +99,14 @@ export default function LoginAdminForm({ status, canResetPassword, onCloseDialog
                             onClick={() => setData('remember', !data.remember)}
                             tabIndex={3}
                         />
-                        <Label htmlFor="remember">{t('login.rememberMe', 'Remember me')}</Label>
+                        <Label htmlFor="remember">{t('login.rememberMe', 'Se souvenir de moi')}</Label>
                     </div>
 
                     {loginError && <Alert variant="destructive">{loginError}</Alert>}
 
                     <Button type="submit" className="mt-4 w-full" tabIndex={4} disabled={processing}>
                         {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                        {t('login.loginButton', 'Log in')}
+                        {t('login.loginButton', 'Se connecter')}
                     </Button>
                 </div>
             </form>

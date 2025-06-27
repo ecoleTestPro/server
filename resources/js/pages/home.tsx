@@ -1,21 +1,34 @@
 import AboutUsCard from '@/components/aboutUs/aboutUsCard';
-import Bestseller from '@/components/courses/bestseller';
+import AboutUsCardTwo from '@/components/aboutUs/aboutUsCardTwo';
+import OurCurrentCourses from '@/components/courses/list/our-current-courses';
+import Faq from '@/components/faq/Faq';
 import FeaturesSection from '@/components/hero/featuresSection';
 import HeroHomePage from '@/components/hero/HeroHomePage';
-import Testimonial from '@/components/testimonial/testimonial';
+import Testimonials from '@/components/testimonial/Testimonials';
 import DefaultLayout from '@/layouts/public/front.layout';
 import { type SharedData } from '@/types';
 import { usePage } from '@inertiajs/react';
 
 export default function Welcome() {
-    const { auth } = usePage<SharedData>().props;
+    const { auth, data } = usePage<SharedData>().props;
+    // const [loading, setLoading] = useState<boolean>(false);
+    // const [category, setCategory] = useState<ICourseCategory | null>(null);
+    // const [courses, setCourses] = useState<ICourse[]>([]);
+    // const [breadcrumb, setBreadcrumb] = useState<IHeroBreadcrumbItems[]>([]);
 
     return (
         <DefaultLayout title="Welcome" description="Welcome">
-            <HeroHomePage />
-            <FeaturesSection />
-            <AboutUsCard />
-            <Bestseller />
+            <div className="bg-gray-100 dark:bg-[#0a0e19]">
+                <HeroHomePage />
+                <AboutUsCard />
+                {/* <Bestseller /> */}
+                <FeaturesSection />
+                <OurCurrentCourses coursesData={data.categories_with_courses} coursesDataSlice={5} />
+                <AboutUsCardTwo />
+                <Testimonials />
+                <Faq />
+                {/* <ContactCard /> */}
+            </div>
         </DefaultLayout>
     );
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 
 test('login screen can be rendered', function () {
     $response = $this->get('/login');
@@ -13,11 +14,13 @@ test('users can authenticate using the login screen', function () {
 
     $response = $this->post('/login', [
         'email' => $user->email,
-        'password' => 'password',
+        'password' => 'secret',
     ]);
 
+    Log::info('User authenticated', ['user_id' => $user->id, 'response' => $response->getContent()]);
+
     $this->assertAuthenticated();
-    $response->assertRedirect(route('dashboard', absolute: false));
+    $response->assertRedirect(route('home', absolute: false));
 });
 
 test('users can not authenticate with invalid password', function () {
