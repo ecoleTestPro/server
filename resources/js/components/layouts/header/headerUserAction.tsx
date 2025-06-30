@@ -1,7 +1,8 @@
+import { NotificationsDropdown } from '@/components/notification/NotificationsDropdown';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
 import { BtnHoverEffect } from '@/components/ui/button/btnHoverEfffect';
 import { BtnLinkCustom } from '@/components/ui/button/Btnlink';
+import { Button } from '@/components/ui/button/button';
 import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { UserMenuContent } from '@/components/user-menu-content';
@@ -35,32 +36,32 @@ function HeaderUserAction() {
     const [modalContent, setModalContent] = useState<IModalComponent | null>(null);
 
     const userActionLogged: UserAction[] = [
-        {
-            name: 'Favoris',
-            icon: (
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                    <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
-                    />
-                </svg>
-            ),
-            link: route('login'),
-        },
-        {
-            name: 'Panier',
-            icon: (
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                    <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M3 3h2l1.5 9h12l1.5-9h2M6 21a2 2 0 1 0 4 0H6zm8 0a2 2 0 1 0 4 0h-4zM6.5 7h13l-1.5 9H7L6.5 7z"
-                    />
-                </svg>
-            ),
-            link: route('login'),
-        },
+        // {
+        //     name: 'Favoris',
+        //     icon: (
+        //         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+        //             <path
+        //                 strokeLinecap="round"
+        //                 strokeLinejoin="round"
+        //                 d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
+        //             />
+        //         </svg>
+        //     ),
+        //     link: route('login'),
+        // },
+        // {
+        //     name: 'Panier',
+        //     icon: (
+        //         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+        //             <path
+        //                 strokeLinecap="round"
+        //                 strokeLinejoin="round"
+        //                 d="M3 3h2l1.5 9h12l1.5-9h2M6 21a2 2 0 1 0 4 0H6zm8 0a2 2 0 1 0 4 0h-4zM6.5 7h13l-1.5 9H7L6.5 7z"
+        //             />
+        //         </svg>
+        //     ),
+        //     link: route('login'),
+        // },
     ];
 
     const userActionNotLogged: UserAction[] = useMemo(
@@ -165,6 +166,7 @@ function HeaderUserAction() {
                 </div>
             ) : (
                 <div className="flex items-center gap-2">
+                    {/* User Avatar */}
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="ghost" className="size-10 rounded-full p-1">
@@ -180,6 +182,9 @@ function HeaderUserAction() {
                             <UserMenuContent user={auth.user} />
                         </DropdownMenuContent>
                     </DropdownMenu>
+
+                    {/* Notifications */}
+                    <NotificationsDropdown />
                     <div className="flex gap-2">
                         {/* User Icons */}
                         {userActionLogged.map(({ name, icon, link }) => (

@@ -1,12 +1,12 @@
 import CourseCardWrapper from '@/components/courses/card/courseCardWrapper';
-import CourseForm, { ICourseForm } from '@/components/courses/courseForm';
-import CourseToolBar from '@/components/courses/dashboard/courseToolBar';
 import CourseToolBarTwo from '@/components/courses/dashboard/courseToolBarTwo';
-import { ConfirmDialog } from '@/components/ui/confirmDialog';
 import AppLayout from '@/layouts/dashboard/app-layout';
 import { SharedData, type BreadcrumbItem } from '@/types';
-import { Head, router, usePage } from '@inertiajs/react';
-import { useState } from 'react';
+import { ICourse } from '@/types/course';
+import { Logger } from '@/utils/console.util';
+import { Head, usePage } from '@inertiajs/react';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
@@ -28,35 +28,59 @@ export default function Dashboard() {
 
     const { data } = usePage<SharedData>().props;
 
-    const [showConfirm, setShowConfirm] = useState(false);
-    const [isDeleting, setIsDeleting] = useState(false);
-
-    const [open, setOpen] = useState(false);
-    const [selected, setCategory] = useState<ICourseForm | undefined>(undefined);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [coursesInitial, setCoursesInitial] = useState<ICourse[]>([]);
+    const [courses, setCourses] = useState<ICourse[]>([]);
 
     const [searchTerm, setSearchTerm] = useState('');
     const [viewMode, setViewMode] = useState<DashbordCourseView>('card');
 
+    /**
+     * Fetches all courses and updates the state accordingly.
+     * If the fetch is successful, logs a success message and updates
+     * the `coursesInitial` and `courses` states with the fetched courses.
+     * If the fetch fails, logs an error message and displays a toast
+     * error with a generic error message.
+     * Finally, sets the `loading` state to `false`.
+     */
+    const handleGetAllCourses = () => {
+        setLoading(true);
+        
+        axios
+            .get(route('dashboard.course.all'))
+            .then((response) => {
+                Logger.log('Courses fetched successfully', response.data);
+                setCoursesInitial(response.data.courses);
+                setCourses(response.data.courses);
+            })
+            .catch((error) => {
+                Logger.error('Error fetching courses', error);
+                toast.error(t('courses.error_fetching_courses', 'Erreur lors de la récupération des cours'));
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    };
+
+    /**
+     * Handles the change of the current view mode for the courses.
+     * Updates the `viewMode` state with the new view mode.
+     * @param mode - The new view mode to apply.
+     */
     const handleChangeViewMode = (mode: DashbordCourseView) => {
         setViewMode(mode);
     };
 
-    const handleClose = () => {
-        setCategory(undefined);
-        setOpen(false);
-    };
-
-    const handleDelete = () => {
-        // Call the delete function here
-        console.log('Deleting course with ID:', selected?.id);
-        router.delete(route('course.delete', selected?.id), {
-            onSuccess: () => {
-                setShowConfirm(false);
-                setIsDeleting(false);
-                toast.success(t('courses.course.deleteSuccess', 'Formation supprimée avec succès !'));
-            },
-        });
-    };
+    useEffect(() => {
+        Logger.log('CourseCardWrapper useEffect', data);
+        if (data && data.courses && data.courses.list) {
+            setCoursesInitial(data.courses.list);
+            setCourses(data.courses.list);
+        } else {
+            setCoursesInitial([]);
+            setCourses([]);
+        }
+    }, [data]);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -64,35 +88,23 @@ export default function Dashboard() {
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
                 <div className="">
                     {/* <CourseTable /> */}
-                    {false && (
-                        <>
-                            <CourseToolBar
-                                FormComponent={<CourseForm closeDrawer={handleClose} initialData={selected} />}
-                                open={open}
-                                setOpen={(open: boolean) => {
-                                    setOpen(open);
-                                    if (!open) {
-                                        handleClose();
-                                    }
-                                }}
-                            />
+                    <CourseToolBarTwo
+                        setSearchTerm={setSearchTerm}
+                        searchTerm={searchTerm}
+                        viewMode={viewMode}
+                        handleChangeViewMode={handleChangeViewMode}
+                        setCourses={setCourses}
+                        courses={coursesInitial}
+                    />
 
-                            <ConfirmDialog
-                                open={showConfirm}
-                                title="Supprimer la formation"
-                                description="Voulez-vous vraiment supprimer cette formation ? Cette action est irréversible."
-                                confirmLabel="Supprimer"
-                                cancelLabel="Annuler"
-                                onConfirm={handleDelete}
-                                onCancel={() => setShowConfirm(false)}
-                                loading={isDeleting}
-                            />
-                        </>
-                    )}
-
-                    <CourseToolBarTwo setSearchTerm={setSearchTerm} searchTerm={searchTerm} viewMode={viewMode} handleChangeViewMode={handleChangeViewMode} />
-
-                    <CourseCardWrapper searchTerm={searchTerm} viewMode={viewMode} />
+                    <CourseCardWrapper
+                        searchTerm={searchTerm}
+                        viewMode={viewMode}
+                        courses={courses}
+                        setLoading={setLoading}
+                        loading={loading}
+                        handleGetAllCourses={handleGetAllCourses}
+                    />
                 </div>
             </div>
         </AppLayout>

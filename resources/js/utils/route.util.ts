@@ -1,152 +1,135 @@
-
-
-
 interface IRouteMap {
     link: string;
     linkFile?: string;
     title?: string;
-    chjildren?: IRouteMap[];
+    // chjildren?: IRouteMap[];
 }
 
-
-
-export const ROUTE_MAP: {
-    home: IRouteMap;
-    courses: IRouteMap;
-    courseDetail: (categorySlug: string, slug: string) => IRouteMap;
-    courseCategory: (categorySlug: string) => IRouteMap;
-    editCourse: (slug: string) => IRouteMap;
-    consulting: IRouteMap;
-    auditOfMaturityOfTests: IRouteMap;
-    consultingTesting: IRouteMap;
-    services: IRouteMap;
-    serviceTestOutsourcingServices: IRouteMap
-    serviceIntegrationSpecialists: IRouteMap
-    blogs: IRouteMap;
-    blogDetail: (slug: string) => IRouteMap;
-    careers: IRouteMap;
-    faqs: IRouteMap;
-    contact: IRouteMap;
-    aboutUs: IRouteMap;
-    privacyPolicy: IRouteMap;
-    termsOfService: IRouteMap;
-    auth: {
-        login: IRouteMap;
-        register: IRouteMap;
-        forgotPassword: IRouteMap;
-        resetPassword: IRouteMap;
-        verifyEmail: IRouteMap;
-        adminLogin: IRouteMap;
+/**
+ * Creates an object of type IRouteMap.
+ * @param {string} link The href value for the route.
+ * @param {string} [title] The title of the route.
+ * @param {string} [linkFile] The file path for the link.
+ * @returns {IRouteMap} An object of type IRouteMap.
+ */
+const createIRouteMap = (link: string, title?: string, linkFile?: string): IRouteMap => {
+    try {
+        return {
+            link,
+            title,
+            linkFile,
+        };
+    } catch (error) {
+        console.error('Error creating IRouteMap:', error);
+        return {
+            link: '/',
+            title: '',
+            linkFile: '',
+        };
     }
-} = {
-    aboutUs: {
-        link: '/about-us',
-        title: 'A propos de nous',
-    },
-    home: {
-        link: '/',
-        title: 'Accueil',
-    },
-    courses: {
-        title: 'Formations',
-        link: '/formations',
-    },
-    courseDetail: (categorySlug: string, slug: string) => {
-        return {
-            title: 'Détail de la formation',
-            link: `/formation/${categorySlug}/${slug}`,
+}
+
+interface IROUTE_MAP {
+    public: {
+        home: IRouteMap;
+        aboutUs: IRouteMap;
+        careers: IRouteMap;
+        faqs: IRouteMap;
+        contact: IRouteMap;
+        privacyPolicy: IRouteMap;
+        termsOfService: IRouteMap;
+        courses: {
+            list: IRouteMap;
+            byCategory: (categorySlug: string) => IRouteMap;
+            detail: (categorySlug: string, slug: string) => IRouteMap;
+        };
+        services: {
+            consulting: {
+                index: IRouteMap;
+                auditOfMaturityOfTests: IRouteMap;
+                consultingTesting: IRouteMap;
+            },
+            testSerivces: {
+                index: IRouteMap;
+                testOutsourcingServices: IRouteMap;
+                integrationSpecialists: IRouteMap;
+            }
         }
-    },
-    courseCategory: (categorySlug: string) => {
-        return {
-            title: 'Catégorie de formation',
-            link: `/formation/${categorySlug}`,
+        blogs: {
+            list: IRouteMap;
+            detail: (slug: string) => IRouteMap;
         }
+    }
+    auth: {
+        login: IRouteMap,
+        register: IRouteMap,
+        forgotPassword: IRouteMap,
+        resetPassword: IRouteMap,
+        verifyEmail: IRouteMap,
+        adminLogin: IRouteMap,
     },
-    editCourse: (slug: string) => {
-        return {
-            title: 'Modifier la formation',
-            link: `/dashboard/courses/edit/${slug}`,
-        }
-    },
-    consulting: {
-        title: 'Consulting',
-        link: '/consulting',
-    },
-    auditOfMaturityOfTests: {
-        title: 'Audit de maturité de test',
-        link: '/consulting/audit-of-maturity-of-tests',
-    },
-    consultingTesting: {
-        title: 'Conseil Testing',
-        link: '/consulting/consulting-testing',
-    },
-    services: {
-        title: 'Services',
-        link: '/services',
-    },
-    serviceTestOutsourcingServices: {
-        title: 'Services d’externalisation de test',
-        link: '/services/test-outsourcing-services',
-    },
-    serviceIntegrationSpecialists: {
-        title: 'Intégration de Spécialistes dans Vos LocauxTest Outsourcing Services',
-        link: '/services/integration-of-specialists-on-your-premises-test-outsourcing-services',
-    },
-    blogs: {
-        title: 'Blogs',
-        link: '/blogs',
-    },
-    blogDetail: (slug: string) => {
-        return {
-            title: 'Détail du blog',
-            link: `/blog/${slug}`,
-        }
-    },
-    careers: {
-        title: 'Carrières',
-        link: '/careers',
-    },
-    faqs: {
-        title: 'FAQs',
-        link: '/faqs',
-    },
-    contact: {
-        title: 'Nous contacter',
-        link: '/contact',
-    },
-    privacyPolicy: {
-        title: 'Politique de confidentialité',
-        link: '/privacy-policy',
-    },
-    termsOfService: {
-        title: 'Conditions d’utilisation',
-        link: '/terms-of-service',
+    dashboard: {
+        dashboard: IRouteMap,
+        course: {
+            list: IRouteMap,
+            create: IRouteMap,
+            edit: (slug: string) => IRouteMap
+        },
+    }
+}
+
+export const ROUTE_MAP: IROUTE_MAP = {
+    public: {
+        home: createIRouteMap(route('home'), 'Accueil'),
+        aboutUs: createIRouteMap(route('aboutUs'), 'À propos de nous'),
+        careers: createIRouteMap(route('careers'), 'Carrières'),
+        faqs: createIRouteMap(route('faqs'), 'FAQs'),
+        contact: createIRouteMap(route('contact'), 'Nous contacter'),
+        privacyPolicy: createIRouteMap(route('privacyPolicy'), 'Politique de confidentialité'),
+        termsOfService: createIRouteMap(route('termsOfService'), 'Conditions d’utilisation'),
+        courses: {
+            list: createIRouteMap('/formations', 'Liste des formations'),
+            byCategory: (categorySlug: string) => {
+                return createIRouteMap(`/formation/${categorySlug}`, 'Formations par catégorie');
+            },
+            detail: (categorySlug: string, slug: string) => {
+                return createIRouteMap(`/formation/${categorySlug}/${slug}`, 'Détail de la formation');
+            }
+        },
+        services: {
+            consulting: {
+                index: createIRouteMap('/services/consulting', 'Consulting'),
+                auditOfMaturityOfTests: createIRouteMap('/services/consulting/audit-of-maturity-of-tests', 'Audit de maturité de tests'),
+                consultingTesting: createIRouteMap('/services/consulting/consulting-testing', 'Conseil Testing'),
+            },
+            testSerivces: {
+                index: createIRouteMap('/services/test-services', 'Services de test'),
+                testOutsourcingServices: createIRouteMap('/services/test-services/test-outsourcing-services', 'Services d’externalisation de test'),
+                integrationSpecialists: createIRouteMap('/services/test-services/integration-of-specialists-on-your-premises-test-outsourcing-services', 'Intégration de Spécialistes dans Vos LocauxTest Outsourcing Services'),
+            }
+        },
+        blogs: {
+            list: createIRouteMap('/blogs', 'Blogs'),
+            detail: (slug: string) => createIRouteMap(`/blog/${slug}`, 'Détail du blog')
+
+        },
     },
     auth: {
-        login: {
-            link: '/login',
-            title: 'Connexion',
-        },
-        register: {
-            link: '/register',
-            title: 'Inscription',
-        },
-        forgotPassword: {
-            link: '/forgot-password',
-            title: 'Mot de passe oublié',
-        },
-        resetPassword: {
-            link: '/reset-password',
-            title: 'Réinitialiser le mot de passe',
-        },
-        verifyEmail: {
-            link: '/verify-email',
-            title: 'Vérifier l’email',
-        },
-        adminLogin: {
-            link: '/admin/login',
-            title: 'Connexion Admin',
+        login: createIRouteMap(route('login'), 'Connexion'),
+        register: createIRouteMap(route('auth.register'), 'Inscription'),
+        forgotPassword: createIRouteMap(route('password.request'), 'Mot de passe oublié'),
+        resetPassword: createIRouteMap(route('password.email'), 'Réinitialiser le mot de passe'),
+        verifyEmail: createIRouteMap(route('verification.notice'), 'Vérifier l’email'),
+        adminLogin: createIRouteMap(route('admin.login'), 'Connexion Admin'),
+    },
+    dashboard: {
+        dashboard: createIRouteMap(route('dashboard.index'), 'Tableau de bord'),
+        course: {
+            list: createIRouteMap(route('dashboard.course.index'), 'Liste des formations'),
+            create: createIRouteMap(route('dashboard.course.create'), 'Créer une formation'),
+            edit: (slug: string) => {
+                return createIRouteMap(route('dashboard.course.edit', { slug }), 'Modifier la formation');
+            },
         },
     }
 }

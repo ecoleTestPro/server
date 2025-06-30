@@ -9,6 +9,7 @@ import CourseInscriptionDialog from '../detail/partial/CourseInscriptionDialog';
 
 interface ICourseTableProps {
     courses: ICourse[];
+    onDelete?: (course: ICourse) => void;
 }
 
 export default function CourseTable({ courses }: ICourseTableProps) {
@@ -61,7 +62,7 @@ export default function CourseTable({ courses }: ICourseTableProps) {
                                         <div className="text-pretty">
                                             <Link
                                                 className="underline hover:text-primary hover:shadow-2xl transition-all duration-300"
-                                                href={ROUTE_MAP.courseDetail(item.category?.slug ?? '', item.slug).link}
+                                                href={ROUTE_MAP.public.courses.detail(item.category?.slug ?? '', item.slug).link}
                                             >
                                                 {item.title}
                                             </Link>

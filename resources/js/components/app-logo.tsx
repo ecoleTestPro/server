@@ -7,7 +7,7 @@ interface AppLogoProps {
     className?: string;
 }
 
-export default function AppLogo({ showText = false, width = 52, height = 52, className }: AppLogoProps) {
+export default function AppLogo({ showText = false, width = 60, height = 60, className }: AppLogoProps) {
     return (
         <>
             <div className={`cursor-pointer ${className}`}>

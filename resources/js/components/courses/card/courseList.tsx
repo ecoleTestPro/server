@@ -4,9 +4,10 @@ import CourseCard from './courseCard';
 
 interface CourseListProps {
     courses: ICourse[];
+    onDelete: (course: ICourse) => void;
 }
 
-const CourseList: React.FC<CourseListProps> = ({ courses }) => {
+const CourseList: React.FC<CourseListProps> = ({ courses, onDelete }) => {
     const { t, i18n } = useTranslation();
 
     if (!courses || courses.length === 0) {
@@ -24,9 +25,9 @@ const CourseList: React.FC<CourseListProps> = ({ courses }) => {
                     <p className="text-gray-500">{t('courses.no_courses', 'Aucun cours disponible')}</p>
                 </div>
             ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4">
                     {courses.map((course) => (
-                        <CourseCard key={course.id} course={course} />
+                        <CourseCard key={course.id} course={course} onDelete={onDelete} />
                     ))}
                 </div>
             )}

@@ -288,19 +288,19 @@ function AboutUsCardThree() {
                 title: 'Formations Certifiantes',
                 description: 'Validez vos compétences et gagnez un avantage compétitif.',
                 bgColor: 'bg-primary-100',
-                ctaLink: ROUTE_MAP.courses.link,
+                ctaLink: ROUTE_MAP.public.courses.list.link,
             },
             {
                 title: 'Formations Sur-Mesure',
                 description: 'Parcours adaptés aux besoins spécifiques des entreprises et individus.',
                 bgColor: 'bg-primary-200',
-                ctaLink: ROUTE_MAP.courses.link,
+                ctaLink: ROUTE_MAP.public.courses.list.link,
             },
             {
                 title: 'Accompagnement des Institutions',
                 description: ' Aide aux entreprises, centres et écoles pour concevoir des formations en reconversion et développement personnel.',
                 bgColor: 'bg-primary-400',
-                ctaLink: ROUTE_MAP.courses.link,
+                ctaLink: ROUTE_MAP.public.courses.list.link,
             },
         ];
         return (

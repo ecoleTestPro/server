@@ -17,12 +17,37 @@ use App\Repositories\InstructorRepository;
 use App\Repositories\NotificationInstanceRepository;
 use App\Repositories\NotificationRepository;
 use App\Repositories\UserRepository;
+use App\Services\Notification\CourseStoreNotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class CourseController extends Controller
 {
+
+
+    /**
+     * Retrieve all courses.
+     *
+     * This method returns all courses in JSON format. If there is an error,
+     * a JSON response with an error message is returned with a 500 status code.
+     *
+     * @return \Illuminate\Http\JsonResponse The JSON response containing all courses or an error message.
+     */
+    public function allCourses()
+    {
+        try {
+            $courses = CourseRepository::findAll();
+            return response()->json([
+                'courses' => $courses,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Error fetching courses: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
     /**
      * Display a listing of the courses.
      *
@@ -53,15 +78,17 @@ class CourseController extends Controller
 
     public function create(string|null $slug = null)
     {
-        $categories = CategoryRepository::findAll();
+        // $categories = CategoryRepository::findAll();
+        $categories = CategoryRepository::getRecursiveTree(false);
+        // dd($categories);
         $course = null;
         if ($slug) {
             $course = CourseRepository::findBySlug($slug);
         }
 
         $data = [
-            'course'     => $course,
-            'categories' => $categories,
+            'course'                  => $course,
+            'categories_with_courses' => $categories,
         ];
 
         return Inertia::render('dashboard/courses/course-create', [
@@ -80,47 +107,40 @@ class CourseController extends Controller
         $chapters = $course?->chapters()->get();
 
         return view('course.overview', [
-            'course' => $course,
-            "enrollments" => $totalEnrollments,
-            "transactions" => $transactions,
-            'reviews' => $course->reviews,
-            'students' => $students,
-            'countClass' => $countClass,
-            'durationCount' => $contents->sum('duration'),
-            'videoCount' => $contents->where('type', MediaTypeEnum::VIDEO)->count(),
-            'imageCount' => $contents->where('type', MediaTypeEnum::IMAGE)->count(),
-            'audioCount' => $contents->where('type', MediaTypeEnum::AUDIO)->count(),
+            'course'           => $course,
+            "enrollments"      => $totalEnrollments,
+            "transactions"     => $transactions,
+            'reviews'          => $course->reviews,
+            'students'         => $students,
+            'countClass'       => $countClass,
+            'durationCount'    => $contents->sum('duration'),
+            'videoCount'       => $contents->where('type', MediaTypeEnum::VIDEO)->count(),
+            'imageCount'       => $contents->where('type', MediaTypeEnum::IMAGE)->count(),
+            'audioCount'       => $contents->where('type', MediaTypeEnum::AUDIO)->count(),
             'freeContentCount' => $contents->where('is_free', true)->count(),
-            "chapters" => $chapters,
+            "chapters"         => $chapters,
         ]);
     }
 
     public function store(CourseStoreRequest $request)
     {
+        try {
+            $course = CourseRepository::storeByRequest($request);
 
-        $course = CourseRepository::storeByRequest($request);
-
-        if ($course->is_active) {
-
-            NotificationInstanceRepository::create([
-                'notification_id' => NotificationRepository::query()->where('type', NotificationTypeEnum::NewCourseFromInstructor)->first()->id,
-                'recipient_id' => null,
-                'course_id' => $course->id,
-                'metadata' => json_encode($course),
-                'url' => '/admin/course/show/' . $course->id,
-                'content' => 'New course ' . $course->title . ' has been created by ' . Auth::user()->name,
-            ]);
-
-            foreach ($course->instructor->courses as $instructorCourse) {
-                NotifyEvent::dispatch(NotificationTypeEnum::NewCourseFromInstructor->value, $course->id, [
-                    'course' => $instructorCourse,
-                    'course_name' => $course->title,
-                ]);
+            if ($course->is_published) {
+                CourseStoreNotificationService::notifyCourseStore($course);
             }
-        }
 
-        return back()->with('success', 'Course created');
-        // return to_route('course.index')->with('success', 'Course created');
+            return response()->json([
+                'message' => 'Course created successfully',
+                'course'  => $course,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error creating course: ' . $e->getMessage(),
+                'status'  => 500,
+            ], 500);
+        }
     }
 
     public function edit(Course $course)
@@ -141,35 +161,55 @@ class CourseController extends Controller
         ]);
     }
 
-    public function update(CourseUpdateRequest $request, Course $course)
+    public function update(CourseUpdateRequest $request, string $slug)
     {
-        CourseRepository::updateByRequest($request, $course);
-        if (isset($request->is_active)) {
+        try {
+            $course = CourseRepository::findBySlug($slug);
+            if (!$course) {
+                return response()->json([
+                    'message' => 'Course not found',
+                    'status'  => 404,
+                ], 404);
+            }
 
-            NotificationInstanceRepository::query()->updateOrCreate([
-                'recipient_id' => null,
-                'course_id' => $course->id,
-                'notification_id' => NotificationRepository::query()->where('type', NotificationTypeEnum::NewCourseFromInstructor)->first()->id,
-            ], [
-                'metadata' => json_encode($course),
-                'url' => '/admin/course/show/' . $course->id,
-                'content' => 'New course ' . $course->title . ' has been created by ' . Auth::user()->name,
-            ]);
-            NotifyEvent::dispatch(NotificationTypeEnum::NewCourseFromInstructor->value, $course->id, [
-                'course' => $course,
-                'course_name' => $course->title,
-            ]);
+            CourseRepository::updateByRequest($request, $course);
+            if (isset($request->is_active)) {
+                CourseStoreNotificationService::notifyCourseUpdate($course);
+            }
+
+            return response()->json([
+                'message' => 'Course updated successfully',
+                'course'  => $course,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error updating course: ' . $e->getMessage(),
+                'status'  => 500,
+            ], 500);
         }
-
-        return to_route('course.index')->withSuccess('Course updated');
     }
 
-    public function delete(Course $course)
+    /**
+     * Delete a course.
+     *
+     * @param \App\Models\Course $course
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function delete(int $id)
     {
-
-        $course->delete();
-
-        return redirect()->route('course.index')->withSuccess('Course deleted');
+        try {
+            $course = CourseRepository::query()->findOrFail($id);
+            $course->delete();
+            return response()->json([
+                'message' => 'Course deleted successfully',
+                'status' => 200,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error deleting course: ' . $e->getMessage(),
+                'status' => 500,
+            ]);
+        }
     }
 
     public function restore(int $id)

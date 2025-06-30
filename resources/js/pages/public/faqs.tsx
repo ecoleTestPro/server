@@ -12,7 +12,7 @@ export default function FaqsPage() {
     const { t } = useTranslation();
 
     const breadcrumbItems: IHeroBreadcrumbItems[] = [
-        { label: t('PAGES.HOME', 'Accueil'), href: ROUTE_MAP.home.link },
+        { label: t('PAGES.HOME', 'Accueil'), href: ROUTE_MAP.public.home.link },
         { label: t('PAGES.FAQ', 'FAQ'), href: ROUTE_MAP.faqs.link },
     ];
 

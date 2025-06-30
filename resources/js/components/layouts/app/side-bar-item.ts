@@ -1,5 +1,5 @@
 import { NavItem } from "@/types";
-import { BookOpen, FileStack, Folder, HomeIcon, LayoutGrid, List, ClipboardPlus, Settings2, ListTodo } from 'lucide-react';
+import { BookOpen, FileStack, Folder, HomeIcon, LayoutGrid, List, ClipboardPlus, Settings2, ListTodo, BookAIcon } from 'lucide-react';
 
 
 export const MAIN_NAV_ITEMS: NavItem[] = [
@@ -18,11 +18,11 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
                 href: route('dashboard.course.index'),
                 icon: List,
             },
-            {
-                title: 'Créer une formation',
-                href: route('dashboard.course.create'),
-                icon: ClipboardPlus,
-            },
+            // {
+            //     title: 'Créer une formation',
+            //     href: route('dashboard.course.create'),
+            //     icon: ClipboardPlus,
+            // },
             {
                 title: 'Catégories',
                 href: route('dashboard.category.index'),
@@ -34,6 +34,16 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
                 icon: Settings2,
             },
         ],
+    },
+    {
+        title: 'Témoignages',
+        href: route('dashboard.testimonial.index'),
+        icon: BookAIcon,
+    },
+    {
+        title: 'Faqs',
+        href: route('dashboard.faqs.index'),
+        icon: BookOpen,
     },
     {
         title: 'Paramètres',

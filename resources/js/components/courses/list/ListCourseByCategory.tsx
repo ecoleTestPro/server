@@ -14,7 +14,7 @@ export const ListCourseByCategory = ({ title, slug, coursesList }: ListCourseByC
         <div className="mb-6">
             <h2 className="mb-4 text-2xl font-bold">
                 {slug ? (
-                    <Link href={slug ? ROUTE_MAP.courseCategory(slug).link : '#'} className=" hover:underline">
+                    <Link href={slug ? ROUTE_MAP.public.courses.byCategory(slug).link : '#'} className=" hover:underline">
                         {title}
                     </Link>
                 ) : (

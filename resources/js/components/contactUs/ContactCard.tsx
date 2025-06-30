@@ -62,7 +62,7 @@ const ContactCard = () => {
                                         </p>
                                     </div>
 
-                                    <Link href={ROUTE_MAP.contact.link} className=" bg-secondary hover:bg-secondary-600 mt-4 cursor-pointer rounded-full px-4 py-2 font-semibold text-white transition duration-300 hover:underline hover:shadow-lg">
+                                    <Link href={ROUTE_MAP.public.contact.link} className=" bg-secondary hover:bg-secondary-600 mt-4 cursor-pointer rounded-full px-4 py-2 font-semibold text-white transition duration-300 hover:underline hover:shadow-lg">
                                         Nous contacter
                                     </Link>
                                 </div>

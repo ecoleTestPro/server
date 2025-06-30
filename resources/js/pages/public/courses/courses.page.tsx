@@ -8,9 +8,9 @@ import { ROUTE_MAP } from '@/utils/route.util';
 
 export default function CourseCategoryPage() {
     const breadcrumbItems = [
-        { label: 'Home', href: ROUTE_MAP.home.link },
-        { label: 'Courses', href: ROUTE_MAP.courses.link },
-        { label: 'Category', href: ROUTE_MAP.courseCategory(1).link },
+        { label: 'Home', href: ROUTE_MAP.public.home.link },
+        { label: 'Courses', href: ROUTE_MAP.public.courses.list.link },
+        { label: 'Category', href: ROUTE_MAP.public.courses.byCategory(1).link },
     ];
 
     return (
