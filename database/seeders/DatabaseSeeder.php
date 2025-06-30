@@ -24,6 +24,8 @@ class DatabaseSeeder extends Seeder
 
             CategorySeeder::class,
             CourseSeeder::class,
+            CourseSessionSeeder::class,
+            CourseSessionScheduleSeeder::class,
             // GuestSeeder::class,
 
             EnrollmentSeeder::class,
