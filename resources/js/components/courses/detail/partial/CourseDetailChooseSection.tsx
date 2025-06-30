@@ -128,12 +128,6 @@ export const CourseSessionCard = ({
                             Horraires
                         </a>
                     </p>
-                    {/* <p className="text-lg ">
-                    {t('COURSE.PRICE', 'Prix')} <span className="" dangerouslySetInnerHTML={{ __html: getPrice(price, regular_price) }} />
-                </p>
-                <p className=" text-gray-600 dark:text-gray-300">
-                    {t('COURSE.DURATION', 'Durée')} <span className="">{getPeriodicity(periodicity_unit, periodicity_value)} </span>
-                </p> */}
                 </div>
 
                 <div className="mb-4 md:mb-0 border-b md:border-b-0 md:border-r border-gray-200 dark:border-gray-700 w-full md:w-2/6">

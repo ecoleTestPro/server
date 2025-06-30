@@ -76,7 +76,7 @@ export const formatPrice = (price: number): string => {
 * @param course The course object
 * @returns Formatted price string
 */
-export const getPrice = (price: number, regular_price: number): string => {
+export const getPrice = (price: number, regular_price?: number): string => {
     let priceOutput: string = `<span>${formatPrice(price)}</span>`;
     if (regular_price) {
         priceOutput = `${formatPrice(price)} - <span class="line-through text-gray-400">${formatPrice(regular_price)}</span>`;

@@ -1,6 +1,7 @@
 import { CLASS_NAME } from '@/data/styles/style.constant';
 import { ROUTE_MAP } from '@/utils/route.util';
 import { motion } from 'framer-motion';
+import MotionSection from '../motion/MotionSection';
 
 function AboutUsCardThree() {
     // Variants pour les animations
@@ -16,7 +17,7 @@ function AboutUsCardThree() {
 
     const BlockAbout = () => {
         return (
-            <motion.section
+            <MotionSection
                 className={`body-font ${CLASS_NAME.bgWhite}`}
                 style={{
                     backgroundImage: 'url(assets/images/pattern-15.png)',
@@ -92,13 +93,13 @@ function AboutUsCardThree() {
                         </motion.div>
                     </div>
                 </div>
-            </motion.section>
+            </MotionSection>
         );
     };
 
     const BlockOurMission = () => {
         return (
-            <motion.section
+            <MotionSection
                 className={`body-font ${CLASS_NAME.bgGray}`}
                 initial="hidden"
                 whileInView="visible"
@@ -125,19 +126,13 @@ function AboutUsCardThree() {
                         </motion.div>
                     </div>
                 </div>
-            </motion.section>
+            </MotionSection>
         );
     };
 
     const BlockWhatMakesUsSpecial = () => {
         return (
-            <motion.section
-                className={`body-font ${CLASS_NAME.bgGray}`}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, amount: 0.2 }}
-                // variants={sectionVariants}
-            >
+            <MotionSection>
                 <div className="py-[40px] md:py-[50px] lg:py-[60px] xl:py-[80px]">
                     <div className="relative z-[1] container mx-auto px-[12px] 2xl:max-w-[1320px]">
                         {/* Section TestPro et Image */}
@@ -150,23 +145,13 @@ function AboutUsCardThree() {
                         >
                             <div className="relative">
                                 <motion.div
-                                    className="rounded-[7px] border border-white/[0.1] bg-white/[0.54] p-[15px] backdrop-blur-[5.4px] md:max-w-[600px] md:p-[25px] lg:max-w-[400px] xl:max-w-[510px] xl:px-[34px] xl:py-[27px] dark:border-black/[0.1] dark:bg-black/[0.54]"
+                                    className="rounded-[7px] border border-gray/[0.1] bg-white/[0.54] p-[15px] backdrop-blur-[5.4px] md:max-w-[600px] md:p-[25px] lg:max-w-[400px] xl:max-w-[510px] xl:px-[34px] xl:py-[27px] dark:border-black/[0.1] dark:bg-black/[0.54] rotate-2"
                                     // variants={imageVariants}
                                 >
                                     <img
-                                        src="assets/images/Formation-en-ligne-.jpeg"
+                                        src="assets/images/pexels-rdne-8124210.jpg"
                                         className="inline-block h-auto w-full"
                                         alt="order-summary-image"
-                                    />
-                                </motion.div>
-                                <motion.div
-                                    className="absolute top-1/2 -mt-[15px] max-w-[120px] -translate-y-1/2 rounded-[4.294px] drop-shadow-xl md:-mt-[17px] md:max-w-[200px] lg:max-w-[219px] ltr:right-0 ltr:lg:right-[30px] rtl:left-0 rtl:lg:left-[30px]"
-                                    // variants={imageVariants}
-                                >
-                                    <img
-                                        src="assets/images/card-icon-1.png"
-                                        className="animate-image-flotting inline-block h-auto w-full rounded-[4.294px]"
-                                        alt="courses-sales-image"
                                     />
                                 </motion.div>
                             </div>
@@ -200,7 +185,7 @@ function AboutUsCardThree() {
                         </motion.div>
                     </div>
                 </div>
-            </motion.section>
+            </MotionSection>
         );
     };
 
@@ -228,7 +213,7 @@ function AboutUsCardThree() {
         ];
 
         return (
-            <motion.section
+            <MotionSection
                 className={`body-font ${CLASS_NAME.bgGray} ${CLASS_NAME.sectionContentPadding}`}
                 initial="hidden"
                 whileInView="visible"
@@ -278,7 +263,7 @@ function AboutUsCardThree() {
                         </motion.div>
                     </div>
                 </div>
-            </motion.section>
+            </MotionSection>
         );
     };
 
@@ -304,13 +289,7 @@ function AboutUsCardThree() {
             },
         ];
         return (
-            <motion.section
-                className={`body-font ${CLASS_NAME.bgAlt1} ${CLASS_NAME.sectionContentPadding}`}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, amount: 0.2 }}
-                // variants={sectionVariants}
-            >
+            <MotionSection>
                 <div className="">
                     <div className="relative z-[1] container mx-auto px-[12px] 2xl:max-w-[1320px]">
                         <motion.div
@@ -349,19 +328,13 @@ function AboutUsCardThree() {
                         </motion.div>
                     </div>
                 </div>
-            </motion.section>
+            </MotionSection>
         );
     };
 
     const BlockDGWord = () => {
         return (
-            <motion.section
-                className={`body-font ${CLASS_NAME.bgGray}`}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, amount: 0.2 }}
-                // variants={sectionVariants}
-            >
+            <MotionSection>
                 <div className="">
                     <div className="relative z-[1] container mx-auto px-[12px] 2xl:max-w-[1320px]">
                         {/* Section Directeur général */}
@@ -374,10 +347,14 @@ function AboutUsCardThree() {
                         >
                             <div className="grid grid-cols-2 md:grid-cols-5 gap-[25px]">
                                 <div className="col-span-5 md:col-span-3">
-                                    <p className="leading-[1.5] text-2xl">
-                                        "Nous pensons que l'apprentissage doit être accessible, engageant et transformateur. Notre mission est de vous
-                                        permettre d'atteindre votre plein potentiel."
-                                    </p>
+                                    <div className="flex items-center h-full">
+                                        <div>
+                                            <p className="leading-[1.5] text-2xl">
+                                                "Nous pensons que l'apprentissage doit être accessible, engageant et transformateur. Notre mission est
+                                                de vous permettre d'atteindre votre plein potentiel."
+                                            </p>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div className="col-span-5 md:col-span-2">
@@ -416,7 +393,7 @@ function AboutUsCardThree() {
                         )}
                     </div>
                 </div>
-            </motion.section>
+            </MotionSection>
         );
     };
 

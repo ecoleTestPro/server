@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Repositories\CourseRepository;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class CourseSessionFactory extends Factory
@@ -16,14 +17,16 @@ class CourseSessionFactory extends Factory
     {
         $course = CourseRepository::getAll()->random();
 
-        // Generate start_date at least 3 days from now
-        $startDate = $this->faker->dateTimeBetween('+3 days', '+30 days');
+        // Generate start_date at least 2 days from now
+        $startDate = $this->faker->dateTimeBetween('+1 days', '+2 days');
 
         // Generate end_date after start_date (e.g., between 1 and 7 days after start_date)
-        $endDate = $this->faker->dateTimeBetween(
-            $startDate->format('Y-m-d H:i:s'),
-            $startDate->modify('+7 days')->format('Y-m-d H:i:s')
-        );
+        // $endDate = $this->faker->dateTimeBetween(
+        //     $startDate->modify('+3 days')->format('Y-m-d H:i:s'),
+        //     $startDate->modify('+6 days')->format('Y-m-d H:i:s')
+        // );
+
+        $endDate = Carbon::instance($startDate)->addDays($this->faker->numberBetween(1, 7))->format('Y-m-d H:i:s');
 
         return [
             'course_id'      => $course->id,

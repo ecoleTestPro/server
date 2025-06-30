@@ -36,6 +36,16 @@ class Course extends Model
         return $this->hasMany(CourseSession::class);
     }
 
+    // public function nextSession(): string
+    // {
+    //     $nextSession = $this->course_sessions()
+    //         ->where('start_date', '>', now())
+    //         ->orderBy('start_date')
+    //         ->first();
+
+    //     return $nextSession ? $nextSession->start_date->format('Y-m-d H:i:s') : 'No upcoming sessions';
+    // }
+
     public function instructor(): BelongsTo
     {
         return $this->belongsTo(Instructor::class)->withTrashed();

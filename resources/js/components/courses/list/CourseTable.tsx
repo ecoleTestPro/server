@@ -1,7 +1,7 @@
 import { ICourse } from '@/types/course';
 import { ROUTE_MAP } from '@/utils/route.util';
-import { getPeriodicity } from '@/utils/utils';
-import { Link } from '@inertiajs/react';
+import { getPeriodicity, getPrice } from '@/utils/utils';
+import { Link, router } from '@inertiajs/react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import CourseDurationBlock from '../CourseDurationBlock';
@@ -18,13 +18,23 @@ export default function CourseTable({ courses }: ICourseTableProps) {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     const handleClickRegisterCourse = (course: ICourse) => {
-        setCourseSelected(course);
-        setIsDialogOpen(true);
+        router.visit(ROUTE_MAP.public.courses.detail(course.category?.slug ?? '', course.slug).link, {
+            preserveScroll: true,
+            preserveState: true,
+        });
+        // setCourseSelected(course);
+        // setIsDialogOpen(true);
     };
 
     const handleCloseDialog = () => {
         setCourseSelected(null);
         setIsDialogOpen(false);
+    };
+
+    const fakeRandomNextSession = (): string => {
+        const fake = ['15 Jul 2025', '20 Aug - 25 Aug 2025', '10 Sep 2025', '01 Oct 2025', '15 Nov 2025', '05 Dec 2025'];
+
+        return fake[Math.floor(Math.random() * fake.length)];
     };
 
     if (!courses || courses.length === 0) {
@@ -41,7 +51,7 @@ export default function CourseTable({ courses }: ICourseTableProps) {
                                 <th className="w-4/12 bg-gray-50 px-5 py-3 font-medium whitespace-nowrap first:rounded-tl-md ltr:text-left rtl:text-right dark:bg-[#15203c]">
                                     {t('COURSE.TABLE.TITLE', 'Titre')}
                                 </th>
-                                <th className="w-4/12 bg-gray-50 px-5 py-3 font-medium whitespace-nowrap ltr:text-left rtl:text-right dark:bg-[#15203c]">
+                                <th className=" bg-gray-50 px-5 py-3 font-medium whitespace-nowrap ltr:text-left rtl:text-right dark:bg-[#15203c]">
                                     {t('COURSE.TABLE.NEXT_SESSION', 'Prochaine session')}
                                 </th>
                                 <th className=" bg-gray-50 px-5 py-3 font-medium whitespace-nowrap ltr:text-left rtl:text-right dark:bg-[#15203c]">
@@ -68,21 +78,22 @@ export default function CourseTable({ courses }: ICourseTableProps) {
                                             </Link>
                                         </div>
                                     </td>
-                                    <td className="w-4/12 border-b border-gray-100 px-5 py-4 whitespace-nowrap ltr:text-left rtl:text-right dark:border-[#172036]">
-                                        <CourseDurationBlock location={item.location_mode} />
+                                    <td className=" border-b border-gray-100 px-5 py-4 whitespace-nowrap ltr:text-left rtl:text-right dark:border-[#172036]">
+                                        {/* <CourseDurationBlock location={item.location_mode} /> */}
+                                        <div className="text-pretty">{fakeRandomNextSession()}</div>
                                     </td>
                                     <td className="border-b border-gray-100 px-5 py-4 whitespace-nowrap ltr:text-left rtl:text-right dark:border-[#172036]">
                                         <CourseDurationBlock duration={getPeriodicity(item.periodicity_unit, item.periodicity_value)} />
                                     </td>
                                     <td className="border-b border-gray-100 px-5 py-4 whitespace-nowrap ltr:text-left rtl:text-right dark:border-[#172036]">
-                                        <span className="block font-medium">FCFA {item.price / 100}</span>
+                                        <span className="block font-medium text-pretty" dangerouslySetInnerHTML={{ __html: getPrice(item.price) }} />
                                     </td>
                                     <td className="border-b border-gray-100 px-5 py-4 whitespace-nowrap ltr:text-left rtl:text-right dark:border-[#172036]">
                                         <button
                                             className="inline-block animate-pulse text-green-400 underline hover:text-green-500 dark:text-green-400"
                                             onClick={() => handleClickRegisterCourse(item)}
                                         >
-                                            {t('COURSE.TABLE.REGISTER', "S'inscrire")}
+                                            {t('COURSE.TABLE.REGISTER', 'Toute les date')}
                                         </button>
                                     </td>
                                 </tr>

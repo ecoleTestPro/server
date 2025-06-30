@@ -126,44 +126,4 @@ class PublicFormationController extends PublicAbstractController
             return redirect()->route('courses')->withErrors('Une erreur est survenue lors de la récupération des données.');
         }
     }
-
-    /**
-     * Renvoie les horaires d'une session de formation.
-     *
-     * @param int $sessionId ID de la session
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getSessionSchedules($sessionId)
-    {
-        try {
-            $schedules = CourseSessionRepository::getById($sessionId);
-            if (!$schedules) {
-                return response()->json(['error' => 'Aucun horaire trouvé pour cette session.'], 404);
-            }
-
-            return response()->json($schedules);
-        } catch (Exception $e) {
-            Log::error("Error in getSessionSchedules: {$e->getMessage()}");
-            return response()->json(['error' => 'Une erreur est survenue lors de la récupération des horaires.'], 500);
-        }
-    }
-
-    public function downloadSessionSchedules($sessionId)
-    {
-        try {
-            $schedules = CourseSessionRepository::getById($sessionId);
-            if (!$schedules) {
-                return response()->json(['error' => 'Aucun horaire trouvé pour cette session.'], 404);
-            }
-
-            // Logique pour générer le fichier de calendrier (par exemple, ICS)
-            // ...
-
-            // Exemple de réponse avec un fichier fictif
-            return response()->download(storage_path('app/public/schedules/session_' . $sessionId . '.ics'));
-        } catch (Exception $e) {
-            Log::error("Error in downloadSessionSchedules: {$e->getMessage()}");
-            return response()->json(['error' => 'Une erreur est survenue lors du téléchargement des horaires.'], 500);
-        }
-    }
 }

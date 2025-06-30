@@ -22,6 +22,7 @@ class CourseRepository extends Repository
                 ->with([
                     'category',
                     'course_sessions',
+                    // 'nextSession',
                     'instructor.user',
                     'media',
                     'video'

@@ -81,20 +81,20 @@ export const DEFULAT_MAIN_MENU: IMainMenuItem[] = [
                         {
                             id: 'consulting-audit',
                             label: 'Audit de maturité de test',
-                            href: ROUTE_MAP.public.services.consulting.auditOfMaturityOfTests.link,
+                            href: ROUTE_MAP.public.services.testSerivces.testOutsourcingServices.link,
                             description: "Découvrez les formations disponibles dès maintenant, organisées par catégories. Trouvez le cours qui correspond à vos besoins et inscrivez-vous pour progresser dans votre parcours professionnel.",
                             image: 'https://placehold.co/512x512',
                             subItems: [
                                 {
                                     id: 'consulting-audit',
                                     label: ROUTE_MAP.public.services.consulting.auditOfMaturityOfTests.title ?? 'Audit de maturité de test',
-                                    href: ROUTE_MAP.public.services.consulting.auditOfMaturityOfTests.link,
+                                    href: ROUTE_MAP.public.services.testSerivces.testOutsourcingServices.link,
                                     image: 'https://placehold.co/512x512',
                                 },
                                 {
                                     id: 'consulting-testing',
                                     label: ROUTE_MAP.public.services.consulting.consultingTesting.title ?? "Intégration de spécialistes",
-                                    href: ROUTE_MAP.public.services.consulting.consultingTesting.link,
+                                    href: ROUTE_MAP.public.services.testSerivces.integrationSpecialists.link,
                                     image: 'https://placehold.co/512x512'
                                 }
                             ]

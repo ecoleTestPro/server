@@ -47,15 +47,15 @@ const CourseSessionScheduleDialog: React.FC<CourseSessionScheduleDialogProps> = 
             Logger.warn('No schedules available to download');
             return;
         }
-        return axios
-            .post(route('course.session.schedules.download', { sessionId: session.id }))
-            .then((response) => {
-                Logger.log('Calendar downloaded successfully:', response.data);
-                // Handle the download logic here, e.g., trigger a file download
-            })
-            .catch((error) => {
-                Logger.error('Error downloading calendar:', error);
-            });
+        // return axios
+        //     .post(route('course.session.schedules.download', { sessionId: session.id }))
+        //     .then((response) => {
+        //         Logger.log('Calendar downloaded successfully:', response.data);
+        //         // Handle the download logic here, e.g., trigger a file download
+        //     })
+        //     .catch((error) => {
+        //         Logger.error('Error downloading calendar:', error);
+        //     });
     };
 
     React.useEffect(() => {

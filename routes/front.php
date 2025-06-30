@@ -4,6 +4,7 @@ use App\Http\Controllers\Public\ContactUsController;
 use App\Http\Controllers\Public\EnrollController;
 use App\Http\Controllers\Public\PublicController;
 use App\Http\Controllers\Public\PublicFormationController;
+use App\Http\Controllers\Public\PublicFormationSessionController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -60,7 +61,7 @@ Route::group(["prefix" => "/"], function () {
      * Search functionality
      * This route handles search queries for blogs, courses, etc.
      */
-    Route::post('search', [PublicController::class, 'search'])->name('search');
+    Route::post('search', [PublicFormationController::class, 'search'])->name('search');
 
     /** 
      * formation routes
@@ -71,6 +72,6 @@ Route::group(["prefix" => "/"], function () {
     Route::get('formation/{category_slug}',             [PublicFormationController::class, 'courseCategory'])->name('courses.category');
     Route::get('formation/{categorySlug}/{courseSlug}', [PublicFormationController::class, 'courseDetail'])->name('courses.detail');
     Route::post('formation/enrollment',                 [EnrollController::class, 'registerEnrollment'])->name('course.enrollment'); 
-    Route::get('formation/session/{sessionId}/schedules', [PublicFormationController::class, 'getSessionSchedules'])->name('course.session.schedules');
-    Route::get('formation/session/{sessionId}/schedules', [PublicFormationController::class, 'downloadSessionSchedules'])->name('course.session.schedules.download');
+    Route::get('formation/session/{sessionId}/schedules', [PublicFormationSessionController::class, 'getSessionSchedules'])->name('course.session.schedules');
+    Route::get('formation/session/{sessionId}/schedules', [PublicFormationSessionController::class, 'downloadSessionSchedules'])->name('course.session.schedules.download');
 });
