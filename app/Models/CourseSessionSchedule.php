@@ -11,23 +11,13 @@ class CourseSessionSchedule extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = [
-        'location',
-        'country',
-        'city',
-        'longitude',
-        'latitude',
-        'timezone',
-        'language',
-        'start_date',
-        'end_date',
-        'price',
-        'price_discount',
-        'tva',
-        'mode'
-    ];
-
     protected $guarded = ['id', 'course_session_id'];
+
+    protected $casts = [
+        'start_time' => 'datetime:H:i',
+        'end_time'   => 'datetime:H:i',
+        'date'       => 'date:d M Y',
+    ];
 
     public function course_session(): BelongsTo
     {

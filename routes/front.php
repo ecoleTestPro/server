@@ -70,5 +70,7 @@ Route::group(["prefix" => "/"], function () {
     Route::get('formations',                            [PublicFormationController::class, 'courses'])->name('courses');
     Route::get('formation/{category_slug}',             [PublicFormationController::class, 'courseCategory'])->name('courses.category');
     Route::get('formation/{categorySlug}/{courseSlug}', [PublicFormationController::class, 'courseDetail'])->name('courses.detail');
-    Route::post('formation/enrollment',                 [EnrollController::class, 'registerEnrollment'])->name('course.enrollment');
+    Route::post('formation/enrollment',                 [EnrollController::class, 'registerEnrollment'])->name('course.enrollment'); 
+    Route::get('formation/session/{sessionId}/schedules', [PublicFormationController::class, 'getSessionSchedules'])->name('course.session.schedules');
+    Route::get('formation/session/{sessionId}/schedules', [PublicFormationController::class, 'downloadSessionSchedules'])->name('course.session.schedules.download');
 });

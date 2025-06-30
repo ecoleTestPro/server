@@ -88,7 +88,6 @@ export interface ICourse {
     title: string;
     slug: string;
     excerpt: string;
-    description: ICourseDescription;
     duration: string;
     lectures: string | number;
     price: number;
@@ -103,11 +102,14 @@ export interface ICourse {
     periodicity_unit: ICoursePeriodicity;
     periodicity_value: number;
     category?: ICourseCategory;
-    categories?: ICourseCategory[];
-    media?: IMedia[];
     created_at?: string;
     updated_at?: string;
     nextSession?: string; // Optional next session date
+    description: ICourseDescription;
+    categories?: ICourseCategory[];
+    media?: IMedia[];
+    course_sessions?: ICourseSession[];
+
 }
 
 
@@ -151,6 +153,33 @@ export interface ICourseEnrollment {
     discount_amount: number,
     last_activity: string,
     is_certificate_downloaded: boolean,
+}
+
+export interface ICourseSession {
+    id: number,
+    location: string,
+    country: string,
+    city: string,
+    longitude: number,
+    latitude: number,
+    timezone: string,
+    language: string,
+    start_date: string,
+    end_date: string,
+    price: number,
+    price_discount: number,
+    tva: number,
+    schedules: ICourseSessionSchedule[],
+}
+
+export interface ICourseSessionSchedule {
+    id: number
+    course_session_id: number
+    start_time: string
+    end_time: string
+    date: string
+    title?: string
+    description?: string
 }
 
 

@@ -5,12 +5,11 @@ namespace App\Http\Controllers\Public;
 use App\Http\Controllers\PublicAbstractController;
 use App\Repositories\CategoryRepository;
 use App\Repositories\CourseRepository;
+use App\Repositories\CourseSessionRepository;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-
-use function Pest\Laravel\json;
 
 class PublicFormationController extends PublicAbstractController
 {
@@ -22,6 +21,12 @@ class PublicFormationController extends PublicAbstractController
         $this->default_data = $this->getDefaultData();
     }
 
+    /**
+     * Recherche des formations par mot-clé.
+     *
+     * @param Request $request Requ te HTTP contenant le param tre "search" qui contient le mot-cl  de recherche
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function search(Request $request)
     {
         try {
@@ -39,6 +44,11 @@ class PublicFormationController extends PublicAbstractController
         }
     }
 
+    /**
+     * Affiche la liste des formations.
+     * 
+     * @return \Inertia\Response
+     */
     public function courses()
     {
         $data = $this->default_data;
@@ -84,6 +94,14 @@ class PublicFormationController extends PublicAbstractController
         }
     }
 
+    /**
+     * Affiche le détail d'une formation.
+     *
+     * @param string $categorySlug Slug de la catégorie
+     * @param string $courseSlug Slug de la formation
+     *
+     * @return \Inertia\Response
+     */
     public function courseDetail($categorySlug, $courseSlug)
     {
         try {
@@ -106,6 +124,46 @@ class PublicFormationController extends PublicAbstractController
             dd($e);
             Log::error("Error in courseCategory: {$e->getMessage()}");
             return redirect()->route('courses')->withErrors('Une erreur est survenue lors de la récupération des données.');
+        }
+    }
+
+    /**
+     * Renvoie les horaires d'une session de formation.
+     *
+     * @param int $sessionId ID de la session
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getSessionSchedules($sessionId)
+    {
+        try {
+            $schedules = CourseSessionRepository::getById($sessionId);
+            if (!$schedules) {
+                return response()->json(['error' => 'Aucun horaire trouvé pour cette session.'], 404);
+            }
+
+            return response()->json($schedules);
+        } catch (Exception $e) {
+            Log::error("Error in getSessionSchedules: {$e->getMessage()}");
+            return response()->json(['error' => 'Une erreur est survenue lors de la récupération des horaires.'], 500);
+        }
+    }
+
+    public function downloadSessionSchedules($sessionId)
+    {
+        try {
+            $schedules = CourseSessionRepository::getById($sessionId);
+            if (!$schedules) {
+                return response()->json(['error' => 'Aucun horaire trouvé pour cette session.'], 404);
+            }
+
+            // Logique pour générer le fichier de calendrier (par exemple, ICS)
+            // ...
+
+            // Exemple de réponse avec un fichier fictif
+            return response()->download(storage_path('app/public/schedules/session_' . $sessionId . '.ics'));
+        } catch (Exception $e) {
+            Log::error("Error in downloadSessionSchedules: {$e->getMessage()}");
+            return response()->json(['error' => 'Une erreur est survenue lors du téléchargement des horaires.'], 500);
         }
     }
 }

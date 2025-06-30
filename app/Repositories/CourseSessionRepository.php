@@ -13,6 +13,14 @@ class CourseSessionRepository extends Repository
         return CourseSession::class;
     }
 
+    public static function getById(int $id): ?CourseSession
+    {
+        return static::query()
+            ->where('id', $id)
+            ->with(['schedules'])
+            ->first();
+    }
+
     public static function store(CourseSessionStoreRequest $request): CourseSession
     {
         try {

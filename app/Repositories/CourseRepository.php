@@ -19,7 +19,13 @@ class CourseRepository extends Repository
     {
         try {
             return static::query()
-                ->with(['category', 'instructor.user', 'media', 'video']);
+                ->with([
+                    'category',
+                    'course_sessions',
+                    'instructor.user',
+                    'media',
+                    'video'
+                ]);
         } catch (\Exception $e) {
             throw new \Exception('Error initializing course query: ' . $e->getMessage());
         }

@@ -65,11 +65,11 @@ export const createCoursesFromCategory = (data?: ICourseCategory[], limit?: numb
  * formatPrice(100) // returns "1.00 FCFA"
  */
 export const formatPrice = (price: number): string => {
-    const CURRENCY: string = "FCFA"
-    // Assuming price is in cents, convert to dollars
-    const formattedPrice = (price / 100).toFixed(2);
-    return `${formattedPrice} ${CURRENCY}`; // Append the currency symbol
-}
+    const CURRENCY: string = "FCFA";
+    // Formatte le prix avec des espaces comme séparateurs de milliers
+    const formattedPrice = price.toLocaleString('fr-FR', { minimumFractionDigits: 0 });
+    return `${formattedPrice} ${CURRENCY}`;
+};
 
 /**
 * Formats the price of the course as a string, taking into account regular price (if any).
