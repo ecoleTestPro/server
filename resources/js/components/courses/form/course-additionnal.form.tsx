@@ -3,6 +3,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 // import { PeriodicityUnitEnum } from '@/types/course';
+import { Switch } from '@/components/ui/switch';
+import TooltipCustom from '@/components/ui/TooltipCustom';
+import { Info } from 'lucide-react';
 import { lazy, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import 'react-quill/dist/quill.snow.css';
@@ -27,7 +30,25 @@ export default function CourseAdditionnalForm({ fieldsetClasses, data, setData, 
     return (
         <fieldset className={fieldsetClasses}>
             <legend className="px-2 text-base font-semibold">{t('courses.details', 'Détails')}</legend>
-            <div className="mb-6 grid gap-4 sm:grid-cols-2">
+            <div className="mb-6 grid gap-4 md:grid-cols-2">
+                <div className="col-span-2 gap-2">
+                    <div className="flex items-center space-x-2">
+                        <div className="flex items-center space-x-2">
+                            <Switch
+                                id="airplane-mode"
+                                checked={data.is_featured}
+                                onCheckedChange={(checked) => {
+                                    setData('is_featured', checked ? '1' : '0');
+                                }}
+                            />
+                            <Label htmlFor="airplane-mode">Mise en avant</Label>
+                        </div>
+
+                        <TooltipCustom tootipText="Permet de mettre en avant la formation">
+                            <Info className="inline-block h-4 w-4 text-secondary" />
+                        </TooltipCustom>
+                    </div>
+                </div>
                 <div className="grid gap-2">
                     <Label htmlFor="duration">{t('courses.duration', 'Durée')}</Label>
                     <Input

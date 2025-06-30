@@ -1,11 +1,8 @@
 import EnrollmentRate from '@/components/charts/EnrollmentRate';
-import { ICourseForm } from '@/components/courses/form/edit-course.form';
 import DashboardWidget from '@/components/widgets/DashboardWidget';
 import AppLayout from '@/layouts/dashboard/app-layout';
-import { SharedData, type BreadcrumbItem } from '@/types';
-import { Head, usePage } from '@inertiajs/react';
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { type BreadcrumbItem } from '@/types';
+import { Head } from '@inertiajs/react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -15,15 +12,15 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function Dashboard() {
-    const { t } = useTranslation();
+    // const { t } = useTranslation();
 
-    const { data } = usePage<SharedData>().props;
+    // const { data } = usePage<SharedData>().props;
 
-    const [showConfirm, setShowConfirm] = useState(false);
-    const [isDeleting, setIsDeleting] = useState(false);
+    // const [showConfirm, setShowConfirm] = useState(false);
+    // const [isDeleting, setIsDeleting] = useState(false);
 
-    const [open, setOpen] = useState(false);
-    const [selected, setCategory] = useState<ICourseForm | undefined>(undefined);
+    // const [open, setOpen] = useState(false);
+    // const [selected, setCategory] = useState<ICourseForm | undefined>(undefined);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>

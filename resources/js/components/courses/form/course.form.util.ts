@@ -63,6 +63,8 @@ export type ICourseForm = {
 
     image: string;
 
+    is_featured: boolean;
+
     // description: string;
     /**
      * DESCRIPTION PARTS
@@ -146,6 +148,8 @@ export const COURSE_DEFAULT_VALUES: ICourseForm = {
     image: '',
 
     content: '',
+
+    is_featured: false,
 };
 
 

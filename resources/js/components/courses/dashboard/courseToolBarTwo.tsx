@@ -23,7 +23,13 @@ interface ICategoryToolBarProps {
 export default function CourseToolBarTwo({ setSearchTerm, searchTerm, viewMode, handleChangeViewMode, courses, setCourses }: ICategoryToolBarProps) {
     const { t, i18n } = useTranslation();
 
-    const filters: { id: 'all' | 'published' | 'featured' | 'no-published'; label: string; labelColor: string; onClick: () => void; isSelected: boolean }[] = [
+    const filters: {
+        id: 'all' | 'published' | 'featured' | 'no-published';
+        label: string;
+        labelColor: string;
+        onClick: () => void;
+        isSelected: boolean;
+    }[] = [
         {
             id: 'all',
             label: t('course.category.dashboard.filters.all', `Tous (${courses.length})`),
@@ -94,16 +100,7 @@ export default function CourseToolBarTwo({ setSearchTerm, searchTerm, viewMode, 
                 <div className="flex items-center justify-between">
                     <div className="lex items-center justify-start">
                         <div className={`w-full mx-auto`}>
-                            <div className="flex">
-                                <div className={`${CLASS_NAME.bgWhite} lg:min-w-[300px]`}>
-                                    <Input
-                                        type="text"
-                                        placeholder="Rechercher par titre..."
-                                        value={searchTerm}
-                                        onChange={(e) => setSearchTerm(e.target.value)}
-                                    />
-                                </div>
-
+                            <div className="flex items-center justify-between space-x-4">
                                 <div className="flex items-center space-x-2">
                                     <div className="space-x-2 flex items-center ml-3">
                                         <Label>
@@ -116,6 +113,14 @@ export default function CourseToolBarTwo({ setSearchTerm, searchTerm, viewMode, 
                                             onValueChange={handleOnChangeValueFilter}
                                         />
                                     </div>
+                                </div>
+                                <div className={`${CLASS_NAME.bgWhite} lg:min-w-[300px]`}>
+                                    <Input
+                                        type="text"
+                                        placeholder="Rechercher par titre..."
+                                        value={searchTerm}
+                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                    />
                                 </div>
                             </div>
                         </div>
