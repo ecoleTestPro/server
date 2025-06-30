@@ -56,7 +56,7 @@ export default function AboutUsServices() {
     ];
     return (
         <MotionSection>
-            <section className="relative z-10 pb-24 md:pb-16">
+            <section className="relative z-10 pb-6 md:pb-16">
                 <div className="container mx-auto px-4">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                         <div className="h-full flex items-center ">
