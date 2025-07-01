@@ -3,27 +3,52 @@ import { useTranslation } from 'react-i18next';
 import InputError from '../input-error';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
+import SelectCustom, { ISelectItem } from '../ui/select-custom';
 import { ContactFormData } from './ContactUs';
 
 interface ContactFormProps {
     handleSubmit: (data: ContactFormData, e: React.FormEvent) => void;
+    errors: { [key in keyof ContactFormData]?: string[] };
 }
 
-export default function ContactForm({ handleSubmit }: ContactFormProps) {
+export default function ContactForm({ handleSubmit, errors }: ContactFormProps) {
     const { t } = useTranslation();
-    const { data, setData, post, processing, errors, reset } = useForm<ContactFormData>();
+    const { data, setData, post, processing, reset } = useForm<ContactFormData>({
+        civility: 'mr',
+        company: '',
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+        subject: '',
+        message: '',
+    });
+
+    const civities: ISelectItem[] = [
+        { id: 1, title: 'Monsieur', value: 'mr' },
+        { id: 2, title: 'Madame', value: 'mme' },
+        { id: 3, title: 'Mademoiselle', value: 'mlle' },
+    ];
 
     return (
         <div>
             <form onSubmit={(e) => handleSubmit(data, e)} className="animate-form-container">
                 {/* <h2 className="mb-6 text-2xl font-bold text-black dark:text-white">Contactez nous</h2> */}
 
-                <div className="col-span-1 lg:col-span-8"></div>
-                <div className="col-span-1 lg:col-span-5"></div>
-                <div className="col-span-1 lg:col-span-3"></div>
-                <div className="col-span-1 lg:col-span-2"></div>
-
                 <div className="grid grid-cols-1 gap-4 lg:grid-cols-8">
+                    <div className="col-span-1 lg:col-span-8 grid gap-2">
+                        <Label htmlFor="lastName">
+                            Civilité <span className="text-red-500">*</span>
+                        </Label>
+                        <SelectCustom
+                            data={civities}
+                            selectLabel={t('contacts.civility', 'Civilité')}
+                            processing={processing}
+                            onValueChange={(value) => setData('civility', value)}
+                            required
+                        />
+                        {errors && errors.civility && errors.civility.map((error, index) => <InputError key={index} message={error} />)}
+                    </div>
                     <div className="col-span-1 lg:col-span-4">
                         <div className="grid gap-2">
                             <Label htmlFor="lastName">
@@ -39,7 +64,7 @@ export default function ContactForm({ handleSubmit }: ContactFormProps) {
                                 placeholder={t('courses.lastName', 'Nom')}
                                 autoComplete="on"
                             />
-                            <InputError message={errors.lastName} />
+                            {errors && errors.lastName && errors.lastName.map((error, index) => <InputError key={index} message={error} />)}
                         </div>
                     </div>
                     <div className="col-span-1 lg:col-span-4">
@@ -57,7 +82,7 @@ export default function ContactForm({ handleSubmit }: ContactFormProps) {
                                 placeholder={t('courses.firstName', 'Prénom')}
                                 autoComplete="on"
                             />
-                            <InputError message={errors.firstName} />
+                            {errors && errors.firstName && errors.firstName.map((error, index) => <InputError key={index} message={error} />)}
                         </div>
                     </div>
 
@@ -76,7 +101,7 @@ export default function ContactForm({ handleSubmit }: ContactFormProps) {
                                 placeholder={t('courses.email', 'Email')}
                                 autoComplete="on"
                             />
-                            <InputError message={errors.email} />
+                            {errors && errors.email && errors.email.map((error, index) => <InputError key={index} message={error} />)}
                         </div>
                     </div>
                     <div className="col-span-1 lg:col-span-4">
@@ -94,14 +119,27 @@ export default function ContactForm({ handleSubmit }: ContactFormProps) {
                                 placeholder={t('courses.phone', 'Téléphone')}
                                 autoComplete="on"
                             />
-                            <InputError message={errors.phone} />
+                            {errors && errors.phone && errors.phone.map((error, index) => <InputError key={index} message={error} />)}
                         </div>
+                    </div>
+                    <div className="col-span-1 lg:col-span-8 grid gap-2">
+                        <Label htmlFor="lastName">Entreprise</Label>
+                        <Input
+                            id="company"
+                            type="text"
+                            value={data.company}
+                            onChange={(e) => setData('company', e.target.value)}
+                            disabled={processing}
+                            placeholder={t('courses.company', 'Entreprise')}
+                            autoComplete="on"
+                        />
+                        {errors && errors.company && errors.company.map((error, index) => <InputError key={index} message={error} />)}
                     </div>
 
                     <div className="col-span-1 lg:col-span-8">
                         <div className="animate-form-field mb-[20px] md:mb-[25px]" style={{ animationDelay: '0.2s' }}>
                             <Label htmlFor="subject">
-                                Sujet 
+                                Sujet
                                 <span className="text-red-500">*</span>
                             </Label>
                             <Input
@@ -114,7 +152,7 @@ export default function ContactForm({ handleSubmit }: ContactFormProps) {
                                 placeholder="Entrez le sujet de votre message"
                                 autoComplete="on"
                             />
-                            <InputError message={errors.subject} />
+                            {errors && errors.subject && errors.subject.map((error, index) => <InputError key={index} message={error} />)}
                         </div>
                         <div className="animate-form-field mb-[20px] md:mb-[25px]" style={{ animationDelay: '0.5s' }}>
                             <label className="mb-[10px] block font-medium text-black dark:text-white">

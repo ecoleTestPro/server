@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('favicon_id')->nullable()->constrained('media')->nullOnDelete();
             $table->string('admin_footer_text')->default('Developed by Razinsoft');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

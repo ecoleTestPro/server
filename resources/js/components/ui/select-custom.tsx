@@ -46,7 +46,7 @@ export default function SelectCustom({
       onValueChange={onValueChange}
     >
       <SelectTrigger className="w-full">
-        <SelectValue placeholder="Sélectionner une catégorie" />
+        <SelectValue placeholder="Sélectionner une option" />
       </SelectTrigger>
 
       <SelectContent>

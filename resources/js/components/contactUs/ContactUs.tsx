@@ -8,6 +8,7 @@ import { SharedData } from '@/types';
 import { Logger } from '@/utils/console.util';
 import { usePage } from '@inertiajs/react';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 import PageLoading from '../ui/page-loading';
 import ContactInfo from './ContactInfo';
 import ContactMap from './ContactMap';
@@ -20,7 +21,9 @@ export interface ContactFormData {
     phone: string;
     subject: string;
     message: string;
-    [key: string]: any; // <-- Add this line
+    civility: string;
+    company?: string; // Optional field for company name
+    // [key: string]: any; // <-- Add this line
 }
 
 const ContactUs: React.FC = () => {
@@ -28,11 +31,11 @@ const ContactUs: React.FC = () => {
 
     const [loading, setLoading] = useState<boolean>(false);
     const [success, setSuccess] = useState<boolean>(false);
+    const [errors, setErrors] = useState<{ [key in keyof ContactFormData]?: string[] }>({});
 
     const { data: dataShared } = usePage<SharedData>().props;
 
     const handleSubmit = (data: ContactFormData, e: React.FormEvent) => {
-        e.preventDefault();
         setLoading(true);
 
         axios
@@ -40,15 +43,23 @@ const ContactUs: React.FC = () => {
             .then((response) => {
                 if (response.data.success) {
                     setSuccess(true);
+                    e.preventDefault();
                 } else {
-                    // Handle error case
                     Logger.error('Error submitting contact form:', response.data.message);
+                    if (response.data.message && typeof response.data.message === 'string') {
+                        toast.error(response.data.message);
+                    }
+
+                    if (response.data.errors) {
+                        setErrors(response.data.errors);
+                    }
                 }
                 setLoading(false);
             })
             .catch((error) => {
                 // Handle network or server error
-                Logger.error('Error submitting contact form:', error);
+                Logger.error('Error submitting contact form  (catch) :', error);
+                // toast.error(
                 setLoading(false);
             });
     };
@@ -95,7 +106,7 @@ const ContactUs: React.FC = () => {
                                         </p>
                                     </div>
 
-                                    <ContactForm handleSubmit={handleSubmit} />
+                                    <ContactForm handleSubmit={handleSubmit}  errors={errors} />
                                 </div>
                             </div>
                         </div>
