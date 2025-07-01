@@ -46,7 +46,7 @@ export default function ServiceTestOutsourcing() {
         },
         next: {
             title: t('PAGES.SERVICES.SERVICE_INTEGRATION_SPECIALISTS', 'Spécialistes de l’Intégration'),
-            href: ROUTE_MAP.serviceIntegrationSpecialists.link,
+            href: ROUTE_MAP.public.services.testSerivces.integrationSpecialists.link,
         },
     };
 
@@ -79,7 +79,7 @@ export default function ServiceTestOutsourcing() {
                                     // variants={imageVariants}
                                 >
                                     <img
-                                        src="/assets/images/pexels-thirdman-5319357.jpg"
+                                        src="/assets/images/pexels-vinicius-cezario-87687338-10468213.jpg"
                                         className="inline-block h-auto w-full"
                                         alt="order-summary-image"
                                     />

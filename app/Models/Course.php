@@ -16,12 +16,10 @@ class Course extends Model
     protected $guarded = ['id'];
 
     protected $casts = [
-        // 'description'        => 'array',
         'is_featured'        => 'boolean',
         'is_published'       => 'boolean',
         'published_at'       => 'datetime',
         'regular_price'      => 'float',
-        // 'price'              => 'float',
         'price_includes_tax' => 'boolean',
         'duration'           => 'integer',
     ];
@@ -33,25 +31,25 @@ class Course extends Model
         return $this->belongsTo(Category::class)->withTrashed();
     }
 
+    public function course_sessions(): HasMany
+    {
+        return $this->hasMany(CourseSession::class);
+    }
+
+    // public function nextSession(): string
+    // {
+    //     $nextSession = $this->course_sessions()
+    //         ->where('start_date', '>', now())
+    //         ->orderBy('start_date')
+    //         ->first();
+
+    //     return $nextSession ? $nextSession->start_date->format('Y-m-d H:i:s') : 'No upcoming sessions';
+    // }
+
     public function instructor(): BelongsTo
     {
         return $this->belongsTo(Instructor::class)->withTrashed();
     }
-
-    // public function chapters(): HasMany
-    // {
-    //     return $this->hasMany(Chapter::class);
-    // }
-
-    // public function reviews(): HasMany
-    // {
-    //     return $this->hasMany(Review::class)->withTrashed();
-    // }
-
-    // public function enrollments(): HasMany
-    // {
-    //     return $this->hasMany(Enrollment::class);
-    // }
 
     public function media(): BelongsTo
     {
@@ -94,6 +92,26 @@ class Course extends Model
         return $this->belongsToMany(User::class, 'user_courses');
     }
 
+    // public function chapters(): HasMany
+    // {
+    //     return $this->hasMany(Chapter::class);
+    // }
+
+    // public function reviews(): HasMany
+    // {
+    //     return $this->hasMany(Review::class)->withTrashed();
+    // }
+
+    // public function enrollments(): HasMany
+    // {
+    //     return $this->hasMany(Enrollment::class);
+    // }
+
+    // public function userProgress()
+    // {
+    //     return $this->belongsToMany(User::class, 'user_course_progresses')->withPivot('progress', 'course_id');
+    // }
+
     // public function favouriteGuests(): BelongsToMany
     // {
     //     return $this->belongsToMany(Guest::class, 'guest_courses');
@@ -118,9 +136,4 @@ class Course extends Model
     // {
     //     return $this->hasMany(Question::class);
     // }
-
-    public function userProgress()
-    {
-        return $this->belongsToMany(User::class, 'user_course_progresses')->withPivot('progress', 'course_id');
-    }
 }

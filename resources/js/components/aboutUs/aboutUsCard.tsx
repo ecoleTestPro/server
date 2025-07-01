@@ -16,14 +16,14 @@ function AboutUsCard() {
                         <div className="relative">
                             <div className="rounded-[7px] p-[15px] backdrop-blur-[5.400000095367432px] ">
                                 <img
-                                    src="/assets/images/Benefices-de-la-formation-en-entrepreneuriat-scaled-1.jpg"
+                                    src="/assets/images/pexels-pavel-danilyuk-8152734.jpg"
                                     className="inline-block"
                                     alt="order-summary-image"
                                     width={540}
                                     height={'auto'}
                                 />
                             </div>
-                            <div className="absolute top-1/2 -mt-[15px] max-w-[120px] -translate-y-1/2 rounded-[4.294px] drop-shadow-xl md:-mt-[17px] md:max-w-[200px] lg:max-w-[219px] ltr:right-0 ltr:lg:right-[30px] rtl:left-0 rtl:lg:left-[30px]">
+                            {/* <div className="absolute top-1/2 -mt-[15px] max-w-[120px] -translate-y-1/2 rounded-[4.294px] drop-shadow-xl md:-mt-[17px] md:max-w-[200px] lg:max-w-[219px] ltr:right-0 ltr:lg:right-[30px] rtl:left-0 rtl:lg:left-[30px]">
                                 <img
                                     src="/assets/images/card-icon-1.png"
                                     className="inline-block rounded-[4.294px] animate-image-flotting"
@@ -31,7 +31,7 @@ function AboutUsCard() {
                                     width={100}
                                     height={195}
                                 />
-                            </div>
+                            </div> */}
                         </div>
 
                         <div>

@@ -5,12 +5,11 @@ namespace App\Http\Controllers\Public;
 use App\Http\Controllers\PublicAbstractController;
 use App\Repositories\CategoryRepository;
 use App\Repositories\CourseRepository;
+use App\Repositories\CourseSessionRepository;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-
-use function Pest\Laravel\json;
 
 class PublicFormationController extends PublicAbstractController
 {
@@ -22,6 +21,12 @@ class PublicFormationController extends PublicAbstractController
         $this->default_data = $this->getDefaultData();
     }
 
+    /**
+     * Recherche des formations par mot-clé.
+     *
+     * @param Request $request Requ te HTTP contenant le param tre "search" qui contient le mot-cl  de recherche
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function search(Request $request)
     {
         try {
@@ -39,6 +44,11 @@ class PublicFormationController extends PublicAbstractController
         }
     }
 
+    /**
+     * Affiche la liste des formations.
+     * 
+     * @return \Inertia\Response
+     */
     public function courses()
     {
         $data = $this->default_data;
@@ -84,6 +94,14 @@ class PublicFormationController extends PublicAbstractController
         }
     }
 
+    /**
+     * Affiche le détail d'une formation.
+     *
+     * @param string $categorySlug Slug de la catégorie
+     * @param string $courseSlug Slug de la formation
+     *
+     * @return \Inertia\Response
+     */
     public function courseDetail($categorySlug, $courseSlug)
     {
         try {

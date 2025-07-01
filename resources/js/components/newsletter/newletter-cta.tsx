@@ -64,7 +64,7 @@ export default function NewsletterCTA() {
                             {t('NEWSLETTER.CTA.DESCRIPTION', 'Rejoignez notre communauté de professionnels de l’assistance.')}
                         </p>
                         <form action="#" className="relative mx-auto mt-[20px] md:mt-[35px] md:max-w-[496px] lg:mt-[45px]">
-                            <div className="item-center flex">
+                            <div className="flex item-cente justify-betweenr">
                                 <span className="material-symbols-outlined absolute top-[14px] !text-[22px] text-gray-400 md:top-[21px] md:!text-[26px] ltr:left-[20px] ltr:md:left-[30px] rtl:right-[20px] rtl:md:right-[30px] animate-pulse">
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
@@ -72,7 +72,7 @@ export default function NewsletterCTA() {
                                         viewBox="0 0 24 24"
                                         strokeWidth={1.5}
                                         stroke="currentColor"
-                                        className="size-6"
+                                        className="size-6 hidden"
                                     >
                                         <path
                                             strokeLinecap="round"
@@ -83,7 +83,7 @@ export default function NewsletterCTA() {
                                 </span>
                                 <input
                                     type="text"
-                                    className="fw-medium block h-[50px] w-full rounded-[100px] bg-gray-800 px-[52px] text-base text-white !outline-0 placeholder:text-gray-300 md:h-[70px] md:px-[70px] transition-all duration-300 focus:ring-2 focus:ring-blue-500 focus:scale-105"
+                                    className="fw-medium block w-2/3 rounded-[100px] bg-gray-800 text-base text-white !outline-0 placeholder:text-gray-300 transition-all duration-300 focus:ring-2 focus:ring-blue-500 focus:scale-105 py-2 px-4"
                                     placeholder="Entrez votre adresse e-mail"
                                 />
                                 <BtnSecondary label="S'inscrire" />

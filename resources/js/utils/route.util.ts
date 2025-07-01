@@ -98,14 +98,14 @@ export const ROUTE_MAP: IROUTE_MAP = {
         },
         services: {
             consulting: {
-                index: createIRouteMap('/services/consulting', 'Consulting'),
-                auditOfMaturityOfTests: createIRouteMap('/services/consulting/audit-of-maturity-of-tests', 'Audit de maturité de tests'),
-                consultingTesting: createIRouteMap('/services/consulting/consulting-testing', 'Conseil Testing'),
+                index: createIRouteMap(route('consulting'), 'Consulting'),
+                auditOfMaturityOfTests: createIRouteMap(route('consulting.audit'), 'Audit de maturité de tests'),
+                consultingTesting: createIRouteMap(route('consulting.testing'), 'Conseil Testing'),
             },
             testSerivces: {
-                index: createIRouteMap('/services/test-services', 'Services de test'),
-                testOutsourcingServices: createIRouteMap('/services/test-services/test-outsourcing-services', 'Services d’externalisation de test'),
-                integrationSpecialists: createIRouteMap('/services/test-services/integration-of-specialists-on-your-premises-test-outsourcing-services', 'Intégration de Spécialistes dans Vos LocauxTest Outsourcing Services'),
+                index: createIRouteMap(route('services.test.outsourcing'), 'Services de test'),
+                testOutsourcingServices: createIRouteMap(route('services.test.outsourcing'), 'Services d’externalisation de test'),
+                integrationSpecialists: createIRouteMap(route('services.integration.specialists'), 'Intégration de Spécialistes dans Vos LocauxTest Outsourcing Services'),
             }
         },
         blogs: {

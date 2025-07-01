@@ -20,7 +20,7 @@ export default function CourseCategoryPage() {
     useEffect(() => {
         setLoading(true);
 
-        Logger.log('[CourseCategoryPage] useEffect - data', data);
+        Logger.log('[COURSE_CATEGORY_PAGE] useEffect - data', data);
 
         if (data && data.course && data.course.id && data.course.slug) {
             // Assuming data.category is the category object
