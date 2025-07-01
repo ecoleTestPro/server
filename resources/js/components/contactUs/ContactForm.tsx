@@ -16,7 +16,7 @@ export default function ContactForm({ handleSubmit }: ContactFormProps) {
     return (
         <div>
             <form onSubmit={(e) => handleSubmit(data, e)} className="animate-form-container">
-                <h2 className="mb-6 text-2xl font-bold text-black dark:text-white">Contactez nous</h2>
+                {/* <h2 className="mb-6 text-2xl font-bold text-black dark:text-white">Contactez nous</h2> */}
 
                 <div className="col-span-1 lg:col-span-8"></div>
                 <div className="col-span-1 lg:col-span-5"></div>
