@@ -159,16 +159,23 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ course }) => {
                                     </p>
                                 }
                             />
-                            {/* Informations supplémentaires et bouton d'inscription */}
-                            {/* Registration Section with ref */}
-                            <div ref={registrationRef}>
-                                <CourseDetailChooseSection course={course} registrationRef={registrationRef} />
-                            </div>
                         </div>{' '}
                     </div>
 
                     <div className="col-span-1 md:col-span-1">
                         <CouseDetailMedia course={course} />
+                    </div>
+
+                    <div className="col-span-1 md:col-span-3">
+                        {/* Informations supplémentaires et bouton d'inscription */}
+                        {/* Registration Section with ref */}
+                        <div className="">
+                            {/* ref={registrationRef} */}
+                            <div >
+                                {/* registrationRef={registrationRef} */}
+                                <CourseDetailChooseSection course={course} />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

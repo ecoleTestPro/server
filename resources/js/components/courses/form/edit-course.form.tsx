@@ -1,0 +1,311 @@
+import { router, useForm, usePage } from '@inertiajs/react';
+import { InfoIcon, LoaderCircle, LoaderIcon } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
+
+import InputError from '@/components/input-error';
+import { Button } from '@/components/ui/button/button';
+
+import { SharedData } from '@/types';
+import { ICourse, ICourseCategory } from '@/types/course';
+import 'react-quill/dist/quill.snow.css';
+import RichTextQuill from '../../ui/form/RichTextQuill';
+import { Skeleton } from '../../ui/skeleton';
+import CourseAdditionnalForm from './course-additionnal.form';
+import CourseBasicInfoForm from './course-basic-info.form';
+
+import { Logger } from '@/utils/console.util';
+import { ROUTE_MAP } from '@/utils/route.util';
+import axios from 'axios';
+import { COURSE_DEFAULT_VALUES, createPayload, ICourseForm, PeriodicityUnitEnum } from './course.form.util';
+
+interface ICourseFormProps {
+    course: ICourse | null;
+    // initialData?: ICourseForm;
+}
+
+function CourseForm({ course }: ICourseFormProps) {
+    const { t } = useTranslation();
+    const [loading, setLoading] = useState(false);
+
+    const { data: sharedData } = usePage<SharedData>().props;
+    const { data, setData, post, processing, errors, reset } = useForm<ICourseForm>(COURSE_DEFAULT_VALUES);
+
+    const descptionFormPart: { key: keyof ICourseForm; label: string; description?: string }[] = [
+        {
+            key: 'content',
+            label: t('COURSE.FORM.CONTEN', 'Contenu'),
+            description: t('COURSE.FORM.CONTENT_DESCRIPTION', 'Description détaillée du contenu du cours'),
+        },
+        { key: 'target_audience', label: t('COURSE.FORM.TARGET_AUDIENCE', 'Public cible') },
+        // { key: 'summary', label: t('COURSE.FORM.SUMMARY', 'Résumé') },
+        { key: 'pedagogical_objectives', label: t('COURSE.FORM.PEDAGOGICAL_OBJECTIVES', 'Objectifs pédagogiques') },
+        { key: 'course_strengths', label: t('COURSE.FORM.COURSE_STRENGTHS', 'Points forts du cours') },
+        { key: 'evaluation', label: t('COURSE.FORM.EVALUATION', 'Évaluation') },
+        { key: 'prerequisites', label: t('COURSE.FORM.PREREQUISITES', 'Prérequis') },
+        { key: 'why_choose', label: t('COURSE.FORM.WHY_CHOOSE', 'Pourquoi choisir ce cours ?') },
+        { key: 'exam', label: t('COURSE.FORM.EXAM', 'Examen') },
+    ];
+
+    const [displayPrice, setDisplayPrice] = useState<string>(() => (data.price ? Number(data.price).toLocaleString('fr-FR') : ''));
+
+    const fieldsetClasses = 'bg-white dark:bg-gray-800 mb-2 rounded-lg border p-4';
+
+    const [openIndex, setOpenIndex] = useState<number | null>(0);
+    const [categories, setCategories] = useState<ICourseCategory[]>([]);
+
+    const toggleAccordion = (index: number) => {
+        setOpenIndex((prevIndex) => (prevIndex === index ? null : index));
+    };
+
+    const accordionIndex = {
+        basicInfo: 1,
+        description: 2,
+        additionnal: 3,
+    };
+
+    const handleInitializeForm = (course: ICourse) => {
+        reset();
+        setDisplayPrice('');
+
+        setData('id', course.id);
+        setData('excerpt', course.excerpt || '');
+        setData('category_id', course?.category?.id?.toString() || '');
+        setData('duration', course.duration || '');
+        setData('attachment', course.attachment || '');
+        setData('lectures', course.lectures || 0);
+        setData('periodicity_unit', course.periodicity_unit || PeriodicityUnitEnum.DAY);
+        setData('periodicity_value', course.periodicity_value || 1);
+        setData('price', course.price ? Number(course.price).toLocaleString('fr-FR') : '');
+        setData('regular_price', course.regular_price ? Number(course.regular_price).toLocaleString('fr-FR') : '');
+        setData('author', course.author || '');
+        setData('image', course.image || '');
+        setData('title', course.title || '');
+
+        // setData('description', course.description || '');
+        if (course.description) {
+            course.description.content && setData('content', course.description.content);
+            course.description.target_audience && setData('target_audience', course.description.target_audience);
+            course.description.summary && setData('summary', course.description.summary);
+            course.description.pedagogical_objectives && setData('pedagogical_objectives', course.description.pedagogical_objectives);
+            course.description.course_strengths && setData('course_strengths', course.description.course_strengths);
+            course.description.evaluation && setData('evaluation', course.description.evaluation);
+            course.description.prerequisites && setData('prerequisites', course.description.prerequisites);
+            course.description.why_choose && setData('why_choose', course.description.why_choose);
+            course.description.exam && setData('exam', course.description.exam);
+        }
+    };
+
+    /**
+     * @description
+     * Submits the course form data to the server to create or update a course.
+     * If the course is created, redirects to the course list page.
+     * @param {ICourseForm} data Course form data
+     * @param {boolean} draft If true, sets the course is_published field to false
+     * @returns {Promise<void>}
+     */
+    const submit = async (data: ICourseForm, draft: boolean = false): Promise<void> => {
+        console.log('data', data);
+
+        const routeName = data?.id ? 'dashboard.course.update' : 'dashboard.course.store';
+        const axiosAction = data?.id ? axios.put : axios.post;
+
+        try {
+            return await axiosAction(route(routeName, data?.id), createPayload(data, draft)).then(
+                (response) => {
+                    Logger.log('response', response);
+                    toast.success(t('courses.createSuccess', 'Formation créée avec succès !'));
+
+                    // reset();
+
+                    return router.visit(ROUTE_MAP.dashboard.course.list.link);
+                },
+                (error) => {
+                    toast.error(t('courses.createError', 'Erreur lors de la création de la formation'));
+                    console.error('Course creation error:', error);
+                    if (error.response && error.response.errors) {
+                        throw error.response.errors;
+                    }
+                },
+            );
+        } catch (error) {
+            toast.error(t('courses.createError', 'Erreur lors de la création de la formation'));
+            console.error('Course creation error:', error);
+            console.error('Course creation error:', errors);
+        }
+    };
+
+    useEffect(() => {
+        setLoading(true);
+        if (course) {
+            handleInitializeForm(course);
+        } else {
+            reset();
+        }
+        setLoading(false);
+    }, [course]);
+
+    useEffect(() => {
+        if (sharedData && sharedData.categories_with_courses) {
+            setCategories(sharedData.categories_with_courses);
+        } else {
+            setCategories([]);
+        }
+    }, [sharedData]);
+
+    if (!sharedData || sharedData.categories_with_courses === undefined) {
+        return (
+            <div className="flex h-full items-center justify-center">
+                <div className="text-center text-gray-500">{t('courses.loading', 'Chargement des données...')}</div>
+                <div className="flex h-full items-center justify-center">
+                    <Skeleton className="h-12 w-1/2" />
+                </div>
+            </div>
+        );
+    }
+
+    if (loading) {
+        return (
+            <div className="flex flex-col h-full items-center justify-center">
+                <div className="text-center text-gray-500">{t('courses.loading', 'Chargement des données...')}</div>
+                <div>
+                    <LoaderIcon className="h-12 w-12 animate-spin" />
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <form
+            className="container mx-auto flex flex-col gap-8"
+            onSubmit={() => {
+                submit(data, false);
+            }}
+        >
+            {/* mx-auto  */}
+            <h2 className="text-2xl font-bold">{data?.title ? data.title : 'Créer une formation'}</h2>
+
+            <div className="overflow-y-auto max-h-[75vh]">
+                <div className="toc-accordion mx-auto" id="tablesOfContentAccordion">
+                    <div className="grid grid-cols-1 xl:grid-cols-1 gap-4">
+                        <div className="col-span-1 xl:col-span-4">
+                            {/* Bloc Informations principales  && Catégory*/}
+                            <div className="col-span-1 xl:col-span-3">
+                                <CourseBasicInfoForm
+                                    fieldsetClasses={fieldsetClasses}
+                                    data={data}
+                                    categories={categories}
+                                    setData={setData}
+                                    processing={processing}
+                                    errors={errors}
+                                />
+                            </div>
+
+                            {/* Bloc Détails */}
+                            <div className="col-span-1 xl:col-span-1">
+                                <CourseAdditionnalForm
+                                    fieldsetClasses={fieldsetClasses}
+                                    data={data}
+                                    setData={setData}
+                                    processing={processing}
+                                    errors={errors}
+                                />
+                            </div>
+
+                            {/* Bloc Description */}
+                            <section>
+                                <div className="flex items-center justify-between">
+                                    <div className="toc-accordion-item mb-[15px] rounded-md w-full bg-white dark:bg-gray-800 ">
+                                        <button
+                                            className={`toc-accordion-button open lg:text-md relative block w-full cursor-pointertext-base font-medium ltr:text-left rtl:text-right ${
+                                                openIndex === accordionIndex.description ? 'open' : ''
+                                            }`}
+                                            type="button"
+                                            onClick={() => toggleAccordion(accordionIndex.description)}
+                                        >
+                                            <div className="p-[12px]">
+                                                <h3 className="text-lg font-semibold">{t('COURSE.FORM.DESCRIPTION', 'Description')}</h3>
+                                                <br />
+                                                <span className="text-sm text-gray-600 dark:text-white">
+                                                    Decrivez le contenu de votre formation, les objectifs pédagogiques, le public cible, etc. <br />{' '}
+                                                    Vous pouvez deplier ou replier cette section. pour faciliter la lecture.
+                                                </span>
+                                            </div>
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                strokeWidth={1.5}
+                                                stroke="currentColor"
+                                                className="absolute top-1/2 size-5 -translate-y-1/2 transform transition-transform duration-300 ease-in-out ltr:right-[20px] md:ltr:right-[25px] rtl:left-[20px] md:rtl:left-[25px]"
+                                            >
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                                            </svg>
+                                        </button>
+
+                                        <div
+                                            className={`toc-accordion-collapse bg-gray-200 p-[12px] ${openIndex === accordionIndex.description ? 'open' : 'hidden'}`}
+                                        >
+                                            {descptionFormPart.map((item) => (
+                                                <fieldset key={item.key} className={fieldsetClasses}>
+                                                    <legend className="px-2 text-base font-semibold">{item.label}</legend>
+                                                    {item.description && (
+                                                        <div>
+                                                            <span>
+                                                                <InfoIcon className="inline-block mr-2 h-4 w-4 text-secondary" />
+                                                            </span>
+                                                            <span className="text-sm text-gray-600 dark:text-white">{item.description}</span>
+                                                        </div>
+                                                    )}
+                                                    <div className="grid gap-2">
+                                                        {item.key && (
+                                                            <div>
+                                                                <RichTextQuill
+                                                                    label={item.label}
+                                                                    labelId={item.key}
+                                                                    value={data[item.key] as string}
+                                                                    setData={(value: string) => setData(item.key, value)}
+                                                                />
+                                                                <InputError message={errors[item.key]} />
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </fieldset>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div className="flex justify-between items-center space-x-2">
+                <Button
+                    type="button"
+                    onClick={() => router.visit(route('dashboard.course.index'))}
+                    className="mt-2  bg-red-400 hover:bg-red-500 "
+                    disabled={processing}
+                >
+                    {t('courses.cancel', 'Annuler')}
+                </Button>
+
+                <div className="flex items-center space-x-2">
+                    <Button type="button" onClick={() => submit(data, true)} className="mt-2  bg-gray-400 hover:bg-gray-500 " disabled={processing}>
+                        {processing && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
+                        {t('courses.create', 'Sauvegarder comme brouillon')}
+                    </Button>
+
+                    <Button type="submit" className="mt-2 " disabled={processing}>
+                        {processing && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
+                        {course && course.id ? t('courses.update', 'Mettre à jour') : t('courses.create', 'Créer une formation')}
+                    </Button>
+                </div>
+            </div>
+        </form>
+    );
+}
+
+export default CourseForm;

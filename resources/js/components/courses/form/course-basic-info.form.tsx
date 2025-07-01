@@ -3,13 +3,14 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 // import { PeriodicityUnitEnum } from '@/types/course';
-import SelectCustom from '@/components/ui/select-custom';
+import SelectCustom, { ISelectItem } from '@/components/ui/select-custom';
 import { ICourseCategory } from '@/types/course';
-import { lazy } from 'react';
+import { Logger } from '@/utils/console.util';
+import { lazy, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import 'react-quill/dist/quill.snow.css';
 import { Textarea } from '../../ui/text-area';
-import { ICourseForm } from '../courseForm';
+import { ICourseForm } from './course.form.util';
 
 // const ReactQuill = lazy(() => import('react-quill'));
 const ReactQuill = lazy(() => import('react-quill-new'));
@@ -25,6 +26,30 @@ interface CourseBasicInfoFormProps {
 
 export default function CourseBasicInfoForm({ fieldsetClasses, data, setData, processing, errors, categories }: CourseBasicInfoFormProps) {
     const { t } = useTranslation();
+
+    const category_list = (): ISelectItem[] => {
+        return categories.map((category) => ({
+            id: category.id!,
+            title: category.title,
+            value: category.id!.toString(),
+            subItem:
+                category.children?.map((subCategory) => ({
+                    id: subCategory.id!,
+                    title: subCategory.title,
+                    value: subCategory.id!.toString(),
+                })) || [],
+        }));
+    };
+
+    useEffect(() => {
+        Logger.log('CourseBasicInfoForm mounted', {
+            fieldsetClasses,
+            data,
+            processing,
+            errors,
+            categories,
+        });
+    }, [fieldsetClasses, data, processing, errors, categories]);
 
     return (
         <>
@@ -52,7 +77,7 @@ export default function CourseBasicInfoForm({ fieldsetClasses, data, setData, pr
                         <Textarea
                             id="excerpt"
                             required
-                            rows={4}
+                            rows={3}
                             value={data.excerpt}
                             onChange={(e) => setData('excerpt', e.target.value)}
                             disabled={processing}
@@ -72,11 +97,7 @@ export default function CourseBasicInfoForm({ fieldsetClasses, data, setData, pr
 
                         {categories && categories.length > 0 && (
                             <SelectCustom
-                                data={categories.map((category) => ({
-                                    id: category.id!,
-                                    title: category.title,
-                                    value: category.id!.toString(),
-                                }))}
+                                data={category_list()}
                                 selectLabel={t('courses.category', 'Catégorie')}
                                 processing={processing}
                                 onValueChange={(value) => setData('category_id', value)}

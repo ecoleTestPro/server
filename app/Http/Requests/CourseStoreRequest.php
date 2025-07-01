@@ -23,21 +23,12 @@ class CourseStoreRequest extends FormRequest
     {
         return [
             'category_id'           => 'required|exists:categories,id',
-
-            'title'                 => 'required|min:5|max:500',
-            'excerpt'               => 'required|string|min:5|max:5000',
-
+            'title'                 => 'required|min:2|max:500',
+            'excerpt'               => 'required|string|min:2|max:5000',
             'media'                 => 'image|mimes:jpeg,png,jpg|max:2048',
             'video'                 => 'file|mimes:mp4,mpeg|max:1048576',
-
             'description'           => 'json|min:1',
-            // 'description.*.heading' => 'required|string',
-            // 'description.*.body'    => 'required|string',
-
-            // 'instructor_id'         => 'required|exists:instructors,id',
-
-            'is_active'             => '',
-
+            'is_published'          => 'boolean',
             'regular_price'         => 'numeric|min:' . ((float) config('app.minimum_amount')),
             'price' => [
                 'nullable',
@@ -72,6 +63,8 @@ class CourseStoreRequest extends FormRequest
 
             'regular_price.min'      => 'Le prix normal doit être au moins de ' . config('app.minimum_amount') . '.',
             'price.min'              => 'Le prix doit être au moins de ' . config('app.minimum_amount') . '.',
+
+
         ];
     }
 }

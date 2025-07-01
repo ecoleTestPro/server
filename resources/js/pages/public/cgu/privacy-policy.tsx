@@ -11,7 +11,7 @@ export default function PrivacyPolicyPage() {
     const { t } = useTranslation();
 
     const breadcrumbItems: IHeroBreadcrumbItems[] = [
-        { label: t('PAGES.HOME', 'Accueil'), href: ROUTE_MAP.home.link },
+        { label: t('PAGES.HOME', 'Accueil'), href: ROUTE_MAP.public.home.link },
         { label: t('PAGES.ABOUT_US', 'Politique de confidentialité'), href: '#' },
     ];
 

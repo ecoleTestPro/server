@@ -11,7 +11,7 @@ export default function ContactUsPAge() {
     const { t } = useTranslation();
 
     const breadcrumbItems: IHeroBreadcrumbItems[] = [
-        { label: t('PAGES.HOME', 'Accueil'), href: ROUTE_MAP.home.link },
+        { label: t('PAGES.HOME', 'Accueil'), href: ROUTE_MAP.public.home.link },
         { label: t('PAGES.CONTACT_US', 'Nous contacter'), href: '#' },
     ];
 

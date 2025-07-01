@@ -112,7 +112,7 @@ const OurCurrentCourses = ({ coursesData, showSidebar = false, coursesDataSlice 
 
             {allCourses && allCourses.length > 0 && (
                 <div className="mt-6 flex justify-center">
-                    <BtnSecondary label="Voir toutes les formations" href={ROUTE_MAP.courses.link} />
+                    <BtnSecondary label="Voir toutes les formations" href={ROUTE_MAP.public.courses.list.link} />
                 </div>
             )}
         </div>

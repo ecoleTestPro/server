@@ -16,32 +16,31 @@ export default function Footer() {
 
     const quickLinks = [
         {
-            link: ROUTE_MAP.aboutUs.link,
+            link: ROUTE_MAP.public.aboutUs.link,
             label: 'À propos de nous',
         },
-        ,
         {
-            link: ROUTE_MAP.courses.link,
+            link: ROUTE_MAP.public.courses.list.link,
             label: 'Formations',
         },
         {
-            link: ROUTE_MAP.courses.link,
+            link: ROUTE_MAP.public.courses.list.link,
             label: 'Certifications',
         },
         {
-            link: ROUTE_MAP.careers.link,
+            link: ROUTE_MAP.public.careers.link,
             label: 'Carrière',
         },
         {
-            link: ROUTE_MAP.blogs.link,
+            link: ROUTE_MAP.public.blogs.list.link,
             label: 'Blogs',
         },
         {
-            link: ROUTE_MAP.faqs.link,
+            link: ROUTE_MAP.public.faqs.link,
             label: "FAQ's",
         },
         {
-            link: ROUTE_MAP.contact.link,
+            link: ROUTE_MAP.public.contact.link,
             label: 'Contactez-Nous',
         },
     ];
@@ -57,7 +56,9 @@ export default function Footer() {
                         {/*  */}
                         <div className="col-span-1 lg:col-span-2">
                             <div className="ltr:xl:-mr-[35px] rtl:xl:-ml-[35px]">
-                                <AppLogo />
+                                <div  className='mb-4'>
+                                    <AppLogo width={180} />
+                                </div>
                                 <div>
                                     <h5 className="!mb-[10px] !text-xl !leading-[1.2] !font-medium !text-gray-900 dark:!text-white">
                                         Boostez votre carrière avec TestPro !
@@ -168,14 +169,14 @@ export default function Footer() {
                         <div className="items-center justify-end gap-[15px] text-center lg:flex">
                             <div className="hidden h-[15px] w-[1px] bg-gray-200 lg:block dark:bg-gray-800"></div>
                             <Link
-                                href={ROUTE_MAP.privacyPolicy.link}
+                                href={ROUTE_MAP.public.privacyPolicy.link}
                                 className="mx-[7px] mt-[10px] inline-block transition-all hover:text-gray-500 lg:mx-0 lg:mt-0"
                             >
                                 {t('FOOTER.PRIVACY', 'Politique de Confidentialité')}
                             </Link>
                             <div className="hidden h-[15px] w-[1px] bg-gray-200 lg:block dark:bg-gray-800"></div>
                             <Link
-                                href={ROUTE_MAP.termsOfService.link}
+                                href={ROUTE_MAP.public.termsOfService.link}
                                 className="mx-[7px] mt-[10px] inline-block transition-all hover:text-gray-500 lg:mx-0 lg:mt-0"
                             >
                                 {t('FOOTER.TERMS_AND_CONDITIONS', 'Conditions Générales d’Utilisation')}
@@ -185,7 +186,7 @@ export default function Footer() {
                 </div>
             </div>
             <div className="bg-black flex justify-end items-center text-white ">
-                <div className='container mx-auto' >
+                <div className="container mx-auto">
                     <Link href={ROUTE_MAP.auth.adminLogin.link}>{t('FOOTER.LOGIN', 'Connexion')}</Link>
                 </div>
             </div>

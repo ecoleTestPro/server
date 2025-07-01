@@ -34,14 +34,14 @@ export default function ConsultingTest() {
     const pageTitle = t('PAGES.CONSULTING.CONSULTING-AUDIT', 'Conseil Testing');
 
     const breadcrumbItems: IHeroBreadcrumbItems[] = [
-        { label: t('PAGES.HOME', 'Accueil'), href: ROUTE_MAP.home.link },
+        { label: t('PAGES.HOME', 'Accueil'), href: ROUTE_MAP.public.home.link },
         { label: pageTitle, href: '#' },
     ];
 
     const prevNextPage: IPrevNextPage = {
         prev: {
             title: t('PAGES.CONSULTING.CONSULTING-AUDIT', 'Consulting Audit'),
-            href: ROUTE_MAP.auditOfMaturityOfTests.link,
+            href: ROUTE_MAP.public.services.consulting.auditOfMaturityOfTests.link,
             description: 'Découvrez les formations disponibles dès maintenant',
         },
         next: {
@@ -75,7 +75,7 @@ export default function ConsultingTest() {
                                     // variants={imageVariants}
                                 >
                                     <img
-                                        src="/assets/images/pexels-thirdman-5319357.jpg"
+                                        src="/assets/images/pexels-rdne-10375968.jpg"
                                         className="inline-block h-auto w-full"
                                         alt="order-summary-image"
                                     />
@@ -97,31 +97,19 @@ export default function ConsultingTest() {
                                     viewport={{ once: true, amount: 0.2 }}
                                     variants={motionVariants.sectionVariants}
                                 >
-                                    <h2 className="!mb-[15px]text-2xl font-bold md:text-3xl">Processus de Test TMMi, TPI Next</h2>
-                                    <h4 className="!mb-[15px]">
-                                        Nous associons notre Expertise, nos programmes de Certification et notre approche Pratique pour garantir une
-                                        qualité irréprochable de nos services
-                                    </h4>
+                                    <h2 className="!mb-[15px]text-2xl font-bold md:text-3xl">Un Pilier Essentiel de la Qualité Logicielle</h2>
+                                    {/* <h4 className="!mb-[15px]">Un Pilier Essentiel de la Qualité Logicielle</h4> */}
                                 </motion.div>
 
                                 <p className="!mb-[15px] leading-[1.5]">
-                                    Nous nous engageons à optimiser les processus de test logiciel pour assurer des performances fiables et une
-                                    qualité supérieure des produits. Grâce à des méthodologies éprouvées comme TMMi et TPI Next, nous aidons les
-                                    entreprises à structurer leurs pratiques de test.
-                                </p>
-                                <p className="!mb-[15px] leading-[1.5]">
-                                    Nos programmes de formation certifiants sont conçus pour doter les professionnels des compétences nécessaires pour
-                                    exceller dans l’industrie technologique. Nous mettons l’accent sur une approche pratique, avec des projets
-                                    concrets pour renforcer l’expertise.
-                                </p>
-                                <p className="!mb-[15px] leading-[1.5]">
-                                    En collaborant avec nos clients, nous proposons des solutions d’externalisation sur mesure, adaptées à leurs
-                                    besoins spécifiques. Notre objectif est d’accélérer la mise sur le marché tout en maintenant des standards élevés
-                                    d’innovation et de fiabilité.
+                                    Dans un monde toujours plus connecté et dépendant des technologies numériques, la qualité des logiciels n’est plus
+                                    une option — c’est une exigence impérative. C’est ici que le Test Management entre en jeu : il constitue une
+                                    discipline stratégique visant à garantir la fiabilité, la performance et la conformité des solutions informatiques
+                                    tout au long de leur cycle de vie
                                 </p>
 
                                 <Link
-                                    href={ROUTE_MAP.contact.link}
+                                    href={ROUTE_MAP.public.contact.link}
                                     className="mt-[20px] inline-block px-[15px] py-[10px] text-green-500 hover:underline"
                                 >
                                     {t('PAGES.CONSULTING.CONSULTING-AUDIT', 'Contactez-nous pour en savoir plus')}
