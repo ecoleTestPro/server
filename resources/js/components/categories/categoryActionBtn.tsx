@@ -1,6 +1,6 @@
 import { ICourseCategory } from '@/types/course';
 import { SquarePen, Trash2 } from 'lucide-react';
-import { Button } from '../ui/button';
+import { Button } from '../ui/button/button';
 
 interface ICategoryActionBtnProps {
     row: {

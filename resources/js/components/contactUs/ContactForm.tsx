@@ -26,7 +26,9 @@ export default function ContactForm({ handleSubmit }: ContactFormProps) {
                 <div className="grid grid-cols-1 gap-4 lg:grid-cols-8">
                     <div className="col-span-1 lg:col-span-4">
                         <div className="grid gap-2">
-                            <Label htmlFor="lastName">Nom</Label>
+                            <Label htmlFor="lastName">
+                                Nom <span className="text-red-500">*</span>{' '}
+                            </Label>
                             <Input
                                 id="lastName"
                                 type="text"
@@ -42,7 +44,9 @@ export default function ContactForm({ handleSubmit }: ContactFormProps) {
                     </div>
                     <div className="col-span-1 lg:col-span-4">
                         <div className="grid gap-2">
-                            <Label htmlFor="firstName">Prénom</Label>
+                            <Label htmlFor="firstName">
+                                Prénom <span className="text-red-500">*</span>{' '}
+                            </Label>
                             <Input
                                 id="firstName"
                                 type="text"
@@ -59,7 +63,9 @@ export default function ContactForm({ handleSubmit }: ContactFormProps) {
 
                     <div className="col-span-1 lg:col-span-4">
                         <div className="grid gap-2">
-                            <Label htmlFor="email">Email</Label>
+                            <Label htmlFor="email">
+                                Email <span className="text-red-500">*</span>
+                            </Label>
                             <Input
                                 id="email"
                                 type="email"
@@ -75,7 +81,9 @@ export default function ContactForm({ handleSubmit }: ContactFormProps) {
                     </div>
                     <div className="col-span-1 lg:col-span-4">
                         <div className="grid gap-2">
-                            <Label htmlFor="phone">Téléphone</Label>
+                            <Label htmlFor="phone">
+                                Téléphone <span className="text-red-500">*</span>
+                            </Label>
                             <Input
                                 id="phone"
                                 type="tel"
@@ -92,7 +100,10 @@ export default function ContactForm({ handleSubmit }: ContactFormProps) {
 
                     <div className="col-span-1 lg:col-span-8">
                         <div className="animate-form-field mb-[20px] md:mb-[25px]" style={{ animationDelay: '0.2s' }}>
-                            <Label htmlFor="subject">Sujet</Label>
+                            <Label htmlFor="subject">
+                                Sujet 
+                                <span className="text-red-500">*</span>
+                            </Label>
                             <Input
                                 id="subject"
                                 type="text"

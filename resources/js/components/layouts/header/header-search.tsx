@@ -149,7 +149,7 @@ export default function HeaderSearch({ className }: HeaderSearchProps) {
                                                 {courseResults && courseResults.length > 0 ? (
                                                     courseResults.map((course) => (
                                                         <li key={course.id} className="cursor-pointer p-2 hover:bg-white dark:hover:bg-gray-700">
-                                                            <Link classID='hover:underline' href={ROUTE_MAP.courseDetail(course.category?.slug ?? '', course.slug).link}>
+                                                            <Link classID='hover:underline' href={ROUTE_MAP.public.courses.detail(course.category?.slug ?? '', course.slug).link}>
                                                                 {course.title}
                                                             </Link>
                                                         </li>

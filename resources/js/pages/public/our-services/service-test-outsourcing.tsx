@@ -34,7 +34,7 @@ export default function ServiceTestOutsourcing() {
     const pageTitle = t('PAGES.SERVICES.TEST_OUTSOURCING', 'Services d’Externalisation des Tests');
 
     const breadcrumbItems: IHeroBreadcrumbItems[] = [
-        { label: t('PAGES.HOME', 'Accueil'), href: ROUTE_MAP.home.link },
+        { label: t('PAGES.HOME', 'Accueil'), href: ROUTE_MAP.public.home.link },
         { label: pageTitle, href: '#' },
     ];
 
@@ -46,7 +46,7 @@ export default function ServiceTestOutsourcing() {
         },
         next: {
             title: t('PAGES.SERVICES.SERVICE_INTEGRATION_SPECIALISTS', 'Spécialistes de l’Intégration'),
-            href: ROUTE_MAP.serviceIntegrationSpecialists.link,
+            href: ROUTE_MAP.public.services.testSerivces.integrationSpecialists.link,
         },
     };
 
@@ -79,7 +79,7 @@ export default function ServiceTestOutsourcing() {
                                     // variants={imageVariants}
                                 >
                                     <img
-                                        src="/assets/images/pexels-thirdman-5319357.jpg"
+                                        src="/assets/images/pexels-vinicius-cezario-87687338-10468213.jpg"
                                         className="inline-block h-auto w-full"
                                         alt="order-summary-image"
                                     />
@@ -125,7 +125,7 @@ export default function ServiceTestOutsourcing() {
                                 </div>
 
                                 <Link
-                                    href={ROUTE_MAP.contact.link}
+                                    href={ROUTE_MAP.public.contact.link}
                                     className="mt-[20px] inline-block px-[15px] py-[10px] text-green-500 hover:underline"
                                 >
                                     {t('PAGES.CONSULTING.CONSULTING-AUDIT', 'Contactez-nous pour en savoir plus')}
@@ -304,7 +304,7 @@ export default function ServiceTestOutsourcing() {
                                         'Nous avons réduit les temps de test de 30% pour une application financière critique.',
                                     )}
                                 </p>
-                                <Link href={ROUTE_MAP.contact.link} className="text-green-500 hover:underline">
+                                <Link href={ROUTE_MAP.public.contact.link} className="text-green-500 hover:underline">
                                     {t('Learn More', 'En savoir plus')}
                                 </Link>
                             </div>
@@ -316,7 +316,7 @@ export default function ServiceTestOutsourcing() {
                                         'Amélioration de la qualité logicielle pour une plateforme e-commerce grâce à des tests automatisés.',
                                     )}
                                 </p>
-                                <Link href={ROUTE_MAP.contact.link} className="text-green-500 hover:underline">
+                                <Link href={ROUTE_MAP.public.contact.link} className="text-green-500 hover:underline">
                                     {t('Learn More', 'En savoir plus')}
                                 </Link>
                             </div>

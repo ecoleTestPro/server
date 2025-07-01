@@ -1,5 +1,3 @@
-import AppLogo from '@/components/app-logo';
-import AppearanceToggleDropdown from '@/components/appearance-dropdown';
 import { DEFULAT_MAIN_MENU, DEFULAT_MAIN_MENU_RIGHT } from '@/data/data.constant';
 import { SharedData } from '@/types';
 import { ICourseCategory } from '@/types/course';
@@ -12,6 +10,8 @@ import { HeaderNavTwoSidebar } from './HeaderNavTwoMobile';
 import { HeaderNavTwo } from './header-nav-two';
 import HeaderSearch from './header-search';
 import HeaderUserAction from './headerUserAction';
+import AppLogo from '@/components/app-logo';
+import AppearanceToggleDropdown from '@/components/appearance-dropdown';
 
 export default function Header() {
     const { auth, data } = usePage<SharedData>().props;
@@ -69,7 +69,7 @@ export default function Header() {
         return category.courses.slice(0, 4).map((course) => ({
             id: course.id?.toString() || '',
             label: course.title || 'Cours sans titre',
-            href: ROUTE_MAP.courseDetail(category.slug || '', course.slug || '').link,
+            href: ROUTE_MAP.public.courses.detail(category.slug || '', course.slug || '').link,
             description: course.excerpt || '',
             image: course.image || undefined,
         }));
@@ -99,7 +99,7 @@ export default function Header() {
                 id: category.id?.toString() || '',
                 label: category.title || 'Catégorie sans titre',
                 description: category.description || defaultDescription,
-                href: ROUTE_MAP.courseCategory(category.slug).link,
+                href: ROUTE_MAP.public.courses.byCategory(category.slug).link,
                 image: category.image?.src || '/assets/images/bg-03.jpg',
                 subItems: childItems,
             };
@@ -172,7 +172,7 @@ export default function Header() {
                         <div className="flex items-center justify-between bg-gray-50 px-4 py-2 text-sm text-gray-700 sm:px-6 dark:bg-gray-800 dark:text-white">
                             <span>{t('HEADER.WELCOME', '')}</span>
                             <div className="flex space-x-4">
-                                <Link href={ROUTE_MAP.aboutUs.link} className="text-primary-600 dark:text-primary-400 hover:underline">
+                                <Link href={ROUTE_MAP.public.aboutUs.link} className="text-primary-600 dark:text-primary-400 hover:underline">
                                     {t('HEADER.CAREERS', 'Carrières')}
                                 </Link>
                             </div>

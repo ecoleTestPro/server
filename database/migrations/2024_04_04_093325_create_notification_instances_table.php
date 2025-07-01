@@ -19,6 +19,7 @@ return new class extends Migration
             $table->boolean('is_read')->default(false);
             $table->json('metadata');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

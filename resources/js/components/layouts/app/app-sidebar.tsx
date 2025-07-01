@@ -14,7 +14,7 @@ export function AppSidebar() {
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
                             <Link href="/dashboard" prefetch>
-                                <AppLogo />
+                                <AppLogo width={180} />
                             </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -27,7 +27,7 @@ export function AppSidebar() {
 
             <SidebarFooter>
                 <NavFooter items={FOOTER_NAV_ITEMS} className="mt-auto" />
-                <NavUser />
+                {/* <NavUser /> */}
             </SidebarFooter>
         </Sidebar>
     );

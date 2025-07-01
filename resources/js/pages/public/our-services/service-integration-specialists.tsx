@@ -35,14 +35,14 @@ export default function ServiceIntegrationSpecialists() {
     const pageTitle = t('PAGES.SERVICES.INTEGRATION_SPECIALISTS', 'Intégration de Spécialistes dans Vos Locaux');
 
     const breadcrumbItems: IHeroBreadcrumbItems[] = [
-        { label: t('PAGES.HOME', 'Accueil'), href: ROUTE_MAP.home.link },
+        { label: t('PAGES.HOME', 'Accueil'), href: ROUTE_MAP.public.home.link },
         { label: pageTitle, href: '#' },
     ];
 
     const prevNextPage: IPrevNextPage = {
         prev: {
             title: 'Services d’Externalisation des Tests',
-            href: ROUTE_MAP.serviceTestOutsourcingServices.link,
+            href: ROUTE_MAP.public.services.testSerivces.testOutsourcingServices.link,
             description: 'Découvrez les formations disponibles dès maintenant',
         },
         next: {
@@ -80,7 +80,7 @@ export default function ServiceIntegrationSpecialists() {
                                     // variants={imageVariants}
                                 >
                                     <img
-                                        src="/assets/images/pexels-thirdman-5319357.jpg"
+                                        src="/assets/images/pexels-shkrabaanthony-5466250.jpg"
                                         className="inline-block h-auto w-full"
                                         alt="order-summary-image"
                                     />
@@ -111,9 +111,22 @@ export default function ServiceIntegrationSpecialists() {
                                     engagements de moyens.
                                 </p>
 
+                                <div>
+                                    <h1 className="text-xl font-bold text-gray-900 mb-6">
+                                        Centre de Ressources ATR : Une Solution Clé en Main pour la Gestion de vos Équipes Techniques
+                                    </h1>
+
+                                    <p className="text-lg text-gray-700 mb-8">
+                                        Dans un environnement informatique de plus en plus complexe et exigeant, la gestion des ressources techniques
+                                        peut devenir un véritable défi pour les organisations. C’est ici que le{' '}
+                                        <strong>Centre de Ressources ATR (Affectation Temps Réel)</strong> s’affirme comme une réponse efficace et
+                                        flexible pour répondre aux besoins variés en personnel technique spécialisé.
+                                    </p>
+                                </div>
+
                                 <div className="flex justify-between">
                                     <Link
-                                        href={ROUTE_MAP.contact.link}
+                                        href={ROUTE_MAP.public.contact.link}
                                         className="mt-[20px] inline-block px-[15px] py-[10px] text-green-500 hover:underline"
                                     >
                                         {t('PAGES.CONSULTING.CONSULTING-AUDIT', 'Contactez-nous pour en savoir plus')}
@@ -122,6 +135,44 @@ export default function ServiceIntegrationSpecialists() {
                                     {/* <BtnSecondary label={t('PAGES.SERVICES.SERVICE_INTEGRATION_SPECIALISTS', 'Plus de détails')} /> */}
                                 </div>
                             </motion.div>
+
+                            <div className="col-span-1 lg:col-span-2">
+                                <section className="mb-10">
+                                    <h2 className="text-xl font-semibold text-gray-800 mb-4">Qu’est-ce qu’un Centre de Ressources ATR ?</h2>
+                                    <p className="text-gray-700 leading-relaxed">
+                                        Le Centre de Ressources ATR est une <strong>solution de mise à disposition de collaborateurs experts</strong>,
+                                        intégrés directement dans vos équipes projet. Il permet de bénéficier d’une{' '}
+                                        <strong>gestion centralisée des ressources humaines techniques</strong>, tout en conservant la souplesse
+                                        nécessaire pour adapter les profils et les volumes selon l’évolution de vos besoins.
+                                    </p>
+                                </section>
+
+                                <section className="mb-10">
+                                    <h2 className="text-xl font-semibold text-gray-800 mb-4">Un Mode de Fonctionnement en Régie</h2>
+                                    <p className="text-gray-700 leading-relaxed mb-4">
+                                        L’un des grands avantages du Centre de Ressources ATR est son fonctionnement en <strong>mode régie</strong>.
+                                        Cela signifie que :
+                                    </p>
+                                    <ul className="list-disc list-inside text-gray-700 space-y-2 ml-4">
+                                        <li>
+                                            Les collaborateurs mis à disposition sont <strong>intégrés à vos équipes projet</strong>, comme s'ils
+                                            faisaient partie de vos effectifs internes.
+                                        </li>
+                                        <li>
+                                            Ils travaillent quotidiennement sous votre responsabilité opérationnelle, tout en bénéficiant du{' '}
+                                            <strong>management fonctionnel assuré par le prestataire</strong>.
+                                        </li>
+                                        <li>
+                                            Le prestataire gère les aspects RH, administratifs et logistiques, vous libérant ainsi des contraintes
+                                            liées à l’employeur indirect.
+                                        </li>
+                                    </ul>
+                                    <p className="text-gray-700 leading-relaxed mt-4">
+                                        Ce modèle offre une grande <strong>agilité</strong> tout en garantissant une{' '}
+                                        <strong>qualité constante des profils</strong>.
+                                    </p>
+                                </section>
+                            </div>
                         </motion.div>
                     </div>
                 </div>
@@ -295,7 +346,7 @@ export default function ServiceIntegrationSpecialists() {
                                         'Nous avons réduit les temps de test de 30% pour une application financière critique.',
                                     )}
                                 </p>
-                                <Link href={ROUTE_MAP.contact.link} className="text-green-500 hover:underline">
+                                <Link href={ROUTE_MAP.public.contact.link} className="text-green-500 hover:underline">
                                     {t('Learn More', 'En savoir plus')}
                                 </Link>
                             </div>
@@ -307,7 +358,7 @@ export default function ServiceIntegrationSpecialists() {
                                         'Amélioration de la qualité logicielle pour une plateforme e-commerce grâce à des tests automatisés.',
                                     )}
                                 </p>
-                                <Link href={ROUTE_MAP.contact.link} className="text-green-500 hover:underline">
+                                <Link href={ROUTE_MAP.public.contact.link} className="text-green-500 hover:underline">
                                     {t('Learn More', 'En savoir plus')}
                                 </Link>
                             </div>

@@ -18,7 +18,7 @@ export default function BlogCard({ blog }: BlogCardProps) {
         <div
             className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 overflow-hidden cursor-pointer flex flex-col"
             onClick={() => {
-                router.visit(ROUTE_MAP.blogDetail(blog.slug).link, {
+                router.visit(ROUTE_MAP.public.blogs.detail(blog.slug).link, {
                     preserveState: true,
                     preserveScroll: true,
                 });

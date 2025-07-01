@@ -3,7 +3,7 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { SharedData } from '@/types';
-import { ICourse } from '@/types/course';
+import { ICourse, ICourseSession } from '@/types/course';
 import { Logger } from '@/utils/console.util';
 import { useForm, usePage } from '@inertiajs/react';
 import axios from 'axios';
@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next';
 
 interface CourseInscriptionDialogProps {
     course: ICourse;
+    session?: ICourseSession;
     isOpen: boolean;
     onOpenChange: (open: boolean) => void;
     onSubmit?: (formData: FormData) => void;
@@ -27,7 +28,7 @@ interface CourseEnrollmentForm {
     [key: string]: any; // <-- Add this line
 }
 
-const CourseInscriptionDialog: React.FC<CourseInscriptionDialogProps> = ({ course, isOpen, onOpenChange, onSubmit }) => {
+const CourseInscriptionDialog: React.FC<CourseInscriptionDialogProps> = ({ course, session, isOpen, onOpenChange, onSubmit }) => {
     const { auth, data: sharedData } = usePage<SharedData>().props;
     const { t } = useTranslation();
 
@@ -114,6 +115,14 @@ const CourseInscriptionDialog: React.FC<CourseInscriptionDialogProps> = ({ cours
                     <DialogTitle>
                         <span className="text-gray-500 dark:text-gray-300">{t('COURSE.INSCRIPTION.TITLE', 'Inscription')} </span> <br />
                         <span className="text-black dark:text-white mt-2">{course.title}</span>
+                        {session && (
+                            <>
+                                <br />
+                                <span className="text-sm text-gray-500 dark:text-gray-400">
+                                    - Session : {session.start_date} - {session.end_date}
+                                </span>
+                            </>
+                        )}
                     </DialogTitle>
                     <DialogDescription id="dialog-description">
                         {t('COURSE.INSCRIPTION.DESCRIPTION', 'Remplissez le formulaire ci-dessous pour vous inscrire à cette formation.')}

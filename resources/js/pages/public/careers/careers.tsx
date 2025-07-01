@@ -56,7 +56,7 @@ export default function Careers() {
     const pageTitle = t('PAGES.CAREERS', 'Carrières');
 
     const breadcrumbItems: IHeroBreadcrumbItems[] = [
-        { label: t('PAGES.HOME', 'Accueil'), href: ROUTE_MAP.home.link },
+        { label: t('PAGES.HOME', 'Accueil'), href: ROUTE_MAP.public.home.link },
         { label: t('PAGES.CAREERS', pageTitle), href: '#' },
     ];
 

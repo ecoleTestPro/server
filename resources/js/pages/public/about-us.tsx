@@ -15,7 +15,7 @@ export default function AboutUsPage() {
     const { t } = useTranslation();
 
     const breadcrumbItems: IHeroBreadcrumbItems[] = [
-        { label: t('PAGES.HOME', 'A propos de nous'), href: ROUTE_MAP.home.link },
+        { label: t('PAGES.HOME', 'A propos de nous'), href: ROUTE_MAP.public.home.link },
         { label: t('PAGES.ABOUT_US', 'A propos de nous'), href: '#' },
     ];
 

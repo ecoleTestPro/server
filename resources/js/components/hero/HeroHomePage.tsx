@@ -29,9 +29,9 @@ export default function HeroHomePage() {
                 muted
                 playsInline
                 className="absolute inset-0 h-full w-full object-cover"
-                poster="assets/images/Benefices-de-la-formation-en-entrepreneuriat-scaled-1.jpg" // Fallback image
+                poster="/assets/images/Benefices-de-la-formation-en-entrepreneuriat-scaled-1.jpg" // Fallback image
             >
-                <source src="assets/videos/hero-background-2.mp4" type="video/mp4" />
+                <source src="/assets/videos/hero-background-2.mp4" type="video/mp4" />
                 Your browser does not support the video tag.
             </video>
 
@@ -61,7 +61,7 @@ export default function HeroHomePage() {
                                 {courses.map((item, index) => (
                                     <Link
                                         key={item.id}
-                                        href={ROUTE_MAP.courseDetail(item.category?.slug ?? '#', item.slug).link}
+                                        href={ROUTE_MAP.public.courses.detail(item.category?.slug ?? '#', item.slug).link}
                                         className={style.formationItem}
                                     >
                                         {item.title}

@@ -40,7 +40,7 @@ export default function ConsultingAudit() {
     const { t } = useTranslation();
 
     const breadcrumbItems: IHeroBreadcrumbItems[] = [
-        { label: t('PAGES.HOME', 'Accueil'), href: ROUTE_MAP.home.link },
+        { label: t('PAGES.HOME', 'Accueil'), href: ROUTE_MAP.public.home.link },
         { label: t('PAGES.CONSULTING.CONSULTING-AUDIT', 'Audit de maturité de test'), href: '#' },
     ];
 
@@ -52,7 +52,7 @@ export default function ConsultingAudit() {
         },
         next: {
             title: t('PAGES.CONSULTING.CONSULTING-TESTING', 'Conseil Testing'),
-            href: ROUTE_MAP.consultingTesting.link,
+            href: ROUTE_MAP.public.services.consulting.consultingTesting.link,
         },
     };
 
@@ -127,7 +127,7 @@ export default function ConsultingAudit() {
                                 </p>
 
                                 <Link
-                                    href={ROUTE_MAP.contact.link}
+                                    href={ROUTE_MAP.public.contact.link}
                                     className="mt-[20px] inline-block px-[15px] py-[10px] text-green-500 hover:underline"
                                 >
                                     {t('PAGES.CONSULTING.CONSULTING-AUDIT', 'Contactez-nous pour en savoir plus')}

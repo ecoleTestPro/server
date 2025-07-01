@@ -16,7 +16,7 @@ export default function BlogDetail() {
     const { t } = useTranslation();
     const [pageTitle, setPageTitle] = useState(t('PAGES.BLOG_DETAIL', 'Blog Detail'));
     const breadcrumbItems: IHeroBreadcrumbItems[] = [
-        { label: t('PAGES.HOME', 'Accueil'), href: ROUTE_MAP.home.link },
+        { label: t('PAGES.HOME', 'Accueil'), href: ROUTE_MAP.public.home.link },
         { label: pageTitle, href: '#' },
     ];
 

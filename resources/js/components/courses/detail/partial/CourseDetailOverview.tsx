@@ -68,7 +68,7 @@ export default function CourseDetailOverview({ course }: CourseDetailOverviewPro
                             />
                         </svg>
                         {t('COURSE.CATEGORY', 'Catégorie formation')} :{' '}
-                        <Link className="text-primary hover:underline" href={ROUTE_MAP.courseCategory(course.category?.slug).link}>
+                        <Link className="text-primary hover:underline" href={ROUTE_MAP.public.courses.byCategory(course.category?.slug).link}>
                             {course.category?.title}
                         </Link>
                     </li>

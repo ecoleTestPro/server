@@ -20,7 +20,7 @@ export default function CourseCategoryPage() {
     useEffect(() => {
         setLoading(true);
 
-        Logger.log('[CourseCategoryPage] useEffect - data', data);
+        Logger.log('[COURSE_CATEGORY_PAGE] useEffect - data', data);
 
         if (data && data.course && data.course.id && data.course.slug) {
             // Assuming data.category is the category object
@@ -30,9 +30,9 @@ export default function CourseCategoryPage() {
             // Set breadcrumb items based on the category data
             if (data.category) {
                 setBreadcrumb([
-                    { label: 'Home', href: ROUTE_MAP.home.link },
-                    { label: data.category?.title, href: ROUTE_MAP.courseCategory(data.category.slug).link },
-                    { label: data.course?.title, href: ROUTE_MAP.courseDetail(data.category?.slug, data.course?.slug).link },
+                    { label: 'Home', href: ROUTE_MAP.public.home.link },
+                    { label: data.category?.title, href: ROUTE_MAP.public.courses.byCategory(data.category.slug).link },
+                    { label: data.course?.title, href: ROUTE_MAP.public.courses.detail(data.category?.slug, data.course?.slug).link },
                 ]);
             }
         }

@@ -1,42 +1,98 @@
-import React from 'react'
+import React from 'react';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  SelectLabel,
+} from '../ui/select';
 
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue ,SelectLabel} from '../ui/select';
-
-interface ISelectItem {
-    id: number
-    title: string
-    value: string
-  }
-
-interface SelectCustomProps {
-    selectLabel:string
-    required?: boolean
-    disabled?: boolean
-    defaultValue?: string
-    onValueChange: (value: string) => void
-    processing: boolean
-    data: ISelectItem[]
+export interface ISelectItem {
+  id: number;
+  title: string;
+  value: string;
+  canSelectParent?: boolean;
+  subItem?: ISelectItem[];
 }
 
-export default function SelectCustom({ required, disabled, processing, onValueChange, data, selectLabel, defaultValue }: SelectCustomProps) {
+interface SelectCustomProps {
+  selectLabel: string;
+  required?: boolean;
+  disabled?: boolean;
+  defaultValue?: string;
+  onValueChange: (value: string) => void;
+  processing: boolean;
+  data: ISelectItem[];
+  groupLabel?: string;
+}
+
+export default function SelectCustom({
+  required,
+  disabled,
+  processing,
+  onValueChange,
+  data,
+  selectLabel,
+  defaultValue,
+  groupLabel,
+}: SelectCustomProps) {
   return (
-    <Select disabled={processing} required={required}  value={defaultValue} onValueChange={onValueChange}>
-        <SelectTrigger className="w-full">
-            <SelectValue placeholder="Sélectionner une catégorie" />
-        </SelectTrigger>
+    <Select
+      disabled={processing}
+      required={required}
+      value={defaultValue}
+      onValueChange={onValueChange}
+    >
+      <SelectTrigger className="w-full">
+        <SelectValue placeholder="Sélectionner une catégorie" />
+      </SelectTrigger>
 
-        <SelectContent>
-            <SelectGroup>
-                <SelectLabel>{selectLabel}</SelectLabel>
+      <SelectContent>
+        <SelectGroup aria-label={groupLabel}>
+          <SelectLabel>{selectLabel}</SelectLabel>
 
-                {data &&
-                    data.map((item) => (
-                        <SelectItem key={item.id} value={item?.id?.toString() ?? ''}>
-                            {item.title}
-                        </SelectItem>
-                    ))}
-            </SelectGroup>
-        </SelectContent>
+          {data?.map((item) => (
+            <React.Fragment key={item.id}>
+              {/* Render parent item if selectable or no sub-items */}
+              {(!item.subItem || item.canSelectParent) && (
+                <SelectItem value={item.id.toString()}>
+                  {item.title}
+                </SelectItem>
+              )}
+
+              {/* Render sub-items if they exist */}
+              {item.subItem && item.subItem.length > 0 && (
+                <>
+                 <SelectGroup>
+                    <SelectItem
+                    value={item.id.toString()}
+                      disabled={true} // Disable the parent item to prevent selection
+                      className="pl-6" // Indentation for sub-items
+                    >
+                      {item.title}
+                    </SelectItem>
+              
+                </SelectGroup>
+                <SelectGroup>
+                
+                  {item.subItem.map((subItem) => (
+                    <SelectItem
+                      key={subItem.id}
+                      value={subItem.id.toString()}
+                      className="pl-6" // Indentation for sub-items
+                    >
+                      {`— ${subItem.title}`} {/* Prefix for visual hierarchy */}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+                </>
+              )}
+            </React.Fragment>
+          ))}
+        </SelectGroup>
+      </SelectContent>
     </Select>
-  )
+  );
 }
