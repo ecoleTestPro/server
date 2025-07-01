@@ -18,6 +18,13 @@ const CourseSessionScheduleDialog: React.FC<CourseSessionScheduleDialogProps> = 
     const [schedules, setSchedules] = React.useState<ICourseSessionSchedule[] | undefined>(undefined);
     const [loading, setLoading] = React.useState<boolean>(false);
 
+    /**
+     * Fetches the schedules for the given session ID.
+     * If the session ID is not available, it will log a warning and return.
+     * If the schedules are fetched successfully, it will set the schedules to the component state.
+     * If there's an error, it will log the error and set the loading state to false.
+     * Finally, it will set the loading state to false.
+     */
     const getSchedule = () => {
         if (!session || !session.id) {
             Logger.warn('Session ID is not available');
@@ -42,20 +49,18 @@ const CourseSessionScheduleDialog: React.FC<CourseSessionScheduleDialogProps> = 
             });
     };
 
-    const handleDownloadCalendar = () => {
-        if (!schedules || schedules.length === 0) {
-            Logger.warn('No schedules available to download');
-            return;
+    /**
+     * Generates a link to download the schedules as an .ics file.
+     * If there's an error, it will log the error and return an empty string.
+     * @returns {string} The link to download the schedules.
+     */
+    const handleDownloadCalendarLink = (): string => {
+        try {
+            return route('course.session.schedules.download', { sessionId: session.id });
+        } catch (error) {
+            Logger.error('Error in handleDownloadCalendarLink:', error);
+            return '';
         }
-        // return axios
-        //     .post(route('course.session.schedules.download', { sessionId: session.id }))
-        //     .then((response) => {
-        //         Logger.log('Calendar downloaded successfully:', response.data);
-        //         // Handle the download logic here, e.g., trigger a file download
-        //     })
-        //     .catch((error) => {
-        //         Logger.error('Error downloading calendar:', error);
-        //     });
     };
 
     React.useEffect(() => {
@@ -78,53 +83,58 @@ const CourseSessionScheduleDialog: React.FC<CourseSessionScheduleDialogProps> = 
                     </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4">
-                    {loading ? (
-                        <div>
-                            <FaSpinner className="animate-spin text-gray-500 dark:text-gray-400" />
-                            <span className="text-gray-500 dark:text-gray-400"> {t('COURSE.SCHEDULE.LOADING', 'Chargement des horaires...')}</span>
-                        </div>
-                    ) : (
-                        <ol className="relative border-s border-gray-200 dark:border-gray-700">
-                            {schedules &&
-                                schedules.map((schedule) => (
-                                    <li className="mb-10 ms-4">
-                                        <div className="absolute w-5 h-5 bg-gray-200 rounded-full mt-2.5 -start-2.5 border border-white dark:border-gray-900 dark:bg-gray-700">
-                                            {/* {schedule.date} */}
-                                        </div>
-                                        <time className="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
-                                            {session.location}
-                                        </time>
-                                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                                            {schedule.start_time} - {schedule.end_time}
-                                        </h3>
-                                        <p className="mb-4 text-base font-normal text-gray-500 dark:text-gray-400">
-                                            {schedule.title}
-                                            <br />
-                                            {schedule.date}
-                                        </p>
-                                    </li>
-                                ))}
+                    <div className=" max-h-[200px] overflow-y-auto">
+                        {loading ? (
+                            <div>
+                                <FaSpinner className="animate-spin text-gray-500 dark:text-gray-400" />
+                                <span className="text-gray-500 dark:text-gray-400">
+                                    {' '}
+                                    {t('COURSE.SCHEDULE.LOADING', 'Chargement des horaires...')}
+                                </span>
+                            </div>
+                        ) : (
+                            <ol className="relative border-s border-gray-200 dark:border-gray-700">
+                                {schedules &&
+                                    schedules.map((schedule) => (
+                                        <li className="mb-10 ms-4">
+                                            <div className="absolute w-5 h-5 bg-gray-200 rounded-full mt-2.5 -start-2.5 border border-white dark:border-gray-900 dark:bg-gray-700">
+                                                {/* {schedule.date} */}
+                                            </div>
+                                            <time className="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
+                                                {session.location}
+                                            </time>
+                                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                                                {schedule.start_time} - {schedule.end_time}
+                                            </h3>
+                                            <p className="mb-4 text-base font-normal text-gray-500 dark:text-gray-400">
+                                                {schedule.title}
+                                                <br />
+                                                {schedule.date}
+                                            </p>
+                                        </li>
+                                    ))}
 
-                            {schedules && schedules.length === 0 && (
-                                <li className="mb-10 ms-4">
-                                    <div className="absolute w-3 h-3 bg-gray-200 rounded-full mt-1.5 -start-1.5 border border-white dark:border-gray-900 dark:bg-gray-700"></div>
-                                    <time className="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
-                                        Aucun horaire disponible
-                                    </time>
-                                </li>
-                            )}
-                        </ol>
-                    )}
+                                {schedules && schedules.length === 0 && (
+                                    <li className="mb-10 ms-4">
+                                        <div className="absolute w-3 h-3 bg-gray-200 rounded-full mt-1.5 -start-1.5 border border-white dark:border-gray-900 dark:bg-gray-700"></div>
+                                        <time className="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
+                                            Aucun horaire disponible
+                                        </time>
+                                    </li>
+                                )}
+                            </ol>
+                        )}
+                    </div>
 
                     <DialogFooter>
                         {schedules && schedules.length > 0 && (
-                            <button
-                                onClick={handleDownloadCalendar}
-                                type="button"
+                            <a
+                                href={handleDownloadCalendarLink()}
+                                download={`calendrier_session_${session.id}.ics`}
                                 className="cursor-pointer bg-green-500 hover:bg-green-600 text-white inline-flex h-10 items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:bg-green-300"
                             >
                                 Télécharger le calendrier
-                            </button>
+                            </a>
                         )}
                     </DialogFooter>
                 </div>

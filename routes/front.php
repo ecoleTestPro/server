@@ -68,10 +68,10 @@ Route::group(["prefix" => "/"], function () {
      * These routes handle course listings, categories, and details.
      * They are used to display courses, allow enrollment, and provide course details.
      */
-    Route::get('formations',                            [PublicFormationController::class, 'courses'])->name('courses');
-    Route::get('formation/{category_slug}',             [PublicFormationController::class, 'courseCategory'])->name('courses.category');
-    Route::get('formation/{categorySlug}/{courseSlug}', [PublicFormationController::class, 'courseDetail'])->name('courses.detail');
-    Route::post('formation/enrollment',                 [EnrollController::class, 'registerEnrollment'])->name('course.enrollment'); 
-    Route::get('formation/session/{sessionId}/schedules', [PublicFormationSessionController::class, 'getSessionSchedules'])->name('course.session.schedules');
-    Route::get('formation/session/{sessionId}/schedules', [PublicFormationSessionController::class, 'downloadSessionSchedules'])->name('course.session.schedules.download');
+    Route::get('formations',                                        [PublicFormationController::class, 'courses'])->name('courses');
+    Route::get('formation/{category_slug}',                         [PublicFormationController::class, 'courseCategory'])->name('courses.category');
+    Route::get('formation/{categorySlug}/{courseSlug}',             [PublicFormationController::class, 'courseDetail'])->name('courses.detail');
+    Route::post('formation/enrollment',                             [EnrollController::class, 'registerEnrollment'])->name('course.enrollment');
+    Route::get('formation/session/{sessionId}/schedules',           [PublicFormationSessionController::class, 'getSessionSchedules'])->name('course.session.schedules');
+    Route::get('formation/session/{sessionId}/schedule/download',   [PublicFormationSessionController::class, 'downloadSessionSchedules'])->name('course.session.schedules.download');
 });

@@ -169,6 +169,7 @@ export interface ICourseSession {
     price: number,
     price_discount: number,
     tva: number,
+    course : ICourse,
     schedules: ICourseSessionSchedule[],
 }
 
