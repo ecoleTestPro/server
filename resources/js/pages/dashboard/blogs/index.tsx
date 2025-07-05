@@ -1,13 +1,16 @@
+import BlogsDataTable from '@/components/blogs/BlogsDataTable';
+import { ConfirmDialog } from '@/components/ui/confirmDialog';
+import { CLASS_NAME } from '@/data/styles/style.constant';
 import AppLayout from '@/layouts/dashboard/app-layout';
 import { SharedData, type BreadcrumbItem } from '@/types';
 import { IBlog, IBlogCategory } from '@/types/blogs';
 import { Logger } from '@/utils/console.util';
 import { ROUTE_MAP } from '@/utils/route.util';
-import { Head, router, usePage } from '@inertiajs/react';
-import { Pencil, Trash2 } from 'lucide-react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
+import { PlusSquare } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import { BlogForm } from './BlogForm';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -26,7 +29,11 @@ export default function BlogDashboard() {
     const [blogs, setBlogs] = useState<IBlog[]>([]);
     const [categories, setCategories] = useState<IBlogCategory[]>([]);
     const [selectedBlog, setSelectedBlog] = useState<IBlog | null>(null);
-    const [showForm, setShowForm] = useState(false);
+    // const [showForm, setShowForm] = useState(false);
+
+    const [isLoading, setIsLoading] = useState(false);
+    const [showConfirm, setShowConfirm] = useState(false);
+    const [selected, setSelected] = useState<IBlog | null>(null);
 
     useEffect(() => {
         if (data.blogs?.list) {
@@ -39,28 +46,33 @@ export default function BlogDashboard() {
         }
     }, [data.blogs]);
 
-    const handleCreate = () => {
-        setSelectedBlog(null);
-        setShowForm(true);
-    };
-
     const handleEdit = (blog: IBlog) => {
         setSelectedBlog(blog);
-        setShowForm(true);
+        router.visit(route('dashboard.blogs.edit', blog.slug), {
+            preserveState: true,
+            preserveScroll: true,
+        });
     };
 
-    const handleDelete = (id: number) => {
-        if (confirm(t('Are you sure you want to delete this blog?'))) {
-            router.delete(`/dashboard/blogs/${id}`, {
-                onSuccess: () => Logger.log('Blog deleted'),
-                onError: (errors) => Logger.error('Delete error:', errors),
+    const onDelete = (blog: IBlog) => {
+        setSelected(blog);
+        setShowConfirm(true);
+    };
+
+    const handleDelete = () => {
+        if (selected) {
+            router.delete(route('dashboard.blogs.delete', selected.id), {
+                onSuccess: () => {
+                    toast.success(t('Blog supprimé avec succès !'));
+                    setShowConfirm(false);
+                    setSelected(null);
+                },
+                onError: (errors) => {
+                    Logger.error('Delete error:', errors);
+                    toast.error(t('Erreur lors de la suppression du blog.'));
+                },
             });
         }
-    };
-
-    const handleCancel = () => {
-        setShowForm(false);
-        setSelectedBlog(null);
     };
 
     return (
@@ -69,56 +81,28 @@ export default function BlogDashboard() {
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
                 <div className="flex justify-between items-center">
                     <h1>{t('Blogs')}</h1>
-                    <button onClick={handleCreate} className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                        {t('Create Blog')}
-                    </button>
+
+                    <Link className={`${CLASS_NAME.btn.primary}`} href={route('dashboard.blogs.create')}>
+                        <span className="flex items-center">
+                            <PlusSquare className="h-5 w-5" />
+                            <span className="ml-2">{t('course.create', 'Créer un blog')}</span>
+                        </span>
+                    </Link>
                 </div>
-                {showForm ? (
-                    <>
-                        <BlogForm blog={selectedBlog} categories={categories} onCancel={handleCancel} />
-                    </>
-                ) : (
-                    <div className="bg-white dark:bg-gray-800 rounded-xl p-4">
-                        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                            <thead>
-                                <tr>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                        {t('Title')}
-                                    </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                        {t('Category')}
-                                    </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                        {t('Published')}
-                                    </th>
-                                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                        {t('Actions')}
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                                {blogs.map((blog) => (
-                                    <tr key={blog.id}>
-                                        <td className="px-6 py-4 whitespace-nowrap">{blog.title}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            {/* {categories.find((cat) => cat.id === blog.category_id)?.name || '-'} */}
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">{/* {blog.published ? t('Yes') : t('No')} */}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-right">
-                                            <button onClick={() => handleEdit(blog)} className="text-blue-600 hover:text-blue-800 mr-4">
-                                                <Pencil size={16} />
-                                            </button>
-                                            <button onClick={() => handleDelete(blog.id)} className="text-red-600 hover:text-red-800">
-                                                <Trash2 size={16} />
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                )}
+
+                <BlogsDataTable blogs={blogs} onEditRow={handleEdit} onDeleteRow={onDelete} />
             </div>
+
+            <ConfirmDialog
+                open={showConfirm}
+                title="Supprimer ce blog"
+                description="Voulez-vous vraiment supprimer ce blog ? Cette action est irréversible."
+                confirmLabel="Supprimer"
+                cancelLabel="Annuler"
+                onConfirm={handleDelete}
+                onCancel={() => setShowConfirm(false)}
+                loading={isLoading}
+            />
         </AppLayout>
     );
 }

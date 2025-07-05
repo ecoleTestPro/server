@@ -8,6 +8,7 @@ use App\Http\Requests\BlogStoreRequest;
 use App\Http\Requests\BlogUpdateRequest;
 use App\Http\Requests\UserStoreRequest;
 use App\Models\Blog;
+use App\Repositories\BlogCategoryRepository;
 use App\Repositories\BlogRepository;
 use App\Repositories\MediaRepository;
 use Illuminate\Http\Request;
@@ -17,9 +18,8 @@ class BlogController extends Controller
 {
     public function index()
     {
-
         $data = [];
-        $data['blogs']['list'] = BlogRepository::query()->withTrashed()->latest('id')->get();
+        $data['blogs']['list'] = BlogRepository::query()->with(['category', 'user', 'media'])->latest('id')->get();
 
         return Inertia::render('dashboard/blogs/index', [
             'data' => $data,
@@ -28,17 +28,34 @@ class BlogController extends Controller
 
     public function create()
     {
-        return view('blog.create');
+        $data = [];
+        $data['blogs']['categories'] = BlogCategoryRepository::query()->with(['category', 'user', 'media'])->get();
+
+        return Inertia::render('dashboard/blogs/create', [
+            "data" => $data
+        ]);
     }
+
     public function store(BlogStoreRequest $request)
     {
         $blog = BlogRepository::storeByRequest($request);
 
         return to_route('blog.index')->withSuccess('Blog created');
     }
-    public function edit(Blog $blog)
+
+    public function edit(string $slug)
     {
-        return view('blog.edit', compact('blog'));
+        $blog = BlogRepository::query()->with(['category', 'user', 'media'])->where('slug', $slug)->firstOrFail();
+        dd($blog);
+        if (!$blog) {
+            return redirect()->back()->withError('Blog introuvable');
+        }
+
+        $data['blogs']['single'] = $blog;
+
+        return Inertia::render('dashboard/blogs/create', [
+            'data' => $data,
+        ]);
     }
 
     public function update(BlogUpdateRequest $request, Blog $blog)
@@ -47,11 +64,25 @@ class BlogController extends Controller
         return to_route('blog.index')->withSuccess('Blog updated');
     }
 
-    public function delete(Blog $blog)
+    /**
+     * Delete a blog entry by its ID.
+     *
+     * @param int $id The ID of the blog to be deleted.
+     * @return \Illuminate\Http\RedirectResponse Redirects back with a success message if deleted,
+     *                                           or an error message if the blog is not found.
+     */
+    public function delete(int $id)
     {
-        $blog->delete();
-        return redirect()->route('blog.index')->withSuccess('Blog deleted');
+        $blog = BlogRepository::query()->findOrFail($id);
+        if ($blog) {
+            $blog->delete();
+            return redirect()->back()->withSuccess('Blog supprimé avec succès');
+        }
+
+        return redirect()->back()->withError('Blog introuvable');
     }
+
+
     public function restore(int $id)
     {
         BlogRepository::query()->onlyTrashed()->find($id)->restore();

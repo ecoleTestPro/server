@@ -14,10 +14,23 @@ use Illuminate\Support\Facades\Storage;
 
 class Blog extends Model
 {
+    protected $fillable = [
+        'user_id',
+        'media_id',
+        'category_id',
+        'title',
+        'slug',
+        'excerpt',
+        'description',
+        'tags',
+        'status',
+    ];
+
     protected $guarded = ['id'];
 
     protected $casts = [
         'status' => 'boolean',
+        'tags' => 'array',
         // 'created_at' => Carbon::class,
     ];
 
@@ -49,5 +62,10 @@ class Blog extends Model
         return Attribute::make(
             get: fn() => $media,
         );
+    }
+
+    public function tags(): array
+    {
+        return $this->tags ? explode(';', $this->tags) : [];
     }
 }
