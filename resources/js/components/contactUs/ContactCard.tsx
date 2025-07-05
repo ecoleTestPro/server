@@ -4,23 +4,23 @@ import { CONTACT_INFO } from '../layouts/footer/footer';
 
 export const TEAMS = [
     {
-        name: 'John Doe',
-        role: 'CEO & Founder',
+        name: 'Alexis NANA',
+        role: 'Consultant Sénior en Assurance Qualité Logiciel',
         image: '/assets/images/front-pages/user1.jpg',
     },
     {
-        name: 'Jane Smith',
-        role: 'Designer UI/UX',
+        name: 'Anass EL BEKALI',
+        role: 'Consultant Expert en Qualification S.I.',
         image: '/assets/images/front-pages/user2.jpg',
     },
     {
-        name: 'Michael Johnson',
-        role: 'Developer',
+        name: 'Abdessalam MOUTTAKI',
+        role: 'Référent Technique & Automatisation des Tests',
         image: '/assets/images/front-pages/user3.jpg',
     },
     {
-        name: 'Emily Davis',
-        role: 'Marketing Specialist',
+        name: 'EL Mehdi TMIMI',
+        role: 'Consultant S.I. Senior',
         image: '/assets/images/front-pages/user4.jpg',
     },
 ];

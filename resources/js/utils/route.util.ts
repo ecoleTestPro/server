@@ -75,6 +75,11 @@ interface IROUTE_MAP {
             create: IRouteMap,
             edit: (slug: string) => IRouteMap
         },
+        blogs: {
+            index: IRouteMap,
+            create: IRouteMap,
+            edit: (slug: string) => IRouteMap
+        },
     }
 }
 
@@ -129,6 +134,13 @@ export const ROUTE_MAP: IROUTE_MAP = {
             create: createIRouteMap(route('dashboard.course.create'), 'Créer une formation'),
             edit: (slug: string) => {
                 return createIRouteMap(route('dashboard.course.edit', { slug }), 'Modifier la formation');
+            },
+        },
+        blogs: {
+            index: createIRouteMap(route('dashboard.blogs.index'), 'Liste des blogs'),
+            create: createIRouteMap(route('dashboard.blogs.create'), 'Créer un blog'),
+            edit: (slug: string) => {
+                return createIRouteMap(route('dashboard.blogs.edit', { slug }), 'Modifier le blog');
             },
         },
     }

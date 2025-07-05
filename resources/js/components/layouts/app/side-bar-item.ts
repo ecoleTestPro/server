@@ -36,6 +36,11 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
         ],
     },
     {
+        title: 'Blogs',
+        href: route('dashboard.blogs.index'),
+        icon: Folder,
+    },
+    {
         title: 'Témoignages',
         href: route('dashboard.testimonial.index'),
         icon: BookAIcon,

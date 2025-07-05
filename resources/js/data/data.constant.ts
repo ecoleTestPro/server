@@ -87,13 +87,13 @@ export const DEFULAT_MAIN_MENU: IMainMenuItem[] = [
                             subItems: [
                                 {
                                     id: 'consulting-audit',
-                                    label: ROUTE_MAP.public.services.consulting.auditOfMaturityOfTests.title ?? 'Audit de maturité de test',
+                                    label: 'Services d\'externalisation des tests',
                                     href: ROUTE_MAP.public.services.testSerivces.testOutsourcingServices.link,
                                     image: 'https://placehold.co/512x512',
                                 },
                                 {
                                     id: 'consulting-testing',
-                                    label: ROUTE_MAP.public.services.consulting.consultingTesting.title ?? "Intégration de spécialistes",
+                                    label:  "Intégration de spécialistes",
                                     href: ROUTE_MAP.public.services.testSerivces.integrationSpecialists.link,
                                     image: 'https://placehold.co/512x512'
                                 }

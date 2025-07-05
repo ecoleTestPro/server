@@ -12,7 +12,7 @@ import {
 export interface ISelectItem {
   id: number;
   title: string;
-  value: string;
+  value: string | number;
   canSelectParent?: boolean;
   subItem?: ISelectItem[];
 }
