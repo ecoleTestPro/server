@@ -1,4 +1,6 @@
+import { useTranslation } from 'react-i18next';
 import MotionSection from '../motion/MotionSection';
+import TitleBadgeOne from '../ui/badge-one';
 
 interface ContactInfo {
     title: string;
@@ -28,13 +30,14 @@ const contacts: ContactInfo[] = [
 ];
 
 export default function ContactInfo() {
+    const { t } = useTranslation();
     return (
         <MotionSection>
             <div>
                 <div className="container">
-                    <div className="mb-4">
+                    <div className="mb-8">
                         {/* <AppLogo width={260} /> */}
-                        <h2 className="mb-6 text-2xl font-bold text-black dark:text-white">Contactez nous</h2>
+                        {/* <h2 className="mb-6 text-2xl font-bold text-black dark:text-white">Contactez nous</h2> */}
                         <p className="text-gray-600 dark:text-gray-400">
                             Que vous ayez des questions, que vous ayez besoin d'un devis ou que vous souhaitiez simplement nous saluer, nous sommes là
                             pour vous aider. N'hésitez pas à nous contacter et notre équipe vous répondra dans les plus brefs délais.

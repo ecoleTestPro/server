@@ -54,7 +54,7 @@ class Contact extends Mailable
                 'subjectMessage' => $this->subject,
                 'userMessage'    => $this->message,
                 'civility'       => $this->civility,
-                'company'        => $this->company,
+                'company'        => $this->company ?? "Non défini",
             ]
         );
     }

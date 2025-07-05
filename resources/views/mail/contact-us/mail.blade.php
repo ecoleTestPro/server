@@ -27,7 +27,7 @@
         }
 
         .header {
-            background-color: #2c3e50;
+            background-color: #30a549;
             padding: 20px;
             text-align: center;
             color: #ffffff;
@@ -44,7 +44,7 @@
 
         h1 {
             font-size: 24px;
-            color: #2c3e50;
+            color: #30a549;
             margin: 0 0 20px;
             font-weight: 600;
         }
@@ -56,7 +56,7 @@
 
         .label {
             font-weight: bold;
-            color: #2c3e50;
+            color: #30a549;
         }
 
         .message {
@@ -106,7 +106,7 @@
     <div class="container">
         <div class="header">
             <!-- Replace with your logo URL or remove if not needed -->
-            <img src="{{ asset('logo.png') }}" alt="TestPro">
+            <img src="{{ asset('/logo.png') }}" alt="TestPro">
         </div>
         <div class="content">
             <h1>Nouvelle demande de contact</h1>

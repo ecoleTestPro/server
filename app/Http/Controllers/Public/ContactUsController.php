@@ -110,7 +110,7 @@ class ContactUsController extends PublicAbstractController
                 $validated['subjectMessage'],
                 $validated['message'],
                 $validated['civility'] ?? 'mr',
-                $validated['company']
+                $validated['company'] ?? null
             ));
 
             return response()->json([

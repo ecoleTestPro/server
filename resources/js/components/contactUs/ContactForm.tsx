@@ -1,3 +1,4 @@
+import { Logger } from '@/utils/console.util';
 import { useForm } from '@inertiajs/react';
 import { useCallback } from 'react';
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
@@ -6,33 +7,55 @@ import InputError from '../input-error';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import SelectCustom, { ISelectItem } from '../ui/select-custom';
-import { ContactFormData } from './ContactUs';
+import { Civility, ContactFormData } from './ContactUs';
 
 const DEFAULT_FORM_VALUE: ContactFormData = {
-    civility: 'mr',
-    company: 'DEV TECH ABIDJAN',
-    firstName: 'Test',
-    lastName: 'User',
-    email: 'test.user@example.com',
-    phone: '1234567890',
-    subjectMessage: 'Test Subject',
-    message: 'Test Message',
+    civility: '' as Civility,
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    subjectMessage: '',
+    message: '',
     recaptchaToken: '',
 };
 
 interface ContactFormProps {
     handleSubmit: (data: ContactFormData, e: React.FormEvent) => void;
     errors: { [key in keyof ContactFormData]?: string[] };
+    setErrors?: (errors: { [key in keyof ContactFormData]?: string[] }) => void;
 }
 
-export default function ContactForm({ handleSubmit, errors }: ContactFormProps) {
+export default function ContactForm({ handleSubmit, errors, setErrors }: ContactFormProps) {
     const { t } = useTranslation();
-    const { data, setData, post, processing, reset } = useForm<ContactFormData>(DEFAULT_FORM_VALUE);
+    const { data, setData, processing } = useForm<ContactFormData>(DEFAULT_FORM_VALUE);
     const { executeRecaptcha } = useGoogleReCaptcha();
 
     const handleBeforeSubmit = useCallback(
         async (event: React.FormEvent) => {
-            event.preventDefault();
+            if (
+                data.email === '' ||
+                data.firstName === '' ||
+                data.lastName === '' ||
+                data.phone === '' ||
+                data.subjectMessage === '' ||
+                data.message === ''
+            ) {
+                if (setErrors) {
+                    setErrors({
+                        email: data.email === '' ? [t('contacts.emailRequired', "L'email est requis.")] : [],
+                        firstName: data.firstName === '' ? [t('contacts.firstNameRequired', 'Le prénom est requis.')] : [],
+                        lastName: data.lastName === '' ? [t('contacts.lastNameRequired', 'Le nom est requis.')] : [],
+                        phone: data.phone === '' ? [t('contacts.phoneRequired', 'Le téléphone est requis.')] : [],
+                        subjectMessage: data.subjectMessage === '' ? [t('contacts.subjectRequired', 'Le sujet est requis.')] : [],
+                        message: data.message === '' ? [t('contacts.messageRequired', 'Le message est requis.')] : [],
+                    });
+                }
+                Logger.log('Formulaire incomplet, veuillez remplir tous les champs requis.');
+                return;
+            }
+
+            // event.preventDefault();
             if (!executeRecaptcha) {
                 console.log('executeRecaptcha not yet available');
                 return;
@@ -57,17 +80,18 @@ export default function ContactForm({ handleSubmit, errors }: ContactFormProps) 
 
     return (
         <div>
-            <form onSubmit={handleBeforeSubmit} className="animate-form-container">
+            <form className="animate-form-container">
                 <div className="grid grid-cols-1 gap-4 lg:grid-cols-8">
                     <div className="col-span-1 lg:col-span-8 grid gap-2">
                         <Label htmlFor="civility">
                             Civilité <span className="text-red-500">*</span>
                         </Label>
+                        {/* defaultValue="mr" */}
                         <SelectCustom
                             data={civities}
                             selectLabel={t('contacts.civility', 'Civilité')}
                             processing={processing}
-                            onValueChange={(value) => setData('civility', value)}
+                            onValueChange={(value) => setData('civility', value as Civility)}
                             required
                         />
                         {errors?.civility?.map((error, index) => <InputError key={index} message={error} />)}
@@ -189,13 +213,20 @@ export default function ContactForm({ handleSubmit, errors }: ContactFormProps) 
                         </div>
                     </div>
                 </div>
-                <button
-                    type="submit"
-                    disabled={processing}
-                    className="bg-primary-600 hover:bg-primary-500 block w-full transform rounded-md px-[17px] py-[12px] font-medium text-white transition-all duration-300 hover:scale-105 lg:text-[15px] xl:text-[16px]"
-                >
-                    <span className="relative inline-block ltr:pl-[25px] ltr:md:pl-[29px] rtl:pr-[25px] rtl:md:pr-[29px]">Envoyer</span>
-                </button>
+
+                <div className="animate-form-field mb-[20px] md:mb-[25px]" style={{ animationDelay: '0.5s' }} data-aos="fade">
+                    <p className="text-sm text-gray-500">les champs marqués d'un astérisque (*) sont obligatoires.</p>
+                </div>
+                <div className="flex justify-center">
+                    <button
+                        type="submit"
+                        disabled={processing}
+                        onClick={(event: any) => handleBeforeSubmit(event)}
+                        className="bg-primary-600 hover:bg-primary-500 block w-10/12 transform rounded-md px-[17px] py-[12px] font-medium text-white transition-all duration-300 hover:scale-105 lg:text-[15px] xl:text-[16px]"
+                    >
+                        <span className="relative inline-block ltr:pl-[25px] ltr:md:pl-[29px] rtl:pr-[25px] rtl:md:pr-[29px]">Envoyer</span>
+                    </button>
+                </div>
             </form>
         </div>
     );
