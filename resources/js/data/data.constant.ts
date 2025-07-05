@@ -162,3 +162,7 @@ const FORMATION_MAIN_MENU_PART_CHILDREN = {
         featured: [{ id: 'formation-vedette-1', label: 'Formation vedette 1', href: '/formations/formation-vedette-1' }],
     },
 };
+
+
+export const RECAPTCHA_SITE_KEY_PUBLIC: string = "6LdOgHgrAAAAACDxYFx2jRkoJIov4VK6XqMbz6gK";
+export const RECAPTCHA_SITE_KEY_PRIVATE: string = "6LdOgHgrAAAAAN6brCXYKUTyh6ToFeOT20pla4VD";

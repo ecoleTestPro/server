@@ -15,15 +15,15 @@ import ContactMap from './ContactMap';
 import ContactSuccessSubmited from './ContactSuccessSubmited';
 
 export interface ContactFormData {
+    civility: 'mr' | 'mme' | 'mlle';
+    company?: string;
     firstName: string;
     lastName: string;
     email: string;
     phone: string;
-    subject: string;
+    subjectMessage: string;
     message: string;
-    civility: string;
-    company?: string; // Optional field for company name
-    // [key: string]: any; // <-- Add this line
+    recaptchaToken?: string;
 }
 
 const ContactUs: React.FC = () => {
@@ -41,9 +41,10 @@ const ContactUs: React.FC = () => {
         axios
             .post(route('contact.post'), data)
             .then((response) => {
+                Logger.log('[ContactUs] Response from contact form submission:', response);
                 if (response.data.success) {
-                    setSuccess(true);
-                    e.preventDefault();
+                    // setSuccess(true);
+                    // e.preventDefault();
                 } else {
                     Logger.error('Error submitting contact form:', response.data.message);
                     if (response.data.message && typeof response.data.message === 'string') {
@@ -57,9 +58,9 @@ const ContactUs: React.FC = () => {
                 setLoading(false);
             })
             .catch((error) => {
-                // Handle network or server error
                 Logger.error('Error submitting contact form  (catch) :', error);
-                // toast.error(
+                Logger.error('Error submitting contact form  (catch) :', error.response?.data?.message);
+                toast.error(t('CONTACT_US.ERROR', "Une erreur est survenue lors de l'envoi du formulaire."));
                 setLoading(false);
             });
     };
@@ -106,7 +107,7 @@ const ContactUs: React.FC = () => {
                                         </p>
                                     </div>
 
-                                    <ContactForm handleSubmit={handleSubmit}  errors={errors} />
+                                    <ContactForm handleSubmit={handleSubmit} errors={errors} />
                                 </div>
                             </div>
                         </div>

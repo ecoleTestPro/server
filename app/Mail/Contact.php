@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class ContactFormMail extends Mailable
+class Contact extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -21,10 +21,10 @@ class ContactFormMail extends Mailable
         public string $lastName,
         public string $email,
         public string $phone,
-        public string $subject,
         public string $message,
         public string $civility,
-        public ?string $company = null
+        public string $subjectMessage,
+        public ?string $company,
     ) {}
 
     /**
@@ -33,10 +33,8 @@ class ContactFormMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Nouvelle demande de contact: ' . $this->subject,
-            from: new Address($this->email, $this->civility . ' ' . $this->firstName . ' ' . $this->lastName),
-            to: new Address('info@ecoletestpro.com', 'Ecole Test Pro'),
-            replyTo: new Address($this->email, $this->civility . ' ' . $this->firstName . ' ' . $this->lastName),
+            subject: $this->subjectMessage, // Use the subject passed to the constructor
+            from: new Address('keraste38@gmail.com', config('app.name')),
         );
     }
 
@@ -46,16 +44,17 @@ class ContactFormMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.contact-form',
+            view: 'mail.contact-us.mail',
             with: [
-                'firstName' => $this->firstName,
-                'lastName' => $this->lastName,
-                'email' => $this->email,
-                'phone' => $this->phone,
-                'subject' => $this->subject,
-                'message' => $this->message,
-                'civility' => $this->civility,
-                'company' => $this->company,
+                'appLogo'        => 'http://localhost:8000/logo.png', // Replace with your logo URL
+                'firstName'      => $this->firstName,
+                'lastName'       => $this->lastName,
+                'email'          => $this->email,
+                'phone'          => $this->phone,
+                'subjectMessage' => $this->subject,
+                'userMessage'    => $this->message,
+                'civility'       => $this->civility,
+                'company'        => $this->company,
             ]
         );
     }

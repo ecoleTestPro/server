@@ -2,6 +2,7 @@ import { Head, usePage } from '@inertiajs/react';
 import { useEffect, useState, type PropsWithChildren } from 'react';
 
 // import { Icons } from '@/components/icons';
+import { CookieConsent } from '@/components/cookie/cookie-dialog';
 import Footer from '@/components/layouts/footer/footer';
 import Header from '@/components/layouts/header/header';
 import PageLoading from '@/components/ui/page-loading';
@@ -72,6 +73,13 @@ export default function DefaultLayout({ children, title, description }: PropsWit
             <Header />
             <div className="">{children}</div>
             <Toaster position="top-right" toastOptions={{ duration: 4000 }} />
+            <CookieConsent
+                title="Nous accordons de l'importance à votre vie privée"
+                description="Nous utilisons des cookies pour améliorer votre expérience de navigation et analyser le trafic du site."
+                acceptLabel="Accepter tout"
+                declineLabel="Refuser les cookies"
+                policyLink="/politique-de-confidentialite"
+            />
             <Footer />
         </div>
     );
