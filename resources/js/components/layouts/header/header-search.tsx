@@ -49,12 +49,12 @@ export default function HeaderSearch({ className }: HeaderSearchProps) {
         setCourseResults([]);
     };
 
-    const onSearch = () => {
+    const onSearch = (searchTerm: string) => {
         setLoading(true);
         setCourseResults([]); // Reset previous results
 
         axios
-            .post(route('search'), searchResult)
+            .post(route('search'), { search: searchTerm })
             .then((response: { data: { search_result: { courses?: ICourse[] } } }) => {
                 setLoading(false);
                 Logger.log('[Search] Courses updated:', response.data.search_result?.courses);
@@ -75,7 +75,7 @@ export default function HeaderSearch({ className }: HeaderSearchProps) {
 
         // Trigger search if input length is greater than 2 characters
         if (e.target.value.length > 2) {
-            onSearch();
+            onSearch(e.target.value);
         } else {
             initializeResults();
             setSearchResult({ search: '' });
@@ -149,7 +149,10 @@ export default function HeaderSearch({ className }: HeaderSearchProps) {
                                                 {courseResults && courseResults.length > 0 ? (
                                                     courseResults.map((course) => (
                                                         <li key={course.id} className="cursor-pointer p-2 hover:bg-white dark:hover:bg-gray-700">
-                                                            <Link classID='hover:underline' href={ROUTE_MAP.public.courses.detail(course.category?.slug ?? '', course.slug).link}>
+                                                            <Link
+                                                                classID="hover:underline"
+                                                                href={ROUTE_MAP.public.courses.detail(course.category?.slug ?? '', course.slug).link}
+                                                            >
                                                                 {course.title}
                                                             </Link>
                                                         </li>
