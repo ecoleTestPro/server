@@ -8,6 +8,7 @@ use App\Http\Requests\BlogStoreRequest;
 use App\Http\Requests\BlogUpdateRequest;
 use App\Http\Requests\UserStoreRequest;
 use App\Models\Blog;
+use App\Models\BlogCategory;
 use App\Repositories\BlogCategoryRepository;
 use App\Repositories\BlogRepository;
 use App\Repositories\MediaRepository;
@@ -29,7 +30,7 @@ class BlogController extends Controller
     public function create()
     {
         $data = [];
-        $data['blogs']['categories'] = BlogRepository::initQuery()->get();
+        $data['blogs']['categories'] = BlogCategoryRepository::query()->get();
 
         return Inertia::render('dashboard/blogs/create', [
             "data" => $data

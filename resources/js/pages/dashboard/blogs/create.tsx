@@ -2,6 +2,7 @@ import { BlogForm } from '@/components/blogs/BlogForm';
 import AppLayout from '@/layouts/dashboard/app-layout';
 import { SharedData, type BreadcrumbItem } from '@/types';
 import { IBlog, IBlogCategory } from '@/types/blogs';
+import { Logger } from '@/utils/console.util';
 import { Head, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import { FaSpinner } from 'react-icons/fa';
@@ -25,6 +26,7 @@ export default function BlogCreate() {
 
     useEffect(() => {
         setBlogCategories(sharedData?.blogs?.categories ?? []);
+        Logger.log('Blog categories:', sharedData?.blogs?.categories);
     }, [sharedData?.blogs?.categories]);
 
     useEffect(() => {

@@ -9,6 +9,7 @@ import { PlusCircleIcon } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '../ui/button/button';
+import RichTextLexical from '../ui/form/TextLexical/RichTextLexical';
 import { BlogCategoryDialogEdit } from './BlogCategoryDialogEdit';
 
 export interface BlogForm {
@@ -119,7 +120,7 @@ export const BlogForm = ({ blog = null, categories = [], onCancel }: BlogFormPro
                         category={null}
                         categories={categories}
                         open={openCategoryEdit}
-                        onClose={() => setOpenCategoryEdit(false)}
+                        onCancel={() => setOpenCategoryEdit(false)}
                     />
                 </div>
                 <div>
@@ -150,12 +151,20 @@ export const BlogForm = ({ blog = null, categories = [], onCancel }: BlogFormPro
                 <div>
                     <label className="block text-sm font-medium">{t('Content')}</label>
 
-                    <RichTextQuill
+                    <RichTextLexical
+                        label={t('Description')}
+                        labelId="description"
+                        value={""}
+                        setData={(value: string) => setData('description', value)}
+                    />
+
+                    {/* <RichTextQuill
                         label={t('Description')}
                         labelId="description"
                         value={data.description as string}
                         setData={(value: string) => setData('description', value)}
-                    />
+                    /> */}
+
                     <InputError message={errors.description} />
                 </div>
 
