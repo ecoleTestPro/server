@@ -7,12 +7,24 @@ use App\Enum\MediaTypeEnum;
 use App\Http\Requests\BlogStoreRequest;
 use App\Http\Requests\BlogUpdateRequest;
 use App\Models\Blog;
+use App\Models\BlogCategory;
 
 class BlogRepository extends Repository
 {
     public static function model()
     {
         return Blog::class;
+    }
+
+
+    public static function initQuery()
+    {
+        return self::query()->with([
+            'category',
+            'user',
+            'media',
+            // 'tags'
+        ]);
     }
 
     public static function storeByRequest(BlogStoreRequest $request)

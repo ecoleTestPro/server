@@ -19,7 +19,7 @@ class BlogController extends Controller
     public function index()
     {
         $data = [];
-        $data['blogs']['list'] = BlogRepository::query()->with(['category', 'user', 'media'])->latest('id')->get();
+        $data['blogs']['list'] = BlogRepository::initQuery()->latest('id')->get();
 
         return Inertia::render('dashboard/blogs/index', [
             'data' => $data,
@@ -29,7 +29,7 @@ class BlogController extends Controller
     public function create()
     {
         $data = [];
-        $data['blogs']['categories'] = BlogCategoryRepository::query()->with(['category', 'user', 'media'])->get();
+        $data['blogs']['categories'] = BlogRepository::initQuery()->get();
 
         return Inertia::render('dashboard/blogs/create', [
             "data" => $data
@@ -45,8 +45,8 @@ class BlogController extends Controller
 
     public function edit(string $slug)
     {
-        $blog = BlogRepository::query()->with(['category', 'user', 'media'])->where('slug', $slug)->firstOrFail();
-        dd($blog);
+        $blog = BlogRepository::initQuery()->where('slug', $slug)->firstOrFail();
+        // dd($blog);
         if (!$blog) {
             return redirect()->back()->withError('Blog introuvable');
         }

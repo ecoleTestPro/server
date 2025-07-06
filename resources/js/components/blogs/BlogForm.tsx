@@ -97,17 +97,7 @@ export const BlogForm = ({ blog = null, categories = [], onCancel }: BlogFormPro
                     />
                     <InputError message={errors.title} />
                 </div>
-                <div>
-                    <label className="block text-sm font-medium">{t('Content')}</label>
 
-                    <RichTextQuill
-                        label={t('Description')}
-                        labelId="description"
-                        value={data.description as string}
-                        setData={(value: string) => setData('description', value)}
-                    />
-                    <InputError message={errors.description} />
-                </div>
                 <div>
                     <label className="block text-sm font-medium">{t('Category')}</label>
                     <div className="grid grid-cols-12">
@@ -125,7 +115,12 @@ export const BlogForm = ({ blog = null, categories = [], onCancel }: BlogFormPro
                         </Button>
                     </div>
 
-                    <BlogCategoryDialogEdit category={null} categories={categories} open={openCategoryEdit} onClose={() => setOpenCategoryEdit(false)} />
+                    <BlogCategoryDialogEdit
+                        category={null}
+                        categories={categories}
+                        open={openCategoryEdit}
+                        onClose={() => setOpenCategoryEdit(false)}
+                    />
                 </div>
                 <div>
                     <label className="block text-sm font-medium">{t('Tags')}</label>
@@ -150,6 +145,18 @@ export const BlogForm = ({ blog = null, categories = [], onCancel }: BlogFormPro
                             </span>
                         ))}
                     </div>
+                </div>
+
+                <div>
+                    <label className="block text-sm font-medium">{t('Content')}</label>
+
+                    <RichTextQuill
+                        label={t('Description')}
+                        labelId="description"
+                        value={data.description as string}
+                        setData={(value: string) => setData('description', value)}
+                    />
+                    <InputError message={errors.description} />
                 </div>
 
                 <div className="flex justify-between gap-2">
