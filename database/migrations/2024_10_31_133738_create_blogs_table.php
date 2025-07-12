@@ -21,8 +21,8 @@ return new class extends Migration
             $table->foreignIdFor(BlogCategory::class)->nullable()->constrained()->cascadeOnDelete();
             $table->string('title');
             $table->string('slug')->unique();
-            $table->string('excerpt')->nullable();
-            $table->longText('description');
+            $table->text('excerpt')->nullable();
+            $table->text('description');
             $table->string('tags')->nullable();
             $table->boolean('status')->default(false);
             $table->softDeletes();

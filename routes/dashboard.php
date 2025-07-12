@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Private\BlogCategoryController;
+use App\Http\Controllers\Private\BlogController;
 use App\Http\Controllers\Private\CategoryController;
 use App\Http\Controllers\Private\CourseController;
 use App\Http\Controllers\Private\DashboardController;
@@ -73,6 +75,19 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
             // Route::get('', [SettingController::class, 'index'])->name('settings.app.index');
             // Route::patch('settings', [SettingsController::class, 'update'])->name('settings.update');
         });
+    });
+
+    // Blogs
+    Route::group([
+        'prefix' => 'blogs',
+    ], function () {
+        Route::get('', [BlogController::class, 'index'])->name('dashboard.blogs.index');
+        Route::get('create', [BlogController::class, 'create'])->name('dashboard.blogs.create');
+        Route::get('edit/{slug}', [BlogController::class, 'edit'])->name('dashboard.blogs.edit');
+        Route::post('store', [BlogController::class, 'store'])->name('dashboard.blogs.store');
+        Route::post('update', [BlogController::class, 'update'])->name('dashboard.blogs.update');
+        Route::delete('delete/{id}', [BlogController::class, 'delete'])->name('dashboard.blogs.delete');
+        Route::post('category/create', [BlogCategoryController::class, 'store'])->name('dashboard.blogs.category.store');
     });
 
     // TESTIMONIALS
