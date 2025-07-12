@@ -6,6 +6,7 @@ use App\Http\Controllers\Private\CategoryController;
 use App\Http\Controllers\Private\CourseController;
 use App\Http\Controllers\Private\DashboardController;
 use App\Http\Controllers\Private\FaqController;
+use App\Http\Controllers\Private\NewsletterController;
 use App\Http\Controllers\Private\SettingController;
 use App\Http\Controllers\Private\TestimonialController;
 use App\Http\Controllers\Private\ReferenceController;
@@ -172,5 +173,13 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
         Route::get('', [\App\Http\Controllers\Private\NewsletterController::class, 'index'])->name('dashboard.newsletters.index');
         Route::post('create', [\App\Http\Controllers\Private\NewsletterController::class, 'store'])->name('dashboard.newsletters.store');
         Route::delete('delete/{newsletter}', [\App\Http\Controllers\Private\NewsletterController::class, 'destroy'])->name('dashboard.newsletters.delete');
+    });
+
+    // NEWSLETTERS
+    Route::group([
+        'prefix' => 'newsletters',
+    ], function () {
+        Route::get('', [NewsletterController::class, 'index'])->name('dashboard.newsletter.index');
+        Route::post('send', [NewsletterController::class, 'send'])->name('dashboard.newsletter.send');
     });
 });

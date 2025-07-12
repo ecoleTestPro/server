@@ -2,44 +2,32 @@
 
 namespace App\Http\Controllers\Private;
 
+use App\Events\SubscriberMailEvent;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\NewsletterStoreRequest;
-use App\Models\Newsletter;
-use App\Repositories\NewsletterRepository;
+use App\Models\NewsletterSubscriber;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class NewsletterController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        $search = $request->search ? strtolower($request->search) : null;
+        return Inertia::render('dashboard/newsletter/index');
+    }
 
-        $newsletters = NewsletterRepository::query()
-            ->when($search, fn($query) => $query->where('email', 'like', "%{$search}%"))
-            ->latest('id')
-            ->paginate(15)
-            ->withQueryString();
-
-        $data = [
-            'newsletters' => $newsletters,
-        ];
-
-        return Inertia::render('dashboard/newsletters/index', [
-            'data' => $data,
+    public function send(Request $request)
+    {
+        $validated = $request->validate([
+            'subject' => 'required|string',
+            'content' => 'required|string',
         ]);
-    }
 
-    public function store(NewsletterStoreRequest $request)
-    {
-        NewsletterRepository::storeByRequest($request);
+        $emails = NewsletterSubscriber::pluck('email');
 
-        return to_route('dashboard.newsletters.index')->withSuccess('Newsletter created successfully.');
-    }
+        foreach ($emails as $email) {
+            SubscriberMailEvent::dispatch($email, $validated['subject'], $validated['content']);
+        }
 
-    public function destroy(Newsletter $newsletter)
-    {
-        $newsletter->delete();
-        return to_route('dashboard.newsletters.index')->withSuccess('Newsletter deleted successfully.');
+        return back()->with('success', 'Newsletter envoyée');
     }
 }
