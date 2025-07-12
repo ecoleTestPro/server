@@ -2,6 +2,7 @@ import { IJobOffer } from '@/types';
 import { motion, Variants } from 'framer-motion';
 import React, { useState } from 'react';
 import JobApplyModal from './JobApplyModal';
+import { FaMapMarkerAlt } from 'react-icons/fa';
 
 // Composant pour une carte d'offre d'emploi
 export const JobCard: React.FC<{ job: IJobOffer }> = ({ job }) => {
@@ -22,8 +23,13 @@ export const JobCard: React.FC<{ job: IJobOffer }> = ({ job }) => {
             whileHover="hover"
         >
             <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100">{job.title}</h3>
-            <p className="text-gray-600 dark:text-gray-300">
-                {job.company} - {job.location}
+            <p className="text-gray-600 dark:text-gray-300 flex items-center gap-1">
+                {job.company}
+                {job.location && (
+                    <span className="flex items-center gap-1">
+                        - <FaMapMarkerAlt className="inline" /> {job.location}
+                    </span>
+                )}
             </p>
             {job?.salary && (
                 <p className="text-gray-500 dark:text-gray-400">
