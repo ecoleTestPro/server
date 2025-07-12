@@ -1,14 +1,14 @@
 import InputError from '@/components/input-error';
-import RichTextQuill from '@/components/ui/form/RichTextQuill';
 import { Input } from '@/components/ui/input';
 import SelectCustom, { ISelectItem } from '@/components/ui/select-custom';
 import { IBlog, IBlogCategory } from '@/types/blogs';
 import { Logger } from '@/utils/console.util';
 import { router, useForm } from '@inertiajs/react';
 import { PlusCircleIcon } from 'lucide-react';
-import { useState } from 'react';
+import { FormEventHandler, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '../ui/button/button';
+import TagInput from '../ui/tag-input';
 import RichTextLexical from '../ui/form/TextLexical/RichTextLexical';
 import { BlogCategoryDialogEdit } from './BlogCategoryDialogEdit';
 
@@ -30,7 +30,7 @@ const createDefaultValues = (blog: IBlog | null): BlogForm => {
             slug: blog.slug,
             excerpt: blog.excerpt,
             description: blog.description,
-            tags: blog.tags,
+            tags: blog.tags || [],
             status: blog.status,
             // category_id: blog.category_id,
         };
@@ -40,6 +40,7 @@ const createDefaultValues = (blog: IBlog | null): BlogForm => {
         slug: '',
         excerpt: '',
         description: '',
+        tags: [],
         status: false,
     };
 };
@@ -53,15 +54,37 @@ interface BlogFormProps {
 export const BlogForm = ({ blog = null, categories = [], onCancel }: BlogFormProps) => {
     const { t } = useTranslation();
 
-    const { data, setData, post, processing, errors, reset } = useForm<BlogForm>(createDefaultValues(blog));
-    const [tag, setTag] = useState<string>('');
-    const [tags, setTags] = useState<string[]>([]);
+    const { data, setData, processing, errors, reset } = useForm<BlogForm>(createDefaultValues(blog));
+    const [tags, setTags] = useState<string[]>(createDefaultValues(blog).tags || []);
 
     const [openCategoryEdit, setOpenCategoryEdit] = useState(false);
 
-    const handleSubmit = (e: string) => {
-        Logger.log('Submitting blog form:', data);
-        // if (blog) {}
+    useEffect(() => {
+        setData('tags', tags);
+    }, [tags]);
+
+    const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+        e.preventDefault();
+        const routeUrl = blog ? route('dashboard.blogs.update') : route('dashboard.blogs.store');
+
+        router.visit(routeUrl, {
+            method: 'post',
+            data: {
+                ...(blog && { blog: blog.id }),
+                title: data.title,
+                slug: data.slug,
+                excerpt: data.excerpt,
+                description: data.description,
+                category_id: data.category_id,
+                status: data.status ? '1' : '0',
+                tags: JSON.stringify(tags),
+            },
+            forceFormData: true,
+            preserveScroll: true,
+            onSuccess: () => {
+                reset();
+            },
+        });
     };
 
     const category_list = (): ISelectItem[] => {
@@ -72,20 +95,13 @@ export const BlogForm = ({ blog = null, categories = [], onCancel }: BlogFormPro
         }));
     };
 
-    const handleAddTag = (tag: string) => {
-        setTags([...tags, tag]);
-        setTag('');
-    };
-
     const handleOpenCategoryEdit = () => {
         setOpenCategoryEdit(true);
     };
 
     return (
         <div className="flex flex-col gap-4 rounded-xl p-4 bg-white dark:bg-gray-800">
-            {/* <h2>{blog ? t('Edit Blog') : t('Create Blog')}</h2> */}
-            {/* onSubmit={handleSubmit} */}
-            <form className="space-y-4">
+            <form className="space-y-4" onSubmit={handleSubmit}>
                 <div>
                     <label className="block text-sm font-medium">{t('Title')}</label>
                     <Input
@@ -125,27 +141,7 @@ export const BlogForm = ({ blog = null, categories = [], onCancel }: BlogFormPro
                 </div>
                 <div>
                     <label className="block text-sm font-medium">{t('Tags')}</label>
-                    <div className="flex items-center">
-                        <Input
-                            type="text"
-                            name="tags"
-                            value={tag}
-                            onChange={(e) => setTag(e.target.value)}
-                            placeholder="e.g., tech, news, tutorial"
-                        />
-
-                        <button type="button" onClick={() => handleAddTag(tag)}>
-                            Add Tag
-                        </button>
-                    </div>
-
-                    <div className="relative">
-                        {tags.map((tag, index) => (
-                            <span key={index} className="inline-block bg-gray-200 rounded-full px-2 py-1 text-sm font-semibold text-gray-700 mr-2">
-                                {tag}
-                            </span>
-                        ))}
-                    </div>
+                    <TagInput tags={tags} onChange={setTags} placeholder="e.g., tech, news" />
                 </div>
 
                 <div>
@@ -154,7 +150,7 @@ export const BlogForm = ({ blog = null, categories = [], onCancel }: BlogFormPro
                     <RichTextLexical
                         label={t('Description')}
                         labelId="description"
-                        value={""}
+                        value={data.description as string}
                         setData={(value: string) => setData('description', value)}
                     />
 
@@ -183,7 +179,7 @@ export const BlogForm = ({ blog = null, categories = [], onCancel }: BlogFormPro
                             Brouillon
                         </Button>
 
-                        <Button type="button">{blog ? t('Update', 'Modifier') : t('Create', 'Sauvegarder')}</Button>
+                        <Button type="submit">{blog ? t('Update', 'Modifier') : t('Create', 'Sauvegarder')}</Button>
                     </div>
                 </div>
             </form>
