@@ -154,6 +154,9 @@ export const ROUTE_MAP: IROUTE_MAP = {
         },
         newsletters: {
             index: createIRouteMap(route('dashboard.newsletters.index'), 'Newsletters'),
+            compose: createIRouteMap(route('dashboard.newsletters.compose'), 'Compose'),
+            templates: createIRouteMap(route('dashboard.newsletter-templates.index'), 'Templates'),
+            logs: createIRouteMap(route('dashboard.newsletter-logs.index'), 'Logs'),
         },
     }
 }

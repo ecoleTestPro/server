@@ -7,6 +7,8 @@ use App\Http\Controllers\Private\CourseController;
 use App\Http\Controllers\Private\DashboardController;
 use App\Http\Controllers\Private\FaqController;
 use App\Http\Controllers\Private\NewsletterController;
+use App\Http\Controllers\Private\NewsletterTemplateController;
+use App\Http\Controllers\Private\NewsletterLogController;
 use App\Http\Controllers\Private\SettingController;
 use App\Http\Controllers\Private\TestimonialController;
 use App\Http\Controllers\Private\ReferenceController;
@@ -171,8 +173,26 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
         'prefix' => 'newsletters',
     ], function () {
         Route::get('', [NewsletterController::class, 'index'])->name('dashboard.newsletters.index');
+        Route::get('compose', [NewsletterController::class, 'compose'])->name('dashboard.newsletters.compose');
         Route::post('send', [NewsletterController::class, 'send'])->name('dashboard.newsletters.send');
         Route::post('create', [NewsletterController::class, 'store'])->name('dashboard.newsletters.store');
         Route::delete('delete/{newsletter}', [NewsletterController::class, 'destroy'])->name('dashboard.newsletters.delete');
+    });
+
+    // NEWSLETTER TEMPLATES
+    Route::group([
+        'prefix' => 'newsletter-templates',
+    ], function () {
+        Route::get('', [NewsletterTemplateController::class, 'index'])->name('dashboard.newsletter-templates.index');
+        Route::post('create', [NewsletterTemplateController::class, 'store'])->name('dashboard.newsletter-templates.store');
+        Route::delete('delete/{newsletterTemplate}', [NewsletterTemplateController::class, 'destroy'])->name('dashboard.newsletter-templates.delete');
+    });
+
+    // NEWSLETTER LOGS
+    Route::group([
+        'prefix' => 'newsletter-logs',
+    ], function () {
+        Route::get('', [NewsletterLogController::class, 'index'])->name('dashboard.newsletter-logs.index');
+        Route::post('resend/{newsletterLog}', [NewsletterLogController::class, 'resend'])->name('dashboard.newsletter-logs.resend');
     });
 });
