@@ -32,13 +32,32 @@ export default function DashboardCategory() {
     const [categorySelected, setCategorySelected] = useState<ICategoryForm | undefined>(undefined);
 
     useEffect(() => {
-        if (data && data.categories_with_courses) {
-            setCategories(data.categories_with_courses);
+        if (data && data.categories) {
+            setCategories(data.categories);
         }
     }, [data]);
 
     const handleOpenCategory = () => {
         setOpenCategory(true);
+    };
+
+    const flatCategories = (categories: ICourseCategory[]): ICourseCategory[] => {
+        if (data && data.categories) {
+            const parent = categories.map((category) => category);
+            const children = categories.flatMap((category) => {
+                let list = category.children || [];
+
+                list = list.map((child) => ({
+                    ...child,
+                    title: `${category.title} > ${child.title}`,
+                }));
+
+                return list;
+            });
+            return [...parent, ...children];
+        } else {
+            return [];
+        }
     };
 
     /**
@@ -128,8 +147,12 @@ export default function DashboardCategory() {
                     />
 
                     <div className="container mx-auto flex h-full items-center justify-center">
-                        {data.categories && (
-                            <CategoryDataTable categories={categories} onEditRow={handleOpenEditCategory} onDeleteRow={handleOnDeleteRow} />
+                        {data?.categories && (
+                            <CategoryDataTable
+                                categories={flatCategories(data.categories)}
+                                onEditRow={handleOpenEditCategory}
+                                onDeleteRow={handleOnDeleteRow}
+                            />
                         )}
                     </div>
                 </div>

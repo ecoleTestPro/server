@@ -212,7 +212,7 @@ export interface ICustomSharedData {
     /**
      * Paginated list of course categories
      */
-    categories?: IDataWithPagination<ICourseCategory>;
+    categories: ICourseCategory[]; 
 
     /**
      * List of course categories with their courses
