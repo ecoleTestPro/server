@@ -176,12 +176,7 @@ function CourseForm({ course }: ICourseFormProps) {
     }
 
     return (
-        <form
-            className="container mx-auto flex flex-col gap-8"
-            onSubmit={() => {
-                submit(data, false);
-            }}
-        >
+        <form className="container mx-auto flex flex-col gap-8">
             {/* mx-auto  */}
             <h2 className="text-2xl font-bold">{data?.title ? data.title : 'Créer une formation'}</h2>
 
@@ -298,20 +293,20 @@ function CourseForm({ course }: ICourseFormProps) {
                             {t('courses.cancel', 'Annuler')}
                         </Button>
 
-                            <Button
-                                type="button"
-                                onClick={() => submit(data, true)}
-                                className="mt-2  bg-gray-400 hover:bg-gray-500 "
-                                disabled={processing}
-                            >
-                                {processing && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
-                                {t('courses.create', 'Sauvegarder comme brouillon')}
-                            </Button>
+                        <Button
+                            type="button"
+                            onClick={() => submit(data, true)}
+                            className="mt-2  bg-gray-400 hover:bg-gray-500 "
+                            disabled={processing}
+                        >
+                            {processing && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
+                            {t('courses.create', 'Sauvegarder comme brouillon')}
+                        </Button>
 
-                            <Button type="submit" className="mt-2 " disabled={processing}>
-                                {processing && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
-                                {course && course.id ? t('courses.update', 'Mettre à jour') : t('courses.create', 'Créer une formation')}
-                            </Button>
+                        <Button type="submit" className="mt-2 " disabled={processing}>
+                            {processing && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
+                            {course && course.id ? t('courses.update', 'Mettre à jour') : t('courses.create', 'Créer une formation')}
+                        </Button>
                     </div>
                 </div>
             </div>
