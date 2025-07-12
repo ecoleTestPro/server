@@ -1,4 +1,4 @@
-import { IDataWithPagination } from ".";
+import { IDataWithPagination, IJobOffer } from ".";
 import { IBlog, IBlogCategory } from "./blogs";
 import { ITestimonial } from "./testimonial";
 import { IFaq } from "./faq";
@@ -272,4 +272,6 @@ export interface ICustomSharedData {
         enrollment_area: IChartData;
         course_area: IChartData;
     }
+
+    job_offers : IJobOffer[];
 }

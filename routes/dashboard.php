@@ -129,7 +129,7 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
         Route::post('create',        [FaqController::class, 'store'])->name('dashboard.faqs.store');
         Route::put('update/{faq}',   [FaqController::class, 'update'])->name('dashboard.faqs.update');
         Route::delete('delete/{faq}', [FaqController::class, 'destroy'])->name('dashboard.faqs.delete');
-        Route::post('restore/{faq}', [FaqController::class, 'restore'])->name('dashboard.faqs.restore'); 
+        Route::post('restore/{faq}', [FaqController::class, 'restore'])->name('dashboard.faqs.restore');
     });
 
     // REFERENCES
@@ -170,16 +170,9 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
     Route::group([
         'prefix' => 'newsletters',
     ], function () {
-        Route::get('', [\App\Http\Controllers\Private\NewsletterController::class, 'index'])->name('dashboard.newsletters.index');
-        Route::post('create', [\App\Http\Controllers\Private\NewsletterController::class, 'store'])->name('dashboard.newsletters.store');
-        Route::delete('delete/{newsletter}', [\App\Http\Controllers\Private\NewsletterController::class, 'destroy'])->name('dashboard.newsletters.delete');
-    });
-
-    // NEWSLETTERS
-    Route::group([
-        'prefix' => 'newsletters',
-    ], function () {
-        Route::get('', [NewsletterController::class, 'index'])->name('dashboard.newsletter.index');
-        Route::post('send', [NewsletterController::class, 'send'])->name('dashboard.newsletter.send');
+        Route::get('', [NewsletterController::class, 'index'])->name('dashboard.newsletters.index');
+        Route::post('send', [NewsletterController::class, 'send'])->name('dashboard.newsletters.send');
+        Route::post('create', [NewsletterController::class, 'store'])->name('dashboard.newsletters.store');
+        Route::delete('delete/{newsletter}', [NewsletterController::class, 'destroy'])->name('dashboard.newsletters.delete');
     });
 });

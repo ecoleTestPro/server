@@ -13,7 +13,7 @@ export default function NewsletterIndex() {
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
-        router.post(route('dashboard.newsletter.send'), { subject, content });
+        router.post(route('dashboard.newsletters.send'), { subject, content });
     };
 
     return (

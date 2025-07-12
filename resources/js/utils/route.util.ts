@@ -82,6 +82,9 @@ interface IROUTE_MAP {
             create: IRouteMap,
             edit: (slug: string) => IRouteMap
         },
+        newsletters: {
+            index: IRouteMap,
+        }
     }
 }
 

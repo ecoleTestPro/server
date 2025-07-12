@@ -29,11 +29,12 @@ export default function Careers() {
     const [filters, setFilters] = useState({ title: '', location: '', type: '', minSalary: 0 });
 
     const filteredJobs = jobs.filter((job) => {
+        const salary = job.salary || 0; 
         return (
-            job.title.toLowerCase().includes(filters.title.toLowerCase()) &&
-            job.location.toLowerCase().includes(filters.location.toLowerCase()) &&
+            (job.title?.toLowerCase() ?? '').includes(filters.title.toLowerCase()) &&
+            (job.location?.toLowerCase() ?? '').includes(filters.location.toLowerCase()) &&
             (filters.type === '' || job.type === filters.type) &&
-            job.salary >= filters.minSalary
+            salary >= filters.minSalary
         );
     });
 
