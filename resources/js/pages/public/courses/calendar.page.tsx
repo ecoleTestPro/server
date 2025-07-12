@@ -1,5 +1,7 @@
+import CourseDetailOverview from '@/components/courses/detail/partial/CourseDetailOverview';
 import CourseInscriptionDialog from '@/components/courses/detail/partial/CourseInscriptionDialog';
 import Hero, { IHeroBreadcrumbItems } from '@/components/hero/hearo';
+import Drawer from '@/components/ui/drawer';
 import DefaultLayout from '@/layouts/public/front.layout';
 import { ICourse, ICourseSession } from '@/types/course';
 import { ROUTE_MAP } from '@/utils/route.util';
@@ -8,8 +10,6 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-import Drawer from '@/components/ui/drawer';
-import CourseDetailOverview from '@/components/courses/detail/partial/CourseDetailOverview';
 import { useTranslation } from 'react-i18next';
 
 interface SessionWithCourse extends ICourseSession {
@@ -85,40 +85,42 @@ export default function TrainingCalendarPage() {
                                         key={session.id}
                                         className="border rounded-md p-4 flex flex-col md:flex-row justify-between items-start md:items-center"
                                     >
-                                        <div>
-                                            <h3 className="font-semibold text-lg text-black dark:text-white">{session.course?.title}</h3>
-                                            <p className="text-sm text-gray-500 dark:text-gray-400">
-                                                {session.start_date} - {session.end_date} - {session.location}
-                                            </p>
-                                        </div>
+                                        <div className="grid grid-cols-1 gap-y-4 ">
+                                            <div>
+                                                <h3 className="font-semibold text-lg text-black dark:text-white">{session.course?.title}</h3>
+                                                <p className="text-sm text-gray-500 dark:text-gray-400">
+                                                    {session.start_date} - {session.end_date} - {session.location}
+                                                </p>
+                                            </div>
 
-                                        <div className="flex gap-2 mt-2 md:mt-0">
-                                            <button
-                                                className="bg-green-500 hover:bg-green-600 text-white rounded-md px-4 py-2 text-sm"
-                                                onClick={() => {
-                                                    setSelectedSession(session);
-                                                    setOpenDialog(true);
-                                                }}
-                                            >
-                                                {t('COURSE.DETAIL.REGISTER', 'Inscription')}
-                                            </button>{' '}
-                                            <button
-                                                className="bg-blue-500 hover:bg-blue-600 text-white rounded-md px-4 py-2 text-sm"
-                                                onClick={() => {
-                                                    setSelectedCourse(session.course);
-                                                    setOpenCourseDrawer(true);
-                                                }}
-                                            >
-                                                {t('CALENDAR.VIEW_COURSE', 'Voir la formation')}
-                                            </button>
-                                            {false && (
-                                                <Link
-                                                    href={`${ROUTE_MAP.public.contact.link}?subject=Formation ${session.course?.title}`}
-                                                    className="bg-blue-500 hover:bg-blue-600 text-white rounded-md px-4 py-2 text-sm"
+                                            <div className="flex gap-2 mt-2 md:mt-0">
+                                                <button
+                                                    className="bg-green-500 hover:bg-green-600 text-white rounded-md px-4 py-2 text-sm"
+                                                    onClick={() => {
+                                                        setSelectedSession(session);
+                                                        setOpenDialog(true);
+                                                    }}
                                                 >
-                                                    {t('CALENDAR.CONTACT_US', 'Demander une autre date')}
-                                                </Link>
-                                            )}
+                                                    {t('COURSE.DETAIL.REGISTER', 'Inscription')}
+                                                </button>{' '}
+                                                <button
+                                                    className="bg-blue-500 hover:bg-blue-600 text-white rounded-md px-4 py-2 text-sm"
+                                                    onClick={() => {
+                                                        setSelectedCourse(session.course);
+                                                        setOpenCourseDrawer(true);
+                                                    }}
+                                                >
+                                                    {t('CALENDAR.VIEW_COURSE', 'Voir la formation')}
+                                                </button>
+                                                {false && (
+                                                    <Link
+                                                        href={`${ROUTE_MAP.public.contact.link}?subject=Formation ${session.course?.title}`}
+                                                        className="bg-blue-500 hover:bg-blue-600 text-white rounded-md px-4 py-2 text-sm"
+                                                    >
+                                                        {t('CALENDAR.CONTACT_US', 'Demander une autre date')}
+                                                    </Link>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
                                 ))}
