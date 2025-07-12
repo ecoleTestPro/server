@@ -20,8 +20,6 @@ class Enrollment extends Model
         // 'coupon_id',
         'mode',
         'progress',
-        'course_price',
-        'discount_amount',
         'last_activity',
         'is_certificate_downloaded',
     ];

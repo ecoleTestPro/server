@@ -28,16 +28,11 @@ class EnrollmentRepository extends Repository
                 throw new \Exception('Session de formation invalide.');
             }
 
-            $course_price    = $session->price ?? $course->price;
-            $discount_amount = $request->discount_amount ?? 0;
-
             return self::create([
                 'user_id'           => $request->user_id,
                 'course_id'         => $request->course_id,
                 'course_session_id' => $request->course_session_id,
                 'mode'              => $request->mode,
-                'course_price'      => $course_price,
-                'discount_amount'   => $discount_amount,
                 'last_activity'     => now(),
                 'is_certificate_downloaded' => false,
             ]);

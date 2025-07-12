@@ -157,8 +157,6 @@ export interface ICourseEnrollment {
     course: ICourse,
     mode: string,
     progress: number,
-    course_price: number,
-    discount_amount: number,
     last_activity: string,
     is_certificate_downloaded: boolean,
 }
