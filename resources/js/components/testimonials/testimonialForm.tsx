@@ -31,10 +31,6 @@ export default function TestimonialForm({ closeDrawer, initialData }: Testimonia
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        if (!file && !initialData?.media) {
-            toast.error(t('testimonials.imageRequired', 'Veuillez sélectionner une image.'));
-            return;
-        }
 
         const routeUrl = initialData?.id
             ? route('dashboard.testimonial.update', initialData.id)

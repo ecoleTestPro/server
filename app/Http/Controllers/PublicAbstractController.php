@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Repositories\CategoryRepository;
 use App\Repositories\CourseRepository;
 use App\Repositories\FaqRepository;
+use App\Repositories\TestimonialRepository;
 
 abstract class PublicAbstractController extends Controller
 {
@@ -37,6 +38,7 @@ abstract class PublicAbstractController extends Controller
             'categories_with_courses' => $this->courseWithCategoryTree(true),
             'asset_path'              => asset(''),
             'faqs'                    => FaqRepository::query()->where('is_active', true)->get(),
+            'testimonials'            => TestimonialRepository::query()->where('is_active', true)->with('media')->get(),
         ];
     }
 }
