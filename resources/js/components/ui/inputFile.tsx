@@ -1,5 +1,5 @@
-import * as React from "react";
-import { cn } from "@/lib/utils";
+import * as React from 'react';
+import { cn } from '@/lib/utils';
 
 interface InputFileProps extends React.InputHTMLAttributes<HTMLInputElement> {
   multiple?: boolean;
@@ -7,14 +7,16 @@ interface InputFileProps extends React.InputHTMLAttributes<HTMLInputElement> {
 }
 
 export function InputFile({
-  className,
-  multiple = false,
-  onFilesChange,
-  ...props
+    className,
+    multiple = false,
+    onFilesChange,
+    id: propId,
+    ...props
 }: InputFileProps) {
-  const [dragActive, setDragActive] = React.useState(false);
-  const [previews, setPreviews] = React.useState<string[]>([]);
-  const inputRef = React.useRef<HTMLInputElement>(null);
+    const [dragActive, setDragActive] = React.useState(false);
+    const [previews, setPreviews] = React.useState<string[]>([]);
+    const inputRef = React.useRef<HTMLInputElement>(null);
+    const id = propId ?? React.useId();
 
   const handleFiles = (files: FileList | null) => {
     if (onFilesChange) onFilesChange(files);
@@ -46,10 +48,15 @@ export function InputFile({
     setDragActive(false);
   };
 
+  const handleClick = () => {
+      inputRef.current?.click();
+  };
+
   return (
     <div>
       <label
-        htmlFor="input-file-upload"
+        htmlFor={id}
+        onClick={handleClick}
         className={cn(
           "flex flex-col items-center justify-center border-2 border-dashed rounded-lg cursor-pointer transition-colors duration-200 p-6 bg-white dark:bg-gray-900",
           dragActive ? "border-blue-500 bg-blue-50 dark:bg-blue-900/30" : "border-gray-300",
@@ -66,7 +73,7 @@ export function InputFile({
           Glissez-déposez {multiple ? "des images" : "une image"} ici ou cliquez pour sélectionner
         </span>
         <input
-          id="input-file-upload"
+          id={id}
           ref={inputRef}
           type="file"
           accept={props.accept || 'image/*'}
