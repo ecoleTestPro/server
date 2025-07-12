@@ -50,5 +50,10 @@
         "submit": "Envoyer le lien de réinitialisation",
         "orReturn": "Ou, retour à",
         "login": "connexion"
+    },
+    "CALENDAR": {
+        "TITLE": "Calendrier des formations",
+        "DESCRIPTION": "Consultez nos prochaines sessions et inscrivez-vous.",
+        "CONTACT_US": "Demander une autre date"
     }
 }

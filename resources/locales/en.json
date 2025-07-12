@@ -49,6 +49,11 @@
         "emailPlaceholder": "email@example.com",
         "submit": "Email password reset link",
         "orReturn": "Or, return to",
-        "login": "log in"
-    }
+  "login": "log in"
+  },
+  "CALENDAR": {
+    "TITLE": "Training calendar",
+    "DESCRIPTION": "Check our upcoming sessions and register.",
+    "CONTACT_US": "Request another date"
+  }
 }
