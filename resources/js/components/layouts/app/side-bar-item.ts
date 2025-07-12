@@ -36,6 +36,16 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
         ],
     },
     {
+        title: 'Partenaires',
+        href: route('dashboard.partners.index'),
+        icon: Folder,
+    },
+    // {
+    //     title: 'Pages',
+    //     href: route('dashboard.page.index'),
+    //     icon: BookOpen,
+    // },
+    {
         title: 'Blogs',
         href: route('dashboard.blogs.index'),
         icon: Folder,
