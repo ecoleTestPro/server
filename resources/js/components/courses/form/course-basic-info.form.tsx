@@ -107,6 +107,7 @@ export default function CourseBasicInfoForm({ fieldsetClasses, data, setData, pr
                                 selectLabel={t('courses.category', 'Catégorie')}
                                 processing={processing}
                                 onValueChange={(value) => setData('category_id', value)}
+                                defaultValue={data.category_id}
                                 required
                             />
                         )}
