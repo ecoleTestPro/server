@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Public\ContactUsController;
 use App\Http\Controllers\Public\EnrollController;
+use App\Http\Controllers\Public\NewsletterController;
 use App\Http\Controllers\Public\PublicController;
 use App\Http\Controllers\Public\PublicFormationController;
 use App\Http\Controllers\Public\PublicFormationSessionController;
@@ -28,6 +29,9 @@ Route::group(["prefix" => "/"], function () {
 
     Route::get('contact', [ContactUsController::class, 'contact'])->name('contact');
     Route::post('contact', [ContactUsController::class, 'contactSubmit'])->name('contact.post');
+
+    // Newsletter subscription
+    Route::post('newsletter/subscribe', [NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
 
     /**
      * Consulting routes

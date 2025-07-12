@@ -1,8 +1,31 @@
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import BtnSecondary from '../ui/button/btn-secondary';
+import axios from 'axios';
+import toast from 'react-hot-toast';
 
 export default function NewsletterCTA() {
     const { t } = useTranslation();
+    const [email, setEmail] = useState('');
+    const [loading, setLoading] = useState(false);
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!email) return;
+        setLoading(true);
+        axios
+            .post(route('newsletter.subscribe'), { email })
+            .then(() => {
+                toast.success(
+                    t('NEWSLETTER.SUBSCRIBED', 'Vous êtes maintenant abonné à la newsletter.')
+                );
+                setEmail('');
+            })
+            .catch(() => {
+                toast.error(t('NEWSLETTER.ERROR', "Une erreur s'est produite."));
+            })
+            .finally(() => setLoading(false));
+    };
 
     return (
         <section className="body-font text-gray-600 dark:bg-[#0a0e19] dark:text-white">
@@ -63,7 +86,7 @@ export default function NewsletterCTA() {
                         <p className="lg:text-md text-white md:text-[15px] animate-fade-in-up animation-delay-200">
                             {t('NEWSLETTER.CTA.DESCRIPTION', 'Rejoignez notre communauté de professionnels de l’assistance.')}
                         </p>
-                        <form action="#" className="relative mx-auto mt-[20px] md:mt-[35px] md:max-w-[496px] lg:mt-[45px]">
+                        <form onSubmit={handleSubmit} className="relative mx-auto mt-[20px] md:mt-[35px] md:max-w-[496px] lg:mt-[45px]">
                             <div className="flex item-cente justify-betweenr">
                                 <span className="material-symbols-outlined absolute top-[14px] !text-[22px] text-gray-400 md:top-[21px] md:!text-[26px] ltr:left-[20px] ltr:md:left-[30px] rtl:right-[20px] rtl:md:right-[30px] animate-pulse">
                                     <svg
@@ -82,11 +105,14 @@ export default function NewsletterCTA() {
                                     </svg>
                                 </span>
                                 <input
-                                    type="text"
+                                    type="email"
                                     className="fw-medium block w-2/3 rounded-[100px] bg-gray-800 text-base text-white !outline-0 placeholder:text-gray-300 transition-all duration-300 focus:ring-2 focus:ring-blue-500 focus:scale-105 py-2 px-4"
                                     placeholder="Entrez votre adresse e-mail"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    disabled={loading}
                                 />
-                                <BtnSecondary label="S'inscrire" />
+                                <BtnSecondary label="S'inscrire" onClick={handleSubmit} />
                             </div>
                         </form>
                     </div>
