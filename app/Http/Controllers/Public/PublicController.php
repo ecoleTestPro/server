@@ -90,8 +90,8 @@ class PublicController extends PublicAbstractController
     public function blogs()
     {
         $data = $this->default_data;
-        $data['blogs']['list'] = BlogRepository::getAll();
-        $data['blogs']['categories'] = BlogCategoryRepository::getAll();
+        $data['blogs']['list'] = BlogRepository::getPublished(100);
+        $data['blogs']['categories'] = BlogCategoryRepository::query()->get();
         return Inertia::render('public/blogs/blogs', [
             'data'  => $data,
         ]);
@@ -99,8 +99,16 @@ class PublicController extends PublicAbstractController
 
     public function blogDetail(string $slug)
     {
-        // Blogs
-        return view('blogs');
+        $data = $this->default_data;
+        $blog = BlogRepository::findBySlug($slug);
+
+        $data['blogs']['single'] = $blog;
+        $data['blogs']['list'] = BlogRepository::getPublished(5);
+        $data['blogs']['categories'] = BlogCategoryRepository::query()->get();
+
+        return Inertia::render('public/blogs/blogDetail', [
+            'data' => $data,
+        ]);
     }
 
     public function careers()

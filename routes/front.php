@@ -52,7 +52,7 @@ Route::group(["prefix" => "/"], function () {
      * Blog routes
      */
     Route::get('blogs', [PublicController::class, 'blogs'])->name('blogs');
-    Route::get('blog/{blog_slug}', [PublicController::class, 'blogCategory'])->name('blogs.category');
+    Route::get('blog/{blog_slug}', [PublicController::class, 'blogDetail'])->name('blogs.detail');
 
     /**
      * Careers routes
