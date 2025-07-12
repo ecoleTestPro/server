@@ -87,6 +87,22 @@ class Course extends Model
         );
     }
 
+    public function gallery(): BelongsToMany
+    {
+        return $this->belongsToMany(Media::class, 'course_media');
+    }
+
+    public function galleryPaths(): Attribute
+    {
+        $paths = $this->gallery->map(function ($media) {
+            return Storage::exists($media->src) ? Storage::url($media->src) : null;
+        })->filter()->values()->toArray();
+
+        return Attribute::make(
+            get: fn() => $paths,
+        );
+    }
+
     public function favouriteUsers(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'user_courses');

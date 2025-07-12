@@ -27,6 +27,8 @@ class CourseStoreRequest extends FormRequest
             'excerpt'               => 'required|string|min:2|max:5000',
             'media'                 => 'image|mimes:jpeg,png,jpg|max:2048',
             'video'                 => 'file|mimes:mp4,mpeg|max:1048576',
+            'gallery'               => 'sometimes|array',
+            'gallery.*'            => 'file|mimes:jpeg,png,jpg,mp4,mpeg|max:1048576',
             'description'           => 'json|min:1',
             'is_published'          => 'boolean',
             'regular_price'         => 'numeric|min:' . ((float) config('app.minimum_amount')),

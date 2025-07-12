@@ -54,6 +54,9 @@ function CourseForm({ course }: ICourseFormProps) {
 
     const [openIndex, setOpenIndex] = useState<number | null>(0);
     const [categories, setCategories] = useState<ICourseCategory[]>([]);
+    const [thumbnail, setThumbnail] = useState<File | null>(null);
+    const [videoFile, setVideoFile] = useState<File | null>(null);
+    const [galleryFiles, setGalleryFiles] = useState<FileList | null>(null);
 
     const toggleAccordion = (index: number) => {
         setOpenIndex((prevIndex) => (prevIndex === index ? null : index));
@@ -106,33 +109,30 @@ function CourseForm({ course }: ICourseFormProps) {
      * @returns {Promise<void>}
      */
     const submit = async (data: ICourseForm, draft: boolean = false): Promise<void> => {
-        console.log('data', data);
-
         const routeName = data?.id ? 'dashboard.course.update' : 'dashboard.course.store';
-        const axiosAction = data?.id ? axios.put : axios.post;
+        const formData = new FormData();
+        const payload = createPayload(data, draft);
+
+        Object.entries(payload).forEach(([key, value]) => {
+            if (value !== undefined && value !== null) {
+                formData.append(key, value as any);
+            }
+        });
+
+        if (thumbnail) formData.append('media', thumbnail);
+        if (videoFile) formData.append('video', videoFile);
+        if (galleryFiles) Array.from(galleryFiles).forEach((file) => formData.append('gallery[]', file));
+        if (data?.id) formData.append('_method', 'PUT');
 
         try {
-            return await axiosAction(route(routeName, data?.id), createPayload(data, draft)).then(
-                (response) => {
-                    Logger.log('response', response);
-                    toast.success(t('courses.createSuccess', 'Formation créée avec succès !'));
-
-                    // reset();
-
-                    return router.visit(ROUTE_MAP.dashboard.course.list.link);
-                },
-                (error) => {
-                    toast.error(t('courses.createError', 'Erreur lors de la création de la formation'));
-                    console.error('Course creation error:', error);
-                    if (error.response && error.response.errors) {
-                        throw error.response.errors;
-                    }
-                },
-            );
-        } catch (error) {
+            await axios.post(route(routeName, data?.id), formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            });
+            toast.success(t('courses.createSuccess', 'Formation créée avec succès !'));
+            return router.visit(ROUTE_MAP.dashboard.course.list.link);
+        } catch (error: any) {
             toast.error(t('courses.createError', 'Erreur lors de la création de la formation'));
             console.error('Course creation error:', error);
-            console.error('Course creation error:', errors);
         }
     };
 
@@ -199,6 +199,9 @@ function CourseForm({ course }: ICourseFormProps) {
                                     setData={setData}
                                     processing={processing}
                                     errors={errors}
+                                    onThumbnailChange={setThumbnail}
+                                    onVideoChange={setVideoFile}
+                                    onGalleryChange={setGalleryFiles}
                                 />
                             </div>
 

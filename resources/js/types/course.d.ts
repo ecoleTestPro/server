@@ -110,6 +110,7 @@ export interface ICourse {
     description: ICourseDescription;
     categories?: ICourseCategory[];
     media?: IMedia[];
+    gallery?: IMedia[];
     course_sessions?: ICourseSession[];
 
 }
