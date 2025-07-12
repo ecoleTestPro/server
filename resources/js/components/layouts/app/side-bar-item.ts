@@ -38,7 +38,7 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
     {
         title: 'Partenaires',
         href: route('dashboard.partners.index'),
-        icon: Folder,
+        icon: FileStack,
     },
     // {
     //     title: 'Pages',
