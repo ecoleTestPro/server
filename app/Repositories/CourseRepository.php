@@ -122,6 +122,11 @@ class CourseRepository extends Repository
         }
     }
 
+    public static function incrementViewCount(Course $course): void
+    {
+        $course->increment('view_count');
+    }
+
     /**
      * Get all courses by category id.
      *

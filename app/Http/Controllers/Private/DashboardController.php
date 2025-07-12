@@ -69,22 +69,14 @@ class DashboardController extends PrivateAbstractController
             $chartData[] = isset($enrollmentData[$month]) ? $enrollmentData[$month] : 0;
         }
 
-        // Fetch courses created data for the current year, grouped by month
-        $courseData = Course::select(
-            DB::raw('MONTH(created_at) as month'),
-            DB::raw('COUNT(*) as count')
-        )
-            ->whereYear('created_at', $currentYear)
-            ->groupBy(DB::raw('MONTH(created_at)'))
-            ->orderBy('month')
-            ->get()
-            ->pluck('count', 'month')
-            ->toArray();
+        // Fetch top viewed courses
+        $popularCourses = Course::where('is_published', 1)
+            ->orderByDesc('view_count')
+            ->limit(10)
+            ->get(['title', 'view_count']);
 
-        $courseChartData = [];
-        for ($month = 1; $month <= 12; $month++) {
-            $courseChartData[] = isset($courseData[$month]) ? $courseData[$month] : 0;
-        }
+        $courseChartData = $popularCourses->pluck('view_count')->toArray();
+        $courseChartCategories = $popularCourses->pluck('title')->toArray();
 
         $chart_data = [
             'enrollment_area' => [
@@ -112,24 +104,11 @@ class DashboardController extends PrivateAbstractController
             'course_area' => [
                 'series' => [
                     [
-                        'name' => 'Courses',
+                        'name' => 'Views',
                         'data' => $courseChartData,
                     ],
                 ],
-                'categories' => [
-                    "$currentYear-01-01T00:00:00.000Z",
-                    "$currentYear-02-01T00:00:00.000Z",
-                    "$currentYear-03-01T00:00:00.000Z",
-                    "$currentYear-04-01T00:00:00.000Z",
-                    "$currentYear-05-01T00:00:00.000Z",
-                    "$currentYear-06-01T00:00:00.000Z",
-                    "$currentYear-07-01T00:00:00.000Z",
-                    "$currentYear-08-01T00:00:00.000Z",
-                    "$currentYear-09-01T00:00:00.000Z",
-                    "$currentYear-10-01T00:00:00.000Z",
-                    "$currentYear-11-01T00:00:00.000Z",
-                    "$currentYear-12-01T00:00:00.000Z",
-                ],
+                'categories' => $courseChartCategories,
             ],
         ];
 
