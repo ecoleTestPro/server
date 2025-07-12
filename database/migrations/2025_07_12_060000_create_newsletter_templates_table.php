@@ -14,6 +14,7 @@ return new class extends Migration
             $table->string('subject');
             $table->text('content');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
