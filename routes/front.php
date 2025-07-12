@@ -3,6 +3,7 @@
 use App\Http\Controllers\Public\ContactUsController;
 use App\Http\Controllers\Public\EnrollController;
 use App\Http\Controllers\Public\PublicController;
+use App\Http\Controllers\Public\PublicJobController;
 use App\Http\Controllers\Public\PublicFormationController;
 use App\Http\Controllers\Public\PublicFormationSessionController;
 use Illuminate\Support\Facades\Route;
@@ -56,7 +57,8 @@ Route::group(["prefix" => "/"], function () {
     /**
      * Careers routes
      */
-    Route::get('careers', [PublicController::class, 'careers'])->name('careers');
+    Route::get('careers', [PublicJobController::class, 'list'])->name('careers');
+    Route::post('job/apply', [PublicJobController::class, 'apply'])->name('job.apply');
     Route::get('job/{job_slug}', [PublicController::class, 'jobDetail'])->name('job.detail');
 
     /**
