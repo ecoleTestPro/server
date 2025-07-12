@@ -9,11 +9,13 @@ import { Button } from '@/components/ui/button/button';
 
 import { SharedData } from '@/types';
 import { ICourse, ICourseCategory } from '@/types/course';
+import { IPartner } from '@/types/partner';
 import 'react-quill/dist/quill.snow.css';
 import RichTextQuill from '../../ui/form/RichTextQuill';
 import { Skeleton } from '../../ui/skeleton';
 import CourseAdditionnalForm from './course-additionnal.form';
 import CourseBasicInfoForm from './course-basic-info.form';
+import Drawer from '@/components/ui/drawer';
 
 import { ROUTE_MAP } from '@/utils/route.util';
 import axios from 'axios';
@@ -53,6 +55,9 @@ function CourseForm({ course }: ICourseFormProps) {
 
     const [openIndex, setOpenIndex] = useState<number | null>(0);
     const [categories, setCategories] = useState<ICourseCategory[]>([]);
+    const [partners, setPartners] = useState<IPartner[]>([]);
+    const [selectedPartners, setSelectedPartners] = useState<number[]>([]);
+    const [openPartnerDrawer, setOpenPartnerDrawer] = useState(false);
     const [thumbnail, setThumbnail] = useState<File | null>(null);
     const [videoFile, setVideoFile] = useState<File | null>(null);
     const [galleryFiles, setGalleryFiles] = useState<FileList | null>(null);
@@ -84,6 +89,8 @@ function CourseForm({ course }: ICourseFormProps) {
         setData('author', course.author || '');
         setData('image', course.image || '');
         setData('title', course.title || '');
+        setData('partner_ids', course.partners ? course.partners.map((p) => p.id!) : []);
+        setSelectedPartners(course.partners ? course.partners.map((p) => p.id!) : []);
 
         // setData('description', course.description || '');
         if (course.description) {
@@ -150,6 +157,9 @@ function CourseForm({ course }: ICourseFormProps) {
             setCategories(sharedData.categories_with_courses);
         } else {
             setCategories([]);
+        }
+        if (sharedData && (sharedData as any).partners) {
+            setPartners((sharedData as any).partners);
         }
     }, [sharedData]);
 
@@ -289,6 +299,9 @@ function CourseForm({ course }: ICourseFormProps) {
 
                 <div className="col-span-1 md:col-span-1">
                     <div className="grid grid-cols-1 gap-4">
+                        <Button type="button" onClick={() => setOpenPartnerDrawer(true)} className="mt-2 bg-blue-400 hover:bg-blue-500" disabled={processing}>
+                            {t('courses.partners', 'Associer des partenaires')}
+                        </Button>
                         <Button
                             type="button"
                             onClick={() => router.visit(route('dashboard.course.index'))}
@@ -316,6 +329,34 @@ function CourseForm({ course }: ICourseFormProps) {
                 </div>
             </div>
         </form>
+        <Drawer
+            title={t('courses.partners', 'Associer des partenaires')}
+            open={openPartnerDrawer}
+            setOpen={setOpenPartnerDrawer}
+            component={(
+                <div className="space-y-2">
+                    {partners.map((p) => (
+                        <label key={p.id} className="flex items-center space-x-2">
+                            <input
+                                type="checkbox"
+                                checked={selectedPartners.includes(p.id!)}
+                                onChange={(e) => {
+                                    let updated = [...selectedPartners];
+                                    if (e.target.checked) {
+                                        updated.push(p.id!);
+                                    } else {
+                                        updated = updated.filter((id) => id !== p.id);
+                                    }
+                                    setSelectedPartners(updated);
+                                    setData('partner_ids', updated);
+                                }}
+                            />
+                            <span>{p.name}</span>
+                        </label>
+                    ))}
+                </div>
+            )}
+        />
     );
 }
 

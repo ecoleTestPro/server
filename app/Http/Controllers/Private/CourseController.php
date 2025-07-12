@@ -16,6 +16,7 @@ use App\Repositories\CourseRepository;
 use App\Repositories\InstructorRepository;
 use App\Repositories\NotificationInstanceRepository;
 use App\Repositories\NotificationRepository;
+use App\Repositories\PartnerRepository;
 use App\Repositories\UserRepository;
 use App\Services\Notification\CourseStoreNotificationService;
 use Illuminate\Http\Request;
@@ -80,6 +81,7 @@ class CourseController extends Controller
     {
         // $categories = CategoryRepository::findAll();
         $categories = CategoryRepository::getRecursiveTree(false);
+        $partners = PartnerRepository::query()->where('is_active', true)->get();
         // dd($categories);
         $course = null;
         if ($slug) {
@@ -89,6 +91,7 @@ class CourseController extends Controller
         $data = [
             'course'                  => $course,
             'categories_with_courses' => $categories,
+            'partners'               => $partners,
         ];
 
         return Inertia::render('dashboard/courses/course-create', [

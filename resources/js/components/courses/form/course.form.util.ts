@@ -37,6 +37,8 @@ export type ICourseRequest = {
 
     image: string;
 
+    partner_ids?: number[];
+
     is_published?: boolean; // Indicate if the course is published or a draft
 };
 
@@ -64,6 +66,8 @@ export type ICourseForm = {
     image: string;
 
     is_featured: boolean;
+
+    partner_ids?: number[];
 
     // description: string;
     /**
@@ -150,6 +154,7 @@ export const COURSE_DEFAULT_VALUES: ICourseForm = {
     content: '',
 
     is_featured: false,
+    partner_ids: [],
 };
 
 
@@ -197,6 +202,7 @@ export const createPayload = (data: ICourseForm, draft: boolean): ICourseRequest
             title: data.title || '',
             attachment: data.attachment || '',
             is_published: !draft, // If draft is true, is_published should be false
+            partner_ids: data.partner_ids,
         };
 
         console.log('[CREATE_PAYLOAD]', payload);

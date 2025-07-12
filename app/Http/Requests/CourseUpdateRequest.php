@@ -31,6 +31,8 @@ class CourseUpdateRequest extends FormRequest
             'description'           => 'required|array|min:1',
             'description.*.heading' => 'required|string',
             'description.*.body'    => 'required|string',
+            'partner_ids'           => 'sometimes|array',
+            'partner_ids.*'         => 'exists:partners,id',
             'regular_price'         => 'required|numeric|min:' . ((float) config('app.minimum_amount')),
             'instructor_id'         => 'exists:instructors,id',
             'is_active'             => 'nullable',

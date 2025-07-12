@@ -264,6 +264,10 @@ class CourseRepository extends Repository
             $course->gallery()->attach($galleryIds);
         }
 
+        if ($request->partner_ids) {
+            $course->partners()->sync($request->partner_ids);
+        }
+
         return $course;
     }
 
@@ -320,6 +324,10 @@ class CourseRepository extends Repository
                 );
                 $course->gallery()->attach($media->id);
             }
+        }
+
+        if ($request->partner_ids) {
+            $course->partners()->sync($request->partner_ids);
         }
 
         return self::update($course, [
