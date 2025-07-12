@@ -15,13 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained('users')->cascadeOnDelete();
             $table->foreignId('course_id')->constrained('courses')->cascadeOnDelete();
-            $table->foreignId('course_session_id')->constrained('course_sessions')->cascadeOnDelete();
-            // $table->foreignId('coupon_id')->nullable()->constrained('coupons')->nullOnDelete();
-            $table->enum('mode', ['online', 'in-person', 'hybrid'])->default('online');
+            $table->foreignId('course_session_id')->nullable()->constrained('course_sessions')->cascadeOnDelete();
+            $table->enum('mode', ['online', 'in-person', 'hybrid'])->default('online'); 
             $table->float('progress')->default(0);
-            $table->float('course_price');
-            $table->float('discount_amount');
-            $table->timestamp('last_activity')->nullable();
             $table->boolean('is_certificate_downloaded')->default(false);
             $table->softDeletes();
             $table->timestamps();
