@@ -8,6 +8,7 @@ use App\Http\Controllers\Private\DashboardController;
 use App\Http\Controllers\Private\FaqController;
 use App\Http\Controllers\Private\SettingController;
 use App\Http\Controllers\Private\TestimonialController;
+use App\Http\Controllers\Private\ReferenceController;
 use App\Http\Controllers\Settings\PasswordController;
 use App\Http\Controllers\Settings\ProfileController;
 
@@ -113,5 +114,16 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
         Route::put('update/{faq}',   [FaqController::class, 'update'])->name('dashboard.faqs.update');
         Route::delete('delete/{faq}', [FaqController::class, 'destroy'])->name('dashboard.faqs.delete');
         Route::post('restore/{faq}', [FaqController::class, 'restore'])->name('dashboard.faqs.restore'); 
+    });
+
+    // REFERENCES
+    Route::group([
+        'prefix' => 'references',
+    ], function () {
+        Route::get('',               [ReferenceController::class, 'index'])->name('dashboard.references.index');
+        Route::post('create',        [ReferenceController::class, 'store'])->name('dashboard.references.store');
+        Route::put('update/{reference}', [ReferenceController::class, 'update'])->name('dashboard.references.update');
+        Route::delete('delete/{reference}', [ReferenceController::class, 'destroy'])->name('dashboard.references.delete');
+        Route::post('restore/{reference}', [ReferenceController::class, 'restore'])->name('dashboard.references.restore');
     });
 });
