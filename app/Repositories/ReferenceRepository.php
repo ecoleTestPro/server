@@ -16,6 +16,7 @@ class ReferenceRepository extends Repository
     {
         return self::create([
             'text' => $request->text,
+            'tag' => $request->tag,
             'media_id' => $request->media_id,
             'is_active' => $request->has('is_active') ? true : false,
         ]);
@@ -25,6 +26,7 @@ class ReferenceRepository extends Repository
     {
         return self::update($reference, [
             'text' => $request->text ?? $reference->text,
+            'tag' => $request->tag ?? $reference->tag,
             'media_id' => $request->media_id ?? $reference->media_id,
             'is_active' => $request->has('is_active') ? true : $reference->is_active,
         ]);

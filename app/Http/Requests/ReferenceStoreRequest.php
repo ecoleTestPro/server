@@ -15,6 +15,7 @@ class ReferenceStoreRequest extends FormRequest
     {
         return [
             'text' => 'nullable|string',
+            'tag' => 'nullable|string',
             'media_id' => 'required|exists:media,id',
         ];
     }

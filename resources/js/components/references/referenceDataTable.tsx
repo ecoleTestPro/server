@@ -51,6 +51,15 @@ export default function ReferenceDataTable({ references, onEditRow, onDeleteRow 
             },
         },
         {
+            accessorKey: 'tag',
+            header: ({ column }) => (
+                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                    Tag
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            ),
+        },
+        {
             id: 'actions',
             enableHiding: false,
             cell: ({ row }) => <ReferenceActionBtn row={row} onEdit={onEditRow} onDelete={onDeleteRow} />,
