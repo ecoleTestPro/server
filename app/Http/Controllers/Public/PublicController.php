@@ -135,6 +135,14 @@ class PublicController extends PublicAbstractController
         ]);
     }
 
+    public function reconversionMetier()
+    {
+        $data = $this->default_data;
+        return Inertia::render('public/reconversion-metier', [
+            'data' => $data,
+        ]);
+    }
+
     public function privacyPolicy()
     {
         return Inertia::render('public/cgu/privacy-policy', [

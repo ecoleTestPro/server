@@ -122,9 +122,9 @@ export default function Header() {
     const PROGRAMMES_DE_RECONVERSION: MenuChildItem = {
         id: 'programmes-de-reconversion',
         label: 'Programmes de reconversion',
-        href: '#',
+        href: ROUTE_MAP.public.reconversionMetier.link,
         description: 'Découvrez nos programmes de reconversion professionnelle.',
-        image: 'assets/images/bg-03.jpg',
+        image: 'https://placehold.jp/150x150.png',
     };
 
     const updateCourseMenuPart = (
@@ -146,7 +146,10 @@ export default function Header() {
                     id: 'formations-children',
                     title: 'Formations',
                     description: 'Liste des formations',
-                    items: buildCategoryItems(data.categories_with_courses),
+                    items: [
+                        PROGRAMMES_DE_RECONVERSION,
+                        ...buildCategoryItems(data.categories_with_courses),
+                    ],
                 },
             };
         });

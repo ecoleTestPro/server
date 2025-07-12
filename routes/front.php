@@ -30,6 +30,8 @@ Route::group(["prefix" => "/"], function () {
     Route::get('contact', [ContactUsController::class, 'contact'])->name('contact');
     Route::post('contact', [ContactUsController::class, 'contactSubmit'])->name('contact.post');
 
+    Route::get('reconversion-metier', [PublicController::class, 'reconversionMetier'])->name('reconversion.metier');
+
     Route::post('newsletter', [\App\Http\Controllers\Public\NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
 
     /**
