@@ -8,6 +8,8 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
+import Drawer from '@/components/ui/drawer';
+import CourseDetailOverview from '@/components/courses/detail/partial/CourseDetailOverview';
 import { useTranslation } from 'react-i18next';
 
 interface SessionWithCourse extends ICourseSession {
@@ -20,6 +22,9 @@ export default function TrainingCalendarPage() {
     const [selectedSessions, setSelectedSessions] = useState<SessionWithCourse[]>([]);
     const [selectedSession, setSelectedSession] = useState<SessionWithCourse | null>(null);
     const [openDialog, setOpenDialog] = useState(false);
+    const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+    const [openCourseDrawer, setOpenCourseDrawer] = useState(false);
+    const [selectedCourse, setSelectedCourse] = useState<ICourse | null>(null);
 
     useEffect(() => {
         axios
@@ -29,6 +34,7 @@ export default function TrainingCalendarPage() {
     }, []);
 
     const onDayClick = (value: Date) => {
+        setSelectedDate(value);
         const daySessions = sessions.filter((s) => new Date(s.start_date).toDateString() === value.toDateString());
         setSelectedSessions(daySessions);
     };
@@ -69,12 +75,11 @@ export default function TrainingCalendarPage() {
 
                     <div className="flex flex-col md:flex-row gap-4">
                         <div className="md:w-1/3">
-                            <Calendar onClickDay={onDayClick} tileContent={tileContent} />
+                            <Calendar onClickDay={onDayClick} tileContent={tileContent} className="w-full" />
                         </div>
                         <div className="md:w-2/3">
                             <h3 className="text-xl font-semibold mb-4">{t('CALENDAR.SESSIONS_LIST', 'Liste des sessions')}</h3>
-
-                            <div className="mt-6 space-y-4">
+                            <div className="mt-6 space-y-4 max-h-96 overflow-y-auto">
                                 {selectedSessions.map((session) => (
                                     <div
                                         key={session.id}
@@ -97,6 +102,15 @@ export default function TrainingCalendarPage() {
                                             >
                                                 {t('COURSE.DETAIL.REGISTER', 'Inscription')}
                                             </button>{' '}
+                                            <button
+                                                className="bg-blue-500 hover:bg-blue-600 text-white rounded-md px-4 py-2 text-sm"
+                                                onClick={() => {
+                                                    setSelectedCourse(session.course);
+                                                    setOpenCourseDrawer(true);
+                                                }}
+                                            >
+                                                {t('CALENDAR.VIEW_COURSE', 'Voir la formation')}
+                                            </button>
                                             {false && (
                                                 <Link
                                                     href={`${ROUTE_MAP.public.contact.link}?subject=Formation ${session.course?.title}`}
@@ -108,6 +122,11 @@ export default function TrainingCalendarPage() {
                                         </div>
                                     </div>
                                 ))}
+                                {selectedDate && selectedSessions.length === 0 && (
+                                    <p className="text-gray-500 dark:text-gray-400 text-center">
+                                        {t('CALENDAR.NO_SESSIONS', 'Aucune session prévue pour cette date.')}
+                                    </p>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -115,6 +134,15 @@ export default function TrainingCalendarPage() {
             </div>
             {selectedSession && (
                 <CourseInscriptionDialog course={selectedSession.course} session={selectedSession} isOpen={openDialog} onOpenChange={setOpenDialog} />
+            )}
+            {selectedCourse && (
+                <Drawer
+                    title={t('CALENDAR.COURSE_DETAIL', 'Détails de la formation')}
+                    open={openCourseDrawer}
+                    setOpen={setOpenCourseDrawer}
+                    component={<CourseDetailOverview course={selectedCourse} />}
+                    maxWidth="max-w-3/4"
+                />
             )}
         </DefaultLayout>
     );

@@ -339,3 +339,16 @@ border-secondary-900 {
 .animate-gradient {
     animation: gradientAnimation 10s ease-in-out infinite;
 }
+
+/* Calendar custom styles */
+.react-calendar {
+    @apply w-full rounded-md border border-gray-200 bg-white p-2 text-sm shadow-md dark:border-gray-700 dark:bg-gray-800;
+}
+
+.react-calendar__tile--active {
+    @apply bg-green-500 text-white hover:bg-green-600;
+}
+
+.react-calendar__tile--now {
+    @apply bg-gray-200 dark:bg-gray-700;
+}
