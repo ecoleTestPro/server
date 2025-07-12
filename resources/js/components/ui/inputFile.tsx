@@ -69,7 +69,7 @@ export function InputFile({
           id="input-file-upload"
           ref={inputRef}
           type="file"
-          accept="image/*"
+          accept={props.accept || 'image/*'}
           multiple={multiple}
           className="hidden"
           onChange={handleChange}

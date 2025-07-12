@@ -1,6 +1,7 @@
 import InputError from '@/components/input-error';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { InputFile } from '@/components/ui/inputFile';
 
 // import { PeriodicityUnitEnum } from '@/types/course';
 import SelectCustom, { ISelectItem } from '@/components/ui/select-custom';
@@ -22,9 +23,12 @@ interface CourseBasicInfoFormProps {
     processing: boolean;
     errors: Record<string, string>;
     categories: ICourseCategory[];
+    onThumbnailChange?: (file: File | null) => void;
+    onVideoChange?: (file: File | null) => void;
+    onGalleryChange?: (files: FileList | null) => void;
 }
 
-export default function CourseBasicInfoForm({ fieldsetClasses, data, setData, processing, errors, categories }: CourseBasicInfoFormProps) {
+export default function CourseBasicInfoForm({ fieldsetClasses, data, setData, processing, errors, categories, onThumbnailChange, onVideoChange, onGalleryChange }: CourseBasicInfoFormProps) {
     const { t } = useTranslation();
 
     const category_list = (): ISelectItem[] => {
@@ -106,6 +110,26 @@ export default function CourseBasicInfoForm({ fieldsetClasses, data, setData, pr
                         )}
 
                         <InputError message={errors.category_id} />
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset className={fieldsetClasses}>
+                <legend className="px-2 text-base font-semibold">{t('courses.media', 'Médias')}</legend>
+                <div className="grid gap-4">
+                    <div className="grid gap-2">
+                        <Label htmlFor="thumbnail">{t('courses.thumbnail', 'Image de mise en avant')}</Label>
+                        <InputFile id="thumbnail" onFilesChange={(files) => onThumbnailChange?.(files ? files[0] : null)} accept="image/*" multiple={false} disabled={processing} />
+                        <InputError message={errors.media} />
+                    </div>
+                    <div className="grid gap-2">
+                        <Label htmlFor="video">{t('courses.video', 'Vidéo')}</Label>
+                        <InputFile id="video" onFilesChange={(files) => onVideoChange?.(files ? files[0] : null)} accept="video/*" multiple={false} disabled={processing} />
+                        <InputError message={errors.video} />
+                    </div>
+                    <div className="grid gap-2">
+                        <Label htmlFor="gallery">{t('courses.gallery', 'Galerie')}</Label>
+                        <InputFile id="gallery" onFilesChange={(files) => onGalleryChange?.(files)} accept="image/*,video/*" multiple={true} disabled={processing} />
                     </div>
                 </div>
             </fieldset>

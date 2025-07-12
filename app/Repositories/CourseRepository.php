@@ -207,6 +207,18 @@ class CourseRepository extends Repository
             MediaTypeEnum::VIDEO
         ) : null;
 
+        $galleryIds = [];
+        if ($request->hasFile('gallery')) {
+            foreach ($request->file('gallery') as $file) {
+                $media = MediaRepository::storeByRequest(
+                    $file,
+                    'course/gallery',
+                    self::getFileType($file)
+                );
+                $galleryIds[] = $media->id;
+            }
+        }
+
         // fix instructor_id
         $instructor = InstructorRepository::getDefaultInstructor();
 
@@ -246,6 +258,10 @@ class CourseRepository extends Repository
                     'serial_number' => $requestContent['serial_number']
                 ]);
             }
+        }
+
+        if ($galleryIds) {
+            $course->gallery()->attach($galleryIds);
         }
 
         return $course;
@@ -295,6 +311,17 @@ class CourseRepository extends Repository
             ) : null;
         }
 
+        if ($request->hasFile('gallery')) {
+            foreach ($request->file('gallery') as $file) {
+                $media = MediaRepository::storeByRequest(
+                    $file,
+                    'course/gallery',
+                    self::getFileType($file)
+                );
+                $course->gallery()->attach($media->id);
+            }
+        }
+
         return self::update($course, [
             'category_id'   => $request->category_id ?? $course->category_id,
             'title'         => $request->title ?? $course->title,
@@ -308,5 +335,27 @@ class CourseRepository extends Repository
             'is_active'     => $isActive,
             'published_at'  => $request->is_active == 'on' ? now() : null
         ]);
+    }
+
+    private static function getFileType($file)
+    {
+        switch ($file->getClientMimeType()) {
+            case 'image/jpeg':
+            case 'image/png':
+            case 'image/jpg':
+            case 'image/gif':
+            case 'image/svg+xml':
+                $mediaType = MediaTypeEnum::IMAGE;
+                break;
+            case 'video/mp4':
+            case 'video/mpeg':
+                $mediaType = MediaTypeEnum::VIDEO;
+                break;
+            default:
+                $mediaType = MediaTypeEnum::IMAGE;
+                break;
+        }
+
+        return $mediaType;
     }
 }
