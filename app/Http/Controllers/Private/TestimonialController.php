@@ -39,13 +39,9 @@ class TestimonialController extends Controller
 
     public function store(TestimonialStoreRequest $request)
     {
-        if (app()->isLocal()) {
-            return to_route('testimonial.index')->with('error', 'Testimonial not created in demo mode');
-        }
-
         TestimonialRepository::storeByRequest($request);
 
-        return to_route('testimonial.testimonial')->withSuccess('Testimonial created successfully.');
+        return to_route('dashboard.testimonial.index')->withSuccess('Testimonial created successfully.');
     }
 
     public function edit(Testimonial $testimonial)
@@ -58,7 +54,7 @@ class TestimonialController extends Controller
     public function update(TestimonialUpdateRequest $request, Testimonial $testimonial)
     {
         TestimonialRepository::updateByRequest($request, $testimonial);
-        return to_route('testimonial.index')->withSuccess('Testimonial updated successfully.');
+        return to_route('dashboard.testimonial.index')->withSuccess('Testimonial updated successfully.');
     }
 
     public function destroy(Testimonial $testimonial)
@@ -66,12 +62,12 @@ class TestimonialController extends Controller
         $testimonial->delete();
         $testimonial->is_active = false;
         $testimonial->save();
-        return to_route('testimonial.index')->withSuccess('Testimonial deleted successfully.');
+        return to_route('dashboard.testimonial.index')->withSuccess('Testimonial deleted successfully.');
     }
 
     public function restore($testimonial)
     {
         TestimonialRepository::query()->withTrashed()->find($testimonial)->restore();
-        return to_route('testimonial.index')->withSuccess('Testimonial restored successfully.');
+        return to_route('dashboard.testimonial.index')->withSuccess('Testimonial restored successfully.');
     }
 }

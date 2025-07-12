@@ -67,3 +67,10 @@ export interface IDataWithPagination<T> {
     to: number,
     total: number
 }
+
+export * from './reference';
+export * from './partner';
+export * from './notification';
+export * from './job-offer';
+export * from './newsletterTemplate';
+export * from './newsletterLog';

@@ -104,3 +104,29 @@ export const getPeriodicity = (periodicityUnit: ICoursePeriodicity, periodicityV
     const unit = periodicityMap[periodicityUnit] || 'inconnu';
     return `${periodicityValue} ${unit}${periodicityValue > 1 ? 's' : ''}`;
 }
+
+
+
+export const handleErrorsRequest = (error: any, setLoading: (loading: boolean) => void, toastError: (t: string) => void, setErrors: (errors: any) => void): void => {
+    try {
+        setLoading(false);
+        Logger.error('[handleErrorsRequest] errors :', error);
+        if (error) {
+            if (error?.status == 500) {
+                toastError("Une erreur est survenue");
+            }
+
+            if (error?.status == 422 && error.response?.data?.errors) {
+                if (error.response.data.message && typeof error.response.data.message === 'string') {
+                    toastError(error.response.data.message);
+                }
+
+                if (error.response.data.errors) {
+                    setErrors(error.response.data.errors);
+                }
+            }
+        }
+    } catch (error) {
+        Logger.error('[handleErrorsRequest] (catch) :', error);
+    }
+}

@@ -7,15 +7,16 @@ import { useTranslation } from 'react-i18next';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button/button';
 
+import Drawer from '@/components/ui/drawer';
 import { SharedData } from '@/types';
 import { ICourse, ICourseCategory } from '@/types/course';
+import { IPartner } from '@/types/partner';
 import 'react-quill/dist/quill.snow.css';
 import RichTextQuill from '../../ui/form/RichTextQuill';
 import { Skeleton } from '../../ui/skeleton';
 import CourseAdditionnalForm from './course-additionnal.form';
 import CourseBasicInfoForm from './course-basic-info.form';
 
-import { Logger } from '@/utils/console.util';
 import { ROUTE_MAP } from '@/utils/route.util';
 import axios from 'axios';
 import { COURSE_DEFAULT_VALUES, createPayload, ICourseForm, PeriodicityUnitEnum } from './course.form.util';
@@ -54,6 +55,14 @@ function CourseForm({ course }: ICourseFormProps) {
 
     const [openIndex, setOpenIndex] = useState<number | null>(0);
     const [categories, setCategories] = useState<ICourseCategory[]>([]);
+    const [partners, setPartners] = useState<IPartner[]>([]);
+    const [selectedPartners, setSelectedPartners] = useState<number[]>([]);
+    const [openPartnerDrawer, setOpenPartnerDrawer] = useState(false);
+    const [thumbnail, setThumbnail] = useState<File | null>(null);
+    const [logoFile, setLogoFile] = useState<File | null>(null);
+    const [orgLogoFile, setOrgLogoFile] = useState<File | null>(null);
+    const [videoFile, setVideoFile] = useState<File | null>(null);
+    const [galleryFiles, setGalleryFiles] = useState<FileList | null>(null);
 
     const toggleAccordion = (index: number) => {
         setOpenIndex((prevIndex) => (prevIndex === index ? null : index));
@@ -82,6 +91,8 @@ function CourseForm({ course }: ICourseFormProps) {
         setData('author', course.author || '');
         setData('image', course.image || '');
         setData('title', course.title || '');
+        setData('partner_ids', course.partners ? course.partners.map((p) => p.id!) : []);
+        setSelectedPartners(course.partners ? course.partners.map((p) => p.id!) : []);
 
         // setData('description', course.description || '');
         if (course.description) {
@@ -106,33 +117,32 @@ function CourseForm({ course }: ICourseFormProps) {
      * @returns {Promise<void>}
      */
     const submit = async (data: ICourseForm, draft: boolean = false): Promise<void> => {
-        console.log('data', data);
-
         const routeName = data?.id ? 'dashboard.course.update' : 'dashboard.course.store';
-        const axiosAction = data?.id ? axios.put : axios.post;
+        const formData = new FormData();
+        const payload = createPayload(data, draft);
+
+        Object.entries(payload).forEach(([key, value]) => {
+            if (value !== undefined && value !== null) {
+                formData.append(key, value as any);
+            }
+        });
+
+        if (thumbnail) formData.append('media', thumbnail);
+        if (logoFile) formData.append('logo', logoFile);
+        if (orgLogoFile) formData.append('organization_logo', orgLogoFile);
+        if (videoFile) formData.append('video', videoFile);
+        if (galleryFiles) Array.from(galleryFiles).forEach((file) => formData.append('gallery[]', file));
+        if (data?.id) formData.append('_method', 'PUT');
 
         try {
-            return await axiosAction(route(routeName, data?.id), createPayload(data, draft)).then(
-                (response) => {
-                    Logger.log('response', response);
-                    toast.success(t('courses.createSuccess', 'Formation créée avec succès !'));
-
-                    // reset();
-
-                    return router.visit(ROUTE_MAP.dashboard.course.list.link);
-                },
-                (error) => {
-                    toast.error(t('courses.createError', 'Erreur lors de la création de la formation'));
-                    console.error('Course creation error:', error);
-                    if (error.response && error.response.errors) {
-                        throw error.response.errors;
-                    }
-                },
-            );
-        } catch (error) {
+            await axios.post(route(routeName, data?.id), formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            });
+            toast.success(t('courses.createSuccess', 'Formation créée avec succès !'));
+            return router.visit(ROUTE_MAP.dashboard.course.list.link);
+        } catch (error: any) {
             toast.error(t('courses.createError', 'Erreur lors de la création de la formation'));
             console.error('Course creation error:', error);
-            console.error('Course creation error:', errors);
         }
     };
 
@@ -151,6 +161,9 @@ function CourseForm({ course }: ICourseFormProps) {
             setCategories(sharedData.categories_with_courses);
         } else {
             setCategories([]);
+        }
+        if (sharedData && (sharedData as any).partners) {
+            setPartners((sharedData as any).partners);
         }
     }, [sharedData]);
 
@@ -177,134 +190,194 @@ function CourseForm({ course }: ICourseFormProps) {
     }
 
     return (
-        <form
-            className="container mx-auto flex flex-col gap-8"
-            onSubmit={() => {
-                submit(data, false);
-            }}
-        >
-            {/* mx-auto  */}
-            <h2 className="text-2xl font-bold">{data?.title ? data.title : 'Créer une formation'}</h2>
+        <>
+            <form
+                className="container mx-auto flex flex-col gap-8"
+                onSubmit={() => {
+                    submit(data, false);
+                }}
+            >
+                {/* mx-auto  */}
+                <h2 className="text-2xl font-bold">{data?.title ? data.title : 'Créer une formation'}</h2>
 
-            <div className="overflow-y-auto max-h-[75vh]">
-                <div className="toc-accordion mx-auto" id="tablesOfContentAccordion">
-                    <div className="grid grid-cols-1 xl:grid-cols-1 gap-4">
-                        <div className="col-span-1 xl:col-span-4">
-                            {/* Bloc Informations principales  && Catégory*/}
-                            <div className="col-span-1 xl:col-span-3">
-                                <CourseBasicInfoForm
-                                    fieldsetClasses={fieldsetClasses}
-                                    data={data}
-                                    categories={categories}
-                                    setData={setData}
-                                    processing={processing}
-                                    errors={errors}
-                                />
-                            </div>
-
-                            {/* Bloc Détails */}
-                            <div className="col-span-1 xl:col-span-1">
-                                <CourseAdditionnalForm
-                                    fieldsetClasses={fieldsetClasses}
-                                    data={data}
-                                    setData={setData}
-                                    processing={processing}
-                                    errors={errors}
-                                />
-                            </div>
-
-                            {/* Bloc Description */}
-                            <section>
-                                <div className="flex items-center justify-between">
-                                    <div className="toc-accordion-item mb-[15px] rounded-md w-full bg-white dark:bg-gray-800 ">
-                                        <button
-                                            className={`toc-accordion-button open lg:text-md relative block w-full cursor-pointertext-base font-medium ltr:text-left rtl:text-right ${
-                                                openIndex === accordionIndex.description ? 'open' : ''
-                                            }`}
-                                            type="button"
-                                            onClick={() => toggleAccordion(accordionIndex.description)}
-                                        >
-                                            <div className="p-[12px]">
-                                                <h3 className="text-lg font-semibold">{t('COURSE.FORM.DESCRIPTION', 'Description')}</h3>
-                                                <br />
-                                                <span className="text-sm text-gray-600 dark:text-white">
-                                                    Decrivez le contenu de votre formation, les objectifs pédagogiques, le public cible, etc. <br />{' '}
-                                                    Vous pouvez deplier ou replier cette section. pour faciliter la lecture.
-                                                </span>
-                                            </div>
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                fill="none"
-                                                viewBox="0 0 24 24"
-                                                strokeWidth={1.5}
-                                                stroke="currentColor"
-                                                className="absolute top-1/2 size-5 -translate-y-1/2 transform transition-transform duration-300 ease-in-out ltr:right-[20px] md:ltr:right-[25px] rtl:left-[20px] md:rtl:left-[25px]"
-                                            >
-                                                <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                                            </svg>
-                                        </button>
-
-                                        <div
-                                            className={`toc-accordion-collapse bg-gray-200 p-[12px] ${openIndex === accordionIndex.description ? 'open' : 'hidden'}`}
-                                        >
-                                            {descptionFormPart.map((item) => (
-                                                <fieldset key={item.key} className={fieldsetClasses}>
-                                                    <legend className="px-2 text-base font-semibold">{item.label}</legend>
-                                                    {item.description && (
-                                                        <div>
-                                                            <span>
-                                                                <InfoIcon className="inline-block mr-2 h-4 w-4 text-secondary" />
-                                                            </span>
-                                                            <span className="text-sm text-gray-600 dark:text-white">{item.description}</span>
-                                                        </div>
-                                                    )}
-                                                    <div className="grid gap-2">
-                                                        {item.key && (
-                                                            <div>
-                                                                <RichTextQuill
-                                                                    label={item.label}
-                                                                    labelId={item.key}
-                                                                    value={data[item.key] as string}
-                                                                    setData={(value: string) => setData(item.key, value)}
-                                                                />
-                                                                <InputError message={errors[item.key]} />
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                </fieldset>
-                                            ))}
+                <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
+                    <div className="col-span-1 md:col-span-5">
+                        <div className="overflow-y-auto max-h-[75vh]">
+                            <div className="toc-accordion mx-auto" id="tablesOfContentAccordion">
+                                <div className="grid grid-cols-1 xl:grid-cols-1 gap-4">
+                                    <div className="col-span-1 xl:col-span-4">
+                                        {/* Bloc Informations principales  && Catégory*/}
+                                        <div className="col-span-1 xl:col-span-3">
+                                            <CourseBasicInfoForm
+                                                fieldsetClasses={fieldsetClasses}
+                                                data={data}
+                                                categories={categories}
+                                                setData={setData}
+                                                processing={processing}
+                                                errors={errors}
+                                                onThumbnailChange={setThumbnail}
+                                                onLogoChange={setLogoFile}
+                                                onOrgLogoChange={setOrgLogoFile}
+                                                onVideoChange={setVideoFile}
+                                                onGalleryChange={setGalleryFiles}
+                                            />
                                         </div>
+
+                                        {/* Bloc Détails */}
+                                        <div className="col-span-1 xl:col-span-1">
+                                            <CourseAdditionnalForm
+                                                fieldsetClasses={fieldsetClasses}
+                                                data={data}
+                                                setData={setData}
+                                                processing={processing}
+                                                errors={errors}
+                                            />
+                                        </div>
+
+                                        {/* Bloc Description */}
+                                        <section>
+                                            <div className="flex items-center justify-between">
+                                                <div className="toc-accordion-item mb-[15px] rounded-md w-full bg-white dark:bg-gray-800 ">
+                                                    <button
+                                                        className={`toc-accordion-button open lg:text-md relative block w-full cursor-pointertext-base font-medium ltr:text-left rtl:text-right ${
+                                                            openIndex === accordionIndex.description ? 'open' : ''
+                                                        }`}
+                                                        type="button"
+                                                        onClick={() => toggleAccordion(accordionIndex.description)}
+                                                    >
+                                                        <div className="p-[12px]">
+                                                            <h3 className="text-lg font-semibold">{t('COURSE.FORM.DESCRIPTION', 'Description')}</h3>
+                                                            <br />
+                                                            <span className="text-sm text-gray-600 dark:text-white">
+                                                                Decrivez le contenu de votre formation, les objectifs pédagogiques, le public cible,
+                                                                etc. <br /> Vous pouvez deplier ou replier cette section. pour faciliter la lecture.
+                                                            </span>
+                                                        </div>
+                                                        <svg
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                            fill="none"
+                                                            viewBox="0 0 24 24"
+                                                            strokeWidth={1.5}
+                                                            stroke="currentColor"
+                                                            className="absolute top-1/2 size-5 -translate-y-1/2 transform transition-transform duration-300 ease-in-out ltr:right-[20px] md:ltr:right-[25px] rtl:left-[20px] md:rtl:left-[25px]"
+                                                        >
+                                                            <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                                                        </svg>
+                                                    </button>
+
+                                                    <div
+                                                        className={`toc-accordion-collapse bg-gray-200 p-[12px] ${openIndex === accordionIndex.description ? 'open' : 'hidden'}`}
+                                                    >
+                                                        {descptionFormPart.map((item) => (
+                                                            <fieldset key={item.key} className={fieldsetClasses}>
+                                                                <legend className="px-2 text-base font-semibold">{item.label}</legend>
+                                                                {item.description && (
+                                                                    <div>
+                                                                        <span>
+                                                                            <InfoIcon className="inline-block mr-2 h-4 w-4 text-secondary" />
+                                                                        </span>
+                                                                        <span className="text-sm text-gray-600 dark:text-white">
+                                                                            {item.description}
+                                                                        </span>
+                                                                    </div>
+                                                                )}
+                                                                <div className="grid gap-2">
+                                                                    {item.key && (
+                                                                        <div>
+                                                                            <RichTextQuill
+                                                                                label={item.label}
+                                                                                labelId={item.key}
+                                                                                value={data[item.key] as string}
+                                                                                setData={(value: string) => setData(item.key, value)}
+                                                                            />
+                                                                            <InputError message={errors[item.key]} />
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                            </fieldset>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </section>
                                     </div>
                                 </div>
-                            </section>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="col-span-1 md:col-span-1">
+                        <div className="grid grid-cols-1 gap-4">
+                            <div className="col-span-1 md:col-span-1">
+                                <div className="grid grid-cols-1 gap-4">
+                                    <Button type="submit" className="mt-2 " disabled={processing}>
+                                        {processing && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
+                                        {course && course.id ? t('courses.update', 'Mettre à jour') : t('courses.create', 'Créer une formation')}
+                                    </Button>
+                                    <Button
+                                        type="button"
+                                        onClick={() => setOpenPartnerDrawer(true)}
+                                        className="mt-2 bg-blue-400 hover:bg-blue-500"
+                                        disabled={processing}
+                                    >
+                                        {t('courses.partners', 'Associer des partenaires')}
+                                    </Button>
+                                    <Button
+                                        type="button"
+                                        onClick={() => submit(data, true)}
+                                        className="mt-2  bg-gray-400 hover:bg-gray-500 "
+                                        disabled={processing}
+                                    >
+                                        {processing && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
+                                        {t('courses.create', 'Sauvegarder comme brouillon')}
+                                    </Button>
+
+                                    <div className="mt-[30vh] w-full">
+                                        <Button
+                                            type="button"
+                                            onClick={() => router.visit(route('dashboard.course.index'))}
+                                            className="mt-2  bg-red-400 hover:bg-red-500 w-full "
+                                            disabled={processing}
+                                        >
+                                            {t('courses.cancel', 'Annuler')}
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </form>
 
-            <div className="flex justify-between items-center space-x-2">
-                <Button
-                    type="button"
-                    onClick={() => router.visit(route('dashboard.course.index'))}
-                    className="mt-2  bg-red-400 hover:bg-red-500 "
-                    disabled={processing}
-                >
-                    {t('courses.cancel', 'Annuler')}
-                </Button>
-
-                <div className="flex items-center space-x-2">
-                    <Button type="button" onClick={() => submit(data, true)} className="mt-2  bg-gray-400 hover:bg-gray-500 " disabled={processing}>
-                        {processing && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
-                        {t('courses.create', 'Sauvegarder comme brouillon')}
-                    </Button>
-
-                    <Button type="submit" className="mt-2 " disabled={processing}>
-                        {processing && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
-                        {course && course.id ? t('courses.update', 'Mettre à jour') : t('courses.create', 'Créer une formation')}
-                    </Button>
-                </div>
-            </div>
-        </form>
+            <Drawer
+                title={t('courses.partners', 'Associer des partenaires')}
+                open={openPartnerDrawer}
+                setOpen={setOpenPartnerDrawer}
+                component={
+                    <div className="space-y-2">
+                        {partners.map((p) => (
+                            <label key={p.id} className="flex items-center space-x-2">
+                                <input
+                                    type="checkbox"
+                                    checked={selectedPartners.includes(p.id!)}
+                                    onChange={(e) => {
+                                        let updated = [...selectedPartners];
+                                        if (e.target.checked) {
+                                            updated.push(p.id!);
+                                        } else {
+                                            updated = updated.filter((id) => id !== p.id);
+                                        }
+                                        setSelectedPartners(updated);
+                                        setData('partner_ids', updated);
+                                    }}
+                                />
+                                <span>{p.name}</span>
+                            </label>
+                        ))}
+                    </div>
+                }
+            />
+        </>
     );
 }
 

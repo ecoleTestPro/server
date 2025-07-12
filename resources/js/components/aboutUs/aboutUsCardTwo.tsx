@@ -11,24 +11,23 @@ const widgetsData: Widget[] = [
     {
         title: 'Expertise',
         description: 'Maîtrisez des compétences recherchées et décrochez un emploi dès l’obtention de votre certificat !',
-        image: 'assets/images/svgs/code.svg',
+        image: '/assets/images/svgs/code.svg',
         bgColor: 'bg-primary-100',
     },
     {
         title: 'Certification',
         description: 'Un certificat reconnu qui ouvre instantanément les portes du marché de l’emploi.',
-        image: 'assets/images/svgs/stacks.svg',
+        image: '/assets/images/svgs/stacks.svg',
         bgColor: 'bg-primary-200',
     },
     {
         title: 'Pratique',
         description: 'Apprenez par l’action : des projets concrets pour booster votre carrière et votre impact.',
-        image: 'assets/images/svgs/support_agent.svg',
+        image: '/assets/images/svgs/support_agent.svg',
         bgColor: 'bg-primary-300',
     },
 ];
-
-/*******  d9415daf-750b-42a1-bea1-8ab0355c9d1d  *******/ function AboutUsCardTwo() {
+function AboutUsCardTwo() {
     return (
         <section className="body-font text-gray-600 dark:bg-[#0a0e19] dark:text-white">
             <div className="py-[40px] md:py-[50px] lg:py-[60px] xl:py-[80px]">

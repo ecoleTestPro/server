@@ -17,8 +17,11 @@ class SubscriberMailEvent
     /**
      * Create a new event instance.
      */
-    public function __construct(public $email, public $subject)
-    {
+    public function __construct(
+        public $email,
+        public $subject,
+        public $content
+    ) {
         //
     }
 

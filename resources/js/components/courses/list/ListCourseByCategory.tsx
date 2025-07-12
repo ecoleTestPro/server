@@ -22,7 +22,7 @@ export const ListCourseByCategory = ({ title, slug, coursesList }: ListCourseByC
                 )}
             </h2>
             {coursesList.map((category) => (
-                <CourseTable courses={category.courses || []} />
+                <CourseTable key={category.id} courses={category.courses || []} />
             ))}
         </div>
     );

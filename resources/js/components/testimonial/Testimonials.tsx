@@ -2,44 +2,46 @@
 
 import { CLASS_NAME } from '@/data/styles/style.constant';
 import React from 'react';
+import { usePage } from '@inertiajs/react';
+import { SharedData } from '@/types';
 import TitleBadgeOne from '../ui/badge-one';
 
-interface Testimonial {
-    name: string;
-    role: string;
-    feedback: string;
-    image: string;
-    rating: number;
-}
+import { ITestimonial } from '@/types/testimonial';
 
-const testimonialsData: Testimonial[] = [
+const DEFAULT_TESTIMONIALS: ITestimonial[] = [
     {
         name: 'Sophie Lefèvre',
-        role: 'Chef de Projet IT',
-        feedback:
+        designation: 'Chef de Projet IT',
+        description:
             "La formation ITIL® proposée ici m'a permis d'optimiser la coordination de nos projets IT. Les exemples concrets et les outils fournis ont fait toute la différence dans mon quotidien professionnel.",
-        image: '/assets/images/front-pages/user3.jpg',
         rating: 4,
+        is_active: true,
+        media: { src: '/assets/images/front-pages/user3.jpg' } as any,
     },
     {
         name: 'Thomas Girard',
-        role: 'Consultant en IA',
-        feedback:
+        designation: 'Consultant en IA',
+        description:
             "Les modules d'intelligence artificielle sont d'une grande qualité. Ils m'ont aidé à mieux comprendre les applications pratiques et à conseiller mes clients avec confiance. Un excellent investissement !",
-        image: '/assets/images/front-pages/user4.jpg',
         rating: 4.5,
+        is_active: true,
+        media: { src: '/assets/images/front-pages/user4.jpg' } as any,
     },
     {
         name: 'Claire Moreau',
-        role: 'Marketing Digital',
-        feedback:
+        designation: 'Marketing Digital',
+        description:
             'Les formations Adobe ont transformé ma manière de créer des campagnes visuelles. Le site est intuitif, et les ressources sont adaptées à tous les niveaux. Un vrai plus pour ma carrière !',
-        image: '/assets/images/front-pages/user5.jpg',
         rating: 5,
+        is_active: true,
+        media: { src: '/assets/images/front-pages/user5.jpg' } as any,
     },
 ];
 
 const Testimonials: React.FC = () => {
+    const { data } = usePage<SharedData>().props;
+    const testimonials: ITestimonial[] = (data as any)?.testimonials ?? DEFAULT_TESTIMONIALS;
+
     return (
         <section className={`${CLASS_NAME.section} bg-gradient-to-br from-gray-900 to-gray-800`}>
             <div className={`${CLASS_NAME.sectionContentPadding} ${CLASS_NAME.bgAlt1} py-12 md:py-16`}>
@@ -52,7 +54,7 @@ const Testimonials: React.FC = () => {
                     </div>
 
                     <div className="grid grid-cols-1 gap-[25px] sm:grid-cols-2 lg:grid-cols-3">
-                        {testimonialsData.map((testimonial, index) => (
+                        {testimonials.map((testimonial, index) => (
                             <div
                                 key={index}
                                 className="rounded-[10px] border border-gray-100/50 bg-white/90 p-[20px] shadow-lg transition-all duration-300 hover:shadow-xl md:p-[30px] xl:p-[40px] dark:border-gray-800/50 dark:bg-[#0c1427]/90"
@@ -80,7 +82,7 @@ const Testimonials: React.FC = () => {
                                             paddingRight: '10px',
                                         }}
                                     >
-                                        {testimonial.feedback}
+                                        {testimonial.description}
                                     </p>
                                     <p
                                         className="animate-scroll text-[14px] leading-[1.6] font-medium text-gray-800 md:text-[16px] dark:text-gray-200"
@@ -94,13 +96,13 @@ const Testimonials: React.FC = () => {
                                             whiteSpace: 'nowrap',
                                         }}
                                     >
-                                        {testimonial.feedback}
+                                        {testimonial.description}
                                     </p>
                                 </div>
 
                                 <div className="mt-[15px] flex items-center gap-[12px] md:mt-[20px] md:gap-[15px]">
                                     <img
-                                        src={testimonial.image}
+                                        src={testimonial.media?.src ?? '/media/blank-user.png'}
                                         alt={testimonial.name}
                                         className="rounded-full border-2 border-[#fe7a36] object-cover"
                                         width={50}
@@ -110,7 +112,7 @@ const Testimonials: React.FC = () => {
                                         <h5 className="!mb-[3px] !text-[15px] !font-semibold text-gray-900 md:!text-[16px] dark:text-gray-100">
                                             {testimonial.name}
                                         </h5>
-                                        <span className="block text-gray-600 dark:text-gray-400">{testimonial.role}</span>
+                                        <span className="block text-gray-600 dark:text-gray-400">{testimonial.designation}</span>
                                     </div>
                                 </div>
                             </div>

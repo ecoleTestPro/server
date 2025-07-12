@@ -19,7 +19,7 @@ export default function BlogGridList({ blogs }: BlogGridListProps) {
         <MotionSection>
             <div>
                 <div className="container">
-                    <div className="grid grid-cols-1 md:grid-cols-3 sm:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4  gap-6">
                         {blogs.map((blog) => (
                             <div key={blog.id} className="col-span-1">
                                 <BlogCard blog={blog} />

@@ -22,6 +22,6 @@ class SubscriberMailListener
      */
     public function handle(object $event): void
     {
-        Mail::to($event->email)->send(new Newslatter($event->subject));
+        Mail::to($event->email)->send(new Newslatter($event->subject, $event->content));
     }
 }

@@ -23,6 +23,7 @@ class CourseEnrollmentStoreRequest extends FormRequest
     {
         return [
             'course_id'            => 'required|exists:courses,id',
+            'course_session_id'    => 'required|exists:course_sessions,id',
             'user_id'              => 'nullable|exists:users,id',
             'coupon_code'          => 'nullable|string|max:50',
             'name'                 => 'required|string|min:3|max:255',
@@ -40,8 +41,10 @@ class CourseEnrollmentStoreRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'course_id.required' => 'La formation est obligatoire.',
-            'course_id.exists'   => 'La formation sélectionnée n\'existe pas.',
+            'course_id.required'       => 'La formation est obligatoire.',
+            'course_id.exists'         => 'La formation sélectionnée n\'existe pas.',
+            'course_session_id.required' => 'La session de formation est obligatoire.',
+            'course_session_id.exists'   => 'La session sélectionnée n\'existe pas.',
             'user_id.exists'     => 'L\'utilisateur sélectionné n\'existe pas.',
             'coupon_code.string' => 'Le code de coupon doit être une chaîne de caractères.',
             'coupon_code.max'    => 'Le code de coupon ne peut pas dépasser 50 caractères.',

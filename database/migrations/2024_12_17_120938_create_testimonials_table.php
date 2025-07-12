@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('testimonials', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('media_id')->constrained('media')->cascadeOnDelete();
+            $table->foreignId('media_id')->nullable()->constrained('media')->cascadeOnDelete();
             $table->string('name');
             $table->string('designation');
             $table->text('description');

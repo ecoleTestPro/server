@@ -50,5 +50,16 @@
         "submit": "Envoyer le lien de réinitialisation",
         "orReturn": "Ou, retour à",
         "login": "connexion"
+    },
+    "CALENDAR": {
+        "TITLE": "Calendrier des formations",
+        "DESCRIPTION": "Consultez nos prochaines sessions et inscrivez-vous.",
+        "CONTACT_US": "Demander une autre date",
+        "SESSIONS": "Sessions disponibles",
+        "SESSIONS_DESCRIPTION": "Sélectionnez une date pour voir les sessions disponibles.",
+        "SESSIONS_LIST": "Liste des sessions",
+        "NO_SESSIONS": "Aucune session prévue pour cette date.",
+        "VIEW_COURSE": "Voir la formation",
+        "COURSE_DETAIL": "Détails de la formation"
     }
 }

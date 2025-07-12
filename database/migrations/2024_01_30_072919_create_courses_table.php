@@ -22,7 +22,7 @@ return new class extends Migration
             $table->boolean('is_published')->default(false);
             $table->timestamp('published_at')->nullable();
 
-            $table->text('level')->nullable();
+            $table->string('level')->nullable();
             $table->text('excerpt')->nullable();
 
             /**
@@ -40,7 +40,7 @@ return new class extends Migration
             $table->foreignId('video_id')->nullable()->constrained('media')->nullOnDelete();
 
 
-            $table->text('location_mode')->nullable();
+            $table->string('location_mode')->nullable();
             $table->integer('duration')->nullable();
             $table->string('attachment')->nullable();
             $table->enum('periodicity_unit', ['DAY', 'WEEK', 'MONTH', 'YEAR'])->nullable();
