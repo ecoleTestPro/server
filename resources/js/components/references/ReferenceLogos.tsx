@@ -15,7 +15,7 @@ export default function ReferenceLogos({ references }: ReferenceLogosProps) {
                 {references.map((ref) => (
                     <img
                         key={ref.id}
-                        src={ref.media?.src}
+                        src={'https://placehold.jp/250x150.png' ?? ref.media?.src}
                         alt={ref.text ?? ''}
                         className="h-16 w-auto object-contain"
                     />
