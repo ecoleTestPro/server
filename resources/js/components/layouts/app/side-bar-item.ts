@@ -45,11 +45,6 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
         href: route('dashboard.partners.index'),
         icon: FileStack,
     },
-    // {
-    //     title: 'Pages',
-    //     href: route('dashboard.page.index'),
-    //     icon: BookOpen,
-    // },
     {
         title: 'Offres d\'emploi',
         href: route('dashboard.job-offers.index'),
@@ -74,6 +69,8 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
         title: 'Newsletters',
         href: route('dashboard.newsletters.index'),
         icon: Mail,
+        children: [
+        ],
     },
     {
         title: 'Paramètres',
