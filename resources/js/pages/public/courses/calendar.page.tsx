@@ -3,6 +3,7 @@ import Hero, { IHeroBreadcrumbItems } from '@/components/hero/hearo';
 import DefaultLayout from '@/layouts/public/front.layout';
 import { ICourse, ICourseSession } from '@/types/course';
 import { ROUTE_MAP } from '@/utils/route.util';
+import { Link } from '@inertiajs/react';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import Calendar from 'react-calendar';
@@ -85,6 +86,7 @@ export default function TrainingCalendarPage() {
                                                 {session.start_date} - {session.end_date} - {session.location}
                                             </p>
                                         </div>
+
                                         <div className="flex gap-2 mt-2 md:mt-0">
                                             <button
                                                 className="bg-green-500 hover:bg-green-600 text-white rounded-md px-4 py-2 text-sm"
@@ -94,13 +96,15 @@ export default function TrainingCalendarPage() {
                                                 }}
                                             >
                                                 {t('COURSE.DETAIL.REGISTER', 'Inscription')}
-                                            </button>
-                                            <a
-                                                href={`${ROUTE_MAP.public.contact.link}?subject=Formation ${session.course?.title}`}
-                                                className="bg-blue-500 hover:bg-blue-600 text-white rounded-md px-4 py-2 text-sm"
-                                            >
-                                                {t('CALENDAR.CONTACT_US', 'Demander une autre date')}
-                                            </a>
+                                            </button>{' '}
+                                            {false && (
+                                                <Link
+                                                    href={`${ROUTE_MAP.public.contact.link}?subject=Formation ${session.course?.title}`}
+                                                    className="bg-blue-500 hover:bg-blue-600 text-white rounded-md px-4 py-2 text-sm"
+                                                >
+                                                    {t('CALENDAR.CONTACT_US', 'Demander une autre date')}
+                                                </Link>
+                                            )}
                                         </div>
                                     </div>
                                 ))}
