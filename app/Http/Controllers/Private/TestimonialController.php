@@ -39,10 +39,6 @@ class TestimonialController extends Controller
 
     public function store(TestimonialStoreRequest $request)
     {
-        if (app()->isLocal()) {
-            return to_route('dashboard.testimonial.index')->with('error', 'Testimonial not created in demo mode');
-        }
-
         TestimonialRepository::storeByRequest($request);
 
         return to_route('dashboard.testimonial.index')->withSuccess('Testimonial created successfully.');
