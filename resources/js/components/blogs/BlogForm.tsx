@@ -2,14 +2,13 @@ import InputError from '@/components/input-error';
 import { Input } from '@/components/ui/input';
 import SelectCustom, { ISelectItem } from '@/components/ui/select-custom';
 import { IBlog, IBlogCategory } from '@/types/blogs';
-import { Logger } from '@/utils/console.util';
 import { router, useForm } from '@inertiajs/react';
 import { PlusCircleIcon } from 'lucide-react';
 import { FormEventHandler, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '../ui/button/button';
-import TagInput from '../ui/tag-input';
 import RichTextLexical from '../ui/form/TextLexical/RichTextLexical';
+import TagInput from '../ui/tag-input';
 import { BlogCategoryDialogEdit } from './BlogCategoryDialogEdit';
 
 export interface BlogForm {
@@ -55,7 +54,7 @@ export const BlogForm = ({ blog = null, categories = [], onCancel }: BlogFormPro
     const { t } = useTranslation();
 
     const { data, setData, processing, errors, reset } = useForm<BlogForm>(createDefaultValues(blog));
-    const [tags, setTags] = useState<string[]>(createDefaultValues(blog).tags || []);
+    const [tags, setTags] = useState<string[]>([]); // createDefaultValues(blog).tags ||
 
     const [openCategoryEdit, setOpenCategoryEdit] = useState(false);
 
@@ -77,7 +76,7 @@ export const BlogForm = ({ blog = null, categories = [], onCancel }: BlogFormPro
                 description: data.description,
                 category_id: data.category_id,
                 status: data.status ? '1' : '0',
-                tags: JSON.stringify(tags),
+                // tags: JSON.stringify(tags),
             },
             forceFormData: true,
             preserveScroll: true,

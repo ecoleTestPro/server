@@ -45,7 +45,7 @@ export default function TagInput({ tags, onChange, placeholder }: TagInputProps)
         </Button>
       </div>
       <div className="flex flex-wrap gap-2">
-        {tags.map((tag) => (
+        {tags && tags.length > 0 && tags?.map((tag) => (
           <span
             key={tag}
             className="bg-gray-200 dark:bg-gray-700 text-sm px-2 py-1 rounded-full flex items-center"
