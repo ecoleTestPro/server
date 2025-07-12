@@ -69,6 +69,23 @@ class DashboardController extends PrivateAbstractController
             $chartData[] = isset($enrollmentData[$month]) ? $enrollmentData[$month] : 0;
         }
 
+        // Fetch courses created data for the current year, grouped by month
+        $courseData = Course::select(
+            DB::raw('MONTH(created_at) as month'),
+            DB::raw('COUNT(*) as count')
+        )
+            ->whereYear('created_at', $currentYear)
+            ->groupBy(DB::raw('MONTH(created_at)'))
+            ->orderBy('month')
+            ->get()
+            ->pluck('count', 'month')
+            ->toArray();
+
+        $courseChartData = [];
+        for ($month = 1; $month <= 12; $month++) {
+            $courseChartData[] = isset($courseData[$month]) ? $courseData[$month] : 0;
+        }
+
         $chart_data = [
             'enrollment_area' => [
                 'series' => [
@@ -92,8 +109,27 @@ class DashboardController extends PrivateAbstractController
                     "$currentYear-12-01T00:00:00.000Z",
                 ],
             ],
-            'doughnut' => [
-                'options' => ['red', 'blue', 'green', 'black'],
+            'course_area' => [
+                'series' => [
+                    [
+                        'name' => 'Courses',
+                        'data' => $courseChartData,
+                    ],
+                ],
+                'categories' => [
+                    "$currentYear-01-01T00:00:00.000Z",
+                    "$currentYear-02-01T00:00:00.000Z",
+                    "$currentYear-03-01T00:00:00.000Z",
+                    "$currentYear-04-01T00:00:00.000Z",
+                    "$currentYear-05-01T00:00:00.000Z",
+                    "$currentYear-06-01T00:00:00.000Z",
+                    "$currentYear-07-01T00:00:00.000Z",
+                    "$currentYear-08-01T00:00:00.000Z",
+                    "$currentYear-09-01T00:00:00.000Z",
+                    "$currentYear-10-01T00:00:00.000Z",
+                    "$currentYear-11-01T00:00:00.000Z",
+                    "$currentYear-12-01T00:00:00.000Z",
+                ],
             ],
         ];
 
@@ -106,6 +142,7 @@ class DashboardController extends PrivateAbstractController
         $data['courses'] = $courses;
         $data['enrollments'] = $enrollments;
         $data['notifications'] = $notifications;
+        $data['chart_data'] = $chart_data;
         return Inertia::render('dashboard/dashboard.home', [
             'data' => $data,
         ]);

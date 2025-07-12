@@ -3,6 +3,11 @@ import { IBlog, IBlogCategory } from "./blogs";
 import { ITestimonial } from "./testimonial";
 import { IFaq } from "./faq";
 
+export interface IChartData {
+    series: { name: string; data: number[] }[];
+    categories: string[];
+}
+
 
 export enum PeriodicityUnitEnum {
     DAY = 'DAY',
@@ -264,4 +269,9 @@ export interface ICustomSharedData {
 
     testimonials?: IDataWithPagination<ITestimonial>
     faqs?: IFaq[]
+
+    chart_data?: {
+        enrollment_area: IChartData;
+        course_area: IChartData;
+    }
 }
