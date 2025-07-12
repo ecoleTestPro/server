@@ -116,7 +116,7 @@ export default function CourseBasicInfoForm({ fieldsetClasses, data, setData, pr
 
             <fieldset className={fieldsetClasses}>
                 <legend className="px-2 text-base font-semibold">{t('courses.media', 'Médias')}</legend>
-                <div className="grid gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="grid gap-2">
                         <Label htmlFor="thumbnail">{t('courses.thumbnail', 'Image de mise en avant')}</Label>
                         <InputFile id="thumbnail" onFilesChange={(files) => onThumbnailChange?.(files ? files[0] : null)} accept="image/*" multiple={false} disabled={processing} />
