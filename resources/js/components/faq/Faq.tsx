@@ -1,7 +1,9 @@
 import { CLASS_NAME } from '@/data/styles/style.constant';
+import { usePage } from '@inertiajs/react';
 import { useState } from 'react';
+import { IFaq, SharedData } from '@/types';
 
-export const FAQ: { question: string; answer: string }[] = [
+const DEFAULT_FAQ: IFaq[] = [
     {
         question: "Qu'est ce que TestPro?",
         answer: "TestPro est un leader dans la formation certifiante en test logiciel et en ingénierie des exigences, offrant des certifications reconnues comme ISTQB, IQBBA et IREB. L'école TestPro s'engage à former des professionnels pour répondre aux besoins croissants du marché technologique en Afrique et à l'international.",
@@ -51,7 +53,8 @@ export const FAQ: { question: string; answer: string }[] = [
 ];
 
 const Faq: React.FC = () => {
-    // Initialize openIndex to 0 to open the first item by default
+    const { data } = usePage<SharedData>().props;
+    const faqs: IFaq[] = (data as any)?.faqs ?? DEFAULT_FAQ;
     const [openIndex, setOpenIndex] = useState<number | null>(0);
 
     const toggleAccordion = (index: number) => {
@@ -78,7 +81,7 @@ const Faq: React.FC = () => {
                     </div>
 
                     <div className="toc-accordion mx-auto md:max-w-[738px]" id="tablesOfContentAccordion">
-                        {FAQ.map((faq, index) => (
+                        {faqs.map((faq, index) => (
                             <div
                                 key={index}
                                 className="toc-accordion-item mb-[15px] rounded-md bg-white text-black last:mb-0 dark:bg-[#0c1427] dark:text-white"

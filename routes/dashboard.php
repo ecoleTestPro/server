@@ -110,5 +110,8 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
     ], function () {
         Route::get('',               [FaqController::class, 'index'])->name('dashboard.faqs.index');
         Route::post('create',        [FaqController::class, 'store'])->name('dashboard.faqs.store');
+        Route::put('update/{faq}',   [FaqController::class, 'update'])->name('dashboard.faqs.update');
+        Route::delete('delete/{faq}', [FaqController::class, 'destroy'])->name('dashboard.faqs.delete');
+        Route::post('restore/{faq}', [FaqController::class, 'restore'])->name('dashboard.faqs.restore');
     });
 });

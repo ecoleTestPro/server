@@ -1,6 +1,7 @@
 import { IDataWithPagination } from ".";
 import { IBlog, IBlogCategory } from "./blogs";
 import { ITestimonial } from "./testimonial";
+import { IFaq } from "./faq";
 
 
 export enum PeriodicityUnitEnum {
@@ -261,4 +262,5 @@ export interface ICustomSharedData {
     }
 
     testimonials?: IDataWithPagination<ITestimonial>
+    faqs?: IFaq[]
 }
