@@ -9,6 +9,7 @@ use App\Http\Controllers\Private\FaqController;
 use App\Http\Controllers\Private\SettingController;
 use App\Http\Controllers\Private\TestimonialController;
 use App\Http\Controllers\Private\ReferenceController;
+use App\Http\Controllers\Private\PartnerController;
 use App\Http\Controllers\Settings\PasswordController;
 use App\Http\Controllers\Settings\ProfileController;
 
@@ -125,5 +126,16 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
         Route::put('update/{reference}', [ReferenceController::class, 'update'])->name('dashboard.references.update');
         Route::delete('delete/{reference}', [ReferenceController::class, 'destroy'])->name('dashboard.references.delete');
         Route::post('restore/{reference}', [ReferenceController::class, 'restore'])->name('dashboard.references.restore');
+    });
+
+    // PARTNERS
+    Route::group([
+        'prefix' => 'partners',
+    ], function () {
+        Route::get('',               [PartnerController::class, 'index'])->name('dashboard.partners.index');
+        Route::post('create',        [PartnerController::class, 'store'])->name('dashboard.partners.store');
+        Route::put('update/{partner}', [PartnerController::class, 'update'])->name('dashboard.partners.update');
+        Route::delete('delete/{partner}', [PartnerController::class, 'destroy'])->name('dashboard.partners.delete');
+        Route::post('restore/{partner}', [PartnerController::class, 'restore'])->name('dashboard.partners.restore');
     });
 });

@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Partner;
 
 class Course extends Model
 {
@@ -106,6 +107,11 @@ class Course extends Model
     public function favouriteUsers(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'user_courses');
+    }
+
+    public function partners(): BelongsToMany
+    {
+        return $this->belongsToMany(Partner::class, 'course_partner');
     }
 
     // public function chapters(): HasMany
