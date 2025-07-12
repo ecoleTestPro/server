@@ -25,9 +25,11 @@ export const JobCard: React.FC<{ job: IJobOffer }> = ({ job }) => {
             <p className="text-gray-600 dark:text-gray-300">
                 {job.company} - {job.location}
             </p>
-            <p className="text-gray-500 dark:text-gray-400">
-                {job.type} - {job.salary.toLocaleString()} €/an
-            </p>
+            {job?.salary && (
+                <p className="text-gray-500 dark:text-gray-400">
+                    {job.type} - {job?.salary?.toLocaleString()} €/an
+                </p>
+            )}
             <p className="text-gray-600 dark:text-gray-300 mt-2 line-clamp-2">{job.description}</p>
             <p className="text-sm text-gray-400 dark:text-gray-500 mt-2">Publié le {job.created_at}</p>
             <button

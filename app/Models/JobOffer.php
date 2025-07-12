@@ -11,4 +11,10 @@ class JobOffer extends Model
     use HasFactory, SoftDeletes;
 
     protected $guarded = ['id'];
+
+    protected $casts = [
+        'salary' => 'float',
+        'created_at' => 'datetime:D M Y',
+        'updated_at' => 'datetime:Y-m-d H:i:s',
+    ];
 }

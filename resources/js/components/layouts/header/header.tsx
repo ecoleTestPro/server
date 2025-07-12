@@ -226,13 +226,13 @@ export default function Header() {
                 </section>
             </header>
 
-            <HeaderNavTwoSidebar
+            {/* <HeaderNavTwoSidebar
                 menu={mainMenu}
                 menuRight={mainMenuRight}
                 isOpen={isSidebarOpen}
                 onClose={() => setIsSidebarOpen(false)}
                 className="md:hidden"
-            />
+            /> */}
         </>
     );
 }
