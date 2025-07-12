@@ -18,7 +18,7 @@ export const DEFULAT_MAIN_MENU: IMainMenuItem[] = [
         label: 'Formations',
         href: ROUTE_MAP.public.courses.list.link,
         title: 'Formations',
-        featureImage: '/assets/images/pexels-divinetechygirl-1181634.jpg',
+        // featureImage: '/assets/images/pexels-divinetechygirl-1181634.jpg',
         description:
             '',
         gridClass: 'grid-cols-1 lg:grid-cols-3',
