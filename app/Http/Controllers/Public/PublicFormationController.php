@@ -150,4 +150,12 @@ class PublicFormationController extends PublicAbstractController
             return redirect()->route('courses')->withErrors('Une erreur est survenue lors de la récupération des données.');
         }
     }
+
+    public function calendar()
+    {
+        $data = $this->default_data;
+        return Inertia::render('public/courses/calendar.page', [
+            'data' => $data,
+        ]);
+    }
 }

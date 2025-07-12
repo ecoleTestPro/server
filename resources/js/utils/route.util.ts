@@ -39,6 +39,7 @@ interface IROUTE_MAP {
         privacyPolicy: IRouteMap;
         termsOfService: IRouteMap;
         search: IRouteMap;
+        calendar: IRouteMap;
         courses: {
             list: IRouteMap;
             byCategory: (categorySlug: string) => IRouteMap;
@@ -94,6 +95,7 @@ export const ROUTE_MAP: IROUTE_MAP = {
         privacyPolicy: createIRouteMap(route('privacyPolicy'), 'Politique de confidentialité'),
         termsOfService: createIRouteMap(route('termsOfService'), 'Conditions d’utilisation'),
         search: createIRouteMap(route('search.page'), 'Résultats de recherche'),
+        calendar: createIRouteMap(route('courses.calendar'), 'Calendrier des formations'),
         courses: {
             list: createIRouteMap('/formations', 'Liste des formations'),
             byCategory: (categorySlug: string) => {

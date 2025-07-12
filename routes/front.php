@@ -64,6 +64,9 @@ Route::group(["prefix" => "/"], function () {
     Route::post('search', [PublicFormationController::class, 'search'])->name('search');
     Route::get('search', [PublicFormationController::class, 'searchPage'])->name('search.page');
 
+    Route::get('formations-calendar', [PublicFormationController::class, 'calendar'])->name('courses.calendar');
+    Route::get('formations-calendar/sessions', [PublicFormationSessionController::class, 'listSessions'])->name('courses.calendar.sessions');
+
     /** 
      * formation routes
      * These routes handle course listings, categories, and details.
