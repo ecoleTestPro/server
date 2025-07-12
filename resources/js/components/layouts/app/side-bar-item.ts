@@ -51,6 +51,11 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
     //     icon: BookOpen,
     // },
     {
+        title: 'Offres d\'emploi',
+        href: route('dashboard.job-offers.index'),
+        icon: ClipboardPlus,
+    },
+    {
         title: 'Blogs',
         href: route('dashboard.blogs.index'),
         icon: Folder,
