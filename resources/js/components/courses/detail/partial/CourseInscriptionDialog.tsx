@@ -82,6 +82,7 @@ const CourseInscriptionDialog: React.FC<CourseInscriptionDialogProps> = ({ cours
 
         const payload = {
             course_id: course.id,
+            course_session_id: session?.id,
             user_id: auth.user?.id,
             name: data.name,
             email: data.email,

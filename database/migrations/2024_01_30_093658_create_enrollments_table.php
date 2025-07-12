@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained('users')->cascadeOnDelete();
             $table->foreignId('course_id')->constrained('courses')->cascadeOnDelete();
+            $table->foreignId('course_session_id')->constrained('course_sessions')->cascadeOnDelete();
             // $table->foreignId('coupon_id')->nullable()->constrained('coupons')->nullOnDelete();
             $table->enum('mode', ['online', 'in-person', 'hybrid'])->default('online');
             $table->float('progress')->default(0);

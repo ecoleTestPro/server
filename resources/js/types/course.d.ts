@@ -152,6 +152,7 @@ export const createCourseCategory = (): ICourseCategory => {
 export interface ICourseEnrollment {
     user_id: number,
     course_id: number,
+    course_session_id: number,
     user: User,
     course: ICourse,
     mode: string,
