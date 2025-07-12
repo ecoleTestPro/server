@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\CourseSession;
 
 class Enrollment extends Model
 {
@@ -15,6 +16,7 @@ class Enrollment extends Model
     protected $fillable = [
         'user_id',
         'course_id',
+        'course_session_id',
         // 'coupon_id',
         'mode',
         'progress',
@@ -34,6 +36,11 @@ class Enrollment extends Model
     public function course(): BelongsTo
     {
         return $this->belongsTo(Course::class);
+    }
+
+    public function course_session(): BelongsTo
+    {
+        return $this->belongsTo(CourseSession::class);
     }
 
     // public function coupon(): BelongsTo

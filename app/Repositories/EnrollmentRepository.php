@@ -5,6 +5,8 @@ namespace App\Repositories;
 use Abedin\Maker\Repositories\Repository;
 use App\Http\Requests\CourseEnrollmentStoreRequest;
 use App\Models\Enrollment;
+use App\Repositories\CourseRepository;
+use App\Repositories\CourseSessionRepository;
 
 class EnrollmentRepository extends Repository
 {
@@ -21,16 +23,22 @@ class EnrollmentRepository extends Repository
                 throw new \Exception('Formation introuvable.');
             }
 
-            $course_price = $course->price;
+            $session = CourseSessionRepository::getById($request->course_session_id);
+            if (!$session || $session->course_id !== $course->id) {
+                throw new \Exception('Session de formation invalide.');
+            }
+
+            $course_price    = $session->price ?? $course->price;
             $discount_amount = $request->discount_amount ?? 0;
 
             return self::create([
-                'user_id'                   => $request->user_id,
-                'course_id'                 => $request->course_id,
-                'mode'                      => $request->mode,
-                'course_price'              => $course_price,
-                'discount_amount'           => $discount_amount,
-                'last_activity'             => now(),
+                'user_id'           => $request->user_id,
+                'course_id'         => $request->course_id,
+                'course_session_id' => $request->course_session_id,
+                'mode'              => $request->mode,
+                'course_price'      => $course_price,
+                'discount_amount'   => $discount_amount,
+                'last_activity'     => now(),
                 'is_certificate_downloaded' => false,
             ]);
         } catch (\Exception $e) {

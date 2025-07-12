@@ -17,17 +17,17 @@ class EnrollmentFactory extends Factory
     public function definition(): array
     {
         $course = CourseRepository::getAll()->random();
+        // $course->load('course_sessions');
+        $session = $course->course_sessions->random();
+       
 
         return [
             'user_id'                   => UserRepository::getAll()->random()->id,
             'course_id'                 => $course->id,
+            'course_session_id'         => $session->id,
             'mode'                      => fake()->randomElement(['online', 'in-person', 'hybrid']),
             'progress'                  => 0.00,
-            'course_price'              => $course->price,
-            'discount_amount'           => fake()->numberBetween(0, $course->price),
-            'last_activity'             => now()->setHour(fake()->numberBetween(0, -24)),
             'is_certificate_downloaded' => fake()->boolean(),
-            // 'coupon_id' => CouponRepository::getAll()->random()->id,
         ];
     }
 }

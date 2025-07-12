@@ -16,6 +16,7 @@ export default function CourseDetailChooseSection({ course, registrationRef }: C
     const { t } = useTranslation();
     const [isVisible, setIsVisible] = useState(true); // State to control visibility
     const [isDialogOpen, setIsDialogOpen] = useState(false); // State for dialog
+    const [selectedSession, setSelectedSession] = useState<ICourseSession | undefined>(undefined);
 
     useEffect(() => {
         // Create Intersection Observer
@@ -72,7 +73,10 @@ export default function CourseDetailChooseSection({ course, registrationRef }: C
                                 key={index}
                                 session={session}
                                 courseTitle={course.title}
-                                handleClickRegister={() => setIsDialogOpen(true)}
+                                handleClickRegister={() => {
+                                    setSelectedSession(session);
+                                    setIsDialogOpen(true);
+                                }}
                                 periodicity_unit={course.periodicity_unit}
                                 periodicity_value={course.periodicity_value}
                                 price={course.price}
@@ -82,7 +86,12 @@ export default function CourseDetailChooseSection({ course, registrationRef }: C
                 </div>
             </div>
 
-            <CourseInscriptionDialog course={course} isOpen={isDialogOpen} onOpenChange={setIsDialogOpen} />
+            <CourseInscriptionDialog
+                course={course}
+                session={selectedSession}
+                isOpen={isDialogOpen}
+                onOpenChange={setIsDialogOpen}
+            />
         </>
     );
 }
