@@ -4,13 +4,8 @@ import { ITestimonial } from "./testimonial";
 import { IFaq } from "./faq";
 import { IPartner } from "./partner";
 
-export interface IChartData {
-    series: { name: string; data: number[] }[];
-    categories: string[];
-}
 
-
-export enum PeriodicityUnitEnum {
+export enum PeriodicityUnitEnum { 
     DAY = 'DAY',
     WEEK = 'WEEK',
     MONTH = 'MONTH',

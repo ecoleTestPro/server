@@ -299,40 +299,61 @@ function CourseForm({ course }: ICourseFormProps) {
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <div className="col-span-1 md:col-span-1">
-                        <div className="grid grid-cols-1 gap-4">
-                            <Button type="submit" className="mt-2 " disabled={processing}>
-                                {processing && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
-                                {course && course.id ? t('courses.update', 'Mettre à jour') : t('courses.create', 'Créer une formation')}
-                            </Button>
-                            <Button
-                                type="button"
-                                onClick={() => setOpenPartnerDrawer(true)}
-                                className="mt-2 bg-blue-400 hover:bg-blue-500"
-                                disabled={processing}
-                            >
-                                {t('courses.partners', 'Associer des partenaires')}
-                            </Button>
-                            <Button
-                                type="button"
-                                onClick={() => submit(data, true)}
-                                className="mt-2  bg-gray-400 hover:bg-gray-500 "
-                                disabled={processing}
-                            >
-                                {processing && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
-                                {t('courses.create', 'Sauvegarder comme brouillon')}
-                            </Button>
+                <div className="col-span-1 md:col-span-1">
+                    <div className="grid grid-cols-1 gap-4">
+                        <Button
+                            type="button"
+                            onClick={() => setOpenPartnerDrawer(true)}
+                            className="mt-2 bg-blue-400 hover:bg-blue-500"
+                            disabled={processing}
+                        >
+                            {t('courses.partners', 'Associer des partenaires')}
+                        </Button>
+                        <Button
+                            type="button"
+                            onClick={() => router.visit(route('dashboard.course.index'))}
+                            className="mt-2  bg-red-400 hover:bg-red-500 "
+                            disabled={processing}
+                        >
+                            {t('courses.cancel', 'Annuler')}
+                        </Button>
 
-                            <div className="mt-[20px] w-full">
+                        <div className="col-span-1 md:col-span-1">
+                            <div className="grid grid-cols-1 gap-4">
+                                <Button type="submit" className="mt-2 " disabled={processing}>
+                                    {processing && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
+                                    {course && course.id ? t('courses.update', 'Mettre à jour') : t('courses.create', 'Créer une formation')}
+                                </Button>
                                 <Button
                                     type="button"
-                                    onClick={() => router.visit(route('dashboard.course.index'))}
-                                    className="mt-2  bg-red-400 hover:bg-red-500 w-full "
+                                    onClick={() => setOpenPartnerDrawer(true)}
+                                    className="mt-2 bg-blue-400 hover:bg-blue-500"
                                     disabled={processing}
                                 >
-                                    {t('courses.cancel', 'Annuler')}
+                                    {t('courses.partners', 'Associer des partenaires')}
                                 </Button>
+                                <Button
+                                    type="button"
+                                    onClick={() => submit(data, true)}
+                                    className="mt-2  bg-gray-400 hover:bg-gray-500 "
+                                    disabled={processing}
+                                >
+                                    {processing && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
+                                    {t('courses.create', 'Sauvegarder comme brouillon')}
+                                </Button>
+
+                                <div className="mt-[20px] w-full">
+                                    <Button
+                                        type="button"
+                                        onClick={() => router.visit(route('dashboard.course.index'))}
+                                        className="mt-2  bg-red-400 hover:bg-red-500 w-full "
+                                        disabled={processing}
+                                    >
+                                        {t('courses.cancel', 'Annuler')}
+                                    </Button>
+                                </div>
                             </div>
                         </div>
                     </div>

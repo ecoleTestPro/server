@@ -16,7 +16,7 @@ class PartnerUpdateRequest extends FormRequest
         return [
             'name' => 'required|string',
             'link' => 'nullable|url',
-            'media_id' => 'nullable|exists:media,id',
+            'picture' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];
     }
 }
