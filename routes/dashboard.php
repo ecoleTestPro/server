@@ -151,4 +151,13 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
         Route::delete('delete/{partner}', [PartnerController::class, 'destroy'])->name('dashboard.partners.delete');
         Route::post('restore/{partner}', [PartnerController::class, 'restore'])->name('dashboard.partners.restore');
     });
+
+    // NEWSLETTERS
+    Route::group([
+        'prefix' => 'newsletters',
+    ], function () {
+        Route::get('', [\App\Http\Controllers\Private\NewsletterController::class, 'index'])->name('dashboard.newsletters.index');
+        Route::post('create', [\App\Http\Controllers\Private\NewsletterController::class, 'store'])->name('dashboard.newsletters.store');
+        Route::delete('delete/{newsletter}', [\App\Http\Controllers\Private\NewsletterController::class, 'destroy'])->name('dashboard.newsletters.delete');
+    });
 });

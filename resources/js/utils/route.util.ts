@@ -147,5 +147,8 @@ export const ROUTE_MAP: IROUTE_MAP = {
                 return createIRouteMap(route('dashboard.blogs.edit', { slug }), 'Modifier le blog');
             },
         },
+        newsletters: {
+            index: createIRouteMap(route('dashboard.newsletters.index'), 'Newsletters'),
+        },
     }
 }
