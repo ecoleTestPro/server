@@ -20,8 +20,7 @@ class Enrollment extends Model
         // 'coupon_id',
         'mode',
         'progress',
-        'last_activity',
-        'is_certificate_downloaded',
+        'is_certificate_downloaded', 
     ];
 
     protected $guarded = ['id'];

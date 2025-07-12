@@ -17,10 +17,9 @@ return new class extends Migration
             $table->foreignId('course_id')->constrained('courses')->cascadeOnDelete();
             $table->foreignId('course_session_id')->nullable()->constrained('course_sessions')->cascadeOnDelete();
             $table->enum('mode', ['online', 'in-person', 'hybrid'])->default('online'); 
-            $table->float('progress')->default(0);
             $table->boolean('is_certificate_downloaded')->default(false);
             $table->softDeletes();
-            $table->timestamps();
+            $table->timestamps(); 
         });
     }
 

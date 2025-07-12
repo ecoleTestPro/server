@@ -33,7 +33,6 @@ class EnrollmentRepository extends Repository
                 'course_id'         => $request->course_id,
                 'course_session_id' => $request->course_session_id,
                 'mode'              => $request->mode,
-                'last_activity'     => now(),
                 'is_certificate_downloaded' => false,
             ]);
         } catch (\Exception $e) {

@@ -74,7 +74,6 @@ class EnrolledCourseResource extends JsonResource
             'is_reviewed' => $isReviewed,
             'can_review' => $canReview,
             'enrolled_at' => $this->created_at,
-            'last_activity' => $this->last_activity,
             'is_certificate_downloaded' => $this->is_certificate_downloaded,
         ];
     }
