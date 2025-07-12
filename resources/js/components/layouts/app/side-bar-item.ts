@@ -30,11 +30,11 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
         href: route('dashboard.enrollment.index'),
         icon: ListChecks,
     },
-    {
-        title: 'Partenaires',
-        href: route('dashboard.partners.index'),
-        icon: FileStack,
-    },
+    // {
+    //     title: 'Partenaires',
+    //     href: route('dashboard.partners.index'),
+    //     icon: FileStack,
+    // },
     {
         title: 'Références',
         href: route('dashboard.references.index'),
