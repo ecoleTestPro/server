@@ -59,6 +59,8 @@ function CourseForm({ course }: ICourseFormProps) {
     const [selectedPartners, setSelectedPartners] = useState<number[]>([]);
     const [openPartnerDrawer, setOpenPartnerDrawer] = useState(false);
     const [thumbnail, setThumbnail] = useState<File | null>(null);
+    const [logoFile, setLogoFile] = useState<File | null>(null);
+    const [orgLogoFile, setOrgLogoFile] = useState<File | null>(null);
     const [videoFile, setVideoFile] = useState<File | null>(null);
     const [galleryFiles, setGalleryFiles] = useState<FileList | null>(null);
 
@@ -126,6 +128,8 @@ function CourseForm({ course }: ICourseFormProps) {
         });
 
         if (thumbnail) formData.append('media', thumbnail);
+        if (logoFile) formData.append('logo', logoFile);
+        if (orgLogoFile) formData.append('organization_logo', orgLogoFile);
         if (videoFile) formData.append('video', videoFile);
         if (galleryFiles) Array.from(galleryFiles).forEach((file) => formData.append('gallery[]', file));
         if (data?.id) formData.append('_method', 'PUT');
@@ -212,6 +216,8 @@ function CourseForm({ course }: ICourseFormProps) {
                                                 processing={processing}
                                                 errors={errors}
                                                 onThumbnailChange={setThumbnail}
+                                                onLogoChange={setLogoFile}
+                                                onOrgLogoChange={setOrgLogoFile}
                                                 onVideoChange={setVideoFile}
                                                 onGalleryChange={setGalleryFiles}
                                             />

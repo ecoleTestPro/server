@@ -25,6 +25,8 @@ class CourseUpdateRequest extends FormRequest
             'category_id'           => 'exists:categories,id',
             'title'                 => 'string|min:5|max:500',
             'media'                 => "image|mimes:jpeg,png,jpg|max:10240",
+            'logo'                  => 'image|mimes:jpeg,png,jpg|max:10240',
+            'organization_logo'     => 'image|mimes:jpeg,png,jpg|max:10240',
             'video'                 => 'file|mimes:mp4,mpeg|max:1048576',
             'gallery'               => 'sometimes|array',
             'gallery.*'            => 'file|mimes:jpeg,png,jpg,mp4,mpeg|max:1048576',

@@ -26,6 +26,8 @@ class CourseStoreRequest extends FormRequest
             'title'                 => 'required|min:2|max:500',
             'excerpt'               => 'required|string|min:2|max:5000',
             'media'                 => 'image|mimes:jpeg,png,jpg|max:2048',
+            'logo'                  => 'image|mimes:jpeg,png,jpg|max:2048',
+            'organization_logo'     => 'image|mimes:jpeg,png,jpg|max:2048',
             'video'                 => 'file|mimes:mp4,mpeg|max:1048576',
             'gallery'               => 'sometimes|array',
             'gallery.*'            => 'file|mimes:jpeg,png,jpg,mp4,mpeg|max:1048576',
