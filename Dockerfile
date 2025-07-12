@@ -1,9 +1,8 @@
 # Use PHP 8.2 with Apache as the base image
 FROM php:8.2-apache
 
-# Set working directory
-WORKDIR /app
-# WORKDIR /var/www/html
+# Set working directory inside the web root
+WORKDIR /var/www/html
 
 # Install required system dependencies
 RUN apt-get update && apt-get install -y \
@@ -25,6 +24,8 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
 RUN a2enmod headers
+# Use the provided Apache vhost configuration
+COPY 000-default.conf /etc/apache2/sites-available/000-default.conf
 # Copy Laravel project files
 COPY . .
 
@@ -61,8 +62,6 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
 COPY config.inc.php /usr/share/phpmyadmin/config.inc.php
 # COPY 000-default.conxf /etc/apache2/sites-enabled/000-default.conf
 # RUN cat /etc/apache2/sites-enabled/000-default.conf
-
-RUN npm start dev
 
 # Expose ports
 EXPOSE 80
