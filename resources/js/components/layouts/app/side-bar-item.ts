@@ -1,5 +1,5 @@
 import { NavItem } from "@/types";
-import { BookOpen, FileStack, Folder, HomeIcon, LayoutGrid, List, ClipboardPlus, Settings2, ListTodo, BookAIcon, ListChecks } from 'lucide-react';
+import { BookOpen, FileStack, Folder, HomeIcon, LayoutGrid, List, ClipboardPlus, Settings2, ListTodo, BookAIcon, ListChecks, Mail } from 'lucide-react';
 
 
 export const MAIN_NAV_ITEMS: NavItem[] = [
@@ -64,6 +64,11 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
         title: 'Faqs',
         href: route('dashboard.faqs.index'),
         icon: BookOpen,
+    },
+    {
+        title: 'Newsletters',
+        href: route('dashboard.newsletters.index'),
+        icon: Mail,
     },
     {
         title: 'Paramètres',
