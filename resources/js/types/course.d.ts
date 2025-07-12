@@ -116,6 +116,8 @@ export interface ICourse {
     description: ICourseDescription;
     categories?: ICourseCategory[];
     media?: IMedia[];
+    logo?: IMedia;
+    organization_logo?: IMedia;
     gallery?: IMedia[];
     course_sessions?: ICourseSession[];
     partners?: IPartner[];

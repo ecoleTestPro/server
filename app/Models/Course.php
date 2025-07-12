@@ -104,6 +104,42 @@ class Course extends Model
         );
     }
 
+    public function logo(): BelongsTo
+    {
+        return $this->belongsTo(Media::class, 'logo_id');
+    }
+
+    public function logoPath(): Attribute
+    {
+        $logo = null;
+
+        if ($this->logo && Storage::exists($this->logo->src)) {
+            $logo = Storage::url($this->logo->src);
+        }
+
+        return Attribute::make(
+            get: fn() => $logo,
+        );
+    }
+
+    public function organizationLogo(): BelongsTo
+    {
+        return $this->belongsTo(Media::class, 'organization_logo_id');
+    }
+
+    public function organizationLogoPath(): Attribute
+    {
+        $logo = null;
+
+        if ($this->organizationLogo && Storage::exists($this->organizationLogo->src)) {
+            $logo = Storage::url($this->organizationLogo->src);
+        }
+
+        return Attribute::make(
+            get: fn() => $logo,
+        );
+    }
+
     public function favouriteUsers(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'user_courses');
