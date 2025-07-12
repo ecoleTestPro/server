@@ -2,16 +2,13 @@
 
 namespace App\Http\Controllers\Private;
 
-use App\Enum\MediaTypeEnum;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\TestimonialStoreRequest;
-use App\Http\Requests\TestimonialUpdateRequest;
-use App\Models\Testimonial;
-use App\Repositories\MediaRepository;
-use App\Repositories\TestimonialRepository;
+use App\Http\Requests\FaqStoreRequest;
+use App\Http\Requests\FaqUpdateRequest;
+use App\Models\Faq;
+use App\Repositories\FaqRepository;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use PHPUnit\Event\Code\Test;
 
 class FaqController extends Controller
 {
@@ -19,12 +16,12 @@ class FaqController extends Controller
     {
         $search = $request->cat_search ? strtolower($request->cat_search) : null;
 
-        $testimonials = TestimonialRepository::query()->when($search, function ($query) use ($search) {
-            $query->where('name', 'like', '%' . $search . '%')->OrWhere('designation', 'like', '%' . $search . '%');
+        $faqs = FaqRepository::query()->when($search, function ($query) use ($search) {
+            $query->where('question', 'like', '%' . $search . '%');
         })->withTrashed()->latest('id')->paginate(15)->withQueryString();
 
         $data = [
-            'testimonials' => $testimonials,
+            'faqs' => $faqs,
         ];
 
         return Inertia::render('dashboard/faqs/index', [
@@ -32,46 +29,34 @@ class FaqController extends Controller
         ]);
     }
 
-    public function create()
-    {
-        return view('testimonial.create');
-    }
-
-    public function store(TestimonialStoreRequest $request)
+    public function store(FaqStoreRequest $request)
     {
         if (app()->isLocal()) {
-            return to_route('testimonial.index')->with('error', 'Testimonial not created in demo mode');
+            return to_route('dashboard.faqs.index')->with('error', 'Faq not created in demo mode');
         }
 
-        TestimonialRepository::storeByRequest($request);
+        FaqRepository::storeByRequest($request);
 
-        return to_route('testimonial.testimonial')->withSuccess('Testimonial created successfully.');
+        return to_route('dashboard.faqs.index')->withSuccess('Faq created successfully.');
     }
 
-    public function edit(Testimonial $testimonial)
+    public function update(FaqUpdateRequest $request, Faq $faq)
     {
-        return view('testimonial.edit', [
-            'testimonial' => $testimonial,
-        ]);
+        FaqRepository::updateByRequest($request, $faq);
+        return to_route('dashboard.faqs.index')->withSuccess('Faq updated successfully.');
     }
 
-    public function update(TestimonialUpdateRequest $request, Testimonial $testimonial)
+    public function destroy(Faq $faq)
     {
-        TestimonialRepository::updateByRequest($request, $testimonial);
-        return to_route('testimonial.index')->withSuccess('Testimonial updated successfully.');
+        $faq->delete();
+        $faq->is_active = false;
+        $faq->save();
+        return to_route('dashboard.faqs.index')->withSuccess('Faq deleted successfully.');
     }
 
-    public function destroy(Testimonial $testimonial)
+    public function restore($faq)
     {
-        $testimonial->delete();
-        $testimonial->is_active = false;
-        $testimonial->save();
-        return to_route('testimonial.index')->withSuccess('Testimonial deleted successfully.');
-    }
-
-    public function restore($testimonial)
-    {
-        TestimonialRepository::query()->withTrashed()->find($testimonial)->restore();
-        return to_route('testimonial.index')->withSuccess('Testimonial restored successfully.');
+        FaqRepository::query()->withTrashed()->find($faq)->restore();
+        return to_route('dashboard.faqs.index')->withSuccess('Faq restored successfully.');
     }
 }
