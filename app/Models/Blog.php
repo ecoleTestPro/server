@@ -32,8 +32,7 @@ class Blog extends Model
 
     protected $casts = [
         'status' => 'boolean',
-        // 'tags'   => 'array',
-        // 'created_at' => Carbon::class,
+        'tags'   => 'array',
     ];
 
     use HasFactory, SoftDeletes;
@@ -81,3 +80,4 @@ class Blog extends Model
     //     );
     // }
 }
+
