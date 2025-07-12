@@ -46,6 +46,11 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
         icon: FileStack,
     },
     {
+        title: 'Références',
+        href: route('dashboard.references.index'),
+        icon: FileStack,
+    },
+    {
         title: 'Offres d\'emploi',
         href: route('dashboard.job-offers.index'),
         icon: ClipboardPlus,

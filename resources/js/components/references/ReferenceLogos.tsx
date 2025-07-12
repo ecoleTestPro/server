@@ -1,7 +1,7 @@
-import { IReference } from '@/types/reference';
+import { IPartner } from '@/types/partner';
 
 interface ReferenceLogosProps {
-    references: IReference[];
+    references: IPartner[];
 }
 
 export default function ReferenceLogos({ references }: ReferenceLogosProps) {

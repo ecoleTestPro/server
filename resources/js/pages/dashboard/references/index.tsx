@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import ReferenceForm from '@/components/references/referenceForm';
 import ReferenceToolBar from '@/components/references/referenceToolBar';
 import ReferenceDataTable from '@/components/references/referenceDataTable';
-import { IReference } from '@/types/reference';
+import { IPartner } from '@/types/partner';
 import { ConfirmDialog } from '@/components/ui/confirmDialog';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -25,9 +25,9 @@ export default function DashboardReferences() {
     const { t } = useTranslation();
     const { data } = usePage<SharedData>().props;
 
-    const [references, setReferences] = useState<IReference[]>([]);
+    const [references, setReferences] = useState<IPartner[]>([]);
     const [openForm, setOpenForm] = useState(false);
-    const [selected, setSelected] = useState<IReference | undefined>(undefined);
+    const [selected, setSelected] = useState<IPartner | undefined>(undefined);
     const [showConfirm, setShowConfirm] = useState(false);
 
     useEffect(() => {
@@ -48,7 +48,7 @@ export default function DashboardReferences() {
         });
     };
 
-    const handleOpenEdit = (row: IReference) => {
+    const handleOpenEdit = (row: IPartner) => {
         setSelected(row);
         setOpenForm(true);
     };

@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Private;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ReferenceStoreRequest;
-use App\Http\Requests\ReferenceUpdateRequest;
-use App\Models\Reference;
-use App\Repositories\ReferenceRepository;
+use App\Http\Requests\PartnerStoreRequest;
+use App\Http\Requests\PartnerUpdateRequest;
+use App\Models\Partner;
+use App\Repositories\PartnerRepository;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -16,9 +16,10 @@ class ReferenceController extends Controller
     {
         $search = $request->search ? strtolower($request->search) : null;
 
-        $references = ReferenceRepository::query()
+        $references = PartnerRepository::query()
+            ->where('is_reference', true)
             ->when($search, function ($query) use ($search) {
-                $query->where('text', 'like', '%' . $search . '%');
+                $query->where('name', 'like', '%' . $search . '%');
             })
             ->with('media')
             ->withTrashed()
@@ -35,24 +36,28 @@ class ReferenceController extends Controller
         ]);
     }
 
-    public function store(ReferenceStoreRequest $request)
+    public function store(PartnerStoreRequest $request)
     {
         if (app()->isLocal()) {
             return to_route('dashboard.references.index')->with('error', 'Reference not created in demo mode');
         }
 
-        ReferenceRepository::storeByRequest($request);
+        $request->merge(['is_reference' => true]);
+
+        PartnerRepository::storeByRequest($request);
 
         return to_route('dashboard.references.index')->withSuccess('Reference created successfully.');
     }
 
-    public function update(ReferenceUpdateRequest $request, Reference $reference)
+    public function update(PartnerUpdateRequest $request, Partner $reference)
     {
-        ReferenceRepository::updateByRequest($request, $reference);
+        $request->merge(['is_reference' => true]);
+
+        PartnerRepository::updateByRequest($request, $reference);
         return to_route('dashboard.references.index')->withSuccess('Reference updated successfully.');
     }
 
-    public function destroy(Reference $reference)
+    public function destroy(Partner $reference)
     {
         $reference->delete();
         $reference->is_active = false;
@@ -62,7 +67,7 @@ class ReferenceController extends Controller
 
     public function restore($reference)
     {
-        ReferenceRepository::query()->withTrashed()->find($reference)->restore();
+        PartnerRepository::query()->withTrashed()->find($reference)->restore();
         return to_route('dashboard.references.index')->withSuccess('Reference restored successfully.');
     }
 }
