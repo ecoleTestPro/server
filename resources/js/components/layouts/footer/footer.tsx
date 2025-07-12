@@ -5,7 +5,7 @@ import { Link } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 
 export const CONTACT_INFO = {
-    phone1: '+41 78 225 58 07',
+    // phone1: '+41 78 225 58 07',
     phone2: '+225 0706915705',
     address: "Siège social: 5ème étage de la Résidence Pacy En face de l'immeuble CGK, Cocody Angré Djibi - 9ème tranche, Abidjan Côte d'Ivoire",
     email: 'info@ecoletestpro.com',
@@ -134,14 +134,14 @@ export default function Footer() {
                                         {CONTACT_INFO.email}
                                     </a>
                                 </li>
-                                <li className="mb-[10px] text-gray-500 last:mb-0 lg:text-[15px] xl:text-[16px] dark:text-gray-400">
+                                {/* <li className="mb-[10px] text-gray-500 last:mb-0 lg:text-[15px] xl:text-[16px] dark:text-gray-400">
                                     Téléphone 1:
                                     <a href="tel:+41782255807" className="text-gray-500 transition-all hover:text-gray-800">
                                         {CONTACT_INFO.phone1}
                                     </a>
-                                </li>
+                                </li> */}
                                 <li className="mb-[10px] text-gray-500 last:mb-0 lg:text-[15px] xl:text-[16px] dark:text-gray-400">
-                                    Téléphone 2:
+                                    Téléphone:
                                     <a href={`tel:${CONTACT_INFO.phone2}`} className="text-gray-500 transition-all hover:text-gray-800">
                                         {CONTACT_INFO.phone2}
                                     </a>

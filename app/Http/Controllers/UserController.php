@@ -12,6 +12,7 @@ use App\Repositories\FcmDeviceTokenRepository;
 use App\Repositories\GuestRepository;
 use App\Repositories\UserRepository;
 use App\Services\ResponseService;
+use App\Services\Notification\UserRegistrationNotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -57,6 +58,9 @@ class UserController extends Controller
         }
 
         $newUser->refresh();
+
+        // Notify admin about new user registration
+        UserRegistrationNotificationService::notifyUserRegistered($newUser);
 
         return ResponseService::created('Registration successful', [
             'user'            => UserResource::make($newUser),

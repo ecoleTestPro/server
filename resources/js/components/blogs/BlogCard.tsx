@@ -34,8 +34,8 @@ export default function BlogCard({ blog }: BlogCardProps) {
                         <span className="text-xs text-gray-400">•</span>
                         <span className="text-sm text-gray-400">{blog.created_at}</span>
                     </div>
-                    <span className="inline-block px-3 py-1 bg-blue-100 text-blue-600 text-xs rounded-full font-semibold">Lire plus</span>
                 </div>
+              
             </div>
         </div>
     );

@@ -14,20 +14,42 @@ use Illuminate\Support\Facades\Storage;
 
 class Blog extends Model
 {
-    protected $guarded = ['id'];
+    protected $fillable = [
+        'title',
+        'slug',
+        'excerpt',
+        'description',
+        'tags',
+        'status',
+    ];
+
+    protected $guarded = [
+        'id',
+        'blog_category_id',
+        'user_id',
+        'media_id',
+    ];
 
     protected $casts = [
         'status' => 'boolean',
-        // 'created_at' => Carbon::class,
+        'tags'   => 'array',
     ];
 
     use HasFactory, SoftDeletes;
 
+    /**
+     * The blog category that this blog belongs to.
+     */
     public function category(): BelongsTo
     {
         return $this->belongsTo(BlogCategory::class);
     }
 
+    /**
+     * The user that this blog belongs to.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function user()
     {
         return $this->belongsTo(User::class)->withTrashed();
@@ -50,4 +72,12 @@ class Blog extends Model
             get: fn() => $media,
         );
     }
+
+    // public function tags(): Attribute
+    // {
+    //     return Attribute::make(
+    //         get: fn() => $this->tags ? explode(';', $this->tags) : [],
+    //     );
+    // }
 }
+

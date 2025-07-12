@@ -24,6 +24,17 @@ class PublicFormationSessionController extends PublicAbstractController
         $this->default_data = $this->getDefaultData();
     }
 
+    public function listSessions()
+    {
+        try {
+            $sessions = \App\Models\CourseSession::with('course')->get();
+            return response()->json(['sessions' => $sessions]);
+        } catch (Exception $e) {
+            Log::error("Error in listSessions: {$e->getMessage()}");
+            return response()->json(['error' => 'Une erreur est survenue lors de la récupération des sessions.'], 500);
+        }
+    }
+
     /**
      * Renvoie les horaires d'une session de formation.
      *

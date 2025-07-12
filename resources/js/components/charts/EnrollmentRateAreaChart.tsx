@@ -2,25 +2,19 @@ import React, { Suspense, useEffect, useState } from 'react';
 import { ApexOptions } from 'apexcharts';
 import Chart from 'react-apexcharts';
 
+export interface AreaChartProps {
+    title?: string;
+    series: { name: string; data: number[] }[];
+    categories: string[];
+}
 
-const EnrollmentRateAreaChart: React.FC = () => {
+const EnrollmentRateAreaChart: React.FC<AreaChartProps> = ({ title = 'Chart', series, categories }) => {
     // Chart
     const [isChartLoaded, setChartLoaded] = useState(false);
 
     useEffect(() => {
         setChartLoaded(true);
     }, []);
-
-    const series = [
-        {
-            name: 'Trezo',
-            data: [31, 40, 28, 51, 42, 109, 100],
-        },
-        {
-            name: 'Social',
-            data: [11, 32, 45, 32, 34, 52, 41],
-        },
-    ];
 
     const options: ApexOptions = {
         chart: {
@@ -37,15 +31,7 @@ const EnrollmentRateAreaChart: React.FC = () => {
         colors: ['#605DFF', '#0f79f3'],
         xaxis: {
             type: 'datetime',
-            categories: [
-                '2018-09-19T00:00:00.000Z',
-                '2018-09-19T01:30:00.000Z',
-                '2018-09-19T02:30:00.000Z',
-                '2018-09-19T03:30:00.000Z',
-                '2018-09-19T04:30:00.000Z',
-                '2018-09-19T05:30:00.000Z',
-                '2018-09-19T06:30:00.000Z',
-            ],
+            categories,
             axisTicks: {
                 show: false,
                 color: '#ECEEF2',
@@ -117,7 +103,7 @@ const EnrollmentRateAreaChart: React.FC = () => {
             <div className="trezo-card bg-white dark:bg-[#0c1427] p-[20px] md:p-[25px] rounded-md">
                 <div className="trezo-card-header mb-[20px] md:mb-[25px] flex items-center justify-between">
                     <div className="trezo-card-title">
-                        <h5 className="!mb-0">Spline Area Chart</h5>
+                        <h5 className="!mb-0">{title}</h5>
                     </div>
                 </div>
                 <div className="trezo-card-content">

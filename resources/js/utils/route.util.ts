@@ -38,12 +38,15 @@ interface IROUTE_MAP {
         contact: IRouteMap;
         privacyPolicy: IRouteMap;
         termsOfService: IRouteMap;
+        search: IRouteMap;
+        calendar: IRouteMap;
         courses: {
             list: IRouteMap;
             byCategory: (categorySlug: string) => IRouteMap;
             detail: (categorySlug: string, slug: string) => IRouteMap;
         };
         services: {
+            index: IRouteMap;
             consulting: {
                 index: IRouteMap;
                 auditOfMaturityOfTests: IRouteMap;
@@ -75,6 +78,14 @@ interface IROUTE_MAP {
             create: IRouteMap,
             edit: (slug: string) => IRouteMap
         },
+        blogs: {
+            index: IRouteMap,
+            create: IRouteMap,
+            edit: (slug: string) => IRouteMap
+        },
+        newsletters: {
+            index: IRouteMap,
+        }
     }
 }
 
@@ -87,6 +98,8 @@ export const ROUTE_MAP: IROUTE_MAP = {
         contact: createIRouteMap(route('contact'), 'Nous contacter'),
         privacyPolicy: createIRouteMap(route('privacyPolicy'), 'Politique de confidentialité'),
         termsOfService: createIRouteMap(route('termsOfService'), 'Conditions d’utilisation'),
+        search: createIRouteMap(route('search.page'), 'Résultats de recherche'),
+        calendar: createIRouteMap(route('courses.calendar'), 'Calendrier des formations'),
         courses: {
             list: createIRouteMap('/formations', 'Liste des formations'),
             byCategory: (categorySlug: string) => {
@@ -97,6 +110,7 @@ export const ROUTE_MAP: IROUTE_MAP = {
             }
         },
         services: {
+            index: createIRouteMap(route('services'), 'Nos services'),
             consulting: {
                 index: createIRouteMap(route('consulting'), 'Consulting'),
                 auditOfMaturityOfTests: createIRouteMap(route('consulting.audit'), 'Audit de maturité de tests'),
@@ -130,6 +144,19 @@ export const ROUTE_MAP: IROUTE_MAP = {
             edit: (slug: string) => {
                 return createIRouteMap(route('dashboard.course.edit', { slug }), 'Modifier la formation');
             },
+        },
+        blogs: {
+            index: createIRouteMap(route('dashboard.blogs.index'), 'Liste des blogs'),
+            create: createIRouteMap(route('dashboard.blogs.create'), 'Créer un blog'),
+            edit: (slug: string) => {
+                return createIRouteMap(route('dashboard.blogs.edit', { slug }), 'Modifier le blog');
+            },
+        },
+        newsletters: {
+            index: createIRouteMap(route('dashboard.newsletters.index'), 'Newsletters'),
+            compose: createIRouteMap(route('dashboard.newsletters.compose'), 'Compose'),
+            templates: createIRouteMap(route('dashboard.newsletter-templates.index'), 'Templates'),
+            logs: createIRouteMap(route('dashboard.newsletter-logs.index'), 'Logs'),
         },
     }
 }

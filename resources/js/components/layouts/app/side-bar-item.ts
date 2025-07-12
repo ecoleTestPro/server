@@ -1,5 +1,5 @@
 import { NavItem } from "@/types";
-import { BookOpen, FileStack, Folder, HomeIcon, LayoutGrid, List, ClipboardPlus, Settings2, ListTodo, BookAIcon } from 'lucide-react';
+import { BookOpen, FileStack, Folder, HomeIcon, LayoutGrid, List, ClipboardPlus, Settings2, ListTodo, BookAIcon, ListChecks, Mail } from 'lucide-react';
 
 
 export const MAIN_NAV_ITEMS: NavItem[] = [
@@ -36,6 +36,31 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
         ],
     },
     {
+        title: 'Inscriptions',
+        href: route('dashboard.enrollment.index'),
+        icon: ListChecks,
+    },
+    {
+        title: 'Partenaires',
+        href: route('dashboard.partners.index'),
+        icon: FileStack,
+    },
+    // {
+    //     title: 'Pages',
+    //     href: route('dashboard.page.index'),
+    //     icon: BookOpen,
+    // },
+    {
+        title: 'Offres d\'emploi',
+        href: route('dashboard.job-offers.index'),
+        icon: ClipboardPlus,
+    },
+    {
+        title: 'Blogs',
+        href: route('dashboard.blogs.index'),
+        icon: Folder,
+    },
+    {
         title: 'Témoignages',
         href: route('dashboard.testimonial.index'),
         icon: BookAIcon,
@@ -44,6 +69,11 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
         title: 'Faqs',
         href: route('dashboard.faqs.index'),
         icon: BookOpen,
+    },
+    {
+        title: 'Newsletters',
+        href: route('dashboard.newsletters.index'),
+        icon: Mail,
     },
     {
         title: 'Paramètres',

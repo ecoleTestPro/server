@@ -14,7 +14,7 @@ export default function TestimonialCard({ show_rating, clean, testimonial }: Tes
             <div className="group/testimonial flex h-full flex-col items-center xl:flex-row rtl:xl:flex-row-reverse">
                 <div className="flex-center rounded-50 border-primary size-24 shrink-0 translate-y-12 overflow-hidden border p-1.5 xl:translate-x-12 xl:translate-y-0">
                     <img
-                        data-src="{{ $profileImageSrc }}"
+                        src={testimonial.media?.src ?? '/media/blank-user.png'}
                         alt="Testimonial image"
                         className="rounded-50 custom-transition size-full object-cover group-hover/testimonial:scale-110"
                     />

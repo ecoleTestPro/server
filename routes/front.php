@@ -3,6 +3,7 @@
 use App\Http\Controllers\Public\ContactUsController;
 use App\Http\Controllers\Public\EnrollController;
 use App\Http\Controllers\Public\PublicController;
+use App\Http\Controllers\Public\PublicJobController;
 use App\Http\Controllers\Public\PublicFormationController;
 use App\Http\Controllers\Public\PublicFormationSessionController;
 use Illuminate\Support\Facades\Route;
@@ -29,6 +30,8 @@ Route::group(["prefix" => "/"], function () {
     Route::get('contact', [ContactUsController::class, 'contact'])->name('contact');
     Route::post('contact', [ContactUsController::class, 'contactSubmit'])->name('contact.post');
 
+    Route::post('newsletter', [\App\Http\Controllers\Public\NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
+
     /**
      * Consulting routes
      */
@@ -54,7 +57,8 @@ Route::group(["prefix" => "/"], function () {
     /**
      * Careers routes
      */
-    Route::get('careers', [PublicController::class, 'careers'])->name('careers');
+    Route::get('careers', [PublicJobController::class, 'list'])->name('careers');
+    Route::post('job/apply', [PublicJobController::class, 'apply'])->name('job.apply');
     Route::get('job/{job_slug}', [PublicController::class, 'jobDetail'])->name('job.detail');
 
     /**
@@ -62,6 +66,10 @@ Route::group(["prefix" => "/"], function () {
      * This route handles search queries for blogs, courses, etc.
      */
     Route::post('search', [PublicFormationController::class, 'search'])->name('search');
+    Route::get('search', [PublicFormationController::class, 'searchPage'])->name('search.page');
+
+    Route::get('formations-calendar', [PublicFormationController::class, 'calendar'])->name('courses.calendar');
+    Route::get('formations-calendar/sessions', [PublicFormationSessionController::class, 'listSessions'])->name('courses.calendar.sessions');
 
     /** 
      * formation routes

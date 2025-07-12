@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use Abedin\Maker\Repositories\Repository;
 use App\Enum\MediaTypeEnum;
+use App\Http\Requests\BlogCategoryStoreRequest;
 use App\Http\Requests\StudentRegisterRequest;
 use App\Http\Requests\UserStoreRequest;
 use App\Http\Requests\UserUpdateRequest;
@@ -19,7 +20,5 @@ class BlogCategoryRepository extends Repository
         return BlogCategory::class;
     }
 
-    public static function storeByRequest(UserStoreRequest $request) {}
-
-    public static function updateByRequest(UserUpdateRequest $request, User $user) {}
+    public static function storeByRequest(BlogCategoryStoreRequest $request) {}
 }

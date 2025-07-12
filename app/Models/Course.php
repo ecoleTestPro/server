@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Partner;
 
 class Course extends Model
 {
@@ -87,9 +88,66 @@ class Course extends Model
         );
     }
 
+    public function gallery(): BelongsToMany
+    {
+        return $this->belongsToMany(Media::class, 'course_media');
+    }
+
+    public function galleryPaths(): Attribute
+    {
+        $paths = $this->gallery->map(function ($media) {
+            return Storage::exists($media->src) ? Storage::url($media->src) : null;
+        })->filter()->values()->toArray();
+
+        return Attribute::make(
+            get: fn() => $paths,
+        );
+    }
+
+    public function logo(): BelongsTo
+    {
+        return $this->belongsTo(Media::class, 'logo_id');
+    }
+
+    public function logoPath(): Attribute
+    {
+        $logo = null;
+
+        if ($this->logo && Storage::exists($this->logo->src)) {
+            $logo = Storage::url($this->logo->src);
+        }
+
+        return Attribute::make(
+            get: fn() => $logo,
+        );
+    }
+
+    public function organizationLogo(): BelongsTo
+    {
+        return $this->belongsTo(Media::class, 'organization_logo_id');
+    }
+
+    public function organizationLogoPath(): Attribute
+    {
+        $logo = null;
+
+        if ($this->organizationLogo && Storage::exists($this->organizationLogo->src)) {
+            $logo = Storage::url($this->organizationLogo->src);
+        }
+
+        return Attribute::make(
+            get: fn() => $logo,
+        );
+    }
+
     public function favouriteUsers(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'user_courses');
+    }
+
+    public function partners(): BelongsToMany
+    {
+        return $this->belongsToMany(Partner::class, 'course_partner');
     }
 
     // public function chapters(): HasMany

@@ -34,7 +34,7 @@ export const DEFULAT_MAIN_MENU: IMainMenuItem[] = [
     {
         id: 'servies',
         label: 'Offre pour entreprises',
-        href: ROUTE_MAP.public.services.testSerivces.index.link,
+        href: ROUTE_MAP.public.services.index.link,
         featureImage: '/assets/images/feature_image.png',
         gridClass: 'grid-cols-1 lg:grid-cols-3',
         maxWidth: 'w-[900px]',
@@ -87,13 +87,13 @@ export const DEFULAT_MAIN_MENU: IMainMenuItem[] = [
                             subItems: [
                                 {
                                     id: 'consulting-audit',
-                                    label: ROUTE_MAP.public.services.consulting.auditOfMaturityOfTests.title ?? 'Audit de maturité de test',
+                                    label: 'Services d\'externalisation des tests',
                                     href: ROUTE_MAP.public.services.testSerivces.testOutsourcingServices.link,
                                     image: 'https://placehold.co/512x512',
                                 },
                                 {
                                     id: 'consulting-testing',
-                                    label: ROUTE_MAP.public.services.consulting.consultingTesting.title ?? "Intégration de spécialistes",
+                                    label:  "Intégration de spécialistes",
                                     href: ROUTE_MAP.public.services.testSerivces.integrationSpecialists.link,
                                     image: 'https://placehold.co/512x512'
                                 }
@@ -162,3 +162,7 @@ const FORMATION_MAIN_MENU_PART_CHILDREN = {
         featured: [{ id: 'formation-vedette-1', label: 'Formation vedette 1', href: '/formations/formation-vedette-1' }],
     },
 };
+
+
+export const RECAPTCHA_SITE_KEY_PUBLIC: string = "6LdOgHgrAAAAACDxYFx2jRkoJIov4VK6XqMbz6gK";
+export const RECAPTCHA_SITE_KEY_PRIVATE: string = "6LdOgHgrAAAAAN6brCXYKUTyh6ToFeOT20pla4VD";

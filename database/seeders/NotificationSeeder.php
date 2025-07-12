@@ -56,5 +56,13 @@ class NotificationSeeder extends Seeder
             'heading' => 'Nouvelle inscription au cours',
             'content' => 'Félicitations ! Vous êtes maintenant inscrit à {course_title}. Débloquons ensemble de nouvelles opportunités !',
         ]);
+
+        NotificationRepository::query()->updateOrCreate([
+            'type' => NotificationTypeEnum::NewUserRegistered->value,
+        ], [
+            'is_enabled' => true,
+            'heading' => 'Nouvelle inscription utilisateur',
+            'content' => 'L\'utilisateur {user_name} vient de s\'inscrire sur la plateforme',
+        ]);
     }
 }

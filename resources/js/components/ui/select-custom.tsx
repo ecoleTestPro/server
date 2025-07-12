@@ -12,7 +12,7 @@ import {
 export interface ISelectItem {
   id: number;
   title: string;
-  value: string;
+  value: string | number;
   canSelectParent?: boolean;
   subItem?: ISelectItem[];
 }
@@ -46,7 +46,7 @@ export default function SelectCustom({
       onValueChange={onValueChange}
     >
       <SelectTrigger className="w-full">
-        <SelectValue placeholder="Sélectionner une catégorie" />
+        <SelectValue placeholder="Sélectionner une option" />
       </SelectTrigger>
 
       <SelectContent>
@@ -57,7 +57,7 @@ export default function SelectCustom({
             <React.Fragment key={item.id}>
               {/* Render parent item if selectable or no sub-items */}
               {(!item.subItem || item.canSelectParent) && (
-                <SelectItem value={item.id.toString()}>
+                <SelectItem value={item.value.toString()}>
                   {item.title}
                 </SelectItem>
               )}
@@ -67,7 +67,7 @@ export default function SelectCustom({
                 <>
                  <SelectGroup>
                     <SelectItem
-                    value={item.id.toString()}
+                    value={item.value.toString()}
                       disabled={true} // Disable the parent item to prevent selection
                       className="pl-6" // Indentation for sub-items
                     >
@@ -80,7 +80,7 @@ export default function SelectCustom({
                   {item.subItem.map((subItem) => (
                     <SelectItem
                       key={subItem.id}
-                      value={subItem.id.toString()}
+                      value={subItem.value.toString()}
                       className="pl-6" // Indentation for sub-items
                     >
                       {`— ${subItem.title}`} {/* Prefix for visual hierarchy */}

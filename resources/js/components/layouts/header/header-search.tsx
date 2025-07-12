@@ -2,7 +2,7 @@ import { SharedData } from '@/types';
 import { ICourse } from '@/types/course';
 import { Logger } from '@/utils/console.util';
 import { ROUTE_MAP } from '@/utils/route.util';
-import { Link, useForm, usePage } from '@inertiajs/react';
+import { Link, router, useForm, usePage } from '@inertiajs/react';
 import axios from 'axios';
 import { Loader } from 'lucide-react';
 import { useState } from 'react';
@@ -49,12 +49,12 @@ export default function HeaderSearch({ className }: HeaderSearchProps) {
         setCourseResults([]);
     };
 
-    const onSearch = () => {
+    const onSearch = (searchTerm: string) => {
         setLoading(true);
         setCourseResults([]); // Reset previous results
 
         axios
-            .post(route('search'), searchResult)
+            .post(route('search'), { search: searchTerm })
             .then((response: { data: { search_result: { courses?: ICourse[] } } }) => {
                 setLoading(false);
                 Logger.log('[Search] Courses updated:', response.data.search_result?.courses);
@@ -75,10 +75,17 @@ export default function HeaderSearch({ className }: HeaderSearchProps) {
 
         // Trigger search if input length is greater than 2 characters
         if (e.target.value.length > 2) {
-            onSearch();
+            onSearch(e.target.value);
         } else {
             initializeResults();
             setSearchResult({ search: '' });
+        }
+    };
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (searchText.trim() !== '') {
+            router.visit(`${ROUTE_MAP.public.search.link}?search=${encodeURIComponent(searchText)}`);
         }
     };
 
@@ -93,7 +100,7 @@ export default function HeaderSearch({ className }: HeaderSearchProps) {
         <>
             <div className={className}>
                 <div className="relative mx-auto w-full max-w-xl rounded-full bg-white">
-                    <div className="flex items-center justify-center">
+                    <form className="flex items-center justify-center" onSubmit={handleSubmit}>
                         <input
                             placeholder="Rechercher des formations, des certifications, ..."
                             className="focus:border-primary-200 focus:ring-primary-200 border-[#0bbd53] h-10 w-full rounded-full border-1 bg-transparent pr-24 pl-6 outline-none hover:outline-none focus:shadow-md transition-all duration-100 ease-in-out sm:text-sm sm:font-medium"
@@ -124,7 +131,7 @@ export default function HeaderSearch({ className }: HeaderSearchProps) {
                                 ></path>
                             </svg>
                         </button>
-                    </div>
+                    </form>
                 </div>
             </div>
 
@@ -149,7 +156,10 @@ export default function HeaderSearch({ className }: HeaderSearchProps) {
                                                 {courseResults && courseResults.length > 0 ? (
                                                     courseResults.map((course) => (
                                                         <li key={course.id} className="cursor-pointer p-2 hover:bg-white dark:hover:bg-gray-700">
-                                                            <Link classID='hover:underline' href={ROUTE_MAP.public.courses.detail(course.category?.slug ?? '', course.slug).link}>
+                                                            <Link
+                                                                className="hover:underline"
+                                                                href={ROUTE_MAP.public.courses.detail(course.category?.slug ?? '', course.slug).link}
+                                                            >
                                                                 {course.title}
                                                             </Link>
                                                         </li>

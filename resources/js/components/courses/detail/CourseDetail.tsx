@@ -6,6 +6,7 @@ import CourseDetailAccordion from './CourseDetailAccordion';
 import CouseDetailMedia from './CouseDetailMedia';
 import CourseDetailChooseSection from './partial/CourseDetailChooseSection';
 import CourseDetailOverview from './partial/CourseDetailOverview';
+import CoursePartners from './CoursePartners';
 
 const email: string = 'info@ecoletestpro.com';
 
@@ -38,7 +39,25 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ course }) => {
     return (
         <section className={`${CLASS_NAME.section} ${CLASS_NAME.sectionContentPadding}`}>
             <div className="container mx-auto">
-                <h1 className="text-2xl font-bold mb-6 text-black dark:text-white">{course.title}</h1>
+                <h1 className="text-2xl font-bold mb-4 text-black dark:text-white">{course.title}</h1>
+                {(course.logo || course.organization_logo) && (
+                    <div className="mb-6 flex items-center gap-4">
+                        {course.logo && (
+                            <img
+                                src={course.logo.src}
+                                alt={`${course.title} logo`}
+                                className="h-16 w-auto object-contain"
+                            />
+                        )}
+                        {course.organization_logo && (
+                            <img
+                                src={course.organization_logo.src}
+                                alt="Organization logo"
+                                className="h-16 w-auto object-contain"
+                            />
+                        )}
+                    </div>
+                )}
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div className="toc-accordion col-span-1 md:col-span-2" id="tablesOfContentAccordion">
@@ -176,6 +195,9 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ course }) => {
                                 <CourseDetailChooseSection course={course} />
                             </div>
                         </div>
+                    </div>
+                    <div className="col-span-1 md:col-span-3">
+                        <CoursePartners partners={course.partners} />
                     </div>
                 </div>
             </div>

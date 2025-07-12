@@ -1,4 +1,4 @@
-version: '3.3'
+version: '3.8'
 
 services:
   app:
@@ -10,13 +10,7 @@ services:
       - "8053:80"
     depends_on:
       - db
-    environment:
-      DB_CONNECTION: mysql
-      DB_HOST: db
-      DB_PORT: 3307
-      DB_DATABASE: root
-      DB_USERNAME: jerry_clexcellence
-      DB_PASSWORD: root
+    env_file: .env
 
   db:
     image: mysql:8.0
@@ -29,3 +23,8 @@ services:
       MYSQL_PASSWORD: root
     ports:
       - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:

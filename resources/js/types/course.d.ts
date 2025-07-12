@@ -1,8 +1,11 @@
-import { IDataWithPagination } from ".";
+import { IDataWithPagination, IJobOffer } from ".";
 import { IBlog, IBlogCategory } from "./blogs";
+import { ITestimonial } from "./testimonial";
+import { IFaq } from "./faq";
+import { IPartner } from "./partner";
 
 
-export enum PeriodicityUnitEnum {
+export enum PeriodicityUnitEnum { 
     DAY = 'DAY',
     WEEK = 'WEEK',
     MONTH = 'MONTH',
@@ -108,7 +111,11 @@ export interface ICourse {
     description: ICourseDescription;
     categories?: ICourseCategory[];
     media?: IMedia[];
+    logo?: IMedia;
+    organization_logo?: IMedia;
+    gallery?: IMedia[];
     course_sessions?: ICourseSession[];
+    partners?: IPartner[];
 
 }
 
@@ -145,12 +152,11 @@ export const createCourseCategory = (): ICourseCategory => {
 export interface ICourseEnrollment {
     user_id: number,
     course_id: number,
+    course_session_id: number,
     user: User,
     course: ICourse,
     mode: string,
     progress: number,
-    course_price: number,
-    discount_amount: number,
     last_activity: string,
     is_certificate_downloaded: boolean,
 }
@@ -212,7 +218,7 @@ export interface ICustomSharedData {
     /**
      * Paginated list of course categories
      */
-    categories?: IDataWithPagination<ICourseCategory>;
+    categories: ICourseCategory[]; 
 
     /**
      * List of course categories with their courses
@@ -258,4 +264,14 @@ export interface ICustomSharedData {
         categories?: IBlogCategory[];
         single: IBlog
     }
+
+    testimonials?: IDataWithPagination<ITestimonial>
+    faqs?: IFaq[]
+
+    chart_data?: {
+        enrollment_area: IChartData;
+        course_area: IChartData;
+    }
+
+    job_offers : IJobOffer[];
 }

@@ -10,4 +10,5 @@ enum NotificationTypeEnum: string
     case NewQuizFromCourse          = 'new_quiz_from_course';
     case CustomNotification         = 'new_custom_notification_from_admin';
     case NewEnrollmentNotification  = 'new_enrollment_notification';
+    case NewUserRegistered          = 'new_user_registered';
 }

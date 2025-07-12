@@ -49,6 +49,40 @@ export default function CourseAdditionnalForm({ fieldsetClasses, data, setData, 
                         </TooltipCustom>
                     </div>
                 </div>
+
+                <div className="grid gap-2">
+                    <Label htmlFor="price">{t('courses.price', 'Prix')} (FCFA) </Label>
+                    <Input
+                        id="price"
+                        type="text"
+                        required
+                        value={displayPrice}
+                        onChange={(e) => {
+                            // On enlève les espaces pour la valeur réelle
+                            const raw = e.target.value.replace(/\s/g, '').replace(/[^0-9]/g, '');
+                            setData('price', raw);
+                            // On formate pour l'affichage
+                            setDisplayPrice(raw ? Number(raw).toLocaleString('fr-FR') : '');
+                        }}
+                        disabled={processing}
+                        placeholder={t('courses.price', 'Prix')}
+                    />
+                    <InputError message={errors.price} />
+                </div>
+
+                <div className="grid gap-2">
+                    <Label htmlFor="regular_price">{t('courses.regular_price', 'Prix normal')}</Label>
+                    <Input
+                        id="regular_price"
+                        type="text"
+                        value={data.regular_price}
+                        onChange={(e) => setData('regular_price', e.target.value)}
+                        disabled={processing}
+                        placeholder={t('courses.regular_price', 'Prix normal')}
+                    />
+                    <InputError message={errors.regular_price} />
+                </div>
+
                 <div className="grid gap-2">
                     <Label htmlFor="duration">{t('courses.duration', 'Durée')}</Label>
                     <Input
@@ -111,38 +145,6 @@ export default function CourseAdditionnalForm({ fieldsetClasses, data, setData, 
                         placeholder={t('courses.lectures', 'Nombre de leçons')}
                     />
                     <InputError message={errors.lectures} />
-                </div>
-                <div className="grid gap-2">
-                    <Label htmlFor="price">{t('courses.price', 'Prix')} (FCFA) </Label>
-                    <Input
-                        id="price"
-                        type="text"
-                        required
-                        value={displayPrice}
-                        onChange={(e) => {
-                            // On enlève les espaces pour la valeur réelle
-                            const raw = e.target.value.replace(/\s/g, '').replace(/[^0-9]/g, '');
-                            setData('price', raw);
-                            // On formate pour l'affichage
-                            setDisplayPrice(raw ? Number(raw).toLocaleString('fr-FR') : '');
-                        }}
-                        disabled={processing}
-                        placeholder={t('courses.price', 'Prix')}
-                    />
-                    <InputError message={errors.price} />
-                </div>
-
-                <div className="grid gap-2">
-                    <Label htmlFor="regular_price">{t('courses.regular_price', 'Prix normal')}</Label>
-                    <Input
-                        id="regular_price"
-                        type="text"
-                        value={data.regular_price}
-                        onChange={(e) => setData('regular_price', e.target.value)}
-                        disabled={processing}
-                        placeholder={t('courses.regular_price', 'Prix normal')}
-                    />
-                    <InputError message={errors.regular_price} />
                 </div>
             </div>
         </fieldset>

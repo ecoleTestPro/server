@@ -29,7 +29,6 @@ class CourseSessionRepository extends Repository
                 throw new \Exception('Formation introuvable.');
             }
 
-            $course_price = $course->price;
 
             return self::create([
                 'course_id'      => $request->course_id,
