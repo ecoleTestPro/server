@@ -46,6 +46,7 @@ interface IROUTE_MAP {
             detail: (categorySlug: string, slug: string) => IRouteMap;
         };
         services: {
+            index: IRouteMap;
             consulting: {
                 index: IRouteMap;
                 auditOfMaturityOfTests: IRouteMap;
@@ -109,6 +110,7 @@ export const ROUTE_MAP: IROUTE_MAP = {
             }
         },
         services: {
+            index: createIRouteMap(route('services'), 'Nos services'),
             consulting: {
                 index: createIRouteMap(route('consulting'), 'Consulting'),
                 auditOfMaturityOfTests: createIRouteMap(route('consulting.audit'), 'Audit de maturité de tests'),

@@ -80,8 +80,11 @@ class PublicController extends PublicAbstractController
 
     public function services()
     {
-        // Services
-        return view('services');
+        $data = $this->default_data;
+
+        return Inertia::render('public/services', [
+            'data' => $data,
+        ]);
     }
 
     public function blogs()
