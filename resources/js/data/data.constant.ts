@@ -34,7 +34,7 @@ export const DEFULAT_MAIN_MENU: IMainMenuItem[] = [
     {
         id: 'servies',
         label: 'Offre pour entreprises',
-        href: ROUTE_MAP.public.services.testSerivces.index.link,
+        href: ROUTE_MAP.public.services.index.link,
         featureImage: '/assets/images/feature_image.png',
         gridClass: 'grid-cols-1 lg:grid-cols-3',
         maxWidth: 'w-[900px]',
