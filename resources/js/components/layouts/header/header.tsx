@@ -147,8 +147,8 @@ export default function Header() {
                     title: 'Formations',
                     description: 'Liste des formations',
                     items: [
-                        PROGRAMMES_DE_RECONVERSION,
                         ...buildCategoryItems(data.categories_with_courses),
+                        PROGRAMMES_DE_RECONVERSION,
                     ],
                 },
             };
