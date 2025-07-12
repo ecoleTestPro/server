@@ -4,6 +4,7 @@ import { useCallback } from 'react';
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import { useTranslation } from 'react-i18next';
 import InputError from '../input-error';
+import BtnSecondary from '../ui/button/btn-secondary';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import SelectCustom, { ISelectItem } from '../ui/select-custom';
@@ -218,14 +219,7 @@ export default function ContactForm({ handleSubmit, errors, setErrors }: Contact
                     <p className="text-sm text-gray-500">les champs marqués d'un astérisque (*) sont obligatoires.</p>
                 </div>
                 <div className="flex justify-center">
-                    <button
-                        type="submit"
-                        disabled={processing}
-                        onClick={(event: any) => handleBeforeSubmit(event)}
-                        className="bg-primary-600 hover:bg-primary-500 block w-10/12 transform rounded-md px-[17px] py-[12px] font-medium text-white transition-all duration-300 hover:scale-105 lg:text-[15px] xl:text-[16px]"
-                    >
-                        <span className="relative inline-block ltr:pl-[25px] ltr:md:pl-[29px] rtl:pr-[25px] rtl:md:pr-[29px]">Envoyer</span>
-                    </button>
+                    <BtnSecondary label="Envoyer" onClick={(event: any) => handleBeforeSubmit(event)} />
                 </div>
             </form>
         </div>

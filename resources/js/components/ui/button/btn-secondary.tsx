@@ -5,7 +5,7 @@ interface BtnSecondaryProps {
     className?: string;
     label: string;
     href?: string;
-    onClick?: () => void;
+    onClick?: (event?: any) => void ;
     type?: 'button' | 'submit' | 'reset';
 }
 
