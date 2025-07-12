@@ -10,6 +10,7 @@ use App\Http\Controllers\Private\SettingController;
 use App\Http\Controllers\Private\TestimonialController;
 use App\Http\Controllers\Private\ReferenceController;
 use App\Http\Controllers\Private\PartnerController;
+use App\Http\Controllers\Private\EnrollmentController;
 use App\Http\Controllers\Settings\PasswordController;
 use App\Http\Controllers\Settings\ProfileController;
 
@@ -48,6 +49,14 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
         Route::post('store',               [CategoryController::class, 'store'])->name('dashboard.category.store');
         Route::post('update',              [CategoryController::class, 'update'])->name('dashboard.category.update');
         Route::delete('delete/{category}', [CategoryController::class, 'delete'])->name('dashboard.category.delete');
+    });
+
+    // ENROLLMENTS MANAGEMENT
+    Route::group([
+        'prefix' => 'enrollments',
+    ], function () {
+        Route::get('', [EnrollmentController::class, 'index'])->name('dashboard.enrollment.index');
+        Route::delete('delete/{enrollment}', [EnrollmentController::class, 'destroy'])->name('dashboard.enrollment.delete');
     });
 
 
