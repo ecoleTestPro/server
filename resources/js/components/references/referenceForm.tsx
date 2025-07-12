@@ -15,6 +15,7 @@ interface ReferenceFormProps {
 
 const defaultValues: IReference = {
     text: '',
+    tag: '',
     is_active: true,
 };
 
@@ -30,6 +31,7 @@ export default function ReferenceForm({ closeDrawer, initialData }: ReferenceFor
             method: initialData?.id ? 'put' : 'post',
             data: {
                 text: data.text,
+                tag: data.tag,
                 media_id: data.media_id,
                 is_active: data.is_active ? '1' : '0',
             },
@@ -49,6 +51,11 @@ export default function ReferenceForm({ closeDrawer, initialData }: ReferenceFor
                 <Label htmlFor="text">{t('Text')}</Label>
                 <Input id="text" value={data.text ?? ''} onChange={(e) => setData('text', e.target.value)} disabled={processing} />
                 <InputError message={errors.text} />
+            </div>
+            <div className="grid gap-2">
+                <Label htmlFor="tag">Tag</Label>
+                <Input id="tag" value={data.tag ?? ''} onChange={(e) => setData('tag', e.target.value)} disabled={processing} />
+                <InputError message={errors.tag} />
             </div>
             <div className="grid gap-2">
                 <Label htmlFor="media_id">{t('Media ID')}</Label>
