@@ -18,20 +18,10 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
                 href: route('dashboard.course.index'),
                 icon: List,
             },
-            // {
-            //     title: 'Créer une formation',
-            //     href: route('dashboard.course.create'),
-            //     icon: ClipboardPlus,
-            // },
             {
                 title: 'Catégories',
                 href: route('dashboard.category.index'),
                 icon: ListTodo,
-            },
-            {
-                title: 'Configuration',
-                href: "#",
-                icon: Settings2,
             },
         ],
     },
