@@ -38,7 +38,13 @@ export default function BlogDashboard() {
     useEffect(() => {
         if (data.blogs?.list) {
             Logger.log('Blogs data:', data.blogs.list);
-            setBlogs(data.blogs.list);
+            const blogsWithTags = data.blogs.list.map((blog: IBlog) => {
+                if (blog.tags) {
+                    blog.tagArray = blog.tags.split(';').map((tag) => tag.trim());
+                }
+                return blog;
+            });
+            setBlogs(blogsWithTags);
         }
         if (data.blogs?.categories) {
             Logger.log('Blog categories:', data.blogs.categories);

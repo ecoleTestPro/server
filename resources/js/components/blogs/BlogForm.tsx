@@ -16,7 +16,8 @@ export interface BlogForm {
     slug: string;
     excerpt: string;
     description: string;
-    tags?: string[];
+    tags?: string;
+    tagArray?: string[];
     status: boolean;
     category_id?: number;
     [key: string]: any; // Allow additional properties
@@ -29,7 +30,7 @@ const createDefaultValues = (blog: IBlog | null): BlogForm => {
             slug: blog.slug,
             excerpt: blog.excerpt,
             description: blog.description,
-            tags: blog.tags || [],
+            tags: blog.tags,
             status: blog.status,
             // category_id: blog.category_id,
         };
@@ -39,7 +40,7 @@ const createDefaultValues = (blog: IBlog | null): BlogForm => {
         slug: '',
         excerpt: '',
         description: '',
-        tags: [],
+        tags: '',
         status: false,
     };
 };
@@ -59,7 +60,7 @@ export const BlogForm = ({ blog = null, categories = [], onCancel }: BlogFormPro
     const [openCategoryEdit, setOpenCategoryEdit] = useState(false);
 
     useEffect(() => {
-        setData('tags', tags);
+        setData('tags', tags.join(';'));
     }, [tags]);
 
     const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {

@@ -13,21 +13,6 @@ interface BlogsDataTableProps {
 export default function BlogsDataTable({ blogs, onEditRow, onDeleteRow }: BlogsDataTableProps) {
     // Définition des colonnes
     const columns: ColumnDef<IBlog>[] = [
-        // {
-        //     id: 'select',
-        //     header: ({ table }) => (
-        //         <Checkbox
-        //             checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
-        //             onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        //             aria-label="Select all"
-        //         />
-        //     ),
-        //     cell: ({ row }) => (
-        //         <Checkbox checked={row.getIsSelected()} onCheckedChange={(value) => row.toggleSelected(!!value)} aria-label="Select row" />
-        //     ),
-        //     enableSorting: false,
-        //     enableHiding: false,
-        // },
         {
             accessorKey: 'title',
             header: ({ column }) => (
@@ -67,14 +52,22 @@ export default function BlogsDataTable({ blogs, onEditRow, onDeleteRow }: BlogsD
             accessorKey: 'tags',
             header: ({ column }) => (
                 <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-                    Étiquettes
+                    Tags
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             ),
             cell: ({ row }) => {
                 return (
                     <div className="flex items-center gap-2">
-                        <span className="capitalize">show tags here</span>
+                        {row.original.tagArray?.length ? (
+                            row.original.tagArray.map((tag, index) => (
+                                <span key={index} className="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-2 py-1 rounded capitalize" >
+                                    #{tag}
+                                </span>
+                            ))
+                        ) : (
+                            <span className="text-gray-500">Aucun tag</span>
+                        )}
                     </div>
                 );
             },

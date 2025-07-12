@@ -1,5 +1,7 @@
 import { CLASS_NAME } from '@/data/styles/style.constant';
 import { IBlog, IBlogCategory } from '@/types/blogs';
+import { ROUTE_MAP } from '@/utils/route.util';
+import { Link } from '@inertiajs/react';
 import React from 'react';
 
 interface BlogSidebarProps {
@@ -30,10 +32,13 @@ const BlogSidebar: React.FC<BlogSidebarProps> = ({
             <ul className="space-y-3">
                 {recentBlogs.map((blog) => (
                     <li key={blog.id}>
-                        <button className="w-full text-left hover:underline text-gray-700" onClick={() => onBlogClick(blog.id)}>
+                        <Link
+                            href={ROUTE_MAP.public.blogs.detail(blog.slug).link}
+                            className="w-full text-left hover:text-primary hover:underline text-gray-700"
+                        >
                             <div className="font-medium line-clamp-2">{blog.title}</div>
                             <div className="text-xs text-gray-400">{blog.created_at}</div>
-                        </button>
+                        </Link>
                     </li>
                 ))}
             </ul>

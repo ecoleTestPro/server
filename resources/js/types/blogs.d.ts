@@ -18,7 +18,8 @@ export interface IBlog {
     description: string;
     excerpt: string;
     image: string;
-    tags?: string[];
+    tags?: string;
+    tagArray?: string[];
     status: boolean;
     created_at: string;
     updated_at: string;
