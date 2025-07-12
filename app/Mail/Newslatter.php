@@ -17,7 +17,7 @@ class Newslatter extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct(public $subject)
+    public function __construct(public $subject, public $content)
     {
     }
 
@@ -39,6 +39,9 @@ class Newslatter extends Mailable
     {
         return new Content(
             view: 'newslatter.mail',
+            with: [
+                'content' => $this->content,
+            ]
         );
     }
 

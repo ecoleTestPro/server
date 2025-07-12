@@ -4,6 +4,7 @@ use App\Http\Controllers\Private\CategoryController;
 use App\Http\Controllers\Private\CourseController;
 use App\Http\Controllers\Private\DashboardController;
 use App\Http\Controllers\Private\FaqController;
+use App\Http\Controllers\Private\NewsletterController;
 use App\Http\Controllers\Private\SettingController;
 use App\Http\Controllers\Private\TestimonialController;
 use App\Http\Controllers\Settings\PasswordController;
@@ -92,5 +93,13 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
     ], function () {
         Route::get('',               [FaqController::class, 'index'])->name('dashboard.faqs.index');
         Route::post('create',        [FaqController::class, 'store'])->name('dashboard.faqs.store');
+    });
+
+    // NEWSLETTERS
+    Route::group([
+        'prefix' => 'newsletters',
+    ], function () {
+        Route::get('', [NewsletterController::class, 'index'])->name('dashboard.newsletter.index');
+        Route::post('send', [NewsletterController::class, 'send'])->name('dashboard.newsletter.send');
     });
 });
