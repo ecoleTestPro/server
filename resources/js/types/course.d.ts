@@ -2,6 +2,7 @@ import { IDataWithPagination } from ".";
 import { IBlog, IBlogCategory } from "./blogs";
 import { ITestimonial } from "./testimonial";
 import { IFaq } from "./faq";
+import { IPartner } from "./partner";
 
 
 export enum PeriodicityUnitEnum {
@@ -112,6 +113,7 @@ export interface ICourse {
     media?: IMedia[];
     gallery?: IMedia[];
     course_sessions?: ICourseSession[];
+    partners?: IPartner[];
 
 }
 
