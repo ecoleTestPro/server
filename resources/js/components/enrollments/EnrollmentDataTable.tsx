@@ -22,6 +22,26 @@ export default function EnrollmentDataTable({ enrollments, onDeleteRow }: Enroll
             cell: ({ row }) => <span>{row.original.user?.name || '-'}</span>,
         },
         {
+            id: 'email',
+            header: ({ column }) => (
+                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                    Email
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            ),
+            cell: ({ row }) => <span>{row.original.user?.email || '-'}</span>,
+        },
+        {
+            id: 'phone',
+            header: ({ column }) => (
+                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                    Téléphone
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            ),
+            cell: ({ row }) => <span>{row.original.user?.phone || '-'}</span>,
+        },
+        {
             accessorKey: 'course',
             header: ({ column }) => (
                 <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
