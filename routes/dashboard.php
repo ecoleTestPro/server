@@ -11,6 +11,7 @@ use App\Http\Controllers\Private\TestimonialController;
 use App\Http\Controllers\Private\ReferenceController;
 use App\Http\Controllers\Private\PartnerController;
 use App\Http\Controllers\Private\EnrollmentController;
+use App\Http\Controllers\Private\NotificationController;
 use App\Http\Controllers\Settings\PasswordController;
 use App\Http\Controllers\Settings\ProfileController;
 
@@ -25,6 +26,9 @@ use Inertia\Inertia;
 Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () {
     // DASHBOARD HOME
     Route::get('', [DashboardController::class, 'index'])->name('dashboard.index');
+
+    // NOTIFICATIONS
+    Route::get('notifications', [NotificationController::class, 'index'])->name('dashboard.notifications.index');
 
 
     // COURSE MANAGEMENT

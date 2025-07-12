@@ -7,31 +7,30 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import axios from 'axios';
 import { Bell } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import type { INotificationInstance } from '@/types';
 import { Button } from '../ui/button/button';
 
-const notifications = [
-    {
-        id: 1,
-        title: 'Nouveau message',
-        description: 'Vous avez reçu un message de John Doe',
-        time: 'Il y a 5 minutes',
-    },
-    {
-        id: 2,
-        title: 'Mise à jour système',
-        description: 'Une nouvelle version est disponible',
-        time: 'Il y a 1 heure',
-    },
-    {
-        id: 3,
-        title: 'Rappel réunion',
-        description: "Réunion d'équipe à 14h",
-        time: 'Il y a 2 heures',
-    },
-];
-
 export function NotificationsDropdown() {
+    const [notifications, setNotifications] = useState<INotificationInstance[]>([]);
+
+    const fetchNotifications = () => {
+        axios
+            .get(route('dashboard.notifications.index'))
+            .then((res) => {
+                setNotifications(res.data.notifications ?? []);
+            })
+            .catch(() => {
+                setNotifications([]);
+            });
+    };
+
+    useEffect(() => {
+        fetchNotifications();
+    }, []);
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -54,17 +53,11 @@ export function NotificationsDropdown() {
                 ) : (
                     notifications.map((notification) => (
                         <DropdownMenuItem key={notification.id} className="flex-col items-start gap-1">
-                            <div className="text-sm font-medium">{notification.title}</div>
-                            <div className="text-sm text-muted-foreground">{notification.description}</div>
-                            <div className="text-xs text-muted-foreground">{notification.time}</div>
+                            <div className="text-sm font-medium">{notification.heading}</div>
+                            <div className="text-sm text-muted-foreground">{notification.content}</div>
+                            <div className="text-xs text-muted-foreground">{notification.created_at}</div>
                         </DropdownMenuItem>
                     ))
-                )}
-                {notifications.length > 0 && (
-                    <>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem className="text-center justify-center">Voir toutes les notifications</DropdownMenuItem>
-                    </>
                 )}
             </DropdownMenuContent>
         </DropdownMenu>
