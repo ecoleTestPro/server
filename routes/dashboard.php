@@ -10,6 +10,7 @@ use App\Http\Controllers\Private\SettingController;
 use App\Http\Controllers\Private\TestimonialController;
 use App\Http\Controllers\Private\ReferenceController;
 use App\Http\Controllers\Private\PartnerController;
+use App\Http\Controllers\Private\JobOfferController;
 use App\Http\Controllers\Private\EnrollmentController;
 use App\Http\Controllers\Private\NotificationController;
 use App\Http\Controllers\Settings\PasswordController;
@@ -139,6 +140,18 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
         Route::put('update/{reference}', [ReferenceController::class, 'update'])->name('dashboard.references.update');
         Route::delete('delete/{reference}', [ReferenceController::class, 'destroy'])->name('dashboard.references.delete');
         Route::post('restore/{reference}', [ReferenceController::class, 'restore'])->name('dashboard.references.restore');
+    });
+
+    // JOB OFFERS
+    Route::group([
+        'prefix' => 'job-offers',
+    ], function () {
+        Route::get('', [JobOfferController::class, 'index'])->name('dashboard.job-offers.index');
+        Route::post('create', [JobOfferController::class, 'store'])->name('dashboard.job-offers.store');
+        Route::put('update/{jobOffer}', [JobOfferController::class, 'update'])->name('dashboard.job-offers.update');
+        Route::delete('delete/{jobOffer}', [JobOfferController::class, 'destroy'])->name('dashboard.job-offers.delete');
+        Route::post('restore/{jobOffer}', [JobOfferController::class, 'restore'])->name('dashboard.job-offers.restore');
+        Route::post('toggle/{jobOffer}', [JobOfferController::class, 'toggle'])->name('dashboard.job-offers.toggle');
     });
 
     // PARTNERS

@@ -1,7 +1,7 @@
-import { JobOffer } from '@/pages/public/careers/careers';
+import { IJobOffer } from '@/types';
 import { JobCard } from './JobCard';
 
-export const JobList: React.FC<{ jobs: JobOffer[] }> = ({ jobs }) => {
+export const JobList: React.FC<{ jobs: IJobOffer[] }> = ({ jobs }) => {
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {jobs.length > 0 ? (
