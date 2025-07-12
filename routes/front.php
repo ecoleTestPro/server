@@ -62,6 +62,7 @@ Route::group(["prefix" => "/"], function () {
      * This route handles search queries for blogs, courses, etc.
      */
     Route::post('search', [PublicFormationController::class, 'search'])->name('search');
+    Route::get('search', [PublicFormationController::class, 'searchPage'])->name('search.page');
 
     /** 
      * formation routes

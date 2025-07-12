@@ -45,6 +45,30 @@ class PublicFormationController extends PublicAbstractController
     }
 
     /**
+     * Display search results page.
+     */
+    public function searchPage(Request $request)
+    {
+        try {
+            $searchTerm = $request->input('search', '');
+            $data = $this->default_data;
+            if ($searchTerm !== '') {
+                $data['courses'] = CourseRepository::findAllBySearchText($searchTerm, 50);
+            } else {
+                $data['courses'] = [];
+            }
+
+            return Inertia::render('public/search.page', [
+                'data' => $data,
+                'searchTerm' => $searchTerm,
+            ]);
+        } catch (Exception $e) {
+            Log::error("Error in searchPage: {$e->getMessage()}");
+            return redirect()->route('home')->withErrors('Une erreur est survenue lors de la recherche.');
+        }
+    }
+
+    /**
      * Affiche la liste des formations.
      * 
      * @return \Inertia\Response
