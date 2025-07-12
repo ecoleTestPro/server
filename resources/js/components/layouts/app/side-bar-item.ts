@@ -70,6 +70,21 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
         href: route('dashboard.newsletters.index'),
         icon: Mail,
         children: [
+            {
+                title: 'Newsletters',
+                href: route('dashboard.newsletters.index'),
+                icon: List,
+            },
+            {
+                title: 'Templates',
+                href: route('dashboard.newsletter-templates.index'),
+                icon: FileStack,
+            },
+            {
+                title: 'Envoie de mail',
+                href: route('dashboard.newsletters.compose'),
+                icon: ClipboardPlus,
+            },
         ],
     },
     {
