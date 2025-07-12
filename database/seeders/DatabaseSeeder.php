@@ -36,6 +36,7 @@ class DatabaseSeeder extends Seeder
 
             TestimonialSeeder::class,
             FaqSeeder::class,
+            JobOfferSeeder::class,
         ]);
     }
 }
