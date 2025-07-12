@@ -9,7 +9,7 @@ use App\Repositories\BlogCategoryRepository;
 use App\Repositories\BlogRepository;
 use App\Repositories\CategoryRepository;
 use App\Repositories\CourseRepository;
-use App\Repositories\ReferenceRepository;
+use App\Repositories\PartnerRepository;
 use App\Repositories\SettingRepository;
 use App\Repositories\SocialMediaRepository;
 use Exception;
@@ -54,8 +54,9 @@ class PublicController extends PublicAbstractController
     public function auditMaturity()
     {
         $data = $this->default_data;
-        $data['references'] = ReferenceRepository::query()
+        $data['references'] = PartnerRepository::query()
             ->where('is_active', true)
+            ->where('is_reference', true)
             ->where('tag', 'audit-conseil')
             ->with('media')
             ->get();

@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use App\Enum\MediaTypeEnum;
 use App\Models\Media;
-use App\Models\Reference;
+use App\Models\Partner;
 use Illuminate\Database\Seeder;
 
 class ReferenceSeeder extends Seeder
@@ -33,9 +33,10 @@ class ReferenceSeeder extends Seeder
 
         foreach ($references as $text) {
             $media = Media::factory()->create(['type' => MediaTypeEnum::IMAGE]);
-            Reference::create([
-                'text' => $text,
+            Partner::create([
+                'name' => $text,
                 'tag' => 'audit-conseil',
+                'is_reference' => true,
                 'media_id' => $media->id,
                 'is_active' => true,
             ]);

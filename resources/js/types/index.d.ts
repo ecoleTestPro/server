@@ -68,7 +68,6 @@ export interface IDataWithPagination<T> {
     total: number
 }
 
-export * from './reference';
 export * from './partner';
 export * from './notification';
 export * from './job-offer';

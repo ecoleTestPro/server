@@ -1,7 +1,7 @@
-import { IReference } from '@/types/reference';
+import { IPartner } from '@/types/partner';
 
 interface ReferenceLogosProps {
-    references: IReference[];
+    references: IPartner[];
 }
 
 export default function ReferenceLogos({ references }: ReferenceLogosProps) {
@@ -16,7 +16,7 @@ export default function ReferenceLogos({ references }: ReferenceLogosProps) {
                     <img
                         key={ref.id}
                         src={ref.media?.src}
-                        alt={ref.text ?? ''}
+                        alt={ref.name ?? ''}
                         className="h-16 w-auto object-contain"
                     />
                 ))}
