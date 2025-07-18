@@ -1,11 +1,11 @@
+import { Button } from '@/components/ui/button/button';
+import Drawer from '@/components/ui/drawer';
+import { Input } from '@/components/ui/input';
+import { ICourseSession } from '@/types/course';
+import { Logger } from '@/utils/console.util';
+import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import axios from 'axios';
-import Drawer from '@/components/ui/drawer';
-import { Button } from '@/components/ui/button/button';
-import { Input } from '@/components/ui/input';
-import { Logger } from '@/utils/console.util';
-import { ICourseSession } from '@/types/course';
 
 interface CourseSessionCreateDrawerProps {
     open: boolean;
@@ -61,7 +61,10 @@ export default function CourseSessionCreateDrawer({ open, setOpen, courseId }: C
     const handleSubmit = () => {
         setLoading(true);
         axios
-            .post(route('dashboard.course.session.store', { course: courseId }), { course_id: courseId, sessions })
+            .post(route('dashboard.course.session.store', { course: courseId }), {
+                course_id: courseId,
+                sessions: { ...sessions, course_id: courseId },
+            })
             .then(() => {
                 setOpen(false);
                 setSessions([{ ...emptySession }]);
@@ -86,8 +89,8 @@ export default function CourseSessionCreateDrawer({ open, setOpen, courseId }: C
                                     return (
                                         <li key={s.id} className="flex justify-between text-sm border rounded p-2">
                                             <span>
-                                                {new Date(s.start_date).toLocaleDateString()} -{' '}
-                                                {new Date(s.end_date).toLocaleDateString()} - {s.location}
+                                                {new Date(s.start_date).toLocaleDateString()} - {new Date(s.end_date).toLocaleDateString()} -{' '}
+                                                {s.location}
                                             </span>
                                             <span className={isPast ? 'text-red-500' : 'text-green-600'}>
                                                 {isPast ? t('past', 'Passée') : t('upcoming', 'À venir')}
@@ -103,9 +106,7 @@ export default function CourseSessionCreateDrawer({ open, setOpen, courseId }: C
                         <div key={index} className="space-y-2 border-b pb-4">
                             <div className="grid grid-cols-2 gap-2">
                                 <div>
-                                    <label className="block text-sm font-medium mb-1">
-                                        {t('start_date', 'Date de début')}
-                                    </label>
+                                    <label className="block text-sm font-medium mb-1">{t('start_date', 'Date de début')}</label>
                                     <Input
                                         type="datetime-local"
                                         value={session.start_date}
@@ -113,9 +114,7 @@ export default function CourseSessionCreateDrawer({ open, setOpen, courseId }: C
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium mb-1">
-                                        {t('end_date', 'Date de fin')}
-                                    </label>
+                                    <label className="block text-sm font-medium mb-1">{t('end_date', 'Date de fin')}</label>
                                     <Input
                                         type="datetime-local"
                                         value={session.end_date}
@@ -123,23 +122,12 @@ export default function CourseSessionCreateDrawer({ open, setOpen, courseId }: C
                                     />
                                 </div>
                                 <div className="col-span-2">
-                                    <label className="block text-sm font-medium mb-1">
-                                        {t('location', 'Lieu')}
-                                    </label>
-                                    <Input
-                                        type="text"
-                                        value={session.location}
-                                        onChange={(e) => handleChange(index, 'location', e.target.value)}
-                                    />
+                                    <label className="block text-sm font-medium mb-1">{t('location', 'Lieu')}</label>
+                                    <Input type="text" value={session.location} onChange={(e) => handleChange(index, 'location', e.target.value)} />
                                 </div>
                             </div>
                             {sessions.length > 1 && (
-                                <Button
-                                    variant="outline"
-                                    type="button"
-                                    className="text-red-500"
-                                    onClick={() => handleRemove(index)}
-                                >
+                                <Button variant="outline" type="button" className="text-red-500" onClick={() => handleRemove(index)}>
                                     {t('remove', 'Retirer')}
                                 </Button>
                             )}
