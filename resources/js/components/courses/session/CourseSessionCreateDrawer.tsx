@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import Drawer from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button/button';
 import { Input } from '@/components/ui/input';
 import { Logger } from '@/utils/console.util';
+import { ICourseSession } from '@/types/course';
 
 interface CourseSessionCreateDrawerProps {
     open: boolean;
@@ -15,14 +16,35 @@ interface CourseSessionCreateDrawerProps {
 interface SessionForm {
     start_date: string;
     end_date: string;
+    location: string;
 }
 
-const emptySession: SessionForm = { start_date: '', end_date: '' };
+const emptySession: SessionForm = { start_date: '', end_date: '', location: '' };
 
 export default function CourseSessionCreateDrawer({ open, setOpen, courseId }: CourseSessionCreateDrawerProps) {
     const { t } = useTranslation();
     const [sessions, setSessions] = useState<SessionForm[]>([{ ...emptySession }]);
     const [loading, setLoading] = useState(false);
+    const [existingSessions, setExistingSessions] = useState<ICourseSession[]>([]);
+
+    useEffect(() => {
+        if (!open || !courseId) return;
+        axios
+            .get(route('courses.calendar.sessions'))
+            .then((res) => {
+                const all: ICourseSession[] = res.data.sessions ?? [];
+                const filtered = all.filter((s) => {
+                    if ('course' in s && s.course) {
+                        // When course relation is provided
+                        return s.course.id === courseId;
+                    }
+                    // fallback if course_id is provided directly
+                    return (s as any).course_id === courseId;
+                });
+                setExistingSessions(filtered);
+            })
+            .catch((e) => Logger.error('fetch sessions', e));
+    }, [open, courseId]);
 
     const handleAdd = () => setSessions([...sessions, { ...emptySession }]);
     const handleRemove = (idx: number) => {
@@ -55,6 +77,28 @@ export default function CourseSessionCreateDrawer({ open, setOpen, courseId }: C
             setOpen={setOpen}
             component={
                 <div className="space-y-4">
+                    {existingSessions.length > 0 && (
+                        <div className="space-y-2">
+                            <h3 className="text-sm font-semibold">{t('course.session.existing', 'Sessions enregistrées')}</h3>
+                            <ul className="space-y-1 max-h-40 overflow-y-auto">
+                                {existingSessions.map((s) => {
+                                    const isPast = new Date(s.end_date) < new Date();
+                                    return (
+                                        <li key={s.id} className="flex justify-between text-sm border rounded p-2">
+                                            <span>
+                                                {new Date(s.start_date).toLocaleDateString()} -{' '}
+                                                {new Date(s.end_date).toLocaleDateString()} - {s.location}
+                                            </span>
+                                            <span className={isPast ? 'text-red-500' : 'text-green-600'}>
+                                                {isPast ? t('past', 'Passée') : t('upcoming', 'À venir')}
+                                            </span>
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        </div>
+                    )}
+
                     {sessions.map((session, index) => (
                         <div key={index} className="space-y-2 border-b pb-4">
                             <div className="grid grid-cols-2 gap-2">
@@ -76,6 +120,16 @@ export default function CourseSessionCreateDrawer({ open, setOpen, courseId }: C
                                         type="datetime-local"
                                         value={session.end_date}
                                         onChange={(e) => handleChange(index, 'end_date', e.target.value)}
+                                    />
+                                </div>
+                                <div className="col-span-2">
+                                    <label className="block text-sm font-medium mb-1">
+                                        {t('location', 'Lieu')}
+                                    </label>
+                                    <Input
+                                        type="text"
+                                        value={session.location}
+                                        onChange={(e) => handleChange(index, 'location', e.target.value)}
                                     />
                                 </div>
                             </div>
