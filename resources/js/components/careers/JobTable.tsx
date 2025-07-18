@@ -1,9 +1,14 @@
 import { IJobOffer } from '@/types';
 import { useState } from 'react';
-import JobApplyModal from './JobApplyModal';
+import BtnSecondary from '../ui/button/btn-secondary';
 
-export const JobTable: React.FC<{ jobs: IJobOffer[] }> = ({ jobs }) => {
-    const [openJob, setOpenJob] = useState<number | null>(null);
+export const JobTable: React.FC<{
+    jobs: IJobOffer[];
+    applySelected: number | null;
+    setApplySelected: React.Dispatch<React.SetStateAction<number | null>>;
+    openApplyModal: boolean;
+    setOpenApplyModal: React.Dispatch<React.SetStateAction<boolean>>;
+}> = ({ jobs, setApplySelected, applySelected, openApplyModal, setOpenApplyModal }) => {
 
     return (
         <div className="overflow-x-auto">
@@ -26,13 +31,14 @@ export const JobTable: React.FC<{ jobs: IJobOffer[] }> = ({ jobs }) => {
                                 <td className="px-4 py-2 whitespace-nowrap">{job.location}</td>
                                 <td className="px-4 py-2 whitespace-nowrap">{job.type}</td>
                                 <td className="px-4 py-2 whitespace-nowrap">
-                                    <button
-                                        onClick={() => setOpenJob(job.id!)}
+                                    <BtnSecondary
+                                        label="Postuler"
+                                        onClick={() => {
+                                            setApplySelected(job.id ?? 0);
+                                            setOpenApplyModal(true);
+                                        }}
                                         className="inline-block rounded bg-primary-600 px-3 py-1 text-white hover:bg-primary-700"
-                                    >
-                                        Postuler
-                                    </button>
-                                    <JobApplyModal jobId={job.id!} open={openJob === job.id} onClose={() => setOpenJob(null)} />
+                                    />
                                 </td>
                             </tr>
                         ))
@@ -45,6 +51,7 @@ export const JobTable: React.FC<{ jobs: IJobOffer[] }> = ({ jobs }) => {
                     )}
                 </tbody>
             </table>
+            {/* <JobApplyModal jobId={openJob} open={openJob !== null} onClose={() => setOpenJob(null)} /> */}
         </div>
     );
 };

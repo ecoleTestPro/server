@@ -1,6 +1,8 @@
 import { IJobApplication } from '@/types';
 import { router } from '@inertiajs/react';
 import { useState } from 'react';
+import BtnSecondary from '../ui/button/btn-secondary';
+import { Button } from '../ui/button/button';
 
 interface Props {
     jobId: number;
@@ -52,12 +54,10 @@ export default function JobApplyModal({ jobId, open, onClose }: Props) {
                     onChange={(e) => setForm({ ...form, message: e.target.value })}
                 />
                 <div className="flex justify-end gap-2">
-                    <button type="button" onClick={onClose} className="rounded bg-gray-200 px-4 py-2">
+                    <Button type="button" onClick={onClose} className="rounded bg-red-300 hover:bg-red-400">
                         Annuler
-                    </button>
-                    <button type="submit" className="rounded bg-primary-600 px-4 py-2 text-white">
-                        Envoyer
-                    </button>
+                    </Button>
+                    <BtnSecondary label="Envoyer" type="submit" className="rounded bg-primary-600 text-white" />
                 </div>
             </form>
         </div>

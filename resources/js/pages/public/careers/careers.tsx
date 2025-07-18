@@ -1,16 +1,17 @@
+import JobApplyModal from '@/components/careers/JobApplyModal';
 import { JobList } from '@/components/careers/JobList';
-import { JobSearchFilters } from '@/components/careers/JobSearchFilters';
 import JobPagination from '@/components/careers/JobPagination';
+import { JobSearchFilters } from '@/components/careers/JobSearchFilters';
 import ContactCard from '@/components/contactUs/ContactCard';
 import Hero from '@/components/hero/hearo';
 import { IHeroBreadcrumbItems } from '@/components/hero/HeroCourse';
 import MotionSection from '@/components/motion/MotionSection';
 import DefaultLayout from '@/layouts/public/front.layout';
-import { SharedData, IJobOffer } from '@/types';
+import { IJobOffer, SharedData } from '@/types';
 import { ROUTE_MAP } from '@/utils/route.util';
 import { usePage } from '@inertiajs/react';
 import { motion, Variants } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 // Types pour les offres d'emploi
@@ -29,6 +30,8 @@ export default function Careers() {
     const [jobs] = useState<IJobOffer[]>(data.job_offers as IJobOffer[]);
     const [filters, setFilters] = useState({ title: '', location: '', type: '', minSalary: 0 });
     const [viewMode, setViewMode] = useState<'card' | 'list'>('card');
+    const [applySelected, setApplySelected] = useState<number | null>(null);
+    const [openApplyModal, setOpenApplyModal] = useState<boolean>(false);
     const [currentPage, setCurrentPage] = useState(1);
     const jobsPerPage = 6;
 
@@ -54,7 +57,6 @@ export default function Careers() {
     useEffect(() => {
         setCurrentPage(1);
     }, [filters]);
-
 
     const pageVariants: Variants = {
         hidden: { opacity: 0 },
@@ -100,8 +102,9 @@ export default function Careers() {
                                 </div>
                             </div>
                             <JobSearchFilters onFilterChange={setFilters} />
-                            <JobList jobs={paginatedJobs} view={viewMode} />
+                            <JobList applySelected={applySelected} setApplySelected={setApplySelected} openApplyModal={openApplyModal} setOpenApplyModal={setOpenApplyModal} jobs={paginatedJobs} view={viewMode} />
                             <JobPagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+                            <JobApplyModal jobId={applySelected || 0} open={openApplyModal} onClose={() => setOpenApplyModal(false)} />
                         </div>
                     </motion.div>
                 </MotionSection>
