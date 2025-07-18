@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import TooltipCustom from '@/components/ui/TooltipCustom';
 import { Info } from 'lucide-react';
-import { lazy, useState } from 'react';
+import { lazy, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import 'react-quill/dist/quill.snow.css';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '../../ui/select';
@@ -25,6 +25,10 @@ interface CourseAdditionnalFormProps {
 
 export default function CourseAdditionnalForm({ fieldsetClasses, data, setData, processing, errors }: CourseAdditionnalFormProps) {
     const [displayPrice, setDisplayPrice] = useState<string>(() => (data.price ? Number(data.price).toLocaleString('fr-FR') : ''));
+
+    useEffect(() => {
+        setDisplayPrice(data.price ? Number(data.price).toLocaleString('fr-FR') : '');
+    }, [data.price]);
     const { t } = useTranslation();
 
     return (

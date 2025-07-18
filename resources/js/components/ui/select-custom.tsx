@@ -22,6 +22,7 @@ interface SelectCustomProps {
   required?: boolean;
   disabled?: boolean;
   defaultValue?: string;
+  value?: string;
   onValueChange: (value: string) => void;
   processing: boolean;
   data: ISelectItem[];
@@ -36,13 +37,14 @@ export default function SelectCustom({
   data,
   selectLabel,
   defaultValue,
+  value,
   groupLabel,
 }: SelectCustomProps) {
   return (
     <Select
       disabled={processing}
       required={required}
-      value={defaultValue}
+      value={value ?? defaultValue}
       onValueChange={onValueChange}
     >
       <SelectTrigger className="w-full">
