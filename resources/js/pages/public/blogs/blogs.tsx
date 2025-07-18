@@ -89,6 +89,8 @@ export default function Blogs() {
                                     categories={blogCategories}
                                     tags={tags()}
                                     recentBlogs={blogs}
+                                    selectedCategory={selectedCategory}
+                                    selectedTags={selectedTags}
                                     onBlogClick={(id) => {
                                         const blog = blogs.find((b) => b.id === id);
                                         if (blog) {
@@ -101,6 +103,11 @@ export default function Blogs() {
                                     }}
                                     onTagToggle={(tag) => {
                                         setSelectedTags((prev) => (prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]));
+                                        setCurrentPage(1);
+                                    }}
+                                    onResetFilters={() => {
+                                        setSelectedCategory(null);
+                                        setSelectedTags([]);
                                         setCurrentPage(1);
                                     }}
                                 />
