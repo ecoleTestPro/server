@@ -35,10 +35,12 @@ export default function DefaultLayout({ children, title, description }: PropsWit
         }
 
         // Simulate data fetching
-        setTimeout(() => {
+        const timer = setTimeout(() => {
             setLoading(false);
         }, 200);
-    }, [data]);
+
+        return () => clearTimeout(timer);
+    }, []);
 
     if (loading) {
         return (
