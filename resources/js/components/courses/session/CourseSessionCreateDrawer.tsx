@@ -9,7 +9,7 @@ import { Logger } from '@/utils/console.util';
 interface CourseSessionCreateDrawerProps {
     open: boolean;
     setOpen: (open: boolean) => void;
-    courseId: number;
+    courseId?: number;
 }
 
 interface SessionForm {

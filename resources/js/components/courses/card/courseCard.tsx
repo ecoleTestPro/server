@@ -2,20 +2,19 @@ import { SharedData } from '@/types';
 import { ICourse } from '@/types/course';
 import { ROUTE_MAP } from '@/utils/route.util';
 import { Link, usePage } from '@inertiajs/react';
-import { useState } from 'react';
-import { Edit2Icon, Trash2Icon, CirclePlus } from 'lucide-react';
-import CourseSessionCreateDrawer from '../session/CourseSessionCreateDrawer';
+import { Calendar1, CirclePlus, Edit2Icon, Trash2Icon } from 'lucide-react';
 import { FaClock, FaMapMarkerAlt } from 'react-icons/fa'; // Import icons
 import './CourseCard.css'; // Link to CSS file
 
 interface CourseCardProps {
     course: ICourse;
     onDelete?: (course: ICourse) => void;
+    setOpenSessionDrawer?: (open: boolean) => void;
+    setSelectedCourseSessionSession?: (course: ICourse | null) => void;
 }
 
-const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete }) => {
+const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, setOpenSessionDrawer, setSelectedCourseSessionSession }) => {
     const { auth } = usePage<SharedData>().props;
-    const [openSessionDrawer, setOpenSessionDrawer] = useState(false);
 
     const CourseHeader = () => {
         return (
@@ -85,11 +84,14 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete }) => {
                     <div className="flex gap-x-2">
                         {auth?.user?.is_admin && (
                             <button
-                                onClick={() => setOpenSessionDrawer(true)}
-                                className="text-blue-500 p-4 rounded-full hover:bg-blue-400 hover:text-white"
+                                onClick={() => {
+                                    setSelectedCourseSessionSession && setSelectedCourseSessionSession(course);
+                                    setOpenSessionDrawer && setOpenSessionDrawer(true);
+                                }}
+                                className="cursor-pointer text-blue-500 p-4 rounded-full hover:bg-blue-400 hover:text-white"
                                 type="button"
                             >
-                                <CirclePlus className="w-4 h-4" />
+                                <Calendar1 className="w-4 h-4" />
                             </button>
                         )}
                         <Link
@@ -101,7 +103,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete }) => {
                         </Link>
                         <button
                             onClick={() => onDelete && onDelete(course)}
-                            className="text-red-500 p-4 rounded-full hover:bg-red-400 hover:text-white"
+                            className="cursor-pointer text-red-500 p-4 rounded-full hover:bg-red-400 hover:text-white"
                             type="button"
                         >
                             <Trash2Icon className="w-4 h-4" />
@@ -146,11 +148,6 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete }) => {
                 <CourseDuration />
                 <CourseFooter />
             </div>
-            <CourseSessionCreateDrawer
-                open={openSessionDrawer}
-                setOpen={setOpenSessionDrawer}
-                courseId={course.id}
-            />
         </div>
     );
 };
