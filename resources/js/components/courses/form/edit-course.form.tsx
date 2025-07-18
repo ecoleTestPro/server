@@ -30,7 +30,9 @@ function CourseForm({ course }: ICourseFormProps) {
     const [loading, setLoading] = useState(false);
 
     const { data: sharedData } = usePage<SharedData>().props;
-    const { data, setData, post, processing, errors, reset } = useForm<ICourseForm>(COURSE_DEFAULT_VALUES);
+    const { data, setData, post, processing, reset } = useForm<ICourseForm>(COURSE_DEFAULT_VALUES);
+
+    const [errors, setErrors] = useState<{ [key in keyof ICourseForm]?: string[] }>({});
 
     const descptionFormPart: { key: keyof ICourseForm; label: string; description?: string }[] = [
         {
@@ -62,6 +64,40 @@ function CourseForm({ course }: ICourseFormProps) {
     const [orgLogoFile, setOrgLogoFile] = useState<File | null>(null);
     const [videoFile, setVideoFile] = useState<File | null>(null);
     const [galleryFiles, setGalleryFiles] = useState<FileList | null>(null);
+
+    const validationBeformSubmitForm = () => {
+        const errors: { [key in keyof ICourseForm]?: string[] } = {};
+        if (!data.title) {
+            errors.title = [t('COURSE.FORM.TITLE_REQUIRED', 'Le titre est requis')];
+        }
+        if (!data.category_id) {
+            errors.category_id = [t('COURSE.FORM.CATEGORY_REQUIRED', 'La catégorie est requise')];
+        }
+        if (!data.duration) {
+            errors.duration = [t('COURSE.FORM.DURATION_REQUIRED', 'La durée est requise')];
+        }
+        if (!data.periodicity_unit) {
+            errors.periodicity_unit = [t('COURSE.FORM.PERIODICITY_UNIT_REQUIRED', "L'unité de périodicité est requise")];
+        }
+        if (!data.periodicity_value) {
+            errors.periodicity_value = [t('COURSE.FORM.PERIODICITY_VALUE_REQUIRED', 'La valeur de périodicité est requise')];
+        }
+        if (!data.price) {
+            errors.price = [t('COURSE.FORM.PRICE_REQUIRED', 'Le prix est requis')];
+        } else {
+            const priceValue = parseFloat(data.price.toString().replace(/,/g, '.'));
+            if (isNaN(priceValue) || priceValue < 0) {
+                errors.price = [t('COURSE.FORM.PRICE_INVALID', 'Le prix doit être un nombre valide')];
+            } else {
+                setDisplayPrice(priceValue.toLocaleString('fr-FR'));
+            }
+        }
+        if (!data.excerpt) {
+            errors.excerpt = [t('COURSE.FORM.EXCERPT_REQUIRED', "L'extrait est requis")];
+        }
+        setErrors(errors);
+        return Object.keys(errors).length === 0;
+    };
 
     const toggleAccordion = (index: number) => {
         setOpenIndex((prevIndex) => (prevIndex === index ? null : index));
@@ -116,6 +152,10 @@ function CourseForm({ course }: ICourseFormProps) {
      * @returns {Promise<void>}
      */
     const submit = async (data: ICourseForm, draft: boolean = false): Promise<void> => {
+        validationBeformSubmitForm();
+        if (Object.keys(setErrors).length > 0) {
+            return;
+        }
         const routeName = data?.id ? 'dashboard.course.update' : 'dashboard.course.store';
         const formData = new FormData();
         const payload = createPayload(data, draft);
@@ -134,13 +174,9 @@ function CourseForm({ course }: ICourseFormProps) {
         if (data?.id) formData.append('_method', 'PUT');
 
         try {
-            const response = await axios.post(
-                data?.id ? route(routeName, course?.slug) : route(routeName),
-                formData,
-                {
-                    headers: { 'Content-Type': 'multipart/form-data' },
-                },
-            );
+            const response = await axios.post(data?.id ? route(routeName, course?.slug) : route(routeName), formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            });
             console.log('Course creation response:', response);
 
             // toast.success(t('courses.createSuccess', 'Formation créée avec succès !'));

@@ -1,7 +1,7 @@
 import InputError from '@/components/input-error';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { InputFile } from '@/components/ui/inputFile';
+import { Label } from '@/components/ui/label';
 
 // import { PeriodicityUnitEnum } from '@/types/course';
 import SelectCustom, { ISelectItem } from '@/components/ui/select-custom';
@@ -30,7 +30,19 @@ interface CourseBasicInfoFormProps {
     onGalleryChange?: (files: FileList | null) => void;
 }
 
-export default function CourseBasicInfoForm({ fieldsetClasses, data, setData, processing, errors, categories, onThumbnailChange, onLogoChange, onOrgLogoChange, onVideoChange, onGalleryChange }: CourseBasicInfoFormProps) {
+export default function CourseBasicInfoForm({
+    fieldsetClasses,
+    data,
+    setData,
+    processing,
+    errors,
+    categories,
+    onThumbnailChange,
+    onLogoChange,
+    onOrgLogoChange,
+    onVideoChange,
+    onGalleryChange,
+}: CourseBasicInfoFormProps) {
     const { t } = useTranslation();
 
     const category_list = (): ISelectItem[] => {
@@ -113,6 +125,8 @@ export default function CourseBasicInfoForm({ fieldsetClasses, data, setData, pr
                         )}
 
                         <InputError message={errors.category_id} />
+
+                        {!data.category_id && <p className="text-red-500">{t('courses.categoryRequired', 'La catégorie est requise.')}</p>}
                     </div>
                 </div>
             </fieldset>
@@ -122,27 +136,57 @@ export default function CourseBasicInfoForm({ fieldsetClasses, data, setData, pr
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="grid gap-2">
                         <Label htmlFor="thumbnail">{t('courses.thumbnail', 'Image de mise en avant')}</Label>
-                        <InputFile id="thumbnail" onFilesChange={(files) => onThumbnailChange?.(files ? files[0] : null)} accept="image/*" multiple={false} disabled={processing} />
+                        <InputFile
+                            id="thumbnail"
+                            onFilesChange={(files) => onThumbnailChange?.(files ? files[0] : null)}
+                            accept="image/*"
+                            multiple={false}
+                            disabled={processing}
+                        />
                         <InputError message={errors.media} />
                     </div>
                     <div className="grid gap-2">
                         <Label htmlFor="logo">Logo de la formation</Label>
-                        <InputFile id="logo" onFilesChange={(files) => onLogoChange?.(files ? files[0] : null)} accept="image/*" multiple={false} disabled={processing} />
+                        <InputFile
+                            id="logo"
+                            onFilesChange={(files) => onLogoChange?.(files ? files[0] : null)}
+                            accept="image/*"
+                            multiple={false}
+                            disabled={processing}
+                        />
                         <InputError message={errors.logo} />
                     </div>
                     <div className="grid gap-2">
                         <Label htmlFor="organization_logo">Logo de l'organisme</Label>
-                        <InputFile id="organization_logo" onFilesChange={(files) => onOrgLogoChange?.(files ? files[0] : null)} accept="image/*" multiple={false} disabled={processing} />
+                        <InputFile
+                            id="organization_logo"
+                            onFilesChange={(files) => onOrgLogoChange?.(files ? files[0] : null)}
+                            accept="image/*"
+                            multiple={false}
+                            disabled={processing}
+                        />
                         <InputError message={errors.organization_logo} />
                     </div>
                     <div className="grid gap-2">
                         <Label htmlFor="video">{t('courses.video', 'Vidéo')}</Label>
-                        <InputFile id="video" onFilesChange={(files) => onVideoChange?.(files ? files[0] : null)} accept="video/*" multiple={false} disabled={processing} />
+                        <InputFile
+                            id="video"
+                            onFilesChange={(files) => onVideoChange?.(files ? files[0] : null)}
+                            accept="video/*"
+                            multiple={false}
+                            disabled={processing}
+                        />
                         <InputError message={errors.video} />
                     </div>
                     <div className="grid gap-2">
                         <Label htmlFor="gallery">{t('courses.gallery', 'Galerie')}</Label>
-                        <InputFile id="gallery" onFilesChange={(files) => onGalleryChange?.(files)} accept="image/*,video/*" multiple={true} disabled={processing} />
+                        <InputFile
+                            id="gallery"
+                            onFilesChange={(files) => onGalleryChange?.(files)}
+                            accept="image/*,video/*"
+                            multiple={true}
+                            disabled={processing}
+                        />
                     </div>
                 </div>
             </fieldset>

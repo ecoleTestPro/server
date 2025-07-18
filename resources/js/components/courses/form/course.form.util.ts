@@ -69,6 +69,8 @@ export type ICourseForm = {
 
     partner_ids?: number[];
 
+    published?: boolean; // Indicate if the course is published or a draft
+
     // description: string;
     /**
      * DESCRIPTION PARTS
@@ -201,7 +203,7 @@ export const createPayload = (data: ICourseForm, draft: boolean): ICourseRequest
                 : 0,
             title: data.title || '',
             attachment: data.attachment || '',
-            is_published: !draft, // If draft is true, is_published should be false
+            is_published: !draft,
             partner_ids: data.partner_ids,
         };
 

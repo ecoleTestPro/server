@@ -241,6 +241,8 @@ class CourseRepository extends Repository
         // fix instructor_id
         $instructor = InstructorRepository::getDefaultInstructor();
 
+        $is_published = (bool) $request->is_published;
+
         $course = self::create([
             'category_id'   => $request->category_id,
             'title'         => $request->title,
@@ -253,7 +255,8 @@ class CourseRepository extends Repository
             'regular_price' => $request->regular_price,
             'price'         => $request->price,
             'instructor_id' => $instructor ? $instructor->id : null, // $request->instructor_id,
-            'is_active'     => $isActive,
+            //'is_active'     => $isActive,
+            'is_published'  => $is_published,
             'published_at'  => $request->is_active ? now() : null
         ]);
 
