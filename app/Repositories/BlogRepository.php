@@ -91,7 +91,10 @@ class BlogRepository extends Repository
             ->firstOrFail();
 
         if ($blog->description) {
-            $blog->description = json_decode($blog->description, true);
+            $decoded = json_decode($blog->description, true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $blog->description = $decoded;
+            }
         }
 
         if ($blog->tags) {
