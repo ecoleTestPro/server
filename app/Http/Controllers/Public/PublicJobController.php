@@ -4,14 +4,18 @@ namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\JobApplicationStoreRequest;
+use App\Mail\JobApplicationMail;
 use App\Models\JobOffer;
-use App\Repositories\JobApplicationRepository;
 use App\Repositories\JobOfferRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 
 class PublicJobController extends Controller
 {
+    private string $email = 'keraste38@gmail.com';
+
     public function list()
     {
         $offers = JobOfferRepository::query()->where('is_active', true)->latest('id')->get();
@@ -23,7 +27,17 @@ class PublicJobController extends Controller
 
     public function apply(JobApplicationStoreRequest $request)
     {
-        JobApplicationRepository::storeByRequest($request);
-        return redirect()->back()->withSuccess('Application sent');
+        try {
+            Mail::to($this->email)->send(new JobApplicationMail(
+                $request->name,
+                $request->job_offer_id,
+                $request->file('cv')
+            ));
+
+            return redirect()->back()->with('success', 'Application sent');
+        } catch (\Exception $e) {
+            Log::error('Job application email error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Failed to send application');
+        }
     }
 }
