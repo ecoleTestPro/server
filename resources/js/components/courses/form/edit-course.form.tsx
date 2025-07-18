@@ -1,5 +1,6 @@
 import { router, useForm, usePage } from '@inertiajs/react';
 import { InfoIcon, LoaderCircle, LoaderIcon } from 'lucide-react';
+import { handleErrorsRequest } from '@/utils/utils';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -152,8 +153,10 @@ function CourseForm({ course }: ICourseFormProps) {
      * @returns {Promise<void>}
      */
     const submit = async (data: ICourseForm, draft: boolean = false): Promise<void> => {
-        validationBeformSubmitForm();
-        if (Object.keys(setErrors).length > 0) {
+        setLoading(true);
+        const isValid = validationBeformSubmitForm();
+        if (!isValid) {
+            setLoading(false);
             return;
         }
         const routeName = data?.id ? 'dashboard.course.update' : 'dashboard.course.store';
@@ -182,8 +185,9 @@ function CourseForm({ course }: ICourseFormProps) {
             // toast.success(t('courses.createSuccess', 'Formation créée avec succès !'));
             // return router.visit(ROUTE_MAP.dashboard.course.list.link);
         } catch (error: any) {
-            toast.error(t('courses.createError', 'Erreur lors de la création de la formation'));
-            console.error('Course creation error:', error);
+            handleErrorsRequest(error, setLoading, (message) => toast.error(message), setErrors);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -390,6 +394,9 @@ function CourseForm({ course }: ICourseFormProps) {
                         </div>
                     </div>
                 </div>
+                <p className="text-sm text-gray-500 mt-4">
+                    Les champs marqués d'un <span className="text-red-500">*</span> sont obligatoires.
+                </p>
             </form>
 
             <Drawer

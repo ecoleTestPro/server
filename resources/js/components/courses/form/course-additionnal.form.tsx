@@ -55,7 +55,9 @@ export default function CourseAdditionnalForm({ fieldsetClasses, data, setData, 
                 </div>
 
                 <div className="grid gap-2">
-                    <Label htmlFor="price">{t('courses.price', 'Prix')} (FCFA) </Label>
+                    <Label htmlFor="price">
+                        {t('courses.price', 'Prix')} (FCFA) <span className="text-red-500">*</span>
+                    </Label>
                     <Input
                         id="price"
                         type="text"
@@ -88,7 +90,9 @@ export default function CourseAdditionnalForm({ fieldsetClasses, data, setData, 
                 </div>
 
                 <div className="grid gap-2">
-                    <Label htmlFor="duration">{t('courses.duration', 'Durée')}</Label>
+                    <Label htmlFor="duration">
+                        {t('courses.duration', 'Durée')} <span className="text-red-500">*</span>
+                    </Label>
                     <Input
                         id="duration"
                         type="number"
@@ -101,7 +105,9 @@ export default function CourseAdditionnalForm({ fieldsetClasses, data, setData, 
                 </div>
 
                 <div className="grid gap-2">
-                    <Label htmlFor="periodicity_unit">{t('courses.periodicity_unit', 'Periodicité')}</Label>
+                    <Label htmlFor="periodicity_unit">
+                        {t('courses.periodicity_unit', 'Periodicité')} <span className="text-red-500">*</span>
+                    </Label>
                     <Select disabled={processing} value={data.periodicity_unit} onValueChange={(value) => setData('periodicity_unit', value)}>
                         <SelectTrigger className="w-full">
                             <SelectValue placeholder="Sélectionner une catégorie" />
