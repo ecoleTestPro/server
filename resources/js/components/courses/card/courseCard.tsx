@@ -2,7 +2,9 @@ import { SharedData } from '@/types';
 import { ICourse } from '@/types/course';
 import { ROUTE_MAP } from '@/utils/route.util';
 import { Link, usePage } from '@inertiajs/react';
-import { Edit2Icon, Trash2Icon } from 'lucide-react';
+import { useState } from 'react';
+import { Edit2Icon, Trash2Icon, CirclePlus } from 'lucide-react';
+import CourseSessionCreateDrawer from '../session/CourseSessionCreateDrawer';
 import { FaClock, FaMapMarkerAlt } from 'react-icons/fa'; // Import icons
 import './CourseCard.css'; // Link to CSS file
 
@@ -13,6 +15,7 @@ interface CourseCardProps {
 
 const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete }) => {
     const { auth } = usePage<SharedData>().props;
+    const [openSessionDrawer, setOpenSessionDrawer] = useState(false);
 
     const CourseHeader = () => {
         return (
@@ -80,6 +83,15 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete }) => {
                     </div>
 
                     <div className="flex gap-x-2">
+                        {auth?.user?.is_admin && (
+                            <button
+                                onClick={() => setOpenSessionDrawer(true)}
+                                className="text-blue-500 p-4 rounded-full hover:bg-blue-400 hover:text-white"
+                                type="button"
+                            >
+                                <CirclePlus className="w-4 h-4" />
+                            </button>
+                        )}
                         <Link
                             href={ROUTE_MAP.dashboard.course.edit(course.slug).link}
                             className="text-green-400 p-4 rounded-full hover:bg-green-400 hover:text-white"
@@ -134,6 +146,11 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete }) => {
                 <CourseDuration />
                 <CourseFooter />
             </div>
+            <CourseSessionCreateDrawer
+                open={openSessionDrawer}
+                setOpen={setOpenSessionDrawer}
+                courseId={course.id}
+            />
         </div>
     );
 };
