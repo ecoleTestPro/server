@@ -76,7 +76,9 @@ export default function CourseBasicInfoForm({
                 <legend className="px-2 text-base font-semibold">{t('courses.mainInfo', 'Informations principales')}</legend>
                 <div className="grid gap-4">
                     <div className="grid gap-2">
-                        <Label htmlFor="title">{t('courses.title', 'Titre')}</Label>
+                        <Label htmlFor="title">
+                            {t('courses.title', 'Titre')} <span className="text-red-500">*</span>
+                        </Label>
                         <Input
                             id="title"
                             type="text"
@@ -91,7 +93,9 @@ export default function CourseBasicInfoForm({
                     </div>
 
                     <div className="grid gap-2">
-                        <Label htmlFor="excerpt">{t('courses.excerpt', 'Extrait')}</Label>
+                        <Label htmlFor="excerpt">
+                            {t('courses.excerpt', 'Extrait')} <span className="text-red-500">*</span>
+                        </Label>
                         <Textarea
                             id="excerpt"
                             required
@@ -111,7 +115,9 @@ export default function CourseBasicInfoForm({
                 <legend className="px-2 text-base font-semibold">{t('courses.category', 'Catégorie')}</legend>
                 <div className="grid gap-4">
                     <div className="grid gap-2">
-                        {/* <Label htmlFor="title">{t('courses.category', 'Catégorie')}</Label> */}
+                        <Label htmlFor="category_id">
+                            {t('courses.category', 'Catégorie')} <span className="text-red-500">*</span>
+                        </Label>
 
                         {categories && categories.length > 0 && (
                             <SelectCustom
