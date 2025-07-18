@@ -4,6 +4,7 @@ use App\Http\Controllers\Private\BlogCategoryController;
 use App\Http\Controllers\Private\BlogController;
 use App\Http\Controllers\Private\CategoryController;
 use App\Http\Controllers\Private\CourseController;
+use App\Http\Controllers\Private\CourseSessionController;
 use App\Http\Controllers\Private\DashboardController;
 use App\Http\Controllers\Private\FaqController;
 use App\Http\Controllers\Private\NewsletterController;
@@ -46,6 +47,7 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
         Route::post('create',           [CourseController::class, 'store'])->name('dashboard.course.store');
         Route::put('update/{slug}',     [CourseController::class, 'update'])->name('dashboard.course.update');
         Route::delete('delete/{id}',    [CourseController::class, 'delete'])->name('dashboard.course.delete');
+        Route::post('{course}/sessions', [CourseSessionController::class, 'store'])->name('dashboard.course.session.store');
     });
 
     // CATEGORY COURSE MANAGEMENT
