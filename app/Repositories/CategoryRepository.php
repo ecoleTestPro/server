@@ -7,6 +7,7 @@ use App\Enum\MediaTypeEnum;
 use App\Http\Requests\CategoryStoreRequest;
 use App\Http\Requests\CategoryUpdateRequest;
 use App\Models\Category;
+use Illuminate\Support\Str;
 
 class CategoryRepository extends Repository
 {
@@ -208,9 +209,11 @@ class CategoryRepository extends Repository
 
         return self::create([
             'title'       => $request->title,
+            'slug'        => Str::slug($request->title),
             'media_id'    => $media ? $media->id : null,
+            'parent_id'   => $request->parent_id,
             'is_featured' => $isFeatured,
-            'color'       => $request->color
+            'color'       => $request->color,
         ]);
     }
 
@@ -245,10 +248,12 @@ class CategoryRepository extends Repository
         }
 
         return self::update($category, [
-            'title' => $request->title ?? $category->title,
-            'media_id' => $media ? $media->id : null,
+            'title'       => $request->title ?? $category->title,
+            'slug'        => $request->title ? Str::slug($request->title) : $category->slug,
+            'media_id'    => $media ? $media->id : null,
+            'parent_id'   => $request->parent_id ?? $category->parent_id,
             'is_featured' => $isFeatured,
-            'color' => $request->color ?? $category->color
+            'color'       => $request->color ?? $category->color,
         ]);
     }
 }
