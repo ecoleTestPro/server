@@ -27,7 +27,8 @@ class CourseRepository extends Repository
                     'media',
                     'video',
                     'logo',
-                    'organizationLogo'
+                    'organizationLogo',
+                    'partners.media'
                 ]);
         } catch (\Exception $e) {
             throw new \Exception('Error initializing course query: ' . $e->getMessage());
