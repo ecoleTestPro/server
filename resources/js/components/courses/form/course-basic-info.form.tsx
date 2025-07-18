@@ -5,13 +5,14 @@ import { Label } from '@/components/ui/label';
 
 // import { PeriodicityUnitEnum } from '@/types/course';
 import SelectCustom, { ISelectItem } from '@/components/ui/select-custom';
-import { ICourseCategory } from '@/types/course';
+import { ICourse, ICourseCategory } from '@/types/course';
 import { Logger } from '@/utils/console.util';
 import { lazy, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import 'react-quill/dist/quill.snow.css';
 import { Textarea } from '../../ui/text-area';
 import { ICourseForm } from './course.form.util';
+import { ICourseFormErrors } from './edit-course.form';
 
 // const ReactQuill = lazy(() => import('react-quill'));
 const ReactQuill = lazy(() => import('react-quill-new'));
@@ -19,9 +20,10 @@ const ReactQuill = lazy(() => import('react-quill-new'));
 interface CourseBasicInfoFormProps {
     fieldsetClasses?: string;
     data: ICourseForm;
+    courseSelected: ICourse | null;
     setData: (data: string, value: string | number) => void;
     processing: boolean;
-    errors: Record<string, string>;
+    errors: ICourseFormErrors;
     categories: ICourseCategory[];
     onThumbnailChange?: (file: File | null) => void;
     onLogoChange?: (file: File | null) => void;
@@ -33,6 +35,7 @@ interface CourseBasicInfoFormProps {
 export default function CourseBasicInfoForm({
     fieldsetClasses,
     data,
+    courseSelected,
     setData,
     processing,
     errors,
@@ -67,6 +70,11 @@ export default function CourseBasicInfoForm({
             errors,
             categories,
         });
+        if (courseSelected) {
+            if (data.category_id === '' && courseSelected.category_id) {
+                setData('category_id', courseSelected.category_id.toString());
+            }
+        }
     }, [fieldsetClasses, data, processing, errors, categories]);
 
     return (
@@ -118,7 +126,7 @@ export default function CourseBasicInfoForm({
                         <Label htmlFor="category_id">
                             {t('courses.category', 'Catégorie')} <span className="text-red-500">*</span>
                         </Label>
-
+                        {/* _id{courseSelected?.category_id?.toString() || data.category_id?.toString() || 'N/A'} */}
                         {categories && categories.length > 0 && (
                             <SelectCustom
                                 data={category_list()}
@@ -126,13 +134,12 @@ export default function CourseBasicInfoForm({
                                 processing={processing}
                                 onValueChange={(value) => setData('category_id', value)}
                                 value={data.category_id}
+                                defaultValue={courseSelected?.category_id?.toString() || data.category_id?.toString() || ''}
                                 required
                             />
                         )}
-
                         <InputError message={errors.category_id} />
-
-                        {!data.category_id && <p className="text-red-500">{t('courses.categoryRequired', 'La catégorie est requise.')}</p>}
+                        {/* {!data.category_id && <p className="text-red-500">{t('courses.categoryRequired', 'La catégorie est requise.')}</p>} */}
                     </div>
                 </div>
             </fieldset>
@@ -173,27 +180,31 @@ export default function CourseBasicInfoForm({
                         />
                         <InputError message={errors.organization_logo} />
                     </div>
-                    <div className="grid gap-2">
-                        <Label htmlFor="video">{t('courses.video', 'Vidéo')}</Label>
-                        <InputFile
-                            id="video"
-                            onFilesChange={(files) => onVideoChange?.(files ? files[0] : null)}
-                            accept="video/*"
-                            multiple={false}
-                            disabled={processing}
-                        />
-                        <InputError message={errors.video} />
-                    </div>
-                    <div className="grid gap-2">
-                        <Label htmlFor="gallery">{t('courses.gallery', 'Galerie')}</Label>
-                        <InputFile
-                            id="gallery"
-                            onFilesChange={(files) => onGalleryChange?.(files)}
-                            accept="image/*,video/*"
-                            multiple={true}
-                            disabled={processing}
-                        />
-                    </div>
+                    {false && (
+                        <>
+                            <div className="grid gap-2">
+                                <Label htmlFor="video">{t('courses.video', 'Vidéo')}</Label>
+                                <InputFile
+                                    id="video"
+                                    onFilesChange={(files) => onVideoChange?.(files ? files[0] : null)}
+                                    accept="video/*"
+                                    multiple={false}
+                                    disabled={processing}
+                                />
+                                <InputError message={errors.video} />
+                            </div>
+                            <div className="grid gap-2">
+                                <Label htmlFor="gallery">{t('courses.gallery', 'Galerie')}</Label>
+                                <InputFile
+                                    id="gallery"
+                                    onFilesChange={(files) => onGalleryChange?.(files)}
+                                    accept="image/*,video/*"
+                                    multiple={true}
+                                    disabled={processing}
+                                />
+                            </div>
+                        </>
+                    )}
                 </div>
             </fieldset>
         </>

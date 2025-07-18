@@ -1,6 +1,6 @@
+import { handleErrorsRequest } from '@/utils/utils';
 import { router, useForm, usePage } from '@inertiajs/react';
 import { InfoIcon, LoaderCircle, LoaderIcon } from 'lucide-react';
-import { handleErrorsRequest } from '@/utils/utils';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -21,6 +21,8 @@ import CourseBasicInfoForm from './course-basic-info.form';
 import axios from 'axios';
 import { COURSE_DEFAULT_VALUES, createPayload, ICourseForm, PeriodicityUnitEnum } from './course.form.util';
 
+export type ICourseFormErrors = { [key in keyof ICourseForm]?: string[] };
+
 interface ICourseFormProps {
     course: ICourse | null;
     // initialData?: ICourseForm;
@@ -33,7 +35,7 @@ function CourseForm({ course }: ICourseFormProps) {
     const { data: sharedData } = usePage<SharedData>().props;
     const { data, setData, post, processing, reset } = useForm<ICourseForm>(COURSE_DEFAULT_VALUES);
 
-    const [errors, setErrors] = useState<{ [key in keyof ICourseForm]?: string[] }>({});
+    const [errors, setErrors] = useState<ICourseFormErrors>({}); 
 
     const descptionFormPart: { key: keyof ICourseForm; label: string; description?: string }[] = [
         {
@@ -142,6 +144,10 @@ function CourseForm({ course }: ICourseFormProps) {
             course.description.why_choose && setData('why_choose', course.description.why_choose);
             course.description.exam && setData('exam', course.description.exam);
         }
+
+        console.log("[handleInitializeForm] course:", course);
+        console.log("[handleInitializeForm] data:", data);
+        
     };
 
     /**
@@ -202,6 +208,8 @@ function CourseForm({ course }: ICourseFormProps) {
     }, [course]);
 
     useEffect(() => {
+        console.log("{{ sharedData }}", sharedData);
+        
         if (sharedData && sharedData.categories_with_courses) {
             setCategories(sharedData.categories_with_courses);
         } else {
@@ -251,6 +259,7 @@ function CourseForm({ course }: ICourseFormProps) {
                                             <CourseBasicInfoForm
                                                 fieldsetClasses={fieldsetClasses}
                                                 data={data}
+                                                courseSelected={course}
                                                 categories={categories}
                                                 setData={setData}
                                                 processing={processing}
@@ -268,6 +277,7 @@ function CourseForm({ course }: ICourseFormProps) {
                                             <CourseAdditionnalForm
                                                 fieldsetClasses={fieldsetClasses}
                                                 data={data}
+                                                courseSelected={course}
                                                 setData={setData}
                                                 processing={processing}
                                                 errors={errors}
