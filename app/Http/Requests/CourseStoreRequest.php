@@ -36,6 +36,7 @@ class CourseStoreRequest extends FormRequest
             'partner_ids'           => 'sometimes|array',
             'partner_ids.*'         => 'exists:partners,id',
             'regular_price'         => 'numeric|min:' . ((float) config('app.minimum_amount')),
+            'reference_tag'         => 'nullable|string',
             'price' => [
                 'nullable',
                 'numeric',
