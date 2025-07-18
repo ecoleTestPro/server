@@ -139,7 +139,22 @@ class CategoryRepository extends Repository
 
         // Si un categoryId est fourni, retourner l'arbre à partir de cette catégorie
         if ($categoryId !== null) {
-            return isset($categoriesByParent[$categoryId]) ? $buildTree($categoryId) : [];
+            $rootCategory = $categories->firstWhere('id', $categoryId);
+            $childrenTree = isset($categoriesByParent[$categoryId]) ? $buildTree($categoryId) : [];
+
+            if ($rootCategory) {
+                $rootNode = $rootCategory->toArray();
+                $rootNode['image'] = [
+                    'id' => $rootCategory->image?->id,
+                    'src' => $rootCategory->imagePath,
+                ];
+                $rootNode['children'] = $childrenTree;
+                $rootNode['courses'] = $includeCourses ? CourseRepository::findAllByCategoryId($rootCategory->id) : [];
+
+                return [$rootNode];
+            }
+
+            return $childrenTree;
         }
 
         // Sinon, retourner l'arbre complet à partir de la racine (parent_id = 0)
