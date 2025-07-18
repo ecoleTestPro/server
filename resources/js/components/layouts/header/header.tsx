@@ -57,13 +57,13 @@ export default function Header() {
         setMainMenuRight(mainMenuRightInit);
 
         if (data && data.categories_with_courses && data.categories_with_courses.length > 0) {
-            console.log('[Header] categories_with_courses', data.categories_with_courses);
+            // console.log('[Header] categories_with_courses', data.categories_with_courses);
             updateCourseMenuPart(mainMenuInit, setMainMenu, data);
         }
     }, [data, page]);
 
     const buildCourseItems = (category: ICourseCategory): MenuChildItem[] => {
-        console.log('[buildCourseItems] category courses', category?.courses);
+        // console.log('[buildCourseItems] category courses', category?.courses);
         if (!category.courses || category.courses.length === 0) return [];
 
         return category.courses.slice(0, 4).map((course) => ({
@@ -80,7 +80,7 @@ export default function Header() {
         const filteredCategories = categories.filter((category) => category); // .parent_id === parentId
 
         const output: MenuChildItem[] = filteredCategories.map((category) => {
-            console.log('[buildCategoryItems] category title', category.title);
+            // console.log('[buildCategoryItems] category title', category.title);
 
             const defaultDescription =
                 'Les formations vous préparent au passage de nombreuses certifications internationales. Validez vos compétences et accroissez votre employabilité ainsi que votre efficacité au sein de votre entreprise.';
@@ -89,7 +89,7 @@ export default function Header() {
 
             // Appeler récursivement uniquement sur les enfants directs
             if (category.children && category.children.length > 0) {
-                console.log('[buildCategoryItems] category children', category.children);
+                // console.log('[buildCategoryItems] category children', category.children);
                 childItems = buildCategoryItems(category.children, category.id || null);
             } else {
                 childItems = buildCourseItems(category);
@@ -122,9 +122,9 @@ export default function Header() {
     const PROGRAMMES_DE_RECONVERSION: MenuChildItem = {
         id: 'programmes-de-reconversion',
         label: 'Programmes de reconversion',
-        href: '#',
+        href: ROUTE_MAP.public.reconversionMetier.link,
         description: 'Découvrez nos programmes de reconversion professionnelle.',
-        image: 'assets/images/bg-03.jpg',
+        image: 'https://placehold.jp/150x150.png',
     };
 
     const updateCourseMenuPart = (
@@ -138,7 +138,7 @@ export default function Header() {
                 return item;
             }
 
-            console.log('[CATEGORIES_WITH_COURSES]', data.categories_with_courses);
+            // console.log('[CATEGORIES_WITH_COURSES]', data.categories_with_courses);
 
             return {
                 ...item,
@@ -146,7 +146,10 @@ export default function Header() {
                     id: 'formations-children',
                     title: 'Formations',
                     description: 'Liste des formations',
-                    items: buildCategoryItems(data.categories_with_courses),
+                    items: [
+                        ...buildCategoryItems(data.categories_with_courses),
+                        PROGRAMMES_DE_RECONVERSION,
+                    ],
                 },
             };
         });
@@ -223,13 +226,13 @@ export default function Header() {
                 </section>
             </header>
 
-            <HeaderNavTwoSidebar
+            {/* <HeaderNavTwoSidebar
                 menu={mainMenu}
                 menuRight={mainMenuRight}
                 isOpen={isSidebarOpen}
                 onClose={() => setIsSidebarOpen(false)}
                 className="md:hidden"
-            />
+            /> */}
         </>
     );
 }

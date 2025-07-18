@@ -34,7 +34,11 @@ class FormationCertifianteCategorySeeder extends AbstractCourseCategorySeeder
                 'title' => 'A4Q Certified Selenium Tester Foundation',
                 'slug'  => 'a4q-certified-selenium-tester-foundation',
                 'level' => 'Fondation',
-                'excerpt' => 'Cette certification est destinée aux testeurs qui souhaitent acquérir des compétences en automatisation des tests avec Selenium.',
+                'duration' => 3,
+                'excerpt' => 'Le titulaire de la certification Selenium Foundation A4Q est capable de concevoir, exécuter et automatiser des tests sur des applications web.',
+                'description' => json_encode([
+                    'content' => "Formation - A4Q Certified Selenium Tester Foundation\nLe titulaire de la certification Selenium Foundation A4Q est capable de concevoir, exécuter et automatiser des tests sur des applications web. Cette formation vous enseignera comment identifier et tester divers éléments d'une page web, en mettant particulièrement l'accent sur les interfaces graphiques (GUI) à l'aide de Selenium WebDriver. Les exemples fournis seront en Python.\nDétails de la formation : Formation en présentiel à Abidjan ou classe à distance ; Durée : 3 jours ; Tarif : 650 000 XOF Hors Taxe, Bon pour l'examen inclus ; Documents : Livre de référence.\nPourquoi choisir la certification A4Q Selenium Foundation : La certification A4Q Selenium Foundation valide vos compétences en automatisation des tests avec Selenium. Elle est reconnue dans l'industrie et permet de démontrer votre expertise dans l'utilisation de cet outil, renforçant ainsi votre profil professionnel et votre valeur sur le marché du travail."
+                ]),
                 'is_featured' => true,
             ]),
 

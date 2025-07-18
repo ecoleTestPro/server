@@ -123,7 +123,7 @@ function HeaderUserAction() {
                     <CalendarMenu />
 
                     {/* User Icons */}
-                    {userActionNotLogged.map(({ name, icon, link, modalComponent }) =>
+                    {false && userActionNotLogged.map(({ name, icon, link, modalComponent }) =>
                         modalComponent ? (
                             <button
                                 key={name}

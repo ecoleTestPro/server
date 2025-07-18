@@ -2,9 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Repositories\CouponRepository;
-use App\Repositories\CourseRepository;
-use App\Repositories\UserRepository;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class EnrollmentFactory extends Factory
@@ -16,12 +13,21 @@ class EnrollmentFactory extends Factory
      */
     public function definition(): array
     {
-        $course = CourseRepository::getAll()->random();
+
+        $courses = \App\Models\Course::has('course_sessions')
+            ->with('course_sessions')
+            ->get();
+
+        if ($courses->isEmpty()) {
+            throw new \Exception('No courses with sessions available');
+        }
+
+        $course = $courses->random();
         $session = $course->course_sessions->random();
        
 
         return [
-            'user_id'                   => UserRepository::getAll()->random()->id,
+            'user_id'                   => \App\Models\User::inRandomOrder()->first()->id,
             'course_id'                 => $course->id,
             'course_session_id'         => $session->id,
             'mode'                      => fake()->randomElement(['online', 'in-person', 'hybrid']), 

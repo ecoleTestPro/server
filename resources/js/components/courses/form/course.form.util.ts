@@ -69,6 +69,13 @@ export type ICourseForm = {
 
     partner_ids?: number[];
 
+    media?: File | null; // For thumbnail
+    logo: File | null; // For course logo
+    organization_logo: File | null; // For organization logo
+    video: File | null; // For course video
+
+    published?: boolean; // Indicate if the course is published or a draft
+
     // description: string;
     /**
      * DESCRIPTION PARTS
@@ -154,7 +161,13 @@ export const COURSE_DEFAULT_VALUES: ICourseForm = {
     content: '',
 
     is_featured: false,
+    
     partner_ids: [],
+
+    logo: null,
+    organization_logo: null,
+    media: null,
+    video: null,
 };
 
 
@@ -201,8 +214,8 @@ export const createPayload = (data: ICourseForm, draft: boolean): ICourseRequest
                 : 0,
             title: data.title || '',
             attachment: data.attachment || '',
-            is_published: !draft, // If draft is true, is_published should be false
-            partner_ids: data.partner_ids,
+            is_published: !draft,
+            partner_ids: data.partner_ids && data.partner_ids.length > 0 ? data.partner_ids : [],
         };
 
         console.log('[CREATE_PAYLOAD]', payload);

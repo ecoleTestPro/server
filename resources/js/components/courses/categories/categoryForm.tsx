@@ -90,6 +90,9 @@ function CategoryForm({ closeDrawer, initialData }: CategoryFormProps) {
         const formData = new FormData();
         formData.append('title', data.title);
         formData.append('is_featured', data.is_featured ? '1' : '0');
+        if (data.parent_id) {
+            formData.append('parent_id', data.parent_id.toString());
+        }
         if (file) {
             formData.append('media', file);
         }
@@ -99,6 +102,7 @@ function CategoryForm({ closeDrawer, initialData }: CategoryFormProps) {
             data: {
                 title: data.title,
                 is_featured: data.is_featured ? '1' : '0',
+                parent_id: data.parent_id,
                 ...(file && { media: file }),
             },
             forceFormData: true, // Important pour envoyer des fichiers
@@ -149,6 +153,7 @@ function CategoryForm({ closeDrawer, initialData }: CategoryFormProps) {
                     selectLabel={t('courses.category', 'Catégorie')}
                     processing={processing}
                     onValueChange={(value) => setData('parent_id', value)}
+                    defaultValue={data.parent_id?.toString()}
                     required
                 />
                 <InputError message={errors.parent_id} />

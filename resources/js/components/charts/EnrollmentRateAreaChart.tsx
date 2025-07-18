@@ -30,7 +30,7 @@ const EnrollmentRateAreaChart: React.FC<AreaChartProps> = ({ title = 'Chart', se
         },
         colors: ['#605DFF', '#0f79f3'],
         xaxis: {
-            type: 'datetime',
+            type: 'category',
             categories,
             axisTicks: {
                 show: false,
@@ -48,11 +48,7 @@ const EnrollmentRateAreaChart: React.FC<AreaChartProps> = ({ title = 'Chart', se
                 },
             },
         },
-        tooltip: {
-            x: {
-                format: 'dd/MM/yy HH:mm',
-            },
-        },
+        tooltip: {},
         yaxis: {
             tickAmount: 5,
             max: 110,

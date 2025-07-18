@@ -1,6 +1,9 @@
 import { IJobApplication } from '@/types';
 import { router } from '@inertiajs/react';
 import { useState } from 'react';
+import toast from 'react-hot-toast';
+import BtnSecondary from '../ui/button/btn-secondary';
+import { Button } from '../ui/button/button';
 
 interface Props {
     jobId: number;
@@ -12,8 +15,7 @@ export default function JobApplyModal({ jobId, open, onClose }: Props) {
     const [form, setForm] = useState<IJobApplication>({
         job_offer_id: jobId,
         name: '',
-        email: '',
-        message: '',
+        cv: null,
     });
 
     if (!open) return null;
@@ -24,7 +26,14 @@ export default function JobApplyModal({ jobId, open, onClose }: Props) {
                 onSubmit={(e) => {
                     e.preventDefault();
                     router.post(route('job.apply'), form, {
-                        onSuccess: onClose,
+                        forceFormData: true,
+                        onSuccess: () => {
+                            toast.success('Candidature envoyée');
+                            onClose();
+                        },
+                        onError: () => {
+                            toast.error("Erreur lors de l'envoi");
+                        },
                     });
                 }}
                 className="space-y-4 rounded bg-white p-6"
@@ -38,26 +47,16 @@ export default function JobApplyModal({ jobId, open, onClose }: Props) {
                     required
                 />
                 <input
+                    type="file"
                     className="w-full rounded border p-2"
-                    placeholder="Email"
-                    type="email"
-                    value={form.email}
-                    onChange={(e) => setForm({ ...form, email: e.target.value })}
+                    onChange={(e) => setForm({ ...form, cv: e.target.files ? e.target.files[0] : null })}
                     required
                 />
-                <textarea
-                    className="w-full rounded border p-2"
-                    placeholder="Message"
-                    value={form.message}
-                    onChange={(e) => setForm({ ...form, message: e.target.value })}
-                />
                 <div className="flex justify-end gap-2">
-                    <button type="button" onClick={onClose} className="rounded bg-gray-200 px-4 py-2">
+                    <Button type="button" onClick={onClose} className="rounded bg-red-300 hover:bg-red-400">
                         Annuler
-                    </button>
-                    <button type="submit" className="rounded bg-primary-600 px-4 py-2 text-white">
-                        Envoyer
-                    </button>
+                    </Button>
+                    <BtnSecondary label="Envoyer" type="submit" className="rounded bg-primary-600 text-white" />
                 </div>
             </form>
         </div>

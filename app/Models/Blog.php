@@ -21,6 +21,8 @@ class Blog extends Model
         'description',
         'tags',
         'status',
+        'created_at',
+        'updated_at',
     ];
 
     protected $guarded = [
@@ -33,6 +35,8 @@ class Blog extends Model
     protected $casts = [
         'status' => 'boolean',
         'tags'   => 'array',
+        'created_at' => 'datetime:D/m/Y H:i:s',
+        'updated_at' => 'datetime:Y-m-d H:i:s',
     ];
 
     use HasFactory, SoftDeletes;

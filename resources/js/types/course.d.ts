@@ -91,6 +91,7 @@ export interface ICourse {
     title: string;
     slug: string;
     excerpt: string;
+    category_id: string | number;
     duration: string;
     lectures: string | number;
     price: number;

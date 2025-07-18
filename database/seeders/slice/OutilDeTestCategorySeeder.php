@@ -29,10 +29,14 @@ class OutilDeTestCategorySeeder extends AbstractCourseCategorySeeder
                 'duration' => 3,
             ]),
             $this->buildCourse([
-                'title' => 'Gestion de projet agile avec JIRA',
-                'slug'  => 'gestion-projet-agile-jira',
+                'title' => 'Révolutionnez Vos Projets avec Scrum et Jira : Formation Pratique',
+                'slug'  => 'gestion-projet-agile-scrum-jira',
                 'level' => 'OUTILS',
-                'duration' => 2,
+                'duration' => 3,
+                'excerpt' => 'La formation pratique combine théorie Scrum et nombreux cas concrets sur Jira pour maîtriser la gestion de projet Agile.',
+                'description' => json_encode([
+                    'content' => "La formation sur mesure en gestion de projet Agile avec Scrum est destinée aux équipes et organisations souhaitant améliorer leurs pratiques Agiles. Elle combine théorie et cas pratiques utilisant l'outil Jira pour une expérience d'apprentissage dynamique. Les participants apprendront les fondamentaux de Scrum à travers des exercices en groupe et des discussions interactives, favorisant une meilleure compréhension et collaboration."
+                ]),
             ]),
             $this->buildCourse([
                 'title' => 'Automatisation des tests avec Selenium Webdriver',

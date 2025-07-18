@@ -135,6 +135,9 @@ class PublicFormationController extends PublicAbstractController
                 return redirect()->route('courses')->withErrors('Introuvable');
             }
 
+            // Increment view count for the course
+            CourseRepository::incrementViewCount($course);
+
             $data = $this->default_data;
             $category = CategoryRepository::findBySlug($categorySlug);
 

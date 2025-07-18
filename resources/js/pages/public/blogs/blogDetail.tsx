@@ -1,4 +1,4 @@
-import BlogGridList from '@/components/blogs/BlogGridList';
+import BlogDetail from '@/components/blogs/BlogDetail';
 import BlogSidebar from '@/components/blogs/BlogSideBar';
 import Hero from '@/components/hero/hearo';
 import { IHeroBreadcrumbItems } from '@/components/hero/HeroCourse';
@@ -6,13 +6,12 @@ import { CLASS_NAME } from '@/data/styles/style.constant';
 import DefaultLayout from '@/layouts/public/front.layout';
 import { type SharedData } from '@/types';
 import { IBlog, IBlogCategory } from '@/types/blogs';
-import { Logger } from '@/utils/console.util';
 import { ROUTE_MAP } from '@/utils/route.util';
-import { usePage } from '@inertiajs/react';
+import { router, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-export default function BlogDetail() {
+export default function BlogDetailPage() {
     const { t } = useTranslation();
     const [pageTitle, setPageTitle] = useState(t('PAGES.BLOG_DETAIL', 'Blog Detail'));
     const breadcrumbItems: IHeroBreadcrumbItems[] = [
@@ -20,20 +19,30 @@ export default function BlogDetail() {
         { label: pageTitle, href: '#' },
     ];
 
-    const { auth, data } = usePage<SharedData>().props;
+    const { data } = usePage<SharedData>().props;
 
     const [blog, setBlog] = useState<IBlog | null>(null);
-    // const [blogCategories, setBlogCategories] = useState<IBlogCategory[]>([]);
+    const [recentBlogs, setRecentBlogs] = useState<IBlog[]>([]);
+    const [blogCategories, setBlogCategories] = useState<IBlogCategory[]>([]);
 
     const tags = (): string[] => {
         const allTags: string[] = [];
+        recentBlogs.forEach((b) => {
+            if (b.tags) {
+                b.tagArray = b.tags.split(',');
+            }
+        });
         return allTags;
     };
 
     useEffect(() => {
-        if (data.blogs && data.blogs.list) {
-            Logger.log('Blogs data:', data.blogs.list);
+        if (data.blogs) {
             setBlog(data.blogs.single);
+            setRecentBlogs(data.blogs.list ?? []);
+            setBlogCategories(data.blogs.categories ?? []);
+            if (data.blogs.single?.title) {
+                setPageTitle(data.blogs.single.title);
+            }
         }
     }, [data.blogs]);
 
@@ -43,17 +52,22 @@ export default function BlogDetail() {
                 <Hero breadcrumbItems={breadcrumbItems} title={pageTitle} />
 
                 <div className={CLASS_NAME.section}>
-                    <div className="container">
-                        <div className="grid grid-col-1 md:grid-cols-12">
+                    <div className="container mx-auto">
+                        <div className="grid grid-col-1 md:grid-cols-12 gap-4">
                             <div className="col-span-12 md:col-span-3">
-                                {/* <BlogSidebar
-                                    categories={blogCategories}d
+                                <BlogSidebar
+                                    categories={blogCategories}
                                     tags={tags()}
-                                    recentBlogs={blogs}
-                                    onBlogClick={(blog) => {}}
-                                    onCategorySelect={(category) => {}}
-                                    onTagToggle={(tag) => {}}
-                                /> */}
+                                    recentBlogs={recentBlogs}
+                                    onBlogClick={(id) => {
+                                        const blog = recentBlogs.find((b) => b.id === id);
+                                        if (blog) {
+                                            router.visit(ROUTE_MAP.public.blogs.detail(blog.slug).link);
+                                        }
+                                    }}
+                                    onCategorySelect={() => {}}
+                                    onTagToggle={() => {}}
+                                />
                             </div>
                             <div className="col-span-12 md:col-span-9">
                                 <div className="py-[12px] md:py-[24px]">

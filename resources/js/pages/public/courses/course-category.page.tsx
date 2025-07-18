@@ -4,39 +4,29 @@ import Hero, { IHeroBreadcrumbItems } from '@/components/hero/hearo';
 import Testimonials from '@/components/testimonial/Testimonials';
 import DefaultLayout from '@/layouts/public/front.layout';
 import { SharedData } from '@/types';
-import { ICourse, ICourseCategory } from '@/types/course';
-import { Logger } from '@/utils/console.util';
+import { ICourseCategory } from '@/types/course';
 import { ROUTE_MAP } from '@/utils/route.util';
 import { usePage } from '@inertiajs/react';
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
 
 export default function CourseCategoryPage() {
-    const { auth, data } = usePage<SharedData>().props;
-    const [loading, setLoading] = useState<boolean>(false);
-    const [category, setCategory] = useState<ICourseCategory | null>(null);
-    const [courses, setCourses] = useState<ICourse[]>([]);
-    const [breadcrumb, setBreadcrumb] = useState<IHeroBreadcrumbItems[]>([]);
-    const [error, setError] = useState<string | false>(false);
+    const { data } = usePage<SharedData>().props;
 
-    useEffect(() => {
-        setLoading(true);
-
-        Logger.log('[CourseCategoryPage] useEffect - data', data);
-
+    const category = useMemo(() => {
         if (data && data.category && data.category.id && data.category.slug) {
-            // Assuming data.category is the category object
-            setCategory(data.category);
-
-            // Set breadcrumb items based on the category data
-            if (data.category) {
-                setBreadcrumb([
-                    { label: 'Home', href: ROUTE_MAP.public.home.link },
-                    { label: 'Formations', href: ROUTE_MAP.public.courses.list.link },
-                    { label: data.category?.title, href: ROUTE_MAP.public.courses.byCategory(data.category.slug).link },
-                ]);
-            }
+            return data.category as ICourseCategory;
         }
+        return null;
     }, [data]);
+
+    const breadcrumb: IHeroBreadcrumbItems[] = useMemo(() => {
+        if (!category) return [];
+        return [
+            { label: 'Home', href: ROUTE_MAP.public.home.link },
+            { label: 'Formations', href: ROUTE_MAP.public.courses.list.link },
+            { label: category.title, href: ROUTE_MAP.public.courses.byCategory(category.slug).link },
+        ];
+    }, [category]);
 
     return (
         <DefaultLayout title="Welcome" description="Welcome">

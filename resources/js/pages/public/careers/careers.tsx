@@ -1,15 +1,17 @@
+import JobApplyModal from '@/components/careers/JobApplyModal';
 import { JobList } from '@/components/careers/JobList';
+import JobPagination from '@/components/careers/JobPagination';
 import { JobSearchFilters } from '@/components/careers/JobSearchFilters';
 import ContactCard from '@/components/contactUs/ContactCard';
 import Hero from '@/components/hero/hearo';
 import { IHeroBreadcrumbItems } from '@/components/hero/HeroCourse';
 import MotionSection from '@/components/motion/MotionSection';
 import DefaultLayout from '@/layouts/public/front.layout';
-import { SharedData, IJobOffer } from '@/types';
+import { IJobOffer, SharedData } from '@/types';
 import { ROUTE_MAP } from '@/utils/route.util';
 import { usePage } from '@inertiajs/react';
 import { motion, Variants } from 'framer-motion';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 // Types pour les offres d'emploi
@@ -25,11 +27,16 @@ export default function Careers() {
         { label: t('PAGES.CAREERS', pageTitle), href: '#' },
     ];
 
-    const [jobs, setJobs] = useState<IJobOffer[]>(data.job_offers as IJobOffer[]);
+    const [jobs] = useState<IJobOffer[]>(data.job_offers as IJobOffer[]);
     const [filters, setFilters] = useState({ title: '', location: '', type: '', minSalary: 0 });
+    const [viewMode, setViewMode] = useState<'card' | 'list'>('card');
+    const [applySelected, setApplySelected] = useState<number | null>(null);
+    const [openApplyModal, setOpenApplyModal] = useState<boolean>(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const jobsPerPage = 6;
 
     const filteredJobs = jobs.filter((job) => {
-        const salary = job.salary || 0; 
+        const salary = job.salary || 0;
         return (
             (job.title?.toLowerCase() ?? '').includes(filters.title.toLowerCase()) &&
             (job.location?.toLowerCase() ?? '').includes(filters.location.toLowerCase()) &&
@@ -38,6 +45,18 @@ export default function Careers() {
         );
     });
 
+    const totalPages = Math.max(1, Math.ceil(filteredJobs.length / jobsPerPage));
+    const paginatedJobs = filteredJobs.slice((currentPage - 1) * jobsPerPage, currentPage * jobsPerPage);
+
+    const handlePageChange = (page: number) => {
+        if (page < 1 || page > totalPages) return;
+        setCurrentPage(page);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [filters]);
 
     const pageVariants: Variants = {
         hidden: { opacity: 0 },
@@ -65,11 +84,27 @@ export default function Careers() {
                         animate="visible"
                     >
                         <div className="max-w-7xl mx-auto">
-                            <div className="mb-6">
+                            <div className="mb-6 flex items-center justify-between">
                                 <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100">Offres d'emploi</h1>
+                                <div className="space-x-2">
+                                    <button
+                                        className={`px-3 py-1 rounded ${viewMode === 'card' ? 'bg-primary text-white' : 'bg-gray-200'}`}
+                                        onClick={() => setViewMode('card')}
+                                    >
+                                        Card
+                                    </button>
+                                    <button
+                                        className={`px-3 py-1 rounded ${viewMode === 'list' ? 'bg-primary text-white' : 'bg-gray-200'}`}
+                                        onClick={() => setViewMode('list')}
+                                    >
+                                        Liste
+                                    </button>
+                                </div>
                             </div>
                             <JobSearchFilters onFilterChange={setFilters} />
-                            <JobList jobs={filteredJobs} />
+                            <JobList applySelected={applySelected} setApplySelected={setApplySelected} openApplyModal={openApplyModal} setOpenApplyModal={setOpenApplyModal} jobs={paginatedJobs} view={viewMode} />
+                            <JobPagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+                            <JobApplyModal jobId={applySelected || 0} open={openApplyModal} onClose={() => setOpenApplyModal(false)} />
                         </div>
                     </motion.div>
                 </MotionSection>

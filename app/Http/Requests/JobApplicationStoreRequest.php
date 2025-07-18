@@ -16,8 +16,7 @@ class JobApplicationStoreRequest extends FormRequest
         return [
             'job_offer_id' => 'required|exists:job_offers,id',
             'name' => 'required|string',
-            'email' => 'required|email',
-            'message' => 'nullable|string',
+            'cv' => 'required|file|mimes:pdf,doc,docx|max:2048',
         ];
     }
 }

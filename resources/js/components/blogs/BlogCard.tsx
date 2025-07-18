@@ -26,8 +26,8 @@ export default function BlogCard({ blog }: BlogCardProps) {
         >
             <img src={'https://placehold.co/600x400'} alt={blog.title} className="h-48 w-full object-cover" />
             <div className="p-6 flex flex-col flex-1">
-                <h2 className="text-2xl font-bold mb-2 text-gray-800 line-clamp-2">{blog.title}</h2>
-                <p className="text-gray-600 mb-4 flex-1 line-clamp-3">{blog.excerpt}</p>
+                <h2 className="text-lg font-bold mb-2 text-gray-800 line-clamp-2">{blog.title}</h2>
+                <p className="text-base text-gray-600 mb-4 flex-1 line-clamp-3">{blog.excerpt}</p>
                 <div className="flex items-center justify-between mt-auto">
                     <div className="flex items-center space-x-2">
                         {/* <span className="text-sm text-gray-500">{blog.author}</span> */}
