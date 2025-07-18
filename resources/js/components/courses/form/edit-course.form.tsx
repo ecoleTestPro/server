@@ -17,7 +17,6 @@ import { Skeleton } from '../../ui/skeleton';
 import CourseAdditionnalForm from './course-additionnal.form';
 import CourseBasicInfoForm from './course-basic-info.form';
 
-import { ROUTE_MAP } from '@/utils/route.util';
 import axios from 'axios';
 import { COURSE_DEFAULT_VALUES, createPayload, ICourseForm, PeriodicityUnitEnum } from './course.form.util';
 
@@ -135,11 +134,13 @@ function CourseForm({ course }: ICourseFormProps) {
         if (data?.id) formData.append('_method', 'PUT');
 
         try {
-            await axios.post(route(routeName, data?.id), formData, {
+            const response = await axios.post(route(routeName, data?.id), formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
             });
-            toast.success(t('courses.createSuccess', 'Formation créée avec succès !'));
-            return router.visit(ROUTE_MAP.dashboard.course.list.link);
+            console.log('Course creation response:', response);
+
+            // toast.success(t('courses.createSuccess', 'Formation créée avec succès !'));
+            // return router.visit(ROUTE_MAP.dashboard.course.list.link);
         } catch (error: any) {
             toast.error(t('courses.createError', 'Erreur lors de la création de la formation'));
             console.error('Course creation error:', error);
@@ -191,12 +192,7 @@ function CourseForm({ course }: ICourseFormProps) {
 
     return (
         <>
-            <form
-                className="container mx-auto flex flex-col gap-8"
-                onSubmit={() => {
-                    submit(data, false);
-                }}
-            >
+            <form className="container mx-auto flex flex-col gap-8">
                 {/* mx-auto  */}
                 <h2 className="text-2xl font-bold">{data?.title ? data.title : 'Créer une formation'}</h2>
 
@@ -310,7 +306,14 @@ function CourseForm({ course }: ICourseFormProps) {
                         <div className="grid grid-cols-1 gap-4">
                             <div className="col-span-1 md:col-span-1">
                                 <div className="grid grid-cols-1 gap-4">
-                                    <Button type="submit" className="mt-2 " disabled={processing}>
+                                    <Button
+                                        type="button"
+                                        onClick={() => {
+                                            submit(data, false);
+                                        }}
+                                        className="mt-2 "
+                                        disabled={processing}
+                                    >
                                         {processing && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
                                         {course && course.id ? t('courses.update', 'Mettre à jour') : t('courses.create', 'Créer une formation')}
                                     </Button>
