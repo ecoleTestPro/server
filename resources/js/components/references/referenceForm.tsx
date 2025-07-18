@@ -1,5 +1,5 @@
 import { router, useForm } from '@inertiajs/react';
-import { FormEventHandler, useState } from 'react';
+import { FormEventHandler, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import InputError from '@/components/input-error';
@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { InputFile } from '@/components/ui/inputFile';
+import TagInput from '@/components/ui/tag-input';
 import { IPartner } from '@/types/partner';
 
 interface ReferenceFormProps {
@@ -26,6 +27,11 @@ export default function ReferenceForm({ closeDrawer, initialData }: ReferenceFor
     const { t } = useTranslation();
     const [file, setFile] = useState<File | null>(null);
     const { data, setData, processing, errors, reset } = useForm<IPartner>(initialData || defaultValues);
+    const [tags, setTags] = useState<string[]>(initialData?.tag ? initialData.tag.split(';').filter(Boolean) : []);
+
+    useEffect(() => {
+        setData('tag', tags.join(';'));
+    }, [tags]);
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
@@ -65,7 +71,7 @@ export default function ReferenceForm({ closeDrawer, initialData }: ReferenceFor
             </div>
             <div className="grid gap-2">
                 <Label htmlFor="tag">Tag</Label>
-                <Input id="tag" value={data.tag ?? ''} onChange={(e) => setData('tag', e.target.value)} disabled={processing} />
+                <TagInput tags={tags} onChange={setTags} placeholder="tag1;tag2" />
                 <InputError message={errors.tag} />
             </div>
             <div className="grid gap-2">
