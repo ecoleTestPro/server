@@ -13,7 +13,7 @@ import SidebarFilter from './SidebarFilter';
 
 interface IOurCurrentCoursesProps {
     coursesData?: ICourseCategory[];
-    coursesDataSlice?: number;
+    coursesDataSlice?: number; 
     showSidebar?: boolean;
 }
 
@@ -23,7 +23,7 @@ const OurCurrentCourses = ({ coursesData, showSidebar = false, coursesDataSlice 
 
     const [courses, setCourses] = useState<ICourseCategory[] | undefined>(coursesData ?? undefined);
     const [filteredCourses, setFilteredCourses] = useState<ICourseCategory[]>(coursesData ?? []);
-    const [loading, setLoading] = useState<boolean>(true);
+    const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
 
@@ -46,8 +46,9 @@ const OurCurrentCourses = ({ coursesData, showSidebar = false, coursesDataSlice 
 
     // Gérer le chargement des cours
     useEffect(() => {
-        if (!courses) {
-            setLoading(true);
+        setLoading(true);
+        setError(null);
+        if (!courses && !loading && coursesData && coursesData.length > 0) {
             setCourses([]);
             setError(null);
 
@@ -56,7 +57,7 @@ const OurCurrentCourses = ({ coursesData, showSidebar = false, coursesDataSlice 
             setFilteredCourses(newCourses);
 
             setLoading(false);
-        }
+        } 
     }, [coursesData, data, courses, loading]);
 
     // Basculer l'affichage de la barre latérale
