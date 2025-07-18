@@ -16,6 +16,10 @@ class Partner extends Model
 
     protected $guarded = ['id'];
 
+    protected $casts = [
+        'is_reference' => 'boolean',
+    ];
+
     public function media(): BelongsTo
     {
         return $this->belongsTo(Media::class, 'media_id');

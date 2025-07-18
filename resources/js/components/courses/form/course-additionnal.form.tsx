@@ -6,11 +6,13 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import TooltipCustom from '@/components/ui/TooltipCustom';
 import { Info } from 'lucide-react';
-import { lazy, useState } from 'react';
+import { lazy, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import 'react-quill/dist/quill.snow.css';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '../../ui/select';
 import { ICourseForm, PERIODICITY_UNIT } from './course.form.util';
+import { ICourseFormErrors } from './edit-course.form';
+import { ICourse } from '@/types/course';
 
 // const ReactQuill = lazy(() => import('react-quill'));
 const ReactQuill = lazy(() => import('react-quill-new'));
@@ -18,13 +20,18 @@ const ReactQuill = lazy(() => import('react-quill-new'));
 interface CourseAdditionnalFormProps {
     fieldsetClasses?: string;
     data: ICourseForm;
+    courseSelected: ICourse | null;
     setData: (data: string, value: string | number) => void;
     processing: boolean;
-    errors: Record<string, string>;
+    errors: ICourseFormErrors;
 }
 
-export default function CourseAdditionnalForm({ fieldsetClasses, data, setData, processing, errors }: CourseAdditionnalFormProps) {
+export default function CourseAdditionnalForm({ fieldsetClasses, data, courseSelected, setData, processing, errors }: CourseAdditionnalFormProps) {
     const [displayPrice, setDisplayPrice] = useState<string>(() => (data.price ? Number(data.price).toLocaleString('fr-FR') : ''));
+
+    useEffect(() => {
+        setDisplayPrice(data.price ? Number(data.price).toLocaleString('fr-FR') : '');
+    }, [data.price]);
     const { t } = useTranslation();
 
     return (
@@ -51,7 +58,9 @@ export default function CourseAdditionnalForm({ fieldsetClasses, data, setData, 
                 </div>
 
                 <div className="grid gap-2">
-                    <Label htmlFor="price">{t('courses.price', 'Prix')} (FCFA) </Label>
+                    <Label htmlFor="price">
+                        {t('courses.price', 'Prix')} (FCFA) <span className="text-red-500">*</span>
+                    </Label>
                     <Input
                         id="price"
                         type="text"
@@ -84,7 +93,9 @@ export default function CourseAdditionnalForm({ fieldsetClasses, data, setData, 
                 </div>
 
                 <div className="grid gap-2">
-                    <Label htmlFor="duration">{t('courses.duration', 'Durée')}</Label>
+                    <Label htmlFor="duration">
+                        {t('courses.duration', 'Durée')} <span className="text-red-500">*</span>
+                    </Label>
                     <Input
                         id="duration"
                         type="number"
@@ -97,7 +108,9 @@ export default function CourseAdditionnalForm({ fieldsetClasses, data, setData, 
                 </div>
 
                 <div className="grid gap-2">
-                    <Label htmlFor="periodicity_unit">{t('courses.periodicity_unit', 'Periodicité')}</Label>
+                    <Label htmlFor="periodicity_unit">
+                        {t('courses.periodicity_unit', 'Periodicité')} <span className="text-red-500">*</span>
+                    </Label>
                     <Select disabled={processing} value={data.periodicity_unit} onValueChange={(value) => setData('periodicity_unit', value)}>
                         <SelectTrigger className="w-full">
                             <SelectValue placeholder="Sélectionner une catégorie" />

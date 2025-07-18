@@ -18,20 +18,10 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
                 href: route('dashboard.course.index'),
                 icon: List,
             },
-            // {
-            //     title: 'Créer une formation',
-            //     href: route('dashboard.course.create'),
-            //     icon: ClipboardPlus,
-            // },
             {
                 title: 'Catégories',
                 href: route('dashboard.category.index'),
                 icon: ListTodo,
-            },
-            {
-                title: 'Configuration',
-                href: "#",
-                icon: Settings2,
             },
         ],
     },
@@ -40,16 +30,16 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
         href: route('dashboard.enrollment.index'),
         icon: ListChecks,
     },
+    // {
+    //     title: 'Partenaires',
+    //     href: route('dashboard.partners.index'),
+    //     icon: FileStack,
+    // },
     {
-        title: 'Partenaires',
-        href: route('dashboard.partners.index'),
+        title: 'Références',
+        href: route('dashboard.references.index'),
         icon: FileStack,
     },
-    // {
-    //     title: 'Pages',
-    //     href: route('dashboard.page.index'),
-    //     icon: BookOpen,
-    // },
     {
         title: 'Offres d\'emploi',
         href: route('dashboard.job-offers.index'),
@@ -74,6 +64,23 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
         title: 'Newsletters',
         href: route('dashboard.newsletters.index'),
         icon: Mail,
+        children: [
+            {
+                title: 'Newsletters',
+                href: route('dashboard.newsletters.index'),
+                icon: List,
+            },
+            {
+                title: 'Templates',
+                href: route('dashboard.newsletter-templates.index'),
+                icon: FileStack,
+            },
+            {
+                title: 'Envoie de mail',
+                href: route('dashboard.newsletters.compose'),
+                icon: ClipboardPlus,
+            },
+        ],
     },
     {
         title: 'Paramètres',

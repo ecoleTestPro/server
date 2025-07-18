@@ -31,10 +31,30 @@ export default function CourseTable({ courses }: ICourseTableProps) {
         setIsDialogOpen(false);
     };
 
-    const fakeRandomNextSession = (): string => {
-        const fake = ['15 Jul 2025', '20 Aug - 25 Aug 2025', '10 Sep 2025', '01 Oct 2025', '15 Nov 2025', '05 Dec 2025'];
+    const getNextSession = (course: ICourse): string => {
+        if (!course.course_sessions || course.course_sessions.length === 0) {
+            return t('COURSE.TABLE.NO_UPCOMING_SESSION', 'N/A');
+        }
 
-        return fake[Math.floor(Math.random() * fake.length)];
+        const now = new Date();
+        const upcomingSessions = course.course_sessions
+            .filter((session) => new Date(session.start_date) > now)
+            .sort(
+                (a, b) =>
+                    new Date(a.start_date).getTime() -
+                    new Date(b.start_date).getTime(),
+            );
+
+        const next = upcomingSessions[0];
+        if (!next) {
+            return t('COURSE.TABLE.NO_UPCOMING_SESSION', 'N/A');
+        }
+
+        if (next.end_date) {
+            return `${next.start_date} - ${next.end_date}`;
+        }
+
+        return next.start_date;
     };
 
     if (!courses || courses.length === 0) {
@@ -80,7 +100,7 @@ export default function CourseTable({ courses }: ICourseTableProps) {
                                     </td>
                                     <td className=" border-b border-gray-100 px-5 py-4 whitespace-nowrap ltr:text-left rtl:text-right dark:border-[#172036]">
                                         {/* <CourseDurationBlock location={item.location_mode} /> */}
-                                        <div className="text-pretty">{fakeRandomNextSession()}</div>
+                                        <div className="text-pretty">{getNextSession(item)}</div>
                                     </td>
                                     <td className="border-b border-gray-100 px-5 py-4 whitespace-nowrap ltr:text-left rtl:text-right dark:border-[#172036]">
                                         <CourseDurationBlock duration={getPeriodicity(item.periodicity_unit, item.periodicity_value)} />

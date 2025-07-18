@@ -1,6 +1,6 @@
 'use client';
 
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { ChevronDownIcon, ChevronRightIcon, XIcon } from 'lucide-react';
 import { useState } from 'react';
 
@@ -16,6 +16,7 @@ interface NavigationMenuProps {
 
 export function HeaderNavTwoSidebar({ menu, menuRight, isOpen, onClose, className }: NavigationMenuProps) {
     const [openMenus, setOpenMenus] = useState<{ [key: string]: boolean }>({});
+    const page = usePage();
 
     const toggleMenu = (id: string) => {
         setOpenMenus((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -55,12 +56,14 @@ export function HeaderNavTwoSidebar({ menu, menuRight, isOpen, onClose, classNam
                 </div>
 
                 <div className="flex h-[calc(100%-60px)] flex-col space-y-2 overflow-y-auto p-4">
-                    {menu.map((menuItem) => (
+                    {menu.map((menuItem) => {
+                        const isActive = page.url === (menuItem.href || '#');
+                        return (
                         <div key={menuItem.id} className="w-full">
                             {menuItem.children ? (
                                 <button
                                     onClick={() => toggleMenu(menuItem.id)}
-                                    className="flex w-full items-center justify-between px-4 py-2 text-left text-sm font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800"
+                                    className={`flex w-full items-center justify-between px-4 py-2 text-left text-sm font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800 ${isActive ? 'border-l-4 border-primary' : ''}`}
                                     aria-expanded={openMenus[menuItem.id] || false}
                                     aria-controls={`submenu-${menuItem.id}`}
                                 >
@@ -72,7 +75,7 @@ export function HeaderNavTwoSidebar({ menu, menuRight, isOpen, onClose, classNam
                             ) : (
                                 <Link
                                     href={menuItem.href || '#'}
-                                    className="block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800"
+                                    className={`block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800 ${isActive ? 'border-l-4 border-primary' : ''}`}
                                     onClick={onClose}
                                 >
                                     {menuItem.label}
@@ -115,7 +118,7 @@ export function HeaderNavTwoSidebar({ menu, menuRight, isOpen, onClose, classNam
                                 </div>
                             )}
                         </div>
-                    ))}
+                    )})
                 </div>
             </nav>
         </>

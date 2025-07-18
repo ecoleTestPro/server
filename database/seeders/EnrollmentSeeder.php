@@ -13,8 +13,18 @@ class EnrollmentSeeder extends Seeder
      */
     public function run(): void
     {
-        // Enrollment::factory()
-        //     ->count(100)
-        //     ->create();
+        if (\App\Models\Course::has('course_sessions')->count() === 0) {
+            $this->command->warn('Skipping EnrollmentSeeder: no course sessions available.');
+            return;
+        }
+
+        if (\App\Models\User::count() === 0) {
+            $this->command->warn('Skipping EnrollmentSeeder: no users available.');
+            return;
+        }
+
+        Enrollment::factory()
+            ->count(100)
+            ->create();
     }
 }

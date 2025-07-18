@@ -1,3 +1,4 @@
+import { handleErrorsRequest } from '@/utils/utils';
 import { router, useForm, usePage } from '@inertiajs/react';
 import { InfoIcon, LoaderCircle, LoaderIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -17,9 +18,10 @@ import { Skeleton } from '../../ui/skeleton';
 import CourseAdditionnalForm from './course-additionnal.form';
 import CourseBasicInfoForm from './course-basic-info.form';
 
-import { ROUTE_MAP } from '@/utils/route.util';
 import axios from 'axios';
 import { COURSE_DEFAULT_VALUES, createPayload, ICourseForm, PeriodicityUnitEnum } from './course.form.util';
+
+export type ICourseFormErrors = { [key in keyof ICourseForm]?: string[] };
 
 interface ICourseFormProps {
     course: ICourse | null;
@@ -31,7 +33,9 @@ function CourseForm({ course }: ICourseFormProps) {
     const [loading, setLoading] = useState(false);
 
     const { data: sharedData } = usePage<SharedData>().props;
-    const { data, setData, post, processing, errors, reset } = useForm<ICourseForm>(COURSE_DEFAULT_VALUES);
+    const { data, setData, post, processing, reset } = useForm<ICourseForm>(COURSE_DEFAULT_VALUES);
+
+    const [errors, setErrors] = useState<ICourseFormErrors>({}); 
 
     const descptionFormPart: { key: keyof ICourseForm; label: string; description?: string }[] = [
         {
@@ -63,6 +67,40 @@ function CourseForm({ course }: ICourseFormProps) {
     const [orgLogoFile, setOrgLogoFile] = useState<File | null>(null);
     const [videoFile, setVideoFile] = useState<File | null>(null);
     const [galleryFiles, setGalleryFiles] = useState<FileList | null>(null);
+
+    const validationBeformSubmitForm = () => {
+        const errors: { [key in keyof ICourseForm]?: string[] } = {};
+        if (!data.title) {
+            errors.title = [t('COURSE.FORM.TITLE_REQUIRED', 'Le titre est requis')];
+        }
+        if (!data.category_id) {
+            errors.category_id = [t('COURSE.FORM.CATEGORY_REQUIRED', 'La catégorie est requise')];
+        }
+        if (!data.duration) {
+            errors.duration = [t('COURSE.FORM.DURATION_REQUIRED', 'La durée est requise')];
+        }
+        if (!data.periodicity_unit) {
+            errors.periodicity_unit = [t('COURSE.FORM.PERIODICITY_UNIT_REQUIRED', "L'unité de périodicité est requise")];
+        }
+        if (!data.periodicity_value) {
+            errors.periodicity_value = [t('COURSE.FORM.PERIODICITY_VALUE_REQUIRED', 'La valeur de périodicité est requise')];
+        }
+        if (!data.price) {
+            errors.price = [t('COURSE.FORM.PRICE_REQUIRED', 'Le prix est requis')];
+        } else {
+            const priceValue = parseFloat(data.price.toString().replace(/,/g, '.'));
+            if (isNaN(priceValue) || priceValue < 0) {
+                errors.price = [t('COURSE.FORM.PRICE_INVALID', 'Le prix doit être un nombre valide')];
+            } else {
+                setDisplayPrice(priceValue.toLocaleString('fr-FR'));
+            }
+        }
+        if (!data.excerpt) {
+            errors.excerpt = [t('COURSE.FORM.EXCERPT_REQUIRED', "L'extrait est requis")];
+        }
+        setErrors(errors);
+        return Object.keys(errors).length === 0;
+    };
 
     const toggleAccordion = (index: number) => {
         setOpenIndex((prevIndex) => (prevIndex === index ? null : index));
@@ -106,6 +144,10 @@ function CourseForm({ course }: ICourseFormProps) {
             course.description.why_choose && setData('why_choose', course.description.why_choose);
             course.description.exam && setData('exam', course.description.exam);
         }
+
+        console.log("[handleInitializeForm] course:", course);
+        console.log("[handleInitializeForm] data:", data);
+        
     };
 
     /**
@@ -117,6 +159,12 @@ function CourseForm({ course }: ICourseFormProps) {
      * @returns {Promise<void>}
      */
     const submit = async (data: ICourseForm, draft: boolean = false): Promise<void> => {
+        setLoading(true);
+        const isValid = validationBeformSubmitForm();
+        if (!isValid) {
+            setLoading(false);
+            return;
+        }
         const routeName = data?.id ? 'dashboard.course.update' : 'dashboard.course.store';
         const formData = new FormData();
         const payload = createPayload(data, draft);
@@ -135,14 +183,17 @@ function CourseForm({ course }: ICourseFormProps) {
         if (data?.id) formData.append('_method', 'PUT');
 
         try {
-            await axios.post(route(routeName, data?.id), formData, {
+            const response = await axios.post(data?.id ? route(routeName, course?.slug) : route(routeName), formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
             });
-            toast.success(t('courses.createSuccess', 'Formation créée avec succès !'));
-            return router.visit(ROUTE_MAP.dashboard.course.list.link);
+            console.log('Course creation response:', response);
+
+            // toast.success(t('courses.createSuccess', 'Formation créée avec succès !'));
+            // return router.visit(ROUTE_MAP.dashboard.course.list.link);
         } catch (error: any) {
-            toast.error(t('courses.createError', 'Erreur lors de la création de la formation'));
-            console.error('Course creation error:', error);
+            handleErrorsRequest(error, setLoading, (message) => toast.error(message), setErrors);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -157,6 +208,8 @@ function CourseForm({ course }: ICourseFormProps) {
     }, [course]);
 
     useEffect(() => {
+        console.log("{{ sharedData }}", sharedData);
+        
         if (sharedData && sharedData.categories_with_courses) {
             setCategories(sharedData.categories_with_courses);
         } else {
@@ -191,12 +244,7 @@ function CourseForm({ course }: ICourseFormProps) {
 
     return (
         <>
-            <form
-                className="container mx-auto flex flex-col gap-8"
-                onSubmit={() => {
-                    submit(data, false);
-                }}
-            >
+            <form className="container mx-auto flex flex-col gap-8">
                 {/* mx-auto  */}
                 <h2 className="text-2xl font-bold">{data?.title ? data.title : 'Créer une formation'}</h2>
 
@@ -211,6 +259,7 @@ function CourseForm({ course }: ICourseFormProps) {
                                             <CourseBasicInfoForm
                                                 fieldsetClasses={fieldsetClasses}
                                                 data={data}
+                                                courseSelected={course}
                                                 categories={categories}
                                                 setData={setData}
                                                 processing={processing}
@@ -228,6 +277,7 @@ function CourseForm({ course }: ICourseFormProps) {
                                             <CourseAdditionnalForm
                                                 fieldsetClasses={fieldsetClasses}
                                                 data={data}
+                                                courseSelected={course}
                                                 setData={setData}
                                                 processing={processing}
                                                 errors={errors}
@@ -310,7 +360,14 @@ function CourseForm({ course }: ICourseFormProps) {
                         <div className="grid grid-cols-1 gap-4">
                             <div className="col-span-1 md:col-span-1">
                                 <div className="grid grid-cols-1 gap-4">
-                                    <Button type="submit" className="mt-2 " disabled={processing}>
+                                    <Button
+                                        type="button"
+                                        onClick={() => {
+                                            submit(data, false);
+                                        }}
+                                        className="mt-2 "
+                                        disabled={processing}
+                                    >
                                         {processing && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
                                         {course && course.id ? t('courses.update', 'Mettre à jour') : t('courses.create', 'Créer une formation')}
                                     </Button>
@@ -347,6 +404,9 @@ function CourseForm({ course }: ICourseFormProps) {
                         </div>
                     </div>
                 </div>
+                <p className="text-sm text-gray-500 mt-4">
+                    Les champs marqués d'un <span className="text-red-500">*</span> sont obligatoires.
+                </p>
             </form>
 
             <Drawer

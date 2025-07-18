@@ -95,7 +95,7 @@ export default function TrainingCalendarPage() {
 
                                             <div className="flex gap-2 mt-2 md:mt-0">
                                                 <button
-                                                    className="bg-green-500 hover:bg-green-600 text-white rounded-md px-4 py-2 text-sm"
+                                                    className="bg-green-500 hover:bg-green-600 text-white rounded-md px-4 py-2 text-sm cursor-pointer"
                                                     onClick={() => {
                                                         setSelectedSession(session);
                                                         setOpenDialog(true);
@@ -103,15 +103,17 @@ export default function TrainingCalendarPage() {
                                                 >
                                                     {t('COURSE.DETAIL.REGISTER', 'Inscription')}
                                                 </button>{' '}
-                                                <button
-                                                    className="bg-blue-500 hover:bg-blue-600 text-white rounded-md px-4 py-2 text-sm"
-                                                    onClick={() => {
-                                                        setSelectedCourse(session.course);
-                                                        setOpenCourseDrawer(true);
-                                                    }}
-                                                >
-                                                    {t('CALENDAR.VIEW_COURSE', 'Voir la formation')}
-                                                </button>
+                                                {false && (
+                                                    <button
+                                                        className="bg-blue-500 hover:bg-blue-600 text-white rounded-md px-4 py-2 text-sm"
+                                                        onClick={() => {
+                                                            setSelectedCourse(session.course);
+                                                            setOpenCourseDrawer(true);
+                                                        }}
+                                                    >
+                                                        {t('CALENDAR.VIEW_COURSE', 'Voir la formation')}
+                                                    </button>
+                                                )}
                                                 {false && (
                                                     <Link
                                                         href={`${ROUTE_MAP.public.contact.link}?subject=Formation ${session.course?.title}`}

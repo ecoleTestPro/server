@@ -25,6 +25,8 @@ class PartnerRepository extends Repository
         return self::create([
             'name' => $request->name,
             'link' => $request->link,
+            'tag' => $request->tag,
+            'is_reference' => $request->has('is_reference') ? true : false,
             'media_id' => $picture?->id,
             'is_active' => $request->has('is_active') ? true : false,
         ]);
@@ -50,8 +52,10 @@ class PartnerRepository extends Repository
         return self::update($partner, [
             'name' => $request->name ?? $partner->name,
             'link' => $request->link ?? $partner->link,
+            'tag' => $request->tag ?? $partner->tag,
+            'is_reference' => $request->has('is_reference') ? true : $partner->is_reference,
             'media_id' => $picture?->id ?? $partner->media_id,
             'is_active' => $request->has('is_active') ? true : $partner->is_active,
-        ]); 
+        ]);
     }
 }

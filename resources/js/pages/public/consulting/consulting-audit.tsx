@@ -8,6 +8,8 @@ import { type SharedData } from '@/types';
 import { motionVariants } from '@/utils/motion.util';
 import { ROUTE_MAP } from '@/utils/route.util';
 import { Link, usePage } from '@inertiajs/react';
+import ReferenceLogos from '@/components/references/ReferenceLogos';
+import { IPartner } from '@/types/partner';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 
@@ -38,6 +40,7 @@ const tests: StaticFeatureItem[] = [
 export default function ConsultingAudit() {
     const { auth, data } = usePage<SharedData>().props;
     const { t } = useTranslation();
+    const references: IPartner[] = (data as any)?.references ?? [];
 
     const breadcrumbItems: IHeroBreadcrumbItems[] = [
         { label: t('PAGES.HOME', 'Accueil'), href: ROUTE_MAP.public.home.link },
@@ -177,6 +180,8 @@ export default function ConsultingAudit() {
                 <BlockOne />
 
                 <BlockTwo />
+
+                <ReferenceLogos references={references} />
 
                 <PrevNextPage pages={prevNextPage} />
             </div>

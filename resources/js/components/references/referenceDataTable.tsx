@@ -4,16 +4,16 @@ import { Checkbox } from '../ui/checkbox';
 import { DataTable } from '../ui/dataTable';
 import { Button } from '../ui/button/button';
 import ReferenceActionBtn from './referenceActionBtn';
-import { IReference } from '@/types/reference';
+import { IPartner } from '@/types/partner';
 
 interface ReferenceDataTableProps {
-    references: IReference[];
-    onEditRow?: (row: IReference) => void;
-    onDeleteRow?: (row: IReference) => void;
+    references: IPartner[];
+    onEditRow?: (row: IPartner) => void;
+    onDeleteRow?: (row: IPartner) => void;
 }
 
 export default function ReferenceDataTable({ references, onEditRow, onDeleteRow }: ReferenceDataTableProps) {
-    const columns: ColumnDef<IReference>[] = [
+    const columns: ColumnDef<IPartner>[] = [
         {
             id: 'select',
             header: ({ table }) => (
@@ -30,7 +30,7 @@ export default function ReferenceDataTable({ references, onEditRow, onDeleteRow 
             enableHiding: false,
         },
         {
-            accessorKey: 'text',
+            accessorKey: 'name',
             header: ({ column }) => (
                 <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
                     Texte
@@ -39,7 +39,7 @@ export default function ReferenceDataTable({ references, onEditRow, onDeleteRow 
             ),
             cell: ({ row }) => {
                 const reference = row.original;
-                const name = reference.text || '';
+                const name = reference.name || '';
                 const imageUrl = reference.media?.src || null;
 
                 return (
@@ -51,11 +51,20 @@ export default function ReferenceDataTable({ references, onEditRow, onDeleteRow 
             },
         },
         {
+            accessorKey: 'tag',
+            header: ({ column }) => (
+                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                    Tag
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            ),
+        },
+        {
             id: 'actions',
             enableHiding: false,
             cell: ({ row }) => <ReferenceActionBtn row={row} onEdit={onEditRow} onDelete={onDeleteRow} />,
         },
     ];
 
-    return <DataTable columns={columns} data={references} filterColumn="text" />;
+    return <DataTable columns={columns} data={references} filterColumn="name" />;
 }

@@ -20,7 +20,7 @@ export const JobSearchFilters: React.FC<{
 
     return (
         <motion.div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mb-6" variants={filterVariants} initial="hidden" animate="visible">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <input
                     type="text"
                     placeholder="Titre du poste"
@@ -46,13 +46,15 @@ export const JobSearchFilters: React.FC<{
                     <option value="Freelance">Freelance</option>
                     <option value="Stage">Stage</option>
                 </select>
-                <input
-                    type="number"
-                    placeholder="Salaire minimum (€)"
-                    value={minSalary || ''}
-                    onChange={(e) => setMinSalary(Number(e.target.value))}
-                    className="p-3 border rounded-lg dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-500"
-                />
+                {false && (
+                    <input
+                        type="number"
+                        placeholder="Salaire minimum (€)"
+                        value={minSalary || ''}
+                        onChange={(e) => setMinSalary(Number(e.target.value))}
+                        className="p-3 border rounded-lg dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    />
+                )}
             </div>
         </motion.div>
     );

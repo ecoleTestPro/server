@@ -83,5 +83,34 @@ class BlogRepository extends Repository
             'status' => $status,
         ]);
     }
+
+    public static function findBySlug(string $slug): Blog
+    {
+        $blog = self::initQuery()
+            ->where('slug', $slug)
+            ->firstOrFail();
+
+        if ($blog->description) {
+            $decoded = json_decode($blog->description, true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $blog->description = $decoded;
+            }
+        }
+
+        if ($blog->tags) {
+            $blog->tags = json_decode($blog->tags, true);
+        }
+
+        return $blog;
+    }
+
+    public static function getPublished(int $limit = 10)
+    {
+        return self::initQuery()
+            ->where('status', true)
+            ->latest('id')
+            ->take($limit)
+            ->get();
+    }
 }
 

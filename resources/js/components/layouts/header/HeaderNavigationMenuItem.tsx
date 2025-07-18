@@ -8,7 +8,8 @@ import {
     navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu';
 import { IMainMenuItem } from '@/types/header.type';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
+import { cn } from '@/lib/utils';
 import ListItem from './ListItem';
 
 interface HeaderNavigationMenuItemProps {
@@ -16,6 +17,9 @@ interface HeaderNavigationMenuItemProps {
 }
 
 export default function HeaderNavigationMenuItem({ menuItem }: HeaderNavigationMenuItemProps) {
+    const page = usePage();
+    const isActive = page.url === (menuItem.href || '#');
+
     if (!menuItem || !menuItem.id || !menuItem.label) {
         return null; // Si l'élément n'est pas valide, on ne rend rien
     }
@@ -28,7 +32,7 @@ export default function HeaderNavigationMenuItem({ menuItem }: HeaderNavigationM
                     {menuItem.children ? (
                         <>
                             <NavigationMenuTrigger
-                                className="cursor-pointer"
+                                className={cn('cursor-pointer', isActive && 'border-l-4 border-primary')}
                                 onClick={(e) => e.preventDefault()} // Trigger on click
                             >
                                 <Link href={menuItem.href ?? '#'} className="cursor-pointer hover:underline hover:text-primary">
@@ -148,7 +152,10 @@ export default function HeaderNavigationMenuItem({ menuItem }: HeaderNavigationM
                         </>
                     ) : (
                         /* Si pas d'enfants, on rend un simple lien */
-                        <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
+                        <NavigationMenuLink
+                            asChild
+                            className={cn(navigationMenuTriggerStyle(), isActive && 'border-l-4 border-primary')}
+                        >
                             <Link href={menuItem.href || '#'}>{menuItem.label}</Link>
                         </NavigationMenuLink>
                     )}

@@ -21,39 +21,46 @@ const OurCurrentCourses = ({ coursesData, showSidebar = false, coursesDataSlice 
     const { t } = useTranslation();
     const { auth, data } = usePage<SharedData>().props;
 
-    const [courses, setCourses] = useState<ICourseCategory[]>(coursesData ?? []);
-    const [filteredCourses, setFilteredCourses] = useState<ICourseCategory[]>(coursesData ?? []);
-    const [loading, setLoading] = useState<boolean>(true);
+    const [courses, setCourses] = useState<ICourseCategory[] | undefined>(undefined);
+    const [filteredCourses, setFilteredCourses] = useState<ICourseCategory[] | undefined>(undefined);
+    const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
 
     // Extraire tous les cours pour le filtre
-    const allCourses: ICourse[] = courses.flatMap((category) => category.courses || []);
+    const allCourses: ICourse[] = courses?.flatMap((category) => category.courses || []) ?? [];
 
     // Gérer les filtres
     const handleFilterChange = (filtered: ICourse[]) => {
         const filteredIds = new Set(filtered.map((course) => course.id));
-        const newFilteredCourses = courses
-            .map((category) => ({
-                ...category,
-                courses: (category.courses || []).filter((course) => filteredIds.has(course.id)),
-            }))
-            .filter((category) => (category.courses || []).length > 0);
-        setFilteredCourses(newFilteredCourses);
+        if (courses) {
+            const newFilteredCourses = courses
+                ?.map((category) => ({
+                    ...category,
+                    courses: (category.courses || []).filter((course) => filteredIds.has(course.id)),
+                }))
+                ?.filter((category) => (category.courses || []).length > 0);
+            setFilteredCourses(newFilteredCourses);
+        }
     };
 
     // Gérer le chargement des cours
     useEffect(() => {
-        setLoading(true);
-        setCourses([]);
-        setError(null);
+        console.log("[OurCurrentCourses] courses: #0", {courses, loading});
+        if (coursesData && coursesData.length > 0 && !courses && !loading) {
+            setLoading(true);
+            setError(null);
 
-        const newCourses = createCoursesFromCategory(coursesData, coursesDataSlice);
-        setCourses(newCourses);
-        setFilteredCourses(newCourses);
+            const newCourses = createCoursesFromCategory(coursesData, coursesDataSlice);
+            // setCourses(newCourses);
+            setFilteredCourses(newCourses);
 
-        setLoading(false);
-    }, [coursesData, data]);
+            setLoading(false);
+        }
+        console.log("[OurCurrentCourses] courses:", {courses, loading});
+
+    }, [coursesData, data, courses, coursesDataSlice, loading]);
+
 
     // Basculer l'affichage de la barre latérale
     const toggleSidebar = () => {
@@ -69,7 +76,7 @@ const OurCurrentCourses = ({ coursesData, showSidebar = false, coursesDataSlice 
         );
     }
 
-    if (courses.length === 0) {
+    if (courses && courses.length === 0) {
         return (
             <div className="container mx-auto p-4">
                 <div className="text-center text-3xl text-gray-500 dark:text-gray-400">
@@ -99,10 +106,11 @@ const OurCurrentCourses = ({ coursesData, showSidebar = false, coursesDataSlice 
 
                 {/* Liste des cours */}
                 <div className="flex-1">
-                    {filteredCourses.map((category) => (
-                        <ListCourseByCategory key={category.id} title={category.title} slug={category.slug} coursesList={[category]} />
-                    ))}
-                    {filteredCourses.length === 0 && (
+                    {filteredCourses &&
+                        filteredCourses.map((category) => (
+                            <ListCourseByCategory key={category.id} title={category.title} slug={category.slug} coursesList={[category]} />
+                        ))}
+                    {filteredCourses && filteredCourses.length === 0 && (
                         <div className="text-center text-2xl text-gray-500 dark:text-gray-400">
                             {t('COURSE.TABLE.NO_COURSES', 'Aucun cours ne correspond aux filtres.')}
                         </div>

@@ -2,6 +2,8 @@ import { motion, useAnimation, Variants } from 'framer-motion';
 import { Link } from '@inertiajs/react';
 import { useEffect } from 'react';
 import MotionSection from '../motion/MotionSection';
+import BtnSecondary from '../ui/button/btn-secondary';
+import { ROUTE_MAP } from '@/utils/route.util';
 
 export default function ContactSuccessSubmited() {
     const checkControls = useAnimation();
@@ -104,18 +106,7 @@ export default function ContactSuccessSubmited() {
                         </svg>
                     </motion.div>
                     <motion.div variants={childVariants}>
-                        <Link
-                            href="/"
-                            className="inline-block px-6 py-3 bg-primary-600 text-white font-semibold rounded-lg shadow-md hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600"
-                        >
-                            <motion.span
-                                variants={buttonVariants}
-                                whileHover="hover"
-                                whileTap="tap"
-                            >
-                                Retour à l'accueil
-                            </motion.span>
-                        </Link>
+                       <BtnSecondary className="w-full" label="Retourner sur la page d'accueil" href={ROUTE_MAP.public.home.link} />
                     </motion.div>
                 </motion.div>
             </motion.div>

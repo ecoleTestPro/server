@@ -18,11 +18,25 @@ export const DEFULAT_MAIN_MENU: IMainMenuItem[] = [
         label: 'Formations',
         href: ROUTE_MAP.public.courses.list.link,
         title: 'Formations',
-        featureImage: '/assets/images/pexels-divinetechygirl-1181634.jpg',
+        // featureImage: '/assets/images/pexels-divinetechygirl-1181634.jpg',
         description:
             '',
         gridClass: 'grid-cols-1 lg:grid-cols-3',
         maxWidth: 'w-[900px]',
+        children: {
+            id: 'formations-children',
+            title: 'Formations',
+            description: 'Liste des formations',
+            items: [
+                {
+                    id: 'programmes-de-reconversion',
+                    label: 'Programmes de reconversion',
+                    href: ROUTE_MAP.public.reconversionMetier.link,
+                    description: 'Découvrez nos programmes de reconversion professionnelle.',
+                    image: 'https://placehold.jp/150x150.png',
+                },
+            ],
+        },
     },
     // {
     //     id: 'certifications',

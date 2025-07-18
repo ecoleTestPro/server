@@ -36,6 +36,7 @@ interface IROUTE_MAP {
         careers: IRouteMap;
         faqs: IRouteMap;
         contact: IRouteMap;
+        reconversionMetier: IRouteMap;
         privacyPolicy: IRouteMap;
         termsOfService: IRouteMap;
         search: IRouteMap;
@@ -96,6 +97,7 @@ export const ROUTE_MAP: IROUTE_MAP = {
         careers: createIRouteMap(route('careers'), 'Carrières'),
         faqs: createIRouteMap(route('faqs'), 'FAQs'),
         contact: createIRouteMap(route('contact'), 'Nous contacter'),
+        reconversionMetier: createIRouteMap(route('reconversion.metier'), 'Reconversion Métier'),
         privacyPolicy: createIRouteMap(route('privacyPolicy'), 'Politique de confidentialité'),
         termsOfService: createIRouteMap(route('termsOfService'), 'Conditions d’utilisation'),
         search: createIRouteMap(route('search.page'), 'Résultats de recherche'),

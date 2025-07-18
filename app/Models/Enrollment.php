@@ -25,6 +25,12 @@ class Enrollment extends Model
 
     protected $guarded = ['id'];
 
+    protected $casts = [
+        'progress' => 'float',
+        'created_at' => 'datetime:D M Y',
+        'updated_at' => 'datetime:Y-m-d H:i:s',
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

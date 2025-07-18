@@ -16,6 +16,8 @@ class PartnerUpdateRequest extends FormRequest
         return [
             'name' => 'required|string',
             'link' => 'nullable|url',
+            'tag' => 'nullable|string',
+            'is_reference' => 'nullable|boolean',
             'picture' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];
     }

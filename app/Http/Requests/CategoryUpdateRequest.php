@@ -25,6 +25,7 @@ class CategoryUpdateRequest extends FormRequest
             'title' => 'string|max:50',
             // 'color' => 'string|min:7|max:7',
             'media' => "image|mimes:jpeg,png,jpg|max:2048",
+            'parent_id' => 'nullable|exists:categories,id',
             'is_featured' => '',
         ];
     }

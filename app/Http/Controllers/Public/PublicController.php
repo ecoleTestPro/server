@@ -9,6 +9,7 @@ use App\Repositories\BlogCategoryRepository;
 use App\Repositories\BlogRepository;
 use App\Repositories\CategoryRepository;
 use App\Repositories\CourseRepository;
+use App\Repositories\PartnerRepository;
 use App\Repositories\SettingRepository;
 use App\Repositories\SocialMediaRepository;
 use Exception;
@@ -52,8 +53,16 @@ class PublicController extends PublicAbstractController
 
     public function auditMaturity()
     {
+        $data = $this->default_data;
+        $data['references'] = PartnerRepository::query()
+            ->where('is_active', true)
+            ->where('is_reference', true)
+            ->where('tag', 'audit-conseil')
+            ->with('media')
+            ->get();
+
         return Inertia::render('public/consulting/consulting-audit', [
-            'data'  => $this->default_data,
+            'data'  => $data,
         ]);
     }
 
@@ -90,8 +99,8 @@ class PublicController extends PublicAbstractController
     public function blogs()
     {
         $data = $this->default_data;
-        $data['blogs']['list'] = BlogRepository::getAll();
-        $data['blogs']['categories'] = BlogCategoryRepository::getAll();
+        $data['blogs']['list'] = BlogRepository::getPublished(100);
+        $data['blogs']['categories'] = BlogCategoryRepository::query()->get();
         return Inertia::render('public/blogs/blogs', [
             'data'  => $data,
         ]);
@@ -99,8 +108,16 @@ class PublicController extends PublicAbstractController
 
     public function blogDetail(string $slug)
     {
-        // Blogs
-        return view('blogs');
+        $data = $this->default_data;
+        $blog = BlogRepository::findBySlug($slug);
+
+        $data['blogs']['single'] = $blog;
+        $data['blogs']['list'] = BlogRepository::getPublished(5);
+        $data['blogs']['categories'] = BlogCategoryRepository::query()->get();
+
+        return Inertia::render('public/blogs/blogDetail', [
+            'data' => $data,
+        ]);
     }
 
     public function careers()
@@ -123,6 +140,14 @@ class PublicController extends PublicAbstractController
     {
         $data = $this->default_data;
         return Inertia::render('public/about-us', [
+            'data' => $data,
+        ]);
+    }
+
+    public function reconversionMetier()
+    {
+        $data = $this->default_data;
+        return Inertia::render('public/reconversion-metier', [
             'data' => $data,
         ]);
     }

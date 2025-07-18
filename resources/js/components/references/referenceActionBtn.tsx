@@ -1,13 +1,13 @@
-import { IReference } from '@/types/reference';
+import { IPartner } from '@/types/partner';
 import { SquarePen, Trash2 } from 'lucide-react';
 import { Button } from '../ui/button/button';
 
 interface IReferenceActionBtnProps {
     row: {
-        original: IReference;
+        original: IPartner;
     };
-    onEdit?: (row: IReference) => void;
-    onDelete?: (row: IReference) => void;
+    onEdit?: (row: IPartner) => void;
+    onDelete?: (row: IPartner) => void;
 }
 
 export default function ReferenceActionBtn({ row, onEdit, onDelete }: IReferenceActionBtnProps) {
