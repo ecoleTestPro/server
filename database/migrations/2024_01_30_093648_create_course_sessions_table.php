@@ -19,13 +19,13 @@ return new class extends Migration
             $table->string('city')->nullable();
             $table->string('longitude')->nullable();
             $table->string('latitude')->nullable();
-            $table->string('timezone')->default('UTC');
+            $table->string('timezone')->default('UTC')->nullable();
             $table->string('language')->default('fr')->nullable();
             $table->dateTime('start_date');
             $table->dateTime('end_date');
-            $table->float('price')->default(0);
-            $table->float('price_discount')->default(0);
-            $table->float('tva')->default(0);
+            $table->float('price')->default(0)->nullable();
+            $table->float('price_discount')->default(0)->nullable();
+            $table->float('tva')->default(18)->nullable();
             // $table->enum('mode', ['online', 'in-person', 'hybrid'])->default('online');
             $table->softDeletes();
             $table->timestamps();
