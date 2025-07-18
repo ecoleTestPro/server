@@ -6,6 +6,7 @@ use App\Http\Controllers\PublicAbstractController;
 use App\Repositories\CategoryRepository;
 use App\Repositories\CourseRepository;
 use App\Repositories\CourseSessionRepository;
+use App\Repositories\PartnerRepository;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
@@ -143,6 +144,14 @@ class PublicFormationController extends PublicAbstractController
 
             $data['category'] = $category;
             $data['course'] = $course;
+            $data['references'] = PartnerRepository::query()
+                ->where('is_active', true)
+                ->where('is_reference', true)
+                ->when($course->reference_tag, function ($query) use ($course) {
+                    $query->where('tag', $course->reference_tag);
+                })
+                ->with('media')
+                ->get();
 
             return Inertia::render('public/courses/course-detail.page', [
                 'data' => $data,

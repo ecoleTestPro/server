@@ -37,6 +37,7 @@ class CourseUpdateRequest extends FormRequest
             'regular_price'         => 'required|numeric|min:' . ((float) config('app.minimum_amount')),
             'instructor_id'         => 'exists:instructors,id',
             'is_active'             => 'nullable',
+            'reference_tag'         => 'nullable|string',
             'price' => [
                 'nullable',
                 'numeric',

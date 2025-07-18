@@ -132,6 +132,7 @@ function CourseForm({ course }: ICourseFormProps) {
         setData('image', course.image || '');
         setData('title', course.title || '');
         setData('partner_ids', course.partners ? course.partners.map((p) => p.id!) : []);
+        setData('reference_tag', (course as any).reference_tag || '');
         setSelectedPartners(course.partners ? course.partners.map((p) => p.id!) : []);
 
         // setData('description', course.description || '');
