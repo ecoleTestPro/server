@@ -1,9 +1,9 @@
 'use client';
 
 import { CLASS_NAME } from '@/data/styles/style.constant';
-import React from 'react';
-import { usePage } from '@inertiajs/react';
 import { SharedData } from '@/types';
+import { usePage } from '@inertiajs/react';
+import React from 'react';
 import TitleBadgeOne from '../ui/badge-one';
 
 import { ITestimonial } from '@/types/testimonial';
@@ -57,7 +57,7 @@ const Testimonials: React.FC = () => {
                         {testimonials.map((testimonial, index) => (
                             <div
                                 key={index}
-                                className="rounded-[10px] border border-gray-100/50 bg-white/90 p-[20px] shadow-lg transition-all duration-300 hover:shadow-xl md:p-[30px] xl:p-[40px] dark:border-gray-800/50 dark:bg-[#0c1427]/90"
+                                className="rounded-[10px] border border-gray-100/50 bg-white/90 shadow-lg transition-all duration-300 hover:shadow-xl p-5 dark:border-gray-800/50 dark:bg-[#0c1427]/90"
                             >
                                 <div className="mb-[12px] flex items-center gap-[4px] text-[16px] leading-none text-[#fe7a36] md:mb-[20px] md:text-[19px]">
                                     {Array.from({ length: 5 }, (_, i) => (
@@ -70,7 +70,7 @@ const Testimonials: React.FC = () => {
                                     ))}
                                 </div>
 
-                                <div className="relative h-[120px] overflow-hidden md:h-[140px]">
+                                <div className="relative h-[120px] overflow-hidden overflow-y-auto md:h-[140px]">
                                     <p
                                         className="text-[14px] leading-[1.6] font-medium text-gray-800 transition-all duration-300 md:text-[16px] dark:text-gray-200"
                                         style={{
@@ -84,30 +84,18 @@ const Testimonials: React.FC = () => {
                                     >
                                         {testimonial.description}
                                     </p>
-                                    <p
-                                        className="animate-scroll text-[14px] leading-[1.6] font-medium text-gray-800 md:text-[16px] dark:text-gray-200"
-                                        style={{
-                                            position: 'absolute',
-                                            top: 0,
-                                            left: '100%',
-                                            width: '100%',
-                                            height: '100%',
-                                            paddingRight: '10px',
-                                            whiteSpace: 'nowrap',
-                                        }}
-                                    >
-                                        {testimonial.description}
-                                    </p>
                                 </div>
 
                                 <div className="mt-[15px] flex items-center gap-[12px] md:mt-[20px] md:gap-[15px]">
-                                    <img
-                                        src={testimonial.media?.src ?? '/media/blank-user.png'}
-                                        alt={testimonial.name}
-                                        className="rounded-full border-2 border-[#fe7a36] object-cover"
-                                        width={50}
-                                        height={50}
-                                    />
+                                    {false && (
+                                        <img
+                                            src={testimonial.media?.src ?? '/media/blank-user.png'}
+                                            alt={testimonial.name}
+                                            className="rounded-full border-2 border-[#fe7a36] object-cover"
+                                            width={50}
+                                            height={50}
+                                        />
+                                    )}
                                     <div>
                                         <h5 className="!mb-[3px] !text-[15px] !font-semibold text-gray-900 md:!text-[16px] dark:text-gray-100">
                                             {testimonial.name}
