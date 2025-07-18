@@ -13,7 +13,7 @@ import SidebarFilter from './SidebarFilter';
 
 interface IOurCurrentCoursesProps {
     coursesData?: ICourseCategory[];
-    coursesDataSlice?: number; 
+    coursesDataSlice?: number;
     showSidebar?: boolean;
 }
 
@@ -21,8 +21,8 @@ const OurCurrentCourses = ({ coursesData, showSidebar = false, coursesDataSlice 
     const { t } = useTranslation();
     const { auth, data } = usePage<SharedData>().props;
 
-    const [courses, setCourses] = useState<ICourseCategory[] | undefined>(coursesData ?? undefined);
-    const [filteredCourses, setFilteredCourses] = useState<ICourseCategory[]>(coursesData ?? []);
+    const [courses, setCourses] = useState<ICourseCategory[] | undefined>(undefined);
+    const [filteredCourses, setFilteredCourses] = useState<ICourseCategory[] | undefined>(undefined);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
@@ -46,19 +46,21 @@ const OurCurrentCourses = ({ coursesData, showSidebar = false, coursesDataSlice 
 
     // Gérer le chargement des cours
     useEffect(() => {
-        setLoading(true);
-        setError(null);
-        if (!courses && !loading && coursesData && coursesData.length > 0) {
-            setCourses([]);
+        console.log("[OurCurrentCourses] courses: #0", {courses, loading});
+        if (coursesData && coursesData.length > 0 && !courses && !loading) {
+            setLoading(true);
             setError(null);
 
             const newCourses = createCoursesFromCategory(coursesData, coursesDataSlice);
-            setCourses(newCourses);
+            // setCourses(newCourses);
             setFilteredCourses(newCourses);
 
             setLoading(false);
-        } 
-    }, [coursesData, data, courses, loading]);
+        }
+        console.log("[OurCurrentCourses] courses:", {courses, loading});
+
+    }, [coursesData, data, courses, coursesDataSlice, loading]);
+
 
     // Basculer l'affichage de la barre latérale
     const toggleSidebar = () => {
@@ -104,10 +106,11 @@ const OurCurrentCourses = ({ coursesData, showSidebar = false, coursesDataSlice 
 
                 {/* Liste des cours */}
                 <div className="flex-1">
-                    {filteredCourses.map((category) => (
-                        <ListCourseByCategory key={category.id} title={category.title} slug={category.slug} coursesList={[category]} />
-                    ))}
-                    {filteredCourses.length === 0 && (
+                    {filteredCourses &&
+                        filteredCourses.map((category) => (
+                            <ListCourseByCategory key={category.id} title={category.title} slug={category.slug} coursesList={[category]} />
+                        ))}
+                    {filteredCourses && filteredCourses.length === 0 && (
                         <div className="text-center text-2xl text-gray-500 dark:text-gray-400">
                             {t('COURSE.TABLE.NO_COURSES', 'Aucun cours ne correspond aux filtres.')}
                         </div>
