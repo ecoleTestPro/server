@@ -61,7 +61,7 @@ export default function CourseSessionCreateDrawer({ open, setOpen, courseId }: C
     const handleSubmit = () => {
         setLoading(true);
         axios
-            .post(route('dashboard.course.session.store'), { course_id: courseId, sessions })
+            .post(route('dashboard.course.session.store', { course: courseId }), { course_id: courseId, sessions })
             .then(() => {
                 setOpen(false);
                 setSessions([{ ...emptySession }]);
