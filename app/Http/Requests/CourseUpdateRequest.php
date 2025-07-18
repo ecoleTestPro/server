@@ -32,7 +32,7 @@ class CourseUpdateRequest extends FormRequest
             'gallery.*'            => 'file|mimes:jpeg,png,jpg,mp4,mpeg|max:1048576',
             'description'           => 'sometimes|json|min:1',
             'is_published'          => 'nullable',
-            'partner_ids'           => 'sometimes|array',
+            'partner_ids'           => 'sometimes',
             'partner_ids.*'         => 'exists:partners,id',
             'regular_price'         => 'required|numeric|min:' . ((float) config('app.minimum_amount')),
             'instructor_id'         => 'exists:instructors,id',

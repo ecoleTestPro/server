@@ -35,7 +35,9 @@ function CourseForm({ course }: ICourseFormProps) {
     const { data: sharedData } = usePage<SharedData>().props;
     const { data, setData, post, processing, reset } = useForm<ICourseForm>(COURSE_DEFAULT_VALUES);
 
-    const [errors, setErrors] = useState<ICourseFormErrors>({}); 
+    const [formHasBeenInitialized, setFormHasBeenInitialized] = useState(false);
+
+    const [errors, setErrors] = useState<ICourseFormErrors>({});
 
     const descptionFormPart: { key: keyof ICourseForm; label: string; description?: string }[] = [
         {
@@ -124,7 +126,7 @@ function CourseForm({ course }: ICourseFormProps) {
         setData('lectures', course.lectures || 0);
         setData('periodicity_unit', course.periodicity_unit || PeriodicityUnitEnum.DAY);
         setData('periodicity_value', course.periodicity_value || 1);
-        setData('price', course.price ? Number(course.price).toLocaleString('fr-FR') : '');
+        setData('price', course.price ? course.price : '');
         setData('regular_price', course.regular_price ? Number(course.regular_price).toLocaleString('fr-FR') : '');
         setData('author', course.author || '');
         setData('image', course.image || '');
@@ -145,9 +147,10 @@ function CourseForm({ course }: ICourseFormProps) {
             course.description.exam && setData('exam', course.description.exam);
         }
 
-        console.log("[handleInitializeForm] course:", course);
-        console.log("[handleInitializeForm] data:", data);
-        
+        console.log('[handleInitializeForm] course:', course);
+        console.log('[handleInitializeForm] data:', data); 
+
+        setFormHasBeenInitialized(true);
     };
 
     /**
@@ -181,6 +184,10 @@ function CourseForm({ course }: ICourseFormProps) {
         if (videoFile) formData.append('video', videoFile);
         if (galleryFiles) Array.from(galleryFiles).forEach((file) => formData.append('gallery[]', file));
         if (data?.id) formData.append('_method', 'PUT');
+        console.log(" data.partner_ids", data.partner_ids);
+        // if(!data?.partner_ids || data?.partner_ids?.length <= 0) {
+        //     formData.append('partner_ids', JSON.stringify([])); 
+        // }
 
         try {
             const response = await axios.post(data?.id ? route(routeName, course?.slug) : route(routeName), formData, {
@@ -202,14 +209,15 @@ function CourseForm({ course }: ICourseFormProps) {
         if (course) {
             handleInitializeForm(course);
         } else {
+            setFormHasBeenInitialized(false);
             reset();
         }
         setLoading(false);
     }, [course]);
 
     useEffect(() => {
-        console.log("{{ sharedData }}", sharedData);
-        
+        console.log('{{ sharedData }}', sharedData);
+
         if (sharedData && sharedData.categories_with_courses) {
             setCategories(sharedData.categories_with_courses);
         } else {
@@ -231,7 +239,7 @@ function CourseForm({ course }: ICourseFormProps) {
         );
     }
 
-    if (loading) {
+    if (loading && !formHasBeenInitialized) {
         return (
             <div className="flex flex-col h-full items-center justify-center">
                 <div className="text-center text-gray-500">{t('courses.loading', 'Chargement des données...')}</div>
