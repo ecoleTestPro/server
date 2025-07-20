@@ -399,33 +399,53 @@ function AboutUsCardThree() {
 
     const BlockAgrement = () => {
         return (
-            <MotionSection className={`body-font ${CLASS_NAME.bgWhite}`}>
-                <div className={CLASS_NAME.sectionContentPadding}>
-                    <div className="container mx-auto px-[12px] 2xl:max-w-[1320px] space-y-8">
-                        <div>
-                            <h2 className="mb-[15px] text-2xl font-bold md:text-3xl">
-                                TestPro : Partenaire agréé GASQ Platinium pour les formations certifiantes
-                            </h2>
-                            <p className="leading-[1.5]">
-                                En tant qu’organisme de formation certifié et accrédité GASQ Platinium, TestPro Formations dispense des programmes de formation certifiante ISTQB, conformes aux normes internationales en matière d’assurance qualité logicielle. Ces formations fournissent une compréhension approfondie des principes théoriques et des méthodologies avancées de tests et de validation logicielle, intégrant des concepts fondamentaux et des techniques éprouvées pour l’évaluation de la qualité des systèmes logiciels.
-                                L’accréditation GASQ Platinium garantit à TestPro une prestation de haute qualité, comprenant la présence de formateurs agréés, l’utilisation de supports pédagogiques officiels conformes aux référentiels internationaux, ainsi que l’organisation immédiate des examens de certification, en présentiel dans notre centre de test à Cocody ou à distance. La certification ISTQB, IQBBA, IREB, détenue actuellement par plus de 2 000 000 de professionnels à travers le monde, bénéficie d’une reconnaissance universelle auprès des employeurs, PME, ainsi que des grandes entreprises du secteur logiciel, attestant de leur compétence en tests logiciels et en assurance qualité.
-                                Cette accréditation renforce notre positionnement en tant que tiers de confiance et confirme notre dévouement à maintenir les standards les plus élevés en matière de qualité de formation dans le domaine du Test Logiciel, Ingénierie des Exigences et de la Qualité Logicielle.
-                            </p>
-                        </div>
-                        <div className="flex flex-wrap items-center gap-4">
-                            <img src="/logo.png" alt="Logo TestPro" className="h-16 w-auto" />
-                            <img src="/assets/images/logos/gasq-logo.svg" alt="Logo GASQ" className="h-16 w-auto" />
-                        </div>
-                        <div>
-                            <h2 className="mb-[15px] text-2xl font-bold md:text-3xl">
-                                Oo2 Côte d'Ivoire a obtenu l'agrément du Fonds de Développement de la Formation Professionnelle (FDFP)
-                            </h2>
-                            <p className="leading-[1.5]">
-                                La société Oo2 Côte d'Ivoire a obtenu l'agrément du Fonds de Développement de la Formation Professionnelle (FDFP) qui la reconnaît comme opérateur de formation. Les entreprises ivoiriennes cotisant à hauteur de 0,4% de leur masse salariale à la Taxe d'Apprentissage et à hauteur de 1,2% de leur masse salariale à la Taxe Additionnelle à la Formation Professionnelle Continue peuvent bénéficier de ces fonds pour financer leur plan de formation. Grâce à la large couverture de l'offre de formation que nous proposons, Oo2 peut répondre à près de 100% des plans de formation des entreprises Ivoiriennes.
-                            </p>
-                        </div>
-                        <div className="flex flex-wrap items-center gap-4">
-                            <img src="/assets/images/logos/fdfp-logo.svg" alt="Logo FDFP" className="h-16 w-auto" />
+            <MotionSection>
+                <div className={`body-font ${CLASS_NAME.bgWhite}`}>
+                    <div className={`${CLASS_NAME.sectionContentPadding}`}>
+                        <div className="container mx-auto px-4 space-y-20">
+                            <h2 className="!mb-[15px] text-2xl font-bold md:text-3xl">Nos Agreements</h2>
+                            {/* Bloc GASQ */}
+                            <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-center">
+                                <div className="col-span-1 md:col-span-1">
+                                    <img src="/assets/images/agrements/gasq.jpeg" alt="Logo GASQ" className="h-16 md:h-20" />
+                                </div>
+                                <div className="space-y-4 col-span-1 md:col-span-5">
+                                    <h2 className="text-2xl md:text-3xl font-bold text-gray-900">TestPro, organisme certifié GASQ Platinium</h2>
+                                    <p className="leading-relaxed text-gray-700 text-justify">
+                                        En tant que centre de formation accrédité GASQ Platinium, <strong>TestPro</strong> propose des parcours de
+                                        formation certifiants tels que <strong>ISTQB</strong>, alignés sur les standards internationaux du test
+                                        logiciel.
+                                        <br />
+                                        Nos formations allient expertise technique et pédagogie de qualité, encadrées par des formateurs certifiés,
+                                        avec des supports officiels à jour. Les examens peuvent être passés sur site dans nos locaux à Cocody ou en
+                                        ligne.
+                                        <br />
+                                        Cette reconnaissance renforce notre crédibilité en tant qu’acteur clé de la formation en assurance qualité
+                                        logicielle.
+                                    </p>
+                                </div>
+                            </div>
+
+                            {/* Divider */}
+                            <div className="w-full border-t border-gray-200 my-4" />
+
+                            {/* Bloc FDFP */}
+                            <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-center">
+                                <div className="col-span-1 md:col-span-1">
+                                    <img src="/assets/images/agrements/logo-fdfp.jpg" alt="Logo FDFP" className="h-20 md:h-24" />
+                                </div>
+                                <div className="space-y-4 col-span-1 md:col-span-5">
+                                    <h2 className="text-2xl md:text-3xl font-bold text-gray-900">TestPro agréé par le FDFP</h2>
+                                    <p className="leading-relaxed text-gray-700 text-justify">
+                                        <strong>TestPro</strong> est agréé par le{' '}
+                                        <strong>Fonds de Développement de la Formation Professionnelle (FDFP)</strong>, ce qui permet aux entreprises
+                                        ivoiriennes de mobiliser leur contribution pour financer les formations de leurs équipes.
+                                        <br />
+                                        Grâce à notre catalogue riche et adapté aux besoins métiers, nous accompagnons efficacement les entreprises
+                                        dans la mise en œuvre de leur plan de formation, avec une prise en charge facilitée par le FDFP.
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -444,9 +464,6 @@ function AboutUsCardThree() {
             {/* #6 - Citation du Directeur général */}
             <BlockDGWord />
 
-            {/* #7 - Agréments */}
-            <BlockAgrement />
-
             {/* #3 - Qu'est-ce qui nous rend spécial ? */}
             <BlockWhatMakesUsSpecial />
 
@@ -455,6 +472,9 @@ function AboutUsCardThree() {
 
             {/* #5 - Ce Que Nous Offrons */}
             <BlockWhatWeOffer />
+
+            {/* #7 - Agréments */}
+            <BlockAgrement />
         </section>
     );
 }
