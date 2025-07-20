@@ -83,7 +83,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, setOpenSessio
     const CourseFooter = () => {
         const formatPrice = (price: number, includesTax: boolean) => {
             const currency = 'XOF';
-            return includesTax ? `${price.toLocaleString()} ${currency} (Tax Incl.)` : `${price.toLocaleString()} ${currency} (Excl. Tax)`;
+            return includesTax ? `${price.toLocaleString()} ${currency} (Tax Incl.)` : `${price.toLocaleString()} ${currency} `;
         };
 
         return (
