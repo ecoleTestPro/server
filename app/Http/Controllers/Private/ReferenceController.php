@@ -38,9 +38,6 @@ class ReferenceController extends Controller
 
     public function store(PartnerStoreRequest $request)
     {
-        if (app()->isLocal()) {
-            return to_route('dashboard.references.index')->with('error', 'Reference not created in demo mode');
-        }
 
         $request->merge(['is_reference' => true]);
 
