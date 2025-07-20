@@ -306,15 +306,15 @@ class CourseRepository extends Repository
                 $isActive = $request->is_active === "on" ?? true;
             }
 
-            $media = $course->media;
-            if ($request->hasFile('media')) {
-                $media = MediaRepository::updateByRequest(
-                    $request->file('media'),
-                    $media,
-                    'course/thumbnail',
-                    MediaTypeEnum::IMAGE
-                );
-            }
+        $media = $course->media;
+        if ($request->hasFile('media')) {
+            $media = MediaRepository::updateOrCreateByRequest(
+                $request->file('media'),
+                'course/thumbnail',
+                $media,
+                MediaTypeEnum::IMAGE
+            );
+        }
 
             $video = $course->video;
             if ($request->hasFile('video')) {
