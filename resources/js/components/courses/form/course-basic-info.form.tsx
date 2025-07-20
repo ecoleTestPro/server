@@ -8,7 +8,7 @@ import SelectCustom, { ISelectItem } from '@/components/ui/select-custom';
 import { ICourse, ICourseCategory } from '@/types/course';
 import { Logger } from '@/utils/console.util';
 import { getMediaUrl } from '@/utils/utils';
-import { lazy, useEffect } from 'react';
+import { lazy, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import 'react-quill/dist/quill.snow.css';
 import { Textarea } from '../../ui/text-area';
@@ -49,9 +49,21 @@ export default function CourseBasicInfoForm({
 }: CourseBasicInfoFormProps) {
     const { t } = useTranslation();
 
-    const thumbnailPreview = courseSelected?.media ? [getMediaUrl(courseSelected.media)] : undefined;
-    const logoPreview = courseSelected?.logo ? [getMediaUrl(courseSelected.logo)] : undefined;
-    const orgLogoPreview = courseSelected?.organization_logo ? [getMediaUrl(courseSelected.organization_logo)] : undefined;
+    const thumbnailPreview = useMemo(
+        () => (courseSelected?.media ? [getMediaUrl(courseSelected.media)] : undefined),
+        [courseSelected?.media]
+    );
+    const logoPreview = useMemo(
+        () => (courseSelected?.logo ? [getMediaUrl(courseSelected.logo)] : undefined),
+        [courseSelected?.logo]
+    );
+    const orgLogoPreview = useMemo(
+        () =>
+            courseSelected?.organization_logo
+                ? [getMediaUrl(courseSelected.organization_logo)]
+                : undefined,
+        [courseSelected?.organization_logo]
+    );
 
     const category_list = (): ISelectItem[] => {
         return categories.map((category) => ({
