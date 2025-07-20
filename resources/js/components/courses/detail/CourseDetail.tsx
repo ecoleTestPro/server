@@ -1,5 +1,6 @@
 import { CLASS_NAME } from '@/data/styles/style.constant';
 import { ICourse } from '@/types/course';
+import { getMediaUrl } from '@/utils/utils';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import CourseDetailAccordion from './CourseDetailAccordion';
@@ -44,14 +45,14 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ course }) => {
                     <div className="mb-6 flex items-center gap-4">
                         {course.logo && (
                             <img
-                                src={course.logo.src}
+                                src={getMediaUrl(course.logo)}
                                 alt={`${course.title} logo`}
                                 className="h-16 w-auto object-contain"
                             />
                         )}
                         {course.organization_logo && (
                             <img
-                                src={course.organization_logo.src}
+                                src={getMediaUrl(course.organization_logo)}
                                 alt="Organization logo"
                                 className="h-16 w-auto object-contain"
                             />

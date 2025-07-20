@@ -1,6 +1,15 @@
 import { SharedData } from "@/types";
-import { ICourse, ICourseCategory, ICoursePeriodicity, ICustomSharedData } from "@/types/course";
+import { ICourse, ICourseCategory, ICoursePeriodicity, ICustomSharedData, IMedia } from "@/types/course";
 import { Logger } from "./console.util";
+
+export const getMediaUrl = (media: IMedia | string | undefined): string => {
+    const src = typeof media === 'string' ? media : media?.url || media?.src;
+    if (!src) return '';
+    if (/^https?:\/\//i.test(src)) {
+        return src;
+    }
+    return `/storage/${src.replace(/^\/+/, '')}`;
+};
 
 const callBackCreateCoursesFromCategory = (category: ICourseCategory): ICourse[] => {
     let courses: ICourse[] = [];
