@@ -4,24 +4,24 @@ import { CONTACT_INFO } from '../layouts/footer/footer';
 
 export const TEAMS = [
     {
-        name: 'Alexis NANA',
-        role: 'Consultant Sénior en Assurance Qualité Logiciel',
-        image: '/assets/images/front-pages/user1.jpg',
+        name: 'Anass EL BEKALI',
+        role: 'EXPERT QUALITÉ LOGICIEL AUDITEUR TMMi ACCRÉDITÉ',
+        image: '/assets/images/teams/01.png', 
     },
     {
-        name: 'Anass EL BEKALI',
-        role: 'Consultant Expert en Qualification S.I.',
-        image: '/assets/images/front-pages/user2.jpg',
+        name: 'Alexis NANA',
+        role: 'CONSULTANT SÉNIOR TESTING EXPERT TOSCA',
+        image: '/assets/images/teams/02.png',
     },
     {
         name: 'Abdessalam MOUTTAKI',
-        role: 'Référent Technique & Automatisation des Tests',
-        image: '/assets/images/front-pages/user3.jpg',
+        role: 'RÉFÉRENT TECHNIQUE & AUTOMATISATION DES TESTS',
+        image: '/assets/images/teams/03.png',
     },
     {
         name: 'EL Mehdi TMIMI',
-        role: 'Consultant S.I. Senior',
-        image: '/assets/images/front-pages/user4.jpg',
+        role: 'CONSULTANT SENIOR ASSURANCE QUALITÉ LOGICIEL',
+        image: '/assets/images/teams/04.png',
     },
 ];
 
