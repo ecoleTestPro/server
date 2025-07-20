@@ -65,6 +65,15 @@ function CourseForm({ course }: ICourseFormProps) {
     const [partners, setPartners] = useState<IPartner[]>([]);
     const [selectedPartners, setSelectedPartners] = useState<number[]>([]);
     const [openPartnerDrawer, setOpenPartnerDrawer] = useState(false);
+    const [partnerFilter, setPartnerFilter] = useState('');
+    const partnerTags = Array.from(
+        new Set(
+            partners
+                .map((p) => p.tag)
+                .filter(Boolean)
+                .flatMap((t) => t!.split(';').filter(Boolean))
+        )
+    );
     const [thumbnail, setThumbnail] = useState<File | null>(null);
     const [logoFile, setLogoFile] = useState<File | null>(null);
     const [orgLogoFile, setOrgLogoFile] = useState<File | null>(null);
@@ -319,6 +328,7 @@ function CourseForm({ course }: ICourseFormProps) {
                                                 setData={setData}
                                                 processing={processing}
                                                 errors={errors}
+                                                partnerTags={partnerTags}
                                             />
                                         </div>
 
@@ -453,7 +463,16 @@ function CourseForm({ course }: ICourseFormProps) {
                 setOpen={setOpenPartnerDrawer}
                 component={
                     <div className="space-y-2">
-                        {partners.map((p) => (
+                        <input
+                            type="text"
+                            className="w-full rounded border p-2"
+                            placeholder="Rechercher..."
+                            value={partnerFilter}
+                            onChange={(e) => setPartnerFilter(e.target.value)}
+                        />
+                        {partners
+                            .filter((p) => p.name.toLowerCase().includes(partnerFilter.toLowerCase()))
+                            .map((p) => (
                             <label key={p.id} className="flex items-center space-x-2">
                                 <input
                                     type="checkbox"

@@ -8,6 +8,7 @@ use App\Events\NotifyEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CourseStoreRequest;
 use App\Http\Requests\CourseUpdateRequest;
+use App\Http\Requests\CoursePartnerSyncRequest;
 use App\Models\Course;
 use App\Models\User;
 use App\Repositories\CategoryRepository;
@@ -191,6 +192,32 @@ class CourseController extends Controller
                 'message' => 'Error updating course: ' . $e->getMessage(),
                 'status'  => 500,
                 'trace'   => $e->getTrace(),
+            ], 500);
+        }
+    }
+
+    public function syncPartners(CoursePartnerSyncRequest $request, string $slug)
+    {
+        try {
+            $course = CourseRepository::findBySlug($slug);
+            if (!$course) {
+                return response()->json([
+                    'message' => 'Course not found',
+                    'status'  => 404,
+                ], 404);
+            }
+
+            $course->partners()->sync($request->validated('partner_ids') ?? []);
+            $course->load('partners');
+
+            return response()->json([
+                'message'  => 'Partners synced',
+                'partners' => $course->partners,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error syncing partners: ' . $e->getMessage(),
+                'status'  => 500,
             ], 500);
         }
     }

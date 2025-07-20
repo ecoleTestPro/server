@@ -24,9 +24,10 @@ interface CourseAdditionnalFormProps {
     setData: (data: string, value: string | number) => void;
     processing: boolean;
     errors: ICourseFormErrors;
+    partnerTags?: string[];
 }
 
-export default function CourseAdditionnalForm({ fieldsetClasses, data, courseSelected, setData, processing, errors }: CourseAdditionnalFormProps) {
+export default function CourseAdditionnalForm({ fieldsetClasses, data, courseSelected, setData, processing, errors, partnerTags = [] }: CourseAdditionnalFormProps) {
     const [displayPrice, setDisplayPrice] = useState<string>(() => (data.price ? Number(data.price).toLocaleString('fr-FR') : ''));
 
     useEffect(() => {
@@ -175,6 +176,7 @@ export default function CourseAdditionnalForm({ fieldsetClasses, data, courseSel
                 <div className="grid gap-2">
                     <Label htmlFor="reference_tag">Tag de référence</Label>
                     <Input
+                        list="partner-tags"
                         id="reference_tag"
                         type="text"
                         value={data.reference_tag ?? ''}
@@ -182,6 +184,11 @@ export default function CourseAdditionnalForm({ fieldsetClasses, data, courseSel
                         disabled={processing}
                         placeholder="Tag de référence (ex: audit-conseil)"
                     />
+                    <datalist id="partner-tags">
+                        {partnerTags.map((tag) => (
+                            <option key={tag} value={tag} />
+                        ))}
+                    </datalist>
                     <InputError message={errors.reference_tag} />
                 </div>
             </div>
