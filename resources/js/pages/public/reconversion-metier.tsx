@@ -1,5 +1,6 @@
 import Hero, { IHeroBreadcrumbItems } from '@/components/hero/hearo';
 import BtnSecondary from '@/components/ui/button/btn-secondary';
+import StatsBlock from '@/components/reconversion/stats-block';
 import DefaultLayout from '@/layouts/public/front.layout';
 import { SharedData } from '@/types';
 import { ROUTE_MAP } from '@/utils/route.util';
@@ -24,6 +25,7 @@ export default function ReconversionMetierPage() {
                     breadcrumbItems={breadcrumbItems}
                     gradient="style-2"
                 />
+                <StatsBlock />
                 <div className="container mx-auto px-4 py-8 space-y-4">
                     <p>
                         TestPro accompagne les centres de formation, écoles et ESN souhaitant délivrer des formations de reconversion au métier «
