@@ -21,7 +21,7 @@ export default function CouseDetailMedia({ course }: CouseDetailMediaProps) {
             {[course.media]
                 ?.filter((media) => media.type === 'image')
                 .map((media, index) => (
-                    <img key={index} src={getMediaUrl(media.src)} alt={course.title} className="w-full h-auto rounded-lg shadow-lg object-cover" />
+                    <img key={index} src={getMediaUrl(media.src)} alt={course.title} className="w-full h-auto rounded-lg  object-cover" />
                 ))}
         </div>
     );
