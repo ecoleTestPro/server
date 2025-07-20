@@ -60,7 +60,7 @@ function CourseForm({ course }: ICourseFormProps) {
 
     const fieldsetClasses = 'bg-white dark:bg-gray-800 mb-2 rounded-lg border p-4';
 
-    const [openIndex, setOpenIndex] = useState<number | null>(0);
+    const [openIndex, setOpenIndex] = useState<number | null>(2);
     const [categories, setCategories] = useState<ICourseCategory[]>([]);
     const [partners, setPartners] = useState<IPartner[]>([]);
     const [selectedPartners, setSelectedPartners] = useState<number[]>([]);
