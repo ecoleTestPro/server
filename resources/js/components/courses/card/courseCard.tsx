@@ -1,16 +1,16 @@
+import { Button } from '@/components/ui/button/button';
+import Drawer from '@/components/ui/drawer';
 import { SharedData } from '@/types';
 import { ICourse } from '@/types/course';
 import { IPartner } from '@/types/partner';
 import { ROUTE_MAP } from '@/utils/route.util';
 import { Link, usePage } from '@inertiajs/react';
-import { Calendar1, CirclePlus, Edit2Icon, Trash2Icon } from 'lucide-react';
+import axios from 'axios';
+import { Calendar1, CirclePlus, Edit2Icon, ExternalLink, Trash2Icon } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { FaClock, FaMapMarkerAlt } from 'react-icons/fa'; // Import icons
 import './CourseCard.css'; // Link to CSS file
-import Drawer from '@/components/ui/drawer';
-import { Button } from '@/components/ui/button/button';
-import axios from 'axios';
-import toast from 'react-hot-toast';
-import { useEffect, useState } from 'react';
 
 interface CourseCardProps {
     course: ICourse;
@@ -98,18 +98,6 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, setOpenSessio
                 </div>
 
                 <div className="flex items-center justify-between">
-                    <div>
-                        {course && (
-                            <Link
-                                href={ROUTE_MAP.public.courses.detail(course?.category?.slug ?? '#', course.slug).link}
-                                className="rounded-md border border-transparent bg-slate-800 px-4 py-2 text-center text-sm text-white shadow-md transition-all hover:bg-primary hover:text-white  hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                                type="button"
-                            >
-                                Voir plus
-                            </Link>
-                        )}
-                    </div>
-
                     <div className="flex gap-x-2">
                         {auth?.user?.is_admin && (
                             <>
@@ -146,6 +134,18 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, setOpenSessio
                         >
                             <Trash2Icon className="w-4 h-4" />
                         </button>
+                    </div>{' '}
+                    <div>
+                        {course && (
+                            <Link
+                                target="_blank"
+                                href={ROUTE_MAP.public.courses.detail(course?.category?.slug ?? '#', course.slug).link}
+                                className="rounded-md border border-transparent bg-slate-800 px-4 py-2 text-center text-sm text-white shadow-md transition-all hover:bg-primary hover:text-white  hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                                type="button"
+                            >
+                                <ExternalLink className="inline-block h-4 w-4" />
+                            </Link>
+                        )}
                     </div>
                 </div>
             </div>
