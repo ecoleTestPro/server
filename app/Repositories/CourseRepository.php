@@ -380,7 +380,7 @@ class CourseRepository extends Repository
                 'category_id'   => $request->category_id ?? $course->category_id,
                 'title'         => $request->title ?? $course->title,
                 'slug'          => str($request->title)->slug(),
-                'media_id'      => $media ? $media->id : $course->media->id,
+                'media_id'      => $media ? $media->id : $course->media_id,
                 'logo_id'       => $logo ? $logo->id : $course->logo_id,
                 'organization_logo_id' => $organizationLogo ? $organizationLogo->id : $course->organization_logo_id,
                 'video_id'      => $video ? $video->id : null,
