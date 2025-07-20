@@ -37,6 +37,12 @@ export default function CourseAdditionnalForm({ fieldsetClasses, data, courseSel
     }, [data.price]);
     const { t } = useTranslation();
 
+    useEffect(() => {
+        if (courseSelected && !data.periodicity_unit) {
+            setData('periodicity_unit', courseSelected.periodicity_unit);
+        }
+    }, [courseSelected, data.periodicity_unit]);
+
     return (
         <fieldset className={fieldsetClasses}>
             <legend className="px-2 text-base font-semibold">{t('courses.details', 'Détails')}</legend>
