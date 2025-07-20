@@ -1,11 +1,11 @@
 import CourseDetail from '@/components/courses/detail/CourseDetail';
 import Hero, { IHeroBreadcrumbItems } from '@/components/hero/hearo';
+import ReferenceLogos from '@/components/references/ReferenceLogos';
 import Testimonials from '@/components/testimonial/Testimonials';
 import DefaultLayout from '@/layouts/public/front.layout';
 import { SharedData } from '@/types';
 import { ICourse } from '@/types/course';
 import { IPartner } from '@/types/partner';
-import ReferenceLogos from '@/components/references/ReferenceLogos';
 import { Logger } from '@/utils/console.util';
 import { ROUTE_MAP } from '@/utils/route.util';
 import { usePage } from '@inertiajs/react';
@@ -49,7 +49,7 @@ export default function CourseCategoryPage() {
                         <Hero title={course.title} description={''} course={course} breadcrumbItems={breadcrumb} gradient="style-2" />
                         {/* <OurCurrentCourses coursesData={category.children} showSidebar={true} /> */}
                         <CourseDetail course={course} />
-                        <ReferenceLogos references={references} />
+                        {course.reference_tag && <ReferenceLogos references={references} tag={course.reference_tag} />}
                     </>
                 )}
                 <Testimonials />

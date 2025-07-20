@@ -5,6 +5,8 @@ interface CoursePartnersProps {
 }
 
 export default function CoursePartners({ partners }: CoursePartnersProps) {
+    console.log('Course Partners:', partners);
+    
     if (!partners || partners.length === 0) {
         return null;
     }
