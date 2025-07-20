@@ -111,7 +111,7 @@ export interface ICourse {
     nextSession?: string; // Optional next session date
     description: ICourseDescription;
     categories?: ICourseCategory[];
-    media?: IMedia[];
+    media?: IMedia;
     logo?: IMedia;
     organization_logo?: IMedia;
     gallery?: IMedia[];

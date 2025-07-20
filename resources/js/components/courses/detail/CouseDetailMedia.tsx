@@ -13,9 +13,11 @@ export default function CouseDetailMedia({ course }: CouseDetailMediaProps) {
         );
     }
 
+    console.log('Course Media:', course.media);
+
     return (
         <div>
-            {course.media
+            {[course.media]
                 ?.filter((media) => media.type === 'image')
                 .map((media, index) => (
                     <img key={index} src={media.src} alt={course.title} className="w-full h-auto rounded-lg shadow-lg object-cover" />
