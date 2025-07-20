@@ -32,10 +32,16 @@ export default function CourseAdditionnalForm({ fieldsetClasses, data, courseSel
     useEffect(() => {
         setDisplayPrice(data.price ? Number(data.price).toLocaleString('fr-FR') : '');
         if(courseSelected ) {
-            courseSelected.price && data.price == '' && setData('price', courseSelected.price.toString()); 
+            courseSelected.price && data.price == '' && setData('price', courseSelected.price.toString());
         }
     }, [data.price]);
     const { t } = useTranslation();
+
+    useEffect(() => {
+        if (courseSelected && !data.periodicity_unit) {
+            setData('periodicity_unit', courseSelected.periodicity_unit);
+        }
+    }, [courseSelected, data.periodicity_unit]);
 
     return (
         <fieldset className={fieldsetClasses}>
