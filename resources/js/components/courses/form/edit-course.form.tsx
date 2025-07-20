@@ -66,6 +66,14 @@ function CourseForm({ course }: ICourseFormProps) {
     const [selectedPartners, setSelectedPartners] = useState<number[]>([]);
     const [openPartnerDrawer, setOpenPartnerDrawer] = useState(false);
     const [partnerFilter, setPartnerFilter] = useState('');
+    const partnerTags = Array.from(
+        new Set(
+            partners
+                .map((p) => p.tag)
+                .filter(Boolean)
+                .flatMap((t) => t!.split(';').filter(Boolean))
+        )
+    );
     const [thumbnail, setThumbnail] = useState<File | null>(null);
     const [logoFile, setLogoFile] = useState<File | null>(null);
     const [orgLogoFile, setOrgLogoFile] = useState<File | null>(null);
@@ -320,6 +328,7 @@ function CourseForm({ course }: ICourseFormProps) {
                                                 setData={setData}
                                                 processing={processing}
                                                 errors={errors}
+                                                partnerTags={partnerTags}
                                             />
                                         </div>
 
