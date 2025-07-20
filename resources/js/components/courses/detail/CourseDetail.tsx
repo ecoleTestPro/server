@@ -47,14 +47,14 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ course }) => {
                             <img
                                 src={getMediaUrl(course.logo)}
                                 alt={`${course.title} logo`}
-                                className="h-16 w-auto object-contain"
+                                className="h-48 w-auto object-contain"
                             />
                         )}
                         {course.organization_logo && (
                             <img
                                 src={getMediaUrl(course.organization_logo)}
                                 alt="Organization logo"
-                                className="h-16 w-auto object-contain"
+                                className="h-48 w-auto object-contain"
                             />
                         )}
                     </div>
