@@ -27,13 +27,12 @@ export const TEAMS = [
 
 const ContactCard = () => {
     return (
-        <section>
-            <section className="body-font text-gray-600 dark:bg-[#0a0e19] dark:text-white">
-                <div className="relative z-[1] container mx-auto py-[40px] md:py-[50px] lg:py-[60px] xl:py-[80px] 2xl:max-w-[1320px]">
-                    <div className="flex items-center justify-center">
-                        <div className="py-[40px] md:py-[50px] lg:py-[60px] xl:py-[80px]">
-                            <div className="flex flex-col justify-between md:flex-row">
-                                <div className="mb-4 w-full md:mb-0 md:w-6/12">
+        <section className="body-font bg-gray-50 text-gray-600 dark:bg-[#0a0e19] dark:text-white">
+            <div className="relative z-[1] container mx-auto py-[40px] md:py-[50px] lg:py-[60px] xl:py-[80px] 2xl:max-w-[1320px]">
+                <div className="flex items-center justify-center">
+                    <div className="py-[40px] md:py-[50px] lg:py-[60px] xl:py-[80px]">
+                        <div className="flex flex-col justify-between md:flex-row">
+                            <div className="mb-4 w-full md:mb-0 md:w-6/12">
                                     <p className="text-primary text-xl">Contact & demandes de renseignements</p>
                                     <h2 className="mt-2 text-4xl font-bold">Besoin d'informations ?</h2>
                                     <p className="mt-2 text-2xl">Notre équipe se tient à votre disposition pour vous accompagner dans vos projets.</p>
@@ -66,21 +65,24 @@ const ContactCard = () => {
 
                                 <div className="mt-4 w-full md:mt-0 md:ml-6 md:w-6/12">
                                     <div className="item-center flex h-fit flex-col">
-                                        {/* <h3 className="text-xl font-semibold">Notre équipe</h3> */}
-                                        <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+                                        <div className="mt-4 grid grid-cols-2 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                                             {TEAMS.map((teamMember, index) => (
-                                                <div key={index} className="flex flex-col items-center">
+                                                <div
+                                                    key={index}
+                                                    className="flex flex-col items-center rounded-xl bg-white p-4 shadow-md transition-transform hover:-translate-y-1 hover:shadow-lg dark:bg-gray-800"
+                                                >
                                                     <img
                                                         src={teamMember.image}
                                                         alt={teamMember.name}
-                                                        className="h-32 w-32 rounded-full"
-                                                        style={{ objectFit: 'cover' }}
+                                                        className="h-36 w-36 rounded-full object-cover"
                                                     />
-                                                    <p className="mt-2 text-sm font-medium">{teamMember.name}</p>
-                                                    <p className="text-xs">{teamMember.role}</p>
+                                                    <p className="mt-2 text-base font-semibold text-center">
+                                                        {teamMember.name}
+                                                    </p>
+                                                    <p className="text-sm text-center">{teamMember.role}</p>
                                                 </div>
                                             ))}
-                                        </div>{' '}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -88,8 +90,7 @@ const ContactCard = () => {
                     </div>
                 </div>
             </section>
-        </section>
-    );
+        );
 };
 
 export default ContactCard;
