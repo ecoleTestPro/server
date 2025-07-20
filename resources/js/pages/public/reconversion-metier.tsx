@@ -1,14 +1,14 @@
 import Hero, { IHeroBreadcrumbItems } from '@/components/hero/hearo';
 import StatsBlock from '@/components/reconversion/stats-block';
+import ReferenceLogos from '@/components/references/ReferenceLogos';
 import BtnSecondary from '@/components/ui/button/btn-secondary';
 import DefaultLayout from '@/layouts/public/front.layout';
-import { SharedData } from '@/types';
+import { IPartner, SharedData } from '@/types';
 import { ROUTE_MAP } from '@/utils/route.util';
 import { usePage } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 
 export default function ReconversionMetierPage() {
-    const { auth } = usePage<SharedData>().props;
     const { t } = useTranslation();
 
     const breadcrumbItems: IHeroBreadcrumbItems[] = [
@@ -44,14 +44,17 @@ export default function ReconversionMetierPage() {
                             </ul>
                             <BtnSecondary label="Contactez-nous" href={ROUTE_MAP.public.contact.link} />
                         </div>
-                        <div className='col-span-1 lg:col-span-2' >
+                        <div className="col-span-1 lg:col-span-2">
                             <img src="/assets/images/pexels-shvetsa-3727464.jpg" alt="illustration" className="mx-auto w-full h-auto object-fill" />
                         </div>
                     </div>
                 </div>
 
                 <StatsBlock />
+
                 <div className="container mx-auto px-4 py-8 space-y-4"></div>
+
+                <ReferenceLogos tag="reconversion" />
             </div>
         </DefaultLayout>
     );

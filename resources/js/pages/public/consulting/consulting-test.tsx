@@ -1,4 +1,5 @@
 import Hero, { IHeroBreadcrumbItems } from '@/components/hero/hearo';
+import ReferenceLogos from '@/components/references/ReferenceLogos';
 import TitleBadgeOne from '@/components/ui/badge-one';
 import CardOne, { StaticFeatureItem } from '@/components/ui/card/card-one';
 import PrevNextPage, { IPrevNextPage } from '@/components/ui/prev-next-page';
@@ -159,6 +160,8 @@ export default function ConsultingTest() {
                 <BlockOne />
 
                 <BlockTwo />
+
+                <ReferenceLogos tag="audit-conseil" />
 
                 <PrevNextPage pages={prevNextPage} />
             </div>

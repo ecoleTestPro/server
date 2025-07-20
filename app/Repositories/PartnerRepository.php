@@ -14,6 +14,16 @@ class PartnerRepository extends Repository
         return Partner::class;
     }
 
+    public static function getActiveReferences(string $tag)
+    {
+        return self::query()
+            ->where('is_active', true)
+            ->where('is_reference', true)
+            ->where('tag', $tag)
+            ->with('media')
+            ->get();
+    }
+
     public static function storeByRequest($request)
     {
         $picture = $request->hasFile('picture') ? MediaRepository::storeByRequest(
