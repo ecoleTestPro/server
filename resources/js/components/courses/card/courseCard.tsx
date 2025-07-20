@@ -25,6 +25,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, setOpenSessio
     const [openPartnerDrawer, setOpenPartnerDrawer] = useState(false);
     const [partners, setPartners] = useState<IPartner[]>([]);
     const [selectedPartners, setSelectedPartners] = useState<number[]>(course.partners ? course.partners.map((p) => p.id!) : []);
+    const [partnerFilter, setPartnerFilter] = useState('');
 
     useEffect(() => {
         if ((data as any)?.partners) {
@@ -34,8 +35,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, setOpenSessio
 
     const handleUpdatePartners = async () => {
         try {
-            await axios.post(route('dashboard.course.update', course.slug), {
-                _method: 'PUT',
+            await axios.post(route('dashboard.course.partners.sync', course.slug), {
                 partner_ids: selectedPartners,
             });
             toast.success('Partenaires associés');
@@ -194,7 +194,16 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, setOpenSessio
                 setOpen={setOpenPartnerDrawer}
                 component={
                     <div className="space-y-2">
-                        {partners.map((p) => (
+                        <input
+                            type="text"
+                            className="w-full rounded border p-2"
+                            placeholder="Rechercher..."
+                            value={partnerFilter}
+                            onChange={(e) => setPartnerFilter(e.target.value)}
+                        />
+                        {partners
+                            .filter((p) => p.name.toLowerCase().includes(partnerFilter.toLowerCase()))
+                            .map((p) => (
                             <label key={p.id} className="flex items-center space-x-2">
                                 <input
                                     type="checkbox"
@@ -211,7 +220,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, setOpenSessio
                                 />
                                 <span>{p.name}</span>
                             </label>
-                        ))}
+                            ))}
                         <Button className="mt-2" onClick={handleUpdatePartners}>
                             Enregistrer
                         </Button>
