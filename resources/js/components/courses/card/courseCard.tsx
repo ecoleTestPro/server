@@ -1,10 +1,16 @@
 import { SharedData } from '@/types';
 import { ICourse } from '@/types/course';
+import { IPartner } from '@/types/partner';
 import { ROUTE_MAP } from '@/utils/route.util';
 import { Link, usePage } from '@inertiajs/react';
 import { Calendar1, CirclePlus, Edit2Icon, Trash2Icon } from 'lucide-react';
 import { FaClock, FaMapMarkerAlt } from 'react-icons/fa'; // Import icons
 import './CourseCard.css'; // Link to CSS file
+import Drawer from '@/components/ui/drawer';
+import { Button } from '@/components/ui/button/button';
+import axios from 'axios';
+import toast from 'react-hot-toast';
+import { useEffect, useState } from 'react';
 
 interface CourseCardProps {
     course: ICourse;
@@ -14,7 +20,30 @@ interface CourseCardProps {
 }
 
 const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, setOpenSessionDrawer, setSelectedCourseSessionSession }) => {
-    const { auth } = usePage<SharedData>().props;
+    const { auth, data } = usePage<SharedData>().props;
+
+    const [openPartnerDrawer, setOpenPartnerDrawer] = useState(false);
+    const [partners, setPartners] = useState<IPartner[]>([]);
+    const [selectedPartners, setSelectedPartners] = useState<number[]>(course.partners ? course.partners.map((p) => p.id!) : []);
+
+    useEffect(() => {
+        if ((data as any)?.partners) {
+            setPartners((data as any).partners as IPartner[]);
+        }
+    }, [data]);
+
+    const handleUpdatePartners = async () => {
+        try {
+            await axios.post(route('dashboard.course.update', course.slug), {
+                _method: 'PUT',
+                partner_ids: selectedPartners,
+            });
+            toast.success('Partenaires associés');
+            setOpenPartnerDrawer(false);
+        } catch (error) {
+            toast.error('Erreur lors de la mise à jour');
+        }
+    };
 
     const CourseHeader = () => {
         return (
@@ -83,16 +112,25 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, setOpenSessio
 
                     <div className="flex gap-x-2">
                         {auth?.user?.is_admin && (
-                            <button
-                                onClick={() => {
-                                    setSelectedCourseSessionSession && setSelectedCourseSessionSession(course);
-                                    setOpenSessionDrawer && setOpenSessionDrawer(true);
-                                }}
-                                className="cursor-pointer text-blue-500 p-4 rounded-full hover:bg-blue-400 hover:text-white"
-                                type="button"
-                            >
-                                <Calendar1 className="w-4 h-4" />
-                            </button>
+                            <>
+                                <button
+                                    onClick={() => {
+                                        setSelectedCourseSessionSession && setSelectedCourseSessionSession(course);
+                                        setOpenSessionDrawer && setOpenSessionDrawer(true);
+                                    }}
+                                    className="cursor-pointer text-blue-500 p-4 rounded-full hover:bg-blue-400 hover:text-white"
+                                    type="button"
+                                >
+                                    <Calendar1 className="w-4 h-4" />
+                                </button>
+                                <button
+                                    onClick={() => setOpenPartnerDrawer(true)}
+                                    className="cursor-pointer text-indigo-500 p-4 rounded-full hover:bg-indigo-400 hover:text-white"
+                                    type="button"
+                                >
+                                    <CirclePlus className="w-4 h-4" />
+                                </button>
+                            </>
                         )}
                         <Link
                             href={ROUTE_MAP.dashboard.course.edit(course.slug).link}
@@ -132,23 +170,55 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, setOpenSessio
     };
 
     return (
-        <div className="course-card w-full rounded-lg bg-white shadow-md dark:bg-gray-800">
-            <div className="course-card-header px-4 pt-2">
-                <CourseHeader />
-                <CourseTitle />
-            </div>
-            <div className="course-card-body p-4">
-                <div className="course-card-content">
-                    <CourseDescription />
-                    <CourseAttachment />
-                    <CourseStatus />
+        <>
+            <div className="course-card w-full rounded-lg bg-white shadow-md dark:bg-gray-800">
+                <div className="course-card-header px-4 pt-2">
+                    <CourseHeader />
+                    <CourseTitle />
+                </div>
+                <div className="course-card-body p-4">
+                    <div className="course-card-content">
+                        <CourseDescription />
+                        <CourseAttachment />
+                        <CourseStatus />
+                    </div>
+                </div>
+                <div className="course-card-footer bg-green rounded-lg p-4">
+                    <CourseDuration />
+                    <CourseFooter />
                 </div>
             </div>
-            <div className="course-card-footer bg-green rounded-lg p-4">
-                <CourseDuration />
-                <CourseFooter />
-            </div>
-        </div>
+            <Drawer
+                title="Associer des partenaires"
+                open={openPartnerDrawer}
+                setOpen={setOpenPartnerDrawer}
+                component={
+                    <div className="space-y-2">
+                        {partners.map((p) => (
+                            <label key={p.id} className="flex items-center space-x-2">
+                                <input
+                                    type="checkbox"
+                                    checked={selectedPartners.includes(p.id!)}
+                                    onChange={(e) => {
+                                        let updated = [...selectedPartners];
+                                        if (e.target.checked) {
+                                            updated.push(p.id!);
+                                        } else {
+                                            updated = updated.filter((id) => id !== p.id);
+                                        }
+                                        setSelectedPartners(updated);
+                                    }}
+                                />
+                                <span>{p.name}</span>
+                            </label>
+                        ))}
+                        <Button className="mt-2" onClick={handleUpdatePartners}>
+                            Enregistrer
+                        </Button>
+                    </div>
+                }
+            />
+        </>
     );
 };
 
