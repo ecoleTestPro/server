@@ -386,7 +386,10 @@ class CourseRepository extends Repository
                 'organization_logo_id' => $organizationLogo ? $organizationLogo->id : $course->organization_logo_id,
                 'video_id'      => $video ? $video->id : null,
                 'reference_tag' => $request->reference_tag ?? $course->reference_tag,
-                'description'   => json_encode($request->description) ?? $course->description,
+                // description is already sent as a JSON string from the form
+                // so we store it directly without re-encoding it to avoid
+                // nested JSON strings
+                'description'   => $request->description ?? $course->description,
                 'regular_price' => $request->regular_price ?? null,
                 'price'         => $request->price,
                 'instructor_id' => $request->instructor_id ?? $course->instructor_id,
