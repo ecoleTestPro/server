@@ -24,7 +24,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: root
-      MYSQL_USER: jerry_clexcellence
+      MYSQL_USER: root
       MYSQL_PASSWORD: root
     volumes:
       - dbdata:/var/lib/mysql
@@ -39,7 +39,7 @@ services:
       - db
     environment:
       PMA_HOST: db
-      PMA_USER: jerry_clexcellence
+      PMA_USER: root
       PMA_PASSWORD: root
     ports:
       - "8080:80"
