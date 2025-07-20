@@ -33,9 +33,10 @@ class CourseStoreRequest extends FormRequest
             'gallery.*'            => 'file|mimes:jpeg,png,jpg,mp4,mpeg|max:1048576',
             'description'           => 'json|min:1',
             'is_published'          => 'nullable',
-            'partner_ids'           => 'sometimes|array',
+            'partner_ids'           => 'sometimes',
             'partner_ids.*'         => 'exists:partners,id',
             'regular_price'         => 'numeric|min:' . ((float) config('app.minimum_amount')),
+            'reference_tag'         => 'nullable|string',
             'price' => [
                 'nullable',
                 'numeric',

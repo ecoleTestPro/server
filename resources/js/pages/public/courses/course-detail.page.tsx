@@ -4,6 +4,8 @@ import Testimonials from '@/components/testimonial/Testimonials';
 import DefaultLayout from '@/layouts/public/front.layout';
 import { SharedData } from '@/types';
 import { ICourse } from '@/types/course';
+import { IPartner } from '@/types/partner';
+import ReferenceLogos from '@/components/references/ReferenceLogos';
 import { Logger } from '@/utils/console.util';
 import { ROUTE_MAP } from '@/utils/route.util';
 import { usePage } from '@inertiajs/react';
@@ -11,6 +13,7 @@ import { useEffect, useState } from 'react';
 
 export default function CourseCategoryPage() {
     const { auth, data } = usePage<SharedData>().props;
+    const references: IPartner[] = (data as any)?.references ?? [];
     const [loading, setLoading] = useState<boolean>(false);
     // const [category, setCategory] = useState<ICourseCategory | null>(null);
     const [course, setCourse] = useState<ICourse | null>(null);
@@ -46,6 +49,7 @@ export default function CourseCategoryPage() {
                         <Hero title={course.title} description={''} course={course} breadcrumbItems={breadcrumb} gradient="style-2" />
                         {/* <OurCurrentCourses coursesData={category.children} showSidebar={true} /> */}
                         <CourseDetail course={course} />
+                        <ReferenceLogos references={references} />
                     </>
                 )}
                 <Testimonials />
