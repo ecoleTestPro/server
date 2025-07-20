@@ -1,4 +1,5 @@
 import { CLASS_NAME } from '@/data/styles/style.constant';
+import 'react-quill/dist/quill.snow.css';
 import { ICourse } from '@/types/course';
 import { getMediaUrl } from '@/utils/utils';
 import { useRef, useState } from 'react';
