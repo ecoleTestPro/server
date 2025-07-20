@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import SelectCustom, { ISelectItem } from '@/components/ui/select-custom';
 import { ICourse, ICourseCategory } from '@/types/course';
 import { Logger } from '@/utils/console.util';
+import { getMediaUrl } from '@/utils/utils';
 import { lazy, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import 'react-quill/dist/quill.snow.css';
@@ -47,6 +48,10 @@ export default function CourseBasicInfoForm({
     onGalleryChange,
 }: CourseBasicInfoFormProps) {
     const { t } = useTranslation();
+
+    const thumbnailPreview = courseSelected?.media ? [getMediaUrl(courseSelected.media)] : undefined;
+    const logoPreview = courseSelected?.logo ? [getMediaUrl(courseSelected.logo)] : undefined;
+    const orgLogoPreview = courseSelected?.organization_logo ? [getMediaUrl(courseSelected.organization_logo)] : undefined;
 
     const category_list = (): ISelectItem[] => {
         return categories.map((category) => ({
@@ -148,6 +153,7 @@ export default function CourseBasicInfoForm({
                             accept="image/*"
                             multiple={false}
                             disabled={processing}
+                            previewUrls={thumbnailPreview}
                         />
                         <InputError message={errors.media} />
                     </div>
@@ -159,6 +165,7 @@ export default function CourseBasicInfoForm({
                             accept="image/*"
                             multiple={false}
                             disabled={processing}
+                            previewUrls={logoPreview}
                         />
                         <InputError message={errors.logo} />
                     </div>
@@ -170,6 +177,7 @@ export default function CourseBasicInfoForm({
                             accept="image/*"
                             multiple={false}
                             disabled={processing}
+                            previewUrls={orgLogoPreview}
                         />
                         <InputError message={errors.organization_logo} />
                     </div>
