@@ -397,6 +397,42 @@ function AboutUsCardThree() {
         );
     };
 
+    const BlockAgrement = () => {
+        return (
+            <MotionSection className={`body-font ${CLASS_NAME.bgWhite}`}>
+                <div className={CLASS_NAME.sectionContentPadding}>
+                    <div className="container mx-auto px-[12px] 2xl:max-w-[1320px] space-y-8">
+                        <div>
+                            <h2 className="mb-[15px] text-2xl font-bold md:text-3xl">
+                                TestPro : Partenaire agréé GASQ Platinium pour les formations certifiantes
+                            </h2>
+                            <p className="leading-[1.5]">
+                                En tant qu’organisme de formation certifié et accrédité GASQ Platinium, TestPro Formations dispense des programmes de formation certifiante ISTQB, conformes aux normes internationales en matière d’assurance qualité logicielle. Ces formations fournissent une compréhension approfondie des principes théoriques et des méthodologies avancées de tests et de validation logicielle, intégrant des concepts fondamentaux et des techniques éprouvées pour l’évaluation de la qualité des systèmes logiciels.
+                                L’accréditation GASQ Platinium garantit à TestPro une prestation de haute qualité, comprenant la présence de formateurs agréés, l’utilisation de supports pédagogiques officiels conformes aux référentiels internationaux, ainsi que l’organisation immédiate des examens de certification, en présentiel dans notre centre de test à Cocody ou à distance. La certification ISTQB, IQBBA, IREB, détenue actuellement par plus de 2 000 000 de professionnels à travers le monde, bénéficie d’une reconnaissance universelle auprès des employeurs, PME, ainsi que des grandes entreprises du secteur logiciel, attestant de leur compétence en tests logiciels et en assurance qualité.
+                                Cette accréditation renforce notre positionnement en tant que tiers de confiance et confirme notre dévouement à maintenir les standards les plus élevés en matière de qualité de formation dans le domaine du Test Logiciel, Ingénierie des Exigences et de la Qualité Logicielle.
+                            </p>
+                        </div>
+                        <div className="flex flex-wrap items-center gap-4">
+                            <img src="/logo.png" alt="Logo TestPro" className="h-16 w-auto" />
+                            <img src="/assets/images/logos/gasq-logo.svg" alt="Logo GASQ" className="h-16 w-auto" />
+                        </div>
+                        <div>
+                            <h2 className="mb-[15px] text-2xl font-bold md:text-3xl">
+                                Oo2 Côte d'Ivoire a obtenu l'agrément du Fonds de Développement de la Formation Professionnelle (FDFP)
+                            </h2>
+                            <p className="leading-[1.5]">
+                                La société Oo2 Côte d'Ivoire a obtenu l'agrément du Fonds de Développement de la Formation Professionnelle (FDFP) qui la reconnaît comme opérateur de formation. Les entreprises ivoiriennes cotisant à hauteur de 0,4% de leur masse salariale à la Taxe d'Apprentissage et à hauteur de 1,2% de leur masse salariale à la Taxe Additionnelle à la Formation Professionnelle Continue peuvent bénéficier de ces fonds pour financer leur plan de formation. Grâce à la large couverture de l'offre de formation que nous proposons, Oo2 peut répondre à près de 100% des plans de formation des entreprises Ivoiriennes.
+                            </p>
+                        </div>
+                        <div className="flex flex-wrap items-center gap-4">
+                            <img src="/assets/images/logos/fdfp-logo.svg" alt="Logo FDFP" className="h-16 w-auto" />
+                        </div>
+                    </div>
+                </div>
+            </MotionSection>
+        );
+    };
+
     return (
         <section className="text-gray-600 dark:bg-[#0a0e19] dark:text-white">
             {/* #1 - Bienvenue et TestPro */}
@@ -407,6 +443,9 @@ function AboutUsCardThree() {
 
             {/* #6 - Citation du Directeur général */}
             <BlockDGWord />
+
+            {/* #7 - Agréments */}
+            <BlockAgrement />
 
             {/* #3 - Qu'est-ce qui nous rend spécial ? */}
             <BlockWhatMakesUsSpecial />
