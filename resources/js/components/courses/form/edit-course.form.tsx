@@ -190,6 +190,9 @@ function CourseForm({ course }: ICourseFormProps) {
         //     formData.append('partner_ids', JSON.stringify([])); 
         // }
 
+        console.log('[submit] formData:', formData);
+        
+
         try {
             const response = await axios.post(data?.id ? route(routeName, course?.slug) : route(routeName), formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
