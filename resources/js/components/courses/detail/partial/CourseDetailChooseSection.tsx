@@ -135,21 +135,23 @@ export const CourseSessionCard = ({
                         <FaMapMarker className="inline-block mr-2 text-gray-500 dark:text-gray-400" />
                         <h2>{session.location}</h2>
                     </p>
-                    <p>
-                        <a className="underline" onClick={() => setOpenSessionSchedule(true)}>
-                            Horraires
-                        </a>
-                    </p>
+                    {false && (
+                        <p>
+                            <a className="underline" onClick={() => setOpenSessionSchedule(true)}>
+                                Horraires
+                            </a>
+                        </p>
+                    )}
                 </div>
 
                 <div className="mb-4 md:mb-0 border-b md:border-b-0 md:border-r border-gray-200 dark:border-gray-700 w-full md:w-2/6">
                     <div className="flex items-center">
                         <div className="flex items-center justify-between space-x-4">
-                            <div className="border border-secondary bg-teal-100 dark:bg-teal-300 rounded-full flex items-center justify-center p-2 ">
+                            <div className="border border-secondary bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center p-2 ">
                                 {session.start_date}
                             </div>
                             <ArrowRight className="text-gray-500 dark:text-gray-400" />
-                            <div className="border border-secondary bg-teal-100 dark:bg-teal-300 rounded-full flex items-center justify-center p-2 ">
+                            <div className="border border-secondary bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center p-2 ">
                                 {session.end_date}
                             </div>
                         </div>
