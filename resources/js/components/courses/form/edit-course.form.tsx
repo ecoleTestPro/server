@@ -18,6 +18,7 @@ import { Skeleton } from '../../ui/skeleton';
 import CourseAdditionnalForm from './course-additionnal.form';
 import CourseBasicInfoForm from './course-basic-info.form';
 
+import { ROUTE_MAP } from '@/utils/route.util';
 import axios from 'axios';
 import { COURSE_DEFAULT_VALUES, createPayload, ICourseForm, PeriodicityUnitEnum } from './course.form.util';
 
@@ -70,6 +71,15 @@ function CourseForm({ course }: ICourseFormProps) {
     const [videoFile, setVideoFile] = useState<File | null>(null);
     const [galleryFiles, setGalleryFiles] = useState<FileList | null>(null);
 
+    /**
+     * Validates the course form data before submitting.
+     *
+     * This function checks for required fields and validates the price format.
+     * If any required fields are missing or the price is invalid, it sets the
+     * corresponding error messages. The errors are stored in the `errors` state.
+     *
+     * Returns `true` if the form data is valid and contains no errors, otherwise returns `false`.
+     */
     const validationBeformSubmitForm = () => {
         const errors: { [key in keyof ICourseForm]?: string[] } = {};
         if (!data.title) {
@@ -78,15 +88,15 @@ function CourseForm({ course }: ICourseFormProps) {
         if (!data.category_id) {
             errors.category_id = [t('COURSE.FORM.CATEGORY_REQUIRED', 'La catégorie est requise')];
         }
-        if (!data.duration) {
-            errors.duration = [t('COURSE.FORM.DURATION_REQUIRED', 'La durée est requise')];
-        }
-        if (!data.periodicity_unit) {
-            errors.periodicity_unit = [t('COURSE.FORM.PERIODICITY_UNIT_REQUIRED', "L'unité de périodicité est requise")];
-        }
-        if (!data.periodicity_value) {
-            errors.periodicity_value = [t('COURSE.FORM.PERIODICITY_VALUE_REQUIRED', 'La valeur de périodicité est requise')];
-        }
+        // if (!data.duration) {
+        //     errors.duration = [t('COURSE.FORM.DURATION_REQUIRED', 'La durée est requise')];
+        // }
+        // if (!data.periodicity_unit) {
+        //     errors.periodicity_unit = [t('COURSE.FORM.PERIODICITY_UNIT_REQUIRED', "L'unité de périodicité est requise")];
+        // }
+        // if (!data.periodicity_value) {
+        //     errors.periodicity_value = [t('COURSE.FORM.PERIODICITY_VALUE_REQUIRED', 'La valeur de périodicité est requise')];
+        // }
         if (!data.price) {
             errors.price = [t('COURSE.FORM.PRICE_REQUIRED', 'Le prix est requis')];
         } else {
@@ -114,6 +124,10 @@ function CourseForm({ course }: ICourseFormProps) {
         additionnal: 3,
     };
 
+    /**
+     * Initializes the form with a given course
+     * @param course The course to initialize the form with
+     */
     const handleInitializeForm = (course: ICourse) => {
         reset();
         setDisplayPrice('');
@@ -149,7 +163,7 @@ function CourseForm({ course }: ICourseFormProps) {
         }
 
         console.log('[handleInitializeForm] course:', course);
-        console.log('[handleInitializeForm] data:', data); 
+        console.log('[handleInitializeForm] data:', data);
 
         setFormHasBeenInitialized(true);
     };
@@ -164,46 +178,58 @@ function CourseForm({ course }: ICourseFormProps) {
      */
     const submit = async (data: ICourseForm, draft: boolean = false): Promise<void> => {
         setLoading(true);
-        const isValid = validationBeformSubmitForm();
-        if (!isValid) {
-            setLoading(false);
-            return;
-        }
-        const routeName = data?.id ? 'dashboard.course.update' : 'dashboard.course.store';
-        const formData = new FormData();
-        const payload = createPayload(data, draft);
-
-        Object.entries(payload).forEach(([key, value]) => {
-            if (value !== undefined && value !== null) {
-                formData.append(key, value as any);
-            }
-        });
-
-        if (thumbnail) formData.append('media', thumbnail);
-        if (logoFile) formData.append('logo', logoFile);
-        if (orgLogoFile) formData.append('organization_logo', orgLogoFile);
-        if (videoFile) formData.append('video', videoFile);
-        if (galleryFiles) Array.from(galleryFiles).forEach((file) => formData.append('gallery[]', file));
-        if (data?.id) formData.append('_method', 'PUT');
-        console.log(" data.partner_ids", data.partner_ids);
-        // if(!data?.partner_ids || data?.partner_ids?.length <= 0) {
-        //     formData.append('partner_ids', JSON.stringify([])); 
-        // }
-
-        console.log('[submit] formData:', formData);
-        
-
         try {
+            const isValid = validationBeformSubmitForm();
+            if (!isValid) {
+                console.log('[submit] Validation failed', errors);
+                setLoading(false);
+                return;
+            }
+            console.log('[submit] Preparing form data', { data, draft, thumbnail, logoFile, orgLogoFile, videoFile, galleryFiles });
+            const routeName = data?.id ? 'dashboard.course.update' : 'dashboard.course.store';
+            const formData = new FormData();
+            const payload = createPayload(data, draft);
+
+            Object.entries(payload).forEach(([key, value]) => {
+                if (value !== undefined && value !== null) {
+                    formData.append(key, value as any);
+                }
+            });
+
+            if (thumbnail) formData.append('media', thumbnail);
+            if (logoFile) formData.append('logo', logoFile);
+            if (orgLogoFile) formData.append('organization_logo', orgLogoFile);
+            if (videoFile) formData.append('video', videoFile);
+            if (galleryFiles) Array.from(galleryFiles).forEach((file) => formData.append('gallery[]', file));
+            if (data?.id) formData.append('_method', 'PUT');
+            console.log(' data.partner_ids', data.partner_ids);
+            // if(!data?.partner_ids || data?.partner_ids?.length <= 0) {
+            //     formData.append('partner_ids', JSON.stringify([]));
+            // }
+
+            console.log('[submit] formData:', formData);
+
             const response = await axios.post(data?.id ? route(routeName, course?.slug) : route(routeName), formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
             });
+
+
+            // Handle the response
+            setLoading(false);
+            if (response.status === 200 || response.status === 201) {
+                console.log('[submit] Course submitted successfully', response.data);
+                toast.success(t('COURSE.FORM.SUBMIT_SUCCESS', 'Formation soumise avec succès !'));
+                router.visit(ROUTE_MAP.dashboard.course.list.link, { preserveScroll: true, preserveState: true });
+            } else {
+                console.error('[submit] Error submitting course', response);
+                toast.error(t('COURSE.FORM.SUBMIT_ERROR', 'Erreur lors de la soumission de la formation'));
+            }
             console.log('Course creation response:', response);
 
             // toast.success(t('courses.createSuccess', 'Formation créée avec succès !'));
             // return router.visit(ROUTE_MAP.dashboard.course.list.link);
         } catch (error: any) {
             handleErrorsRequest(error, setLoading, (message) => toast.error(message), setErrors);
-        } finally {
             setLoading(false);
         }
     };

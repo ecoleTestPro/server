@@ -63,13 +63,6 @@ export default function CourseBasicInfoForm({
     };
 
     useEffect(() => {
-        Logger.log('CourseBasicInfoForm mounted', {
-            fieldsetClasses,
-            data,
-            processing,
-            errors,
-            categories,
-        });
         if (courseSelected) {
             if (data.category_id === '' && courseSelected.category_id) {
                 setData('category_id', courseSelected.category_id.toString());

@@ -97,7 +97,8 @@ export default function CourseAdditionnalForm({ fieldsetClasses, data, courseSel
 
                 <div className="grid gap-2">
                     <Label htmlFor="duration">
-                        {t('courses.duration', 'Durée')} <span className="text-red-500">*</span>
+                        {t('courses.duration', 'Durée')}
+                        {/*  <span className="text-red-500">*</span> */}
                     </Label>
                     <Input
                         id="duration"
@@ -112,7 +113,8 @@ export default function CourseAdditionnalForm({ fieldsetClasses, data, courseSel
 
                 <div className="grid gap-2">
                     <Label htmlFor="periodicity_unit">
-                        {t('courses.periodicity_unit', 'Periodicité')} <span className="text-red-500">*</span>
+                        {t('courses.periodicity_unit', 'Periodicité')} 
+                        {/* <span className="text-red-500">*</span> */}
                     </Label>
                     <Select disabled={processing} value={data.periodicity_unit} onValueChange={(value) => setData('periodicity_unit', value)}>
                         <SelectTrigger className="w-full">

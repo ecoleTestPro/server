@@ -247,6 +247,7 @@ class CourseRepository extends Repository
             'category_id'   => $request->category_id,
             'title'         => $request->title,
             'slug'          => str($request->title)->slug(),
+            'excerpt'       => $request->excerpt,
             'media_id'      => $media ? $media->id : null,
             'logo_id'       => $logo ? $logo->id : null,
             'organization_logo_id' => $organizationLogo ? $organizationLogo->id : null,
@@ -298,99 +299,102 @@ class CourseRepository extends Repository
 
     public static function updateByRequest(CourseUpdateRequest $request, Course $course)
     {
+        try {
+            $isActive = false;
 
-        $isActive = false;
-
-        if (isset($request->is_active)) {
-            $isActive = $request->is_active === "on" ?? true;
-        }
-
-        $media = $course->media;
-        if ($request->hasFile('media')) {
-            $media = MediaRepository::updateByRequest(
-                $request->file('media'),
-                $media,
-                'course/thumbnail',
-                MediaTypeEnum::IMAGE
-            );
-        }
-
-        $video = $course->video;
-        if ($request->hasFile('video')) {
-            $video = MediaRepository::updateOrCreateByRequest(
-                $request->file('video'),
-                'course/video',
-                $video,
-                MediaTypeEnum::VIDEO
-            );
-        }
-
-        $logo = $course->logo;
-        if ($request->hasFile('logo')) {
-            $logo = MediaRepository::updateOrCreateByRequest(
-                $request->file('logo'),
-                'course/logo',
-                $logo,
-                MediaTypeEnum::IMAGE
-            );
-        }
-
-        $organizationLogo = $course->organizationLogo;
-        if ($request->hasFile('organization_logo')) {
-            $organizationLogo = MediaRepository::updateOrCreateByRequest(
-                $request->file('organization_logo'),
-                'course/organization-logo',
-                $organizationLogo,
-                MediaTypeEnum::IMAGE
-            );
-        }
-
-        if ($course->video) {
-            $video = $request->hasFile('video') ? MediaRepository::updateByRequest(
-                $request->file('video'),
-                $course->video,
-                'course/video',
-                MediaTypeEnum::VIDEO
-            ) : $course->video;
-        } else {
-            $video = $request->hasFile('video') ? MediaRepository::storeByRequest(
-                $request->file('video'),
-                'course/video',
-                MediaTypeEnum::VIDEO
-            ) : null;
-        }
-
-        if ($request->hasFile('gallery')) {
-            foreach ($request->file('gallery') as $file) {
-                $media = MediaRepository::storeByRequest(
-                    $file,
-                    'course/gallery',
-                    self::getFileType($file)
-                );
-                $course->gallery()->attach($media->id);
+            if (isset($request->is_active)) {
+                $isActive = $request->is_active === "on" ?? true;
             }
-        }
 
-        if ($request->partner_ids) {
-            $course->partners()->sync($request->partner_ids);
-        }
+            $media = $course->media;
+            if ($request->hasFile('media')) {
+                $media = MediaRepository::updateByRequest(
+                    $request->file('media'),
+                    $media,
+                    'course/thumbnail',
+                    MediaTypeEnum::IMAGE
+                );
+            }
 
-        return self::update($course, [
-            'category_id'   => $request->category_id ?? $course->category_id,
-            'title'         => $request->title ?? $course->title,
-            'slug'          => str($request->title)->slug(),
-            'media_id'      => $media ? $media->id : $course->media->id,
-            'logo_id'       => $logo ? $logo->id : $course->logo_id,
-            'organization_logo_id' => $organizationLogo ? $organizationLogo->id : $course->organization_logo_id,
-            'video_id'      => $video ? $video->id : null,
-            'reference_tag' => $request->reference_tag ?? $course->reference_tag,
-            'description'   => json_encode($request->description) ?? $course->description,
-            'regular_price' => $request->regular_price ?? null,
-            'price'         => $request->price,
-            'instructor_id' => $request->instructor_id ?? $course->instructor_id,
-            'is_active'     => $isActive,
-            'published_at'  => $request->is_active == 'on' ? now() : null
-        ]);
+            $video = $course->video;
+            if ($request->hasFile('video')) {
+                $video = MediaRepository::updateOrCreateByRequest(
+                    $request->file('video'),
+                    'course/video',
+                    $video,
+                    MediaTypeEnum::VIDEO
+                );
+            }
+
+            $logo = $course->logo;
+            if ($request->hasFile('logo')) {
+                $logo = MediaRepository::updateOrCreateByRequest(
+                    $request->file('logo'),
+                    'course/logo',
+                    $logo,
+                    MediaTypeEnum::IMAGE
+                );
+            }
+
+            $organizationLogo = $course->organizationLogo;
+            if ($request->hasFile('organization_logo')) {
+                $organizationLogo = MediaRepository::updateOrCreateByRequest(
+                    $request->file('organization_logo'),
+                    'course/organization-logo',
+                    $organizationLogo,
+                    MediaTypeEnum::IMAGE
+                );
+            }
+
+            if ($course->video) {
+                $video = $request->hasFile('video') ? MediaRepository::updateByRequest(
+                    $request->file('video'),
+                    $course->video,
+                    'course/video',
+                    MediaTypeEnum::VIDEO
+                ) : $course->video;
+            } else {
+                $video = $request->hasFile('video') ? MediaRepository::storeByRequest(
+                    $request->file('video'),
+                    'course/video',
+                    MediaTypeEnum::VIDEO
+                ) : null;
+            }
+
+            if ($request->hasFile('gallery')) {
+                foreach ($request->file('gallery') as $file) {
+                    $media = MediaRepository::storeByRequest(
+                        $file,
+                        'course/gallery',
+                        self::getFileType($file)
+                    );
+                    $course->gallery()->attach($media->id);
+                }
+            }
+
+            if ($request->partner_ids) {
+                $course->partners()->sync($request->partner_ids);
+            }
+
+            return self::update($course, [
+                'category_id'   => $request->category_id ?? $course->category_id,
+                'title'         => $request->title ?? $course->title,
+                'slug'          => str($request->title)->slug(),
+                'media_id'      => $media ? $media->id : $course->media->id,
+                'logo_id'       => $logo ? $logo->id : $course->logo_id,
+                'organization_logo_id' => $organizationLogo ? $organizationLogo->id : $course->organization_logo_id,
+                'video_id'      => $video ? $video->id : null,
+                'reference_tag' => $request->reference_tag ?? $course->reference_tag,
+                'description'   => json_encode($request->description) ?? $course->description,
+                'regular_price' => $request->regular_price ?? null,
+                'price'         => $request->price,
+                'instructor_id' => $request->instructor_id ?? $course->instructor_id,
+                'is_active'     => $isActive,
+                'published_at'  => $request->is_active == 'on' ? now() : null
+            ]);
+        } catch (\Exception $e) {
+            throw new \Exception('Error updating course: ' . $e->getMessage());
+        }
     }
 
     private static function getFileType($file)

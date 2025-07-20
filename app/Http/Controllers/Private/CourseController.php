@@ -188,6 +188,7 @@ class CourseController extends Controller
             return response()->json([
                 'message' => 'Error updating course: ' . $e->getMessage(),
                 'status'  => 500,
+                'trace'   => $e->getTrace(),
             ], 500);
         }
     }
