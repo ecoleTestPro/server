@@ -3,8 +3,10 @@
 namespace App\Models;
 
 use App\Enum\MediaTypeEnum;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Media extends Model
 {
@@ -15,4 +17,19 @@ class Media extends Model
     protected $casts = [
         'type' => MediaTypeEnum::class,
     ];
+
+    protected $appends = ['url'];
+
+    public function url(): Attribute
+    {
+        $url = null;
+
+        if ($this->src && Storage::exists($this->src)) {
+            $url = Storage::url($this->src);
+        }
+
+        return Attribute::make(
+            get: fn() => $url,
+        );
+    }
 }

@@ -21,7 +21,8 @@ export interface IMedia {
     extension: string,
     type: mediaType,
     created_at: string,
-    updated_at: string
+    updated_at: string,
+    url?: string
 }
 
 export type ICoursePeriodicity = 'DAY' | 'WEEK' | 'MONTH' | 'YEAR';
