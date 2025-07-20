@@ -1,6 +1,6 @@
 import { ICourseEnrollment } from '@/types/course';
 import { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown, Trash2 } from 'lucide-react';
+import { ArrowUpDown, Mail, Phone, Trash2 } from 'lucide-react';
 import { Button } from '../ui/button/button';
 import { DataTable } from '../ui/dataTable';
 
@@ -40,6 +40,30 @@ export default function EnrollmentDataTable({ enrollments, onDeleteRow }: Enroll
                 </Button>
             ),
             cell: ({ row }) => <span>{row.original.user?.phone || '-'}</span>,
+        },
+        {
+            id: 'contact',
+            header: 'Contact',
+            cell: ({ row }) => (
+                <div className="flex space-x-2">
+                    {row.original.user?.email && (
+                        <Button variant="ghost" size="icon" asChild>
+                            <a href={`mailto:${row.original.user.email}`}>
+                                <Mail className="h-4 w-4" />
+                                <span className="sr-only">Mail</span>
+                            </a>
+                        </Button>
+                    )}
+                    {row.original.user?.phone && (
+                        <Button variant="ghost" size="icon" asChild>
+                            <a href={`tel:${row.original.user.phone}`}>
+                                <Phone className="h-4 w-4" />
+                                <span className="sr-only">Téléphone</span>
+                            </a>
+                        </Button>
+                    )}
+                </div>
+            ),
         },
         {
             accessorKey: 'course',
