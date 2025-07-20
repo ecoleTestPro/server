@@ -251,6 +251,7 @@ class CourseRepository extends Repository
             'logo_id'       => $logo ? $logo->id : null,
             'organization_logo_id' => $organizationLogo ? $organizationLogo->id : null,
             'video_id'      => $video ? $video->id : null,
+            'reference_tag' => $request->reference_tag,
             'description'   => $request->description ?? "", // json_encode($request->description)
             'regular_price' => $request->regular_price,
             'price'         => $request->price,
@@ -382,6 +383,7 @@ class CourseRepository extends Repository
             'logo_id'       => $logo ? $logo->id : $course->logo_id,
             'organization_logo_id' => $organizationLogo ? $organizationLogo->id : $course->organization_logo_id,
             'video_id'      => $video ? $video->id : null,
+            'reference_tag' => $request->reference_tag ?? $course->reference_tag,
             'description'   => json_encode($request->description) ?? $course->description,
             'regular_price' => $request->regular_price ?? null,
             'price'         => $request->price,

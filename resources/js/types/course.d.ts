@@ -117,6 +117,7 @@ export interface ICourse {
     gallery?: IMedia[];
     course_sessions?: ICourseSession[];
     partners?: IPartner[];
+    reference_tag?: string;
 
 }
 
@@ -268,6 +269,8 @@ export interface ICustomSharedData {
 
     testimonials?: IDataWithPagination<ITestimonial>
     faqs?: IFaq[]
+
+    references?: IPartner[]
 
     chart_data?: {
         enrollment_area: IChartData;

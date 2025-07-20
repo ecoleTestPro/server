@@ -31,6 +31,9 @@ export default function CourseAdditionnalForm({ fieldsetClasses, data, courseSel
 
     useEffect(() => {
         setDisplayPrice(data.price ? Number(data.price).toLocaleString('fr-FR') : '');
+        if(courseSelected ) {
+            courseSelected.price && data.price == '' && setData('price', courseSelected.price.toString()); 
+        }
     }, [data.price]);
     const { t } = useTranslation();
 
@@ -158,6 +161,18 @@ export default function CourseAdditionnalForm({ fieldsetClasses, data, courseSel
                         placeholder={t('courses.lectures', 'Nombre de leçons')}
                     />
                     <InputError message={errors.lectures} />
+                </div>
+                <div className="grid gap-2">
+                    <Label htmlFor="reference_tag">Tag de références</Label>
+                    <Input
+                        id="reference_tag"
+                        type="text"
+                        value={data.reference_tag ?? ''}
+                        onChange={(e) => setData('reference_tag', e.target.value)}
+                        disabled={processing}
+                        placeholder="Tag de références (ex: audit-conseil)"
+                    />
+                    <InputError message={errors.reference_tag} />
                 </div>
             </div>
         </fieldset>
