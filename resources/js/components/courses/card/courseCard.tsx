@@ -201,26 +201,28 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, setOpenSessio
                             value={partnerFilter}
                             onChange={(e) => setPartnerFilter(e.target.value)}
                         />
-                        {partners
-                            .filter((p) => p.name.toLowerCase().includes(partnerFilter.toLowerCase()))
-                            .map((p) => (
-                            <label key={p.id} className="flex items-center space-x-2">
-                                <input
-                                    type="checkbox"
-                                    checked={selectedPartners.includes(p.id!)}
-                                    onChange={(e) => {
-                                        let updated = [...selectedPartners];
-                                        if (e.target.checked) {
-                                            updated.push(p.id!);
-                                        } else {
-                                            updated = updated.filter((id) => id !== p.id);
-                                        }
-                                        setSelectedPartners(updated);
-                                    }}
-                                />
-                                <span>{p.name}</span>
-                            </label>
-                            ))}
+                        <div className="max-h-[50vh] overflow-y-scroll">
+                            {partners
+                                .filter((p) => p.name.toLowerCase().includes(partnerFilter.toLowerCase()))
+                                .map((p) => (
+                                    <label key={p.id} className="flex items-center space-x-2">
+                                        <input
+                                            type="checkbox"
+                                            checked={selectedPartners.includes(p.id!)}
+                                            onChange={(e) => {
+                                                let updated = [...selectedPartners];
+                                                if (e.target.checked) {
+                                                    updated.push(p.id!);
+                                                } else {
+                                                    updated = updated.filter((id) => id !== p.id);
+                                                }
+                                                setSelectedPartners(updated);
+                                            }}
+                                        />
+                                        <span>{p.name}</span>
+                                    </label>
+                                ))}
+                        </div>
                         <Button className="mt-2" onClick={handleUpdatePartners}>
                             Enregistrer
                         </Button>
