@@ -66,10 +66,12 @@ class CourseController extends Controller
 
         $categories = CategoryRepository::findAll();
         $courses = CourseRepository::findAll($search);
+        $partners = PartnerRepository::query()->where('is_active', true)->get();
 
         $data = [
             'courses'    => ["list" => $courses],
             'categories' => $categories,
+            'partners'   => $partners,
         ];
 
         return Inertia::render('dashboard/courses/index', [
