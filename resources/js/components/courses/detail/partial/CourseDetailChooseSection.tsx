@@ -64,34 +64,37 @@ export default function CourseDetailChooseSection({ course, registrationRef }: C
             {/* fixed bottom-0 left-0 w-full z-50  */}
             {/*  ${isVisible ? 'translate-y-0' : 'relative -translate-y-full'} */}
             <div className={`transition-transform duration-300 ease-in-out`}>
-                <h2 className="text-lg font-bold">{t('COURSE.DETAIL.CHOOSE_SESSION', 'Choisissez une session')}</h2>
-                <div className="container mx-auto">
-                    {course.course_sessions &&
-                        course.course_sessions.length > 0 &&
-                        course.course_sessions.map((session, index) => (
-                            <CourseSessionCard
-                                key={index}
-                                session={session}
-                                courseTitle={course.title}
-                                handleClickRegister={() => {
-                                    setSelectedSession(session);
-                                    setIsDialogOpen(true);
-                                }}
-                                periodicity_unit={course.periodicity_unit}
-                                periodicity_value={course.periodicity_value}
-                                price={course.price}
-                                regular_price={course.regular_price}
-                            />
-                        ))}
-                </div>
+                {course.course_sessions && course.course_sessions.length > 0 ? (
+                    <>
+                        <h2 className="text-lg font-bold">{t('COURSE.DETAIL.CHOOSE_SESSION', 'Choisissez une session')}</h2>
+                        <div className="container mx-auto">
+                            {course.course_sessions.map((session, index) => (
+                                <CourseSessionCard
+                                    key={index}
+                                    session={session}
+                                    courseTitle={course.title}
+                                    handleClickRegister={() => {
+                                        setSelectedSession(session);
+                                        setIsDialogOpen(true);
+                                    }}
+                                    periodicity_unit={course.periodicity_unit}
+                                    periodicity_value={course.periodicity_value}
+                                    price={course.price}
+                                    regular_price={course.regular_price}
+                                />
+                            ))}
+                        </div>{' '}
+                    </>
+                ) : (
+                    <div className="p-4">
+                        <p className="text-gray-500 dark:text-gray-400">
+                            {t('COURSE.DETAIL.NO_SESSIONS', 'Aucune session disponible pour le moment.')}
+                        </p>
+                    </div>
+                )}
             </div>
 
-            <CourseInscriptionDialog
-                course={course}
-                session={selectedSession}
-                isOpen={isDialogOpen}
-                onOpenChange={setIsDialogOpen}
-            />
+            <CourseInscriptionDialog course={course} session={selectedSession} isOpen={isDialogOpen} onOpenChange={setIsDialogOpen} />
         </>
     );
 }
