@@ -54,7 +54,7 @@ export default function SettingPage({ mustVerifyEmail, status }: { mustVerifyEma
 
     // Initialize form with default or fetched header configuration
     const { data, setData, patch, errors, processing, recentlySuccessful } = useForm<HeaderForm>({
-        logo: headerConfig?.logo || { text: 'EcoleTestProp', href: '/' },
+        logo: headerConfig?.logo || { text: TestProp', href: '/' },
         mainMenu: headerConfig?.mainMenu || [
             {
                 id: 'certifications',

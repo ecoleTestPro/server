@@ -35,7 +35,7 @@ function AboutUsCard() {
                         </div>
 
                         <div>
-                            <TitleBadgeOne title="Ecole TestPro " />
+                            <TitleBadgeOne title="TestPro " />
                             <h2 className="!mb-[15px] !text-[24px] !leading-[1.2] !-tracking-[.5px] md:!text-[28px] md:!-tracking-[.6px] lg:!text-[34px] lg:!-tracking-[.8px] xl:!text-[36px] xl:!-tracking-[1px]">
                                 Des formations pour un succès durable !
                             </h2>
