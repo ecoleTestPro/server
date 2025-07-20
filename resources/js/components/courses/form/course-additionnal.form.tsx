@@ -33,15 +33,10 @@ export default function CourseAdditionnalForm({ fieldsetClasses, data, courseSel
         setDisplayPrice(data.price ? Number(data.price).toLocaleString('fr-FR') : '');
         if (courseSelected) {
             courseSelected.price && data.price == '' && setData('price', courseSelected.price.toString());
+            courseSelected.periodicity_unit && data.periodicity_unit == '' && setData('periodicity_unit', courseSelected.periodicity_unit);
         }
     }, [data.price]);
     const { t } = useTranslation();
-
-    useEffect(() => {
-        if (courseSelected && !data.periodicity_unit) {
-            setData('periodicity_unit', courseSelected.periodicity_unit);
-        }
-    }, [courseSelected, data.periodicity_unit]);
 
     return (
         <fieldset className={fieldsetClasses}>
@@ -122,7 +117,12 @@ export default function CourseAdditionnalForm({ fieldsetClasses, data, courseSel
                         {t('courses.periodicity_unit', 'Periodicité')}
                         {/* <span className="text-red-500">*</span> */}
                     </Label>
-                    <Select disabled={processing} value={data.periodicity_unit} onValueChange={(value) => setData('periodicity_unit', value)}>
+                    <Select
+                        disabled={processing}
+                        value={data.periodicity_unit}
+                        defaultValue={data.periodicity_unit}
+                        onValueChange={(value) => setData('periodicity_unit', value)}
+                    >
                         <SelectTrigger className="w-full">
                             <SelectValue placeholder="Sélectionner une catégorie" />
                         </SelectTrigger>
