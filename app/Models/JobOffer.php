@@ -14,6 +14,7 @@ class JobOffer extends Model
 
     protected $casts = [
         'salary' => 'float',
+        'expires_at' => 'datetime',
         'created_at' => 'datetime:D M Y',
         'updated_at' => 'datetime:Y-m-d H:i:s',
     ];

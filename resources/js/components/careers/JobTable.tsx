@@ -19,6 +19,7 @@ export const JobTable: React.FC<{
                         <th className="px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-200">Entreprise</th>
                         <th className="px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-200">Localité</th>
                         <th className="px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-200">Type</th>
+                        <th className="px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-200">Expire le</th>
                         <th className="px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-200">Action</th>
                     </tr>
                 </thead>
@@ -30,6 +31,7 @@ export const JobTable: React.FC<{
                                 <td className="px-4 py-2 whitespace-nowrap">{job.company}</td>
                                 <td className="px-4 py-2 whitespace-nowrap">{job.location}</td>
                                 <td className="px-4 py-2 whitespace-nowrap">{job.type}</td>
+                                <td className="px-4 py-2 whitespace-nowrap">{job.expires_at}</td>
                                 <td className="px-4 py-2 whitespace-nowrap">
                                     <BtnSecondary
                                         label="Postuler"

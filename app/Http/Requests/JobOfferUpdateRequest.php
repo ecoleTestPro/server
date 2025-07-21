@@ -20,6 +20,7 @@ class JobOfferUpdateRequest extends FormRequest
             'type' => 'nullable|string',
             'salary' => 'nullable|integer',
             'description' => 'nullable|string',
+            'expires_at' => 'nullable|date',
         ];
     }
 }

@@ -21,6 +21,7 @@ class JobOfferRepository extends Repository
             'type' => $request->type,
             'salary' => $request->salary,
             'description' => $request->description,
+            'expires_at' => $request->expires_at,
             'is_active' => $request->has('is_active') ? true : false,
         ]);
     }
@@ -34,6 +35,7 @@ class JobOfferRepository extends Repository
             'type' => $request->type ?? $offer->type,
             'salary' => $request->salary ?? $offer->salary,
             'description' => $request->description ?? $offer->description,
+            'expires_at' => $request->expires_at ?? $offer->expires_at,
             'is_active' => $request->has('is_active') ? true : $offer->is_active,
         ]);
     }

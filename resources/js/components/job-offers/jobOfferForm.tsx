@@ -19,6 +19,7 @@ const defaultValues: IJobOffer = {
     type: '',
     salary: 0,
     description: '',
+    expires_at: '',
     is_active: true,
 };
 
@@ -70,6 +71,10 @@ export default function JobOfferForm({ closeDrawer, initialData }: Props) {
             <div className="grid gap-2">
                 <Label htmlFor="salary">Salaire</Label>
                 <Input id="salary" type="number" value={data.salary || ''} onChange={(e) => setData('salary', Number(e.target.value))} disabled={processing} />
+            </div>
+            <div className="grid gap-2">
+                <Label htmlFor="expires_at">Date de fin</Label>
+                <Input id="expires_at" type="date" value={data.expires_at || ''} onChange={(e) => setData('expires_at', e.target.value)} disabled={processing} />
             </div>
             <div className="grid gap-2">
                 <Label htmlFor="description">Description</Label>
