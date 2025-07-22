@@ -15,13 +15,15 @@ use PHPUnit\Event\Code\Test;
 
 class TestimonialController extends Controller
 {
+    /**
+     * List all the testimonials.
+     *
+     * @param  Request $request
+     * @return \Inertia\Response
+     */
     public function index(Request $request)
     {
-        $search = $request->cat_search ? strtolower($request->cat_search) : null;
-
-        $testimonials = TestimonialRepository::query()->when($search, function ($query) use ($search) {
-            $query->where('name', 'like', '%' . $search . '%')->OrWhere('designation', 'like', '%' . $search . '%');
-        })->withTrashed()->latest('id')->paginate(15)->withQueryString();
+        $testimonials = TestimonialRepository::query()->latest('id')->paginate(9999)->withQueryString();
 
         $data = [
             'testimonials' => $testimonials,
@@ -32,11 +34,12 @@ class TestimonialController extends Controller
         ]);
     }
 
-    public function create()
-    {
-        return view('testimonial.create');
-    }
-
+    /**
+     * Store a newly created testimonial in storage.
+     *
+     * @param  TestimonialStoreRequest $request
+     * @return \Inertia\Response
+     */
     public function store(TestimonialStoreRequest $request)
     {
         TestimonialRepository::storeByRequest($request);
@@ -44,19 +47,25 @@ class TestimonialController extends Controller
         return to_route('dashboard.testimonial.index')->withSuccess('Testimonial created successfully.');
     }
 
-    public function edit(Testimonial $testimonial)
-    {
-        return view('testimonial.edit', [
-            'testimonial' => $testimonial,
-        ]);
-    }
-
+    /**
+     * Update the specified testimonial in storage.
+     *
+     * @param  TestimonialUpdateRequest $request
+     * @param  Testimonial $testimonial
+     * @return \Inertia\Response
+     */
     public function update(TestimonialUpdateRequest $request, Testimonial $testimonial)
     {
         TestimonialRepository::updateByRequest($request, $testimonial);
         return to_route('dashboard.testimonial.index')->withSuccess('Testimonial updated successfully.');
     }
 
+    /**
+     * Remove the specified testimonial from storage and deactivate it.
+     *
+     * @param  Testimonial $testimonial
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function destroy(Testimonial $testimonial)
     {
         $testimonial->delete();
@@ -65,6 +74,12 @@ class TestimonialController extends Controller
         return to_route('dashboard.testimonial.index')->withSuccess('Testimonial deleted successfully.');
     }
 
+    /**
+     * Restore the specified testimonial from the trash.
+     *
+     * @param  int  $testimonial
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function restore($testimonial)
     {
         TestimonialRepository::query()->withTrashed()->find($testimonial)->restore();
