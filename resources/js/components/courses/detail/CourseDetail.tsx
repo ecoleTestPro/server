@@ -44,7 +44,10 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ course }) => {
             <div className="container mx-auto">
                 <h1 className="text-2xl font-bold mb-4 text-black dark:text-white">{course.title}</h1>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className="toc-accordion col-span-1 md:col-span-2" id="tablesOfContentAccordion">
+                    <div
+                        className="toc-accordion col-span-1 md:col-span-2"
+                        id="tablesOfContentAccordion"
+                    >
                         <div className="">
                             {/* Objectifs */}
                             <CourseDetailAccordion
@@ -184,7 +187,7 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ course }) => {
                                 <CouseDetailMedia course={course} />
                             </div>
                             {(course.logo || course.organization_logo) && (
-                                <div className='flex flex-col gap-2 justify-center items-center'>
+                                <div className="flex flex-col gap-2 justify-center items-center">
                                     <div>
                                         {course.logo && (
                                             <img src={getMediaUrl(course.logo)} alt={`${course.title} logo`} className="h-48 w-auto object-contain" />

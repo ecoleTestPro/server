@@ -11,6 +11,7 @@ use Illuminate\Support\Str;
 
 class BlogRepository extends Repository
 {
+
     public static function model()
     {
         return Blog::class;
@@ -29,10 +30,7 @@ class BlogRepository extends Repository
 
     public static function storeByRequest(BlogStoreRequest $request)
     {
-        $status = false;
-        if ($request->status) {
-            $status = true;
-        }
+        $status = $request->status??false;
 
         $media = $request->hasFile('thumbnail') ? MediaRepository::storeByRequest(
             $request->file('thumbnail'),
@@ -41,15 +39,15 @@ class BlogRepository extends Repository
         ) : null;
 
         return self::create([
-            'user_id' => auth()->id(),
-            'media_id' => $media ? $media->id : null,
+            'user_id'          => $request->user_id,
+            'media_id'         => $media ? $media->id : null,
             'blog_category_id' => $request->category_id,
-            'title' => $request->title,
-            'slug' => Str::slug($request->title),
-            'excerpt' => $request->excerpt,
-            'description' => $request->description,
-            'tags' => $request->tags ? json_encode($request->tags) : null,
-            'status' => $status,
+            'title'            => $request->title,
+            'slug'             => Str::slug($request->title),
+            'excerpt'          => $request->excerpt,
+            'description'      => $request->description,
+            'tags'             => $request->tags ? $request->tags : null,
+            'status'           => $status,
         ]);
     }
 
@@ -72,15 +70,15 @@ class BlogRepository extends Repository
         }
 
         return self::update($blog, [
-            'user_id' => auth()->id(),
-            'media_id' => $media ? $media->id : null,
+            'user_id'          => $request->user_id,
+            'media_id'         => $media ? $media->id : null,
             'blog_category_id' => $request->category_id,
-            'title' => $request->title,
-            'slug' => $blog->slug ?? Str::slug($request->title),
-            'excerpt' => $request->excerpt,
-            'description' => $request->description,
-            'tags' => $request->tags ? json_encode($request->tags) : null,
-            'status' => $status,
+            'title'            => $request->title,
+            'slug'             => $blog->slug ?? Str::slug($request->title),
+            'excerpt'          => $request->excerpt,
+            'description'      => $request->description,
+            'tags'             => $request->tags ? json_encode($request->tags) : null,
+            'status'           => $status,
         ]);
     }
 
@@ -113,4 +111,3 @@ class BlogRepository extends Repository
             ->get();
     }
 }
-

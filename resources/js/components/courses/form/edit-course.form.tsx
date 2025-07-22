@@ -8,7 +8,6 @@ import { useTranslation } from 'react-i18next';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button/button';
 
-import Drawer from '@/components/ui/drawer';
 import { SharedData } from '@/types';
 import { ICourse, ICourseCategory } from '@/types/course';
 import { IPartner } from '@/types/partner';
@@ -18,10 +17,10 @@ import { Skeleton } from '../../ui/skeleton';
 import CourseAdditionnalForm from './course-additionnal.form';
 import CourseBasicInfoForm from './course-basic-info.form';
 
+import RichTextCKEditor from '@/components/ui/form/RichTextCKEditor';
 import { ROUTE_MAP } from '@/utils/route.util';
 import axios from 'axios';
 import { COURSE_DEFAULT_VALUES, createPayload, ICourseForm, PeriodicityUnitEnum } from './course.form.util';
-import RichTextCKEditor from '@/components/ui/form/RichTextCKEditor';
 
 export type ICourseFormErrors = { [key in keyof ICourseForm]?: string[] };
 
@@ -382,18 +381,22 @@ function CourseForm({ course }: ICourseFormProps) {
                                                                 <div className="grid gap-2">
                                                                     {item.key && (
                                                                         <div>
-                                                                            {false && <RichTextQuill
-                                                                                label={item.label}
-                                                                                labelId={item.key}
-                                                                                value={data[item.key] as string}
-                                                                                setData={(value: string) => setData(item.key, value)}
-                                                                            />}
-                                                                            <RichTextCKEditor
-                                                                                label={item.label}
-                                                                                labelId={item.key}
-                                                                                value={data[item.key] as string}
-                                                                                setData={(value: string) => setData(item.key, value)}
-                                                                            />
+                                                                            {true && (
+                                                                                <RichTextQuill
+                                                                                    label={item.label}
+                                                                                    labelId={item.key}
+                                                                                    value={data[item.key] as string}
+                                                                                    setData={(value: string) => setData(item.key, value)}
+                                                                                />
+                                                                            )}
+                                                                            {false && (
+                                                                                <RichTextCKEditor
+                                                                                    label={item.label}
+                                                                                    labelId={item.key}
+                                                                                    value={data[item.key] as string}
+                                                                                    setData={(value: string) => setData(item.key, value)}
+                                                                                />
+                                                                            )}
                                                                             <InputError message={errors[item.key]} />
                                                                         </div>
                                                                     )}
@@ -464,7 +467,6 @@ function CourseForm({ course }: ICourseFormProps) {
                     Les champs marqués d'un <span className="text-red-500">*</span> sont obligatoires.
                 </p>
             </form>
-
         </>
     );
 }

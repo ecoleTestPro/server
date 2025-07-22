@@ -28,13 +28,13 @@ class Blog extends Model
     protected $guarded = [
         'id',
         'blog_category_id',
-        'user_id',
+        // 'user_id',
         'media_id',
     ];
 
     protected $casts = [
-        'status' => 'boolean',
-        'tags'   => 'array',
+        'status'     => 'boolean',
+        'tags'       => 'array',
         'created_at' => 'datetime:D/m/Y H:i:s',
         'updated_at' => 'datetime:Y-m-d H:i:s',
     ];
