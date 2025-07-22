@@ -118,7 +118,7 @@ export default function TestimonialForm({ closeDrawer, initialData }: Testimonia
                         multiple={false}
                         disabled={processing}
                     />
-                    <InputError message={errors.picture} />
+                    <InputError message={errors.media_id} />
                 </div>
             )}
             <div className="flex items-center gap-2">

@@ -2,16 +2,13 @@
 
 namespace App\Http\Controllers\Private;
 
-use App\Enum\MediaTypeEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TestimonialStoreRequest;
 use App\Http\Requests\TestimonialUpdateRequest;
 use App\Models\Testimonial;
-use App\Repositories\MediaRepository;
 use App\Repositories\TestimonialRepository;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use PHPUnit\Event\Code\Test;
 
 class TestimonialController extends Controller
 {
