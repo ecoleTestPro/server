@@ -1,10 +1,9 @@
+import { IJobOffer } from '@/types';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
-import { Checkbox } from '../ui/checkbox';
-import { DataTable } from '../ui/dataTable';
 import { Button } from '../ui/button/button';
+import { DataTable } from '../ui/dataTable';
 import JobOfferActionBtn from './jobOfferActionBtn';
-import { IJobOffer } from '@/types';
 
 interface Props {
     offers: IJobOffer[];
@@ -15,21 +14,6 @@ interface Props {
 
 export default function JobOfferDataTable({ offers, onEditRow, onDeleteRow, onToggleRow }: Props) {
     const columns: ColumnDef<IJobOffer>[] = [
-        // {
-        //     id: 'select',
-        //     header: ({ table }) => (
-        //         <Checkbox
-        //             checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
-        //             onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        //             aria-label="Select all"
-        //         />
-        //     ),
-        //     cell: ({ row }) => (
-        //         <Checkbox checked={row.getIsSelected()} onCheckedChange={(value) => row.toggleSelected(!!value)} aria-label="Select row" />
-        //     ),
-        //     enableSorting: false,
-        //     enableHiding: false,
-        // },
         {
             accessorKey: 'title',
             header: ({ column }) => (
@@ -40,8 +24,13 @@ export default function JobOfferDataTable({ offers, onEditRow, onDeleteRow, onTo
             ),
         },
         {
+            accessorKey: 'salary',
+            header: 'Salaire (FCFA)',
+            cell: ({ row }) => <span>{row.original.salary ? `${row.original.salary} FCFA` : ' - '}</span>,
+        },
+        {
             accessorKey: 'expires_at',
-            header: 'Expire le'
+            header: 'Expire le',
         },
         {
             accessorKey: 'is_active',

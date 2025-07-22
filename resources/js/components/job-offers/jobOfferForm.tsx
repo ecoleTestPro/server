@@ -3,8 +3,10 @@ import { Button } from '@/components/ui/button/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { IJobOffer } from '@/types';
-import { router, useForm } from '@inertiajs/react';
-import { FormEventHandler } from 'react';
+import { useForm } from '@inertiajs/react';
+import axios from 'axios';
+import { FormEventHandler, useState } from 'react';
+import toast from 'react-hot-toast';
 import RichTextQuill from '../ui/form/RichTextQuill';
 import SelectCustom, { ISelectItem } from '../ui/select-custom';
 
@@ -25,25 +27,49 @@ const defaultValues: IJobOffer = {
 };
 
 export default function JobOfferForm({ closeDrawer, initialData }: Props) {
-    const { data, setData, processing, errors, reset } = useForm<IJobOffer>(initialData || defaultValues);
+    const { data, setData, processing, reset } = useForm<IJobOffer>(initialData || defaultValues);
+
+    const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
         const routeUrl = initialData?.id ? route('dashboard.job-offers.update', initialData.id) : route('dashboard.job-offers.store');
 
-        router.visit(routeUrl, {
-            method: initialData?.id ? 'put' : 'post',
-            data: {
-                ...data,
-                is_active: data.is_active ? '1' : '0',
-            },
-            forceFormData: true,
-            preserveScroll: true,
-            onSuccess: () => {
+        // router.visit(routeUrl, {
+        //     method: initialData?.id ? 'put' : 'post',
+        //     data: {
+        //         ...data,
+        //         is_active: data.is_active ? '1' : '0',
+        //     },
+        //     forceFormData: true,
+        //     preserveScroll: true,
+        //     onSuccess: () => {
+        //         reset();
+        //         closeDrawer?.();
+        //         toast.success(initialData?.id ? 'Offre mise à jour' : 'Offre créée');
+        //     },
+        //     onError: (errors) => {
+        //         Object.keys(errors).forEach((key) => {
+        //             toast.error(errors[key]);
+        //         });
+        //     },
+        // });
+
+        axios[initialData?.id ? 'put' : 'post'](routeUrl, {
+            ...data,
+            is_active: data.is_active ? '1' : '0',
+        })
+            .then((response) => {
+                toast.success(initialData?.id ? 'Offre mise à jour' : 'Offre créée');
                 reset();
                 closeDrawer?.();
-            },
-        });
+            })
+            .catch((error) => {
+                Object.keys(error.response.data.errors).forEach((key) => {
+                    toast.error(error.response.data.errors[key]);
+                    setErrors((prev) => ({ ...prev, [key]: error.response.data.errors[key] }));
+                });
+            });
     };
 
     const typeList = (): ISelectItem[] => [
@@ -64,7 +90,9 @@ export default function JobOfferForm({ closeDrawer, initialData }: Props) {
     return (
         <form className="mx-auto flex flex-col gap-4" onSubmit={submit}>
             <div className="grid gap-2">
-                <Label htmlFor="title">Titre</Label>
+                <Label htmlFor="title">
+                    Titre <span className="text-red-500">*</span>
+                </Label>
                 <Input id="title" required value={data.title} onChange={(e) => setData('title', e.target.value)} disabled={processing} />
                 <InputError message={errors.title} />
             </div>
@@ -82,7 +110,9 @@ export default function JobOfferForm({ closeDrawer, initialData }: Props) {
             </div>
             <div className="grid grid-cols-2 gap-2">
                 <div className="grid gap-2">
-                    <Label htmlFor="type">Type (CDI, CDD, Stage) </Label>
+                    <Label htmlFor="type">
+                        Type (CDI, CDD, Stage) <span className="text-red-500">*</span>
+                    </Label>
                     <SelectCustom
                         data={typeList()}
                         selectLabel={"Type d'offre"}
@@ -90,8 +120,10 @@ export default function JobOfferForm({ closeDrawer, initialData }: Props) {
                         processing={processing}
                         onValueChange={(value) => setData('type', value)}
                         value={data.type}
+                        defaultValue={initialData?.type ?? 'CDI'}
                         required
                     />
+                    <InputError message={errors.type} />
                 </div>
                 <div className="grid gap-2">
                     <Label htmlFor="salary">Salaire</Label>
@@ -102,6 +134,7 @@ export default function JobOfferForm({ closeDrawer, initialData }: Props) {
                         onChange={(e) => setData('salary', Number(e.target.value))}
                         disabled={processing}
                     />
+                    <InputError message={errors.salary} />
                 </div>
             </div>
             <div className="grid gap-2">
@@ -113,6 +146,7 @@ export default function JobOfferForm({ closeDrawer, initialData }: Props) {
                     onChange={(e) => setData('expires_at', e.target.value)}
                     disabled={processing}
                 />
+                <InputError message={errors.expires_at} />
             </div>
             <div className="grid gap-2">
                 <Label htmlFor="description">Description</Label>
@@ -122,6 +156,7 @@ export default function JobOfferForm({ closeDrawer, initialData }: Props) {
                     value={data.description ?? ''}
                     setData={(value: string) => setData('description', value)}
                 />
+                <InputError message={errors.description} />
             </div>
             <Button type="submit" className="mt-2 w-full" disabled={processing}>
                 {initialData?.id ? 'Mettre à jour' : 'Créer'}
