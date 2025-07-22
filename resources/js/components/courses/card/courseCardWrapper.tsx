@@ -33,7 +33,7 @@ function CourseCardWrapper({ searchTerm, viewMode, loading, setLoading, courses,
     const [isDeleting, setIsDeleting] = useState(false);
 
     const [currentPage, setCurrentPage] = useState(1);
-    const coursesPerPage = 8;
+    const coursesPerPage = 9;
 
     // Fonction pour filtrer les cours par page
     const indexOfLastCourse = currentPage * coursesPerPage;
