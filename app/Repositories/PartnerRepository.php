@@ -14,6 +14,19 @@ class PartnerRepository extends Repository
         return Partner::class;
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection|Partner[]
+     */
+    public static function allWithMedia()
+    {
+        return static::query()
+            ->where('is_reference', true)
+            ->with('media')
+            ->withTrashed()
+            ->latest('id')
+            ->get();
+    }
+
     public static function storeByRequest($request)
     {
         $picture = $request->hasFile('picture') ? MediaRepository::storeByRequest(

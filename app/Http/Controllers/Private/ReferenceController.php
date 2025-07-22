@@ -12,21 +12,15 @@ use Inertia\Inertia;
 
 class ReferenceController extends Controller
 {
+    /**
+     * Get all references with their media.
+     *
+     * @param  Request  $request
+     * @return \Inertia\Response
+     */
     public function index(Request $request)
     {
-        $search = $request->search ? strtolower($request->search) : null;
-
-        $references = PartnerRepository::query()
-            ->where('is_reference', true)
-            ->when($search, function ($query) use ($search) {
-                $query->where('name', 'like', '%' . $search . '%');
-            })
-            ->with('media')
-            ->withTrashed()
-            ->latest('id')
-            ->paginate(15)
-            ->withQueryString();
-
+        $references = PartnerRepository::allWithMedia();
         $data = [
             'references' => $references,
         ];
