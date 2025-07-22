@@ -21,6 +21,7 @@ import CourseBasicInfoForm from './course-basic-info.form';
 import { ROUTE_MAP } from '@/utils/route.util';
 import axios from 'axios';
 import { COURSE_DEFAULT_VALUES, createPayload, ICourseForm, PeriodicityUnitEnum } from './course.form.util';
+import RichTextCKEditor from '@/components/ui/form/RichTextCKEditor';
 
 export type ICourseFormErrors = { [key in keyof ICourseForm]?: string[] };
 
@@ -381,7 +382,13 @@ function CourseForm({ course }: ICourseFormProps) {
                                                                 <div className="grid gap-2">
                                                                     {item.key && (
                                                                         <div>
-                                                                            <RichTextQuill
+                                                                            {false && <RichTextQuill
+                                                                                label={item.label}
+                                                                                labelId={item.key}
+                                                                                value={data[item.key] as string}
+                                                                                setData={(value: string) => setData(item.key, value)}
+                                                                            />}
+                                                                            <RichTextCKEditor
                                                                                 label={item.label}
                                                                                 labelId={item.key}
                                                                                 value={data[item.key] as string}
