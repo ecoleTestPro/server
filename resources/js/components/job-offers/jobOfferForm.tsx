@@ -7,6 +7,7 @@ import { useForm } from '@inertiajs/react';
 import axios from 'axios';
 import { FormEventHandler, useState } from 'react';
 import toast from 'react-hot-toast';
+import RichTextCKEditor from '../ui/form/RichTextCKEditor';
 import RichTextQuill from '../ui/form/RichTextQuill';
 import SelectCustom, { ISelectItem } from '../ui/select-custom';
 
@@ -150,7 +151,15 @@ export default function JobOfferForm({ closeDrawer, initialData }: Props) {
             </div>
             <div className="grid gap-2">
                 <Label htmlFor="description">Description</Label>
-                <RichTextQuill
+                {false && (
+                    <RichTextQuill
+                        label="Description"
+                        labelId="description"
+                        value={data.description ?? ''}
+                        setData={(value: string) => setData('description', value)}
+                    />
+                )}
+                <RichTextCKEditor
                     label="Description"
                     labelId="description"
                     value={data.description ?? ''}
