@@ -4,6 +4,7 @@ import { SharedData } from '@/types';
 import { ICourse } from '@/types/course';
 import { IPartner } from '@/types/partner';
 import { ROUTE_MAP } from '@/utils/route.util';
+import { getMediaUrl } from '@/utils/utils';
 import { Link, usePage } from '@inertiajs/react';
 import axios from 'axios';
 import { Calendar1, CirclePlus, Edit2Icon, ExternalLink, Trash2Icon } from 'lucide-react';
@@ -24,6 +25,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, setOpenSessio
 
     const [openPartnerDrawer, setOpenPartnerDrawer] = useState(false);
     const [partners, setPartners] = useState<IPartner[]>([]);
+    const [partnerTags, setPartnerTags] = useState<string[]>([]);
     const [selectedPartners, setSelectedPartners] = useState<number[]>(course.partners ? course.partners.map((p) => p.id!) : []);
     const [partnerFilter, setPartnerFilter] = useState('');
 
@@ -35,11 +37,18 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, setOpenSessio
 
     const handleUpdatePartners = async () => {
         try {
-            await axios.post(route('dashboard.course.partners.sync', course.slug), {
-                partner_ids: selectedPartners,
-            });
-            toast.success('Partenaires associés');
-            setOpenPartnerDrawer(false);
+            await axios
+                .post(route('dashboard.course.partners.sync', course.slug), {
+                    partner_ids: selectedPartners,
+                    reference_tags: partnerTags,
+                })
+                .then((response) => {
+                    toast.success('Partenaires associés');
+                    setOpenPartnerDrawer(false);
+                })
+                .catch((error) => {
+                    toast.error('Erreur lors de la mise à jour des partenaires');
+                });
         } catch (error) {
             toast.error('Erreur lors de la mise à jour');
         }
@@ -90,10 +99,11 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, setOpenSessio
             <div>
                 <div className="mb-2 flex items-center">
                     <div className="mr-2">
+                        <span className="text-lg font-semibold">{formatPrice(course.price, course.price_includes_tax)}</span>
+
                         {course.regular_price > course.price && (
                             <span className="mr-2 text-gray-500 line-through">{course.regular_price.toLocaleString()} XOF</span>
                         )}
-                        <span className="text-lg font-semibold">{formatPrice(course.price, course.price_includes_tax)}</span>
                     </div>
                 </div>
 
@@ -164,7 +174,9 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, setOpenSessio
         return (
             <div className="mb-2 flex items-center space-x-1">
                 <span>Status: </span>
-                <span className={`text-sm ${course.is_published ? 'text-green-500' : 'text-gray-600'}`}>{course.is_published ? 'Publié' : 'Brouillon'}</span>
+                <span className={`text-sm ${course.is_published ? 'text-green-500' : 'text-gray-600'}`}>
+                    {course.is_published ? 'Publié' : 'Brouillon'}
+                </span>
                 {/* {course.is_published && <span className="ml-2 text-sm text-green-500">Active</span>} */}
             </div>
         );
@@ -206,23 +218,44 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, setOpenSessio
                             {partners
                                 .filter((p) => p.name.toLowerCase().includes(partnerFilter.toLowerCase()))
                                 .map((p) => (
-                                    <label key={p.id} className="flex items-center space-x-2">
-                                        <input
-                                            type="checkbox"
-                                            checked={selectedPartners.includes(p.id!)}
-                                            onChange={(e) => {
-                                                let updated = [...selectedPartners];
-                                                if (e.target.checked) {
-                                                    updated.push(p.id!);
-                                                } else {
-                                                    updated = updated.filter((id) => id !== p.id);
-                                                }
-                                                setSelectedPartners(updated);
-                                            }}
-                                        />
-                                        <span>{p.name}</span>
-                                    </label>
+                                    <div className="p-0">
+                                        <label key={p.id} className="grid grid-cols-3 items-center border-b border-gray-200 space-x-2">
+                                            <div className="col-span-2">
+                                                <div className="flex space-x-1">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={selectedPartners.includes(p.id!)}
+                                                        onChange={(e) => {
+                                                            let updated = [...selectedPartners];
+                                                            if (e.target.checked) {
+                                                                updated.push(p.id!);
+                                                            } else {
+                                                                updated = updated.filter((id) => id !== p.id);
+                                                            }
+                                                            setSelectedPartners(updated);
+                                                        }}
+                                                    />
+                                                    <span>{p.name}</span>
+                                                </div>
+                                            </div>
+                                            <div className="flex justify-end border-l pl-2">
+                                                <img src={getMediaUrl(p.media)} alt={p.name} className="h-20 w-[auto] rounded-full" />
+                                            </div>
+                                        </label>
+                                    </div>
                                 ))}
+                        </div>
+
+                        <div>
+                            <input
+                                type="text"
+                                onChange={(e) => {
+                                    const value = e.target.value;
+                                    setPartnerTags(value ? value.split(',').map((tag) => tag.trim()) : []);
+                                }}
+                                placeholder="Tag"
+                                className="w-full rounded border p-2"
+                            />
                         </div>
                         <Button className="mt-2" onClick={handleUpdatePartners}>
                             Enregistrer
