@@ -39,7 +39,7 @@ class BlogRepository extends Repository
         ) : null;
 
         return self::create([
-            'user_id'          => $request->user_id,
+            'user_id'          => auth()->id(),
             'media_id'         => $media ? $media->id : null,
             'blog_category_id' => $request->category_id,
             'title'            => $request->title,
@@ -70,7 +70,7 @@ class BlogRepository extends Repository
         }
 
         return self::update($blog, [
-            'user_id'          => $request->user_id,
+            'user_id'          => $blog->user_id,
             'media_id'         => $media ? $media->id : null,
             'blog_category_id' => $request->category_id,
             'title'            => $request->title,

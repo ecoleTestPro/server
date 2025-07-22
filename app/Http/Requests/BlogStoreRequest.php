@@ -22,7 +22,6 @@ class BlogStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id'     => 'required|integer|exists:users,id',
             'title'       => 'required|string',
             'description' => 'required|string',
             'category_id' => 'nullable|integer|exists:blog_categories,id',
