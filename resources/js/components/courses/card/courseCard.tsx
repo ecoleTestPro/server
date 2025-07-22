@@ -162,9 +162,10 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, setOpenSessio
 
     const CourseStatus = () => {
         return (
-            <div className="mb-2 flex items-center">
-                <span className="text-sm text-gray-600">Status: {course.is_published ? 'Published' : 'Draft'}</span>
-                {course.is_published && <span className="ml-2 text-sm text-green-500">Active</span>}
+            <div className="mb-2 flex items-center space-x-1">
+                <span>Status: </span>
+                <span className={`text-sm ${course.is_published ? 'text-green-500' : 'text-gray-600'}`}>{course.is_published ? 'Publié' : 'Brouillon'}</span>
+                {/* {course.is_published && <span className="ml-2 text-sm text-green-500">Active</span>} */}
             </div>
         );
     };
