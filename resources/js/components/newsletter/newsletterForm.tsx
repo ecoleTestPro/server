@@ -35,7 +35,7 @@ export default function NewsletterForm({ closeDrawer }: NewsletterFormProps) {
     };
 
     return (
-        <form className="mx-auto flex max-w-xl flex-col gap-4" onSubmit={submit}>
+        <form className="mx-auto flex flex-col gap-4" onSubmit={submit}>
             <div className="grid gap-2">
                 <Input id="email" required value={data.email} onChange={(e) => setData('email', e.target.value)} disabled={processing} placeholder="Email" />
                 <InputError message={errors.email} />

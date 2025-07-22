@@ -62,7 +62,7 @@ export default function PartnerForm({ closeDrawer, initialData }: PartnerFormPro
     };
 
     return (
-        <form className="mx-auto flex max-w-xl flex-col gap-4" onSubmit={submit}>
+        <form className="mx-auto flex flex-col gap-4" onSubmit={submit}>
             <div className="grid gap-2">
                 <Label htmlFor="name">{t('Name', 'Nom')}</Label>
                 <Input id="name" required value={data.name ?? ''} onChange={(e) => setData('name', e.target.value)} disabled={processing} />

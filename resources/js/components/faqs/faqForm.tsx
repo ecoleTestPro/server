@@ -50,7 +50,7 @@ export default function FaqForm({ closeDrawer, initialData }: FaqFormProps) {
     };
 
     return (
-        <form className="mx-auto flex max-w-xl flex-col gap-4" onSubmit={submit}>
+        <form className="mx-auto flex flex-col gap-4" onSubmit={submit}>
             <div className="grid gap-2">
                 <Label htmlFor="question">{t('Question')}</Label>
                 <Input id="question" required value={data.question} onChange={(e) => setData('question', e.target.value)} disabled={processing} />

@@ -41,7 +41,7 @@ export default function JobOfferDataTable({ offers, onEditRow, onDeleteRow, onTo
         },
         {
             accessorKey: 'expires_at',
-            header: 'Expire le',
+            header: 'Expire le'
         },
         {
             accessorKey: 'is_active',
