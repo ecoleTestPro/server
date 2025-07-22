@@ -1,7 +1,8 @@
 import React, { Suspense, lazy } from 'react';
 
-const CKEditorComponent = lazy(() => import('@ckeditor/ckeditor5-react').then(mod => ({ default: mod.CKEditor })));
-const ClassicEditor = lazy(() => import('@ckeditor/ckeditor5-build-classic'));
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+
 
 interface RichTextCKEditorProps {
     label: string;
@@ -24,7 +25,7 @@ export default function RichTextCKEditor({
                 {label}
             </label>
             <Suspense fallback={<div>Loading editor...</div>}>
-                <CKEditorComponent
+                <CKEditor
                     editor={ClassicEditor}
                     data={value}
                     onChange={(_event: unknown, editor: any) => {
@@ -34,17 +35,14 @@ export default function RichTextCKEditor({
                     config={{
                         toolbar: {
                             items: [
-                                'heading',
-                                '|',
-                                'bold',
-                                'italic',
-                                'link',
-                                'bulletedList',
-                                'numberedList',
-                                '|',
-                                'blockQuote',
-                                'undo',
-                                'redo',
+                                'undo', 'redo',
+                                '|', 'heading',
+                                '|', 'fontfamily', 'fontsize', 'fontColor', 'fontBackgroundColor',
+                                '|', 'bold', 'italic', 'strikethrough', 'subscript', 'superscript', 'code',
+                                '-', // break point
+                                '|', 'alignment',
+                                'link', 'uploadImage', 'blockQuote', 'codeBlock',
+                                '|', 'bulletedList', 'numberedList', 'todoList', 'outdent', 'indent'
                             ],
                         },
                     }}

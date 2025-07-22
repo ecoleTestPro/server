@@ -10,6 +10,7 @@ export interface IJobOffer {
     is_active?: boolean;
     created_at?: string;
     updated_at?: string;
+    [key: string]: string | number | boolean | null | undefined;
 }
 
 export interface IJobApplication {
