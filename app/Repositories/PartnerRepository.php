@@ -49,9 +49,11 @@ class PartnerRepository extends Repository
 
     public static function storeByRequest($request)
     {
+        $path = $request->boolean('is_reference') ? 'references' : 'partner/logo';
+
         $picture = $request->hasFile('picture') ? MediaRepository::storeByRequest(
             $request->file('picture'),
-            'partner/logo',
+            $path,
             MediaTypeEnum::IMAGE
         ) : null;
 
@@ -67,17 +69,19 @@ class PartnerRepository extends Repository
 
     public static function updateByRequest($request, Partner $partner)
     {
+        $path = $request->boolean('is_reference') ? 'references' : 'partner/logo';
+
         if ($partner->media) {
             $picture = $request->hasFile('picture') ? MediaRepository::updateByRequest(
                 $request->file('picture'),
                 $partner->media,
-                'partner/logo',
+                $path,
                 MediaTypeEnum::IMAGE
             ) : $partner->media;
         } else {
             $picture = $request->hasFile('picture') ? MediaRepository::storeByRequest(
                 $request->file('picture'),
-                'partner/logo',
+                $path,
                 MediaTypeEnum::IMAGE
             ) : null;
         }
