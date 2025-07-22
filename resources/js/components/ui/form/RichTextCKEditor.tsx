@@ -47,7 +47,6 @@ export default function RichTextCKEditor({
                         },
                     }}
                     id={labelId}
-                    className={className}
                 />
             </Suspense>
         </div>
