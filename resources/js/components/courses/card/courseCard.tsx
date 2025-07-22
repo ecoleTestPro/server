@@ -25,7 +25,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, setOpenSessio
 
     const [openPartnerDrawer, setOpenPartnerDrawer] = useState(false);
     const [partners, setPartners] = useState<IPartner[]>([]);
-    const [partnerTags, setPartnerTags] = useState<string[]>([]);
+    const [partnerTags, setPartnerTags] = useState<string>('');
     const [selectedPartners, setSelectedPartners] = useState<number[]>(course.partners ? course.partners.map((p) => p.id!) : []);
     const [partnerFilter, setPartnerFilter] = useState('');
 
@@ -33,14 +33,26 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, setOpenSessio
         if ((data as any)?.partners) {
             setPartners((data as any).partners as IPartner[]);
         }
+
+        if (course.reference_tag) {
+            setPartnerTags(course.reference_tag);
+        }
     }, [data]);
 
     const handleUpdatePartners = async () => {
         try {
+            if (!selectedPartners || selectedPartners.length === 0) {
+                toast.error('Veuillez sélectionner au moins un partenaire.');
+                return;
+            } else if (!partnerTags) {
+                toast.error('Veuillez entrer un tag de référence.');
+                return;
+            }
+
             await axios
                 .post(route('dashboard.course.partners.sync', course.slug), {
                     partner_ids: selectedPartners,
-                    reference_tags: partnerTags,
+                    reference_tag: partnerTags,
                 })
                 .then((response) => {
                     toast.success('Partenaires associés');
@@ -214,6 +226,19 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, setOpenSessio
                             value={partnerFilter}
                             onChange={(e) => setPartnerFilter(e.target.value)}
                         />
+
+                        <div className="flex items-center justify-between my-2">
+                            <a
+                                className="hover:underline cursor-pointer"
+                                onClick={() => setSelectedPartners(partners.map((p) => p.id).filter((id): id is number => id !== undefined))}
+                            >
+                                Tous sélectionner
+                            </a>
+                            <a className="hover:underline cursor-pointer" onClick={() => setSelectedPartners([])}>
+                                Tous désélectionner
+                            </a>
+                        </div>
+
                         <div className="max-h-[50vh] overflow-y-scroll">
                             {partners
                                 .filter((p) => p.name.toLowerCase().includes(partnerFilter.toLowerCase()))
@@ -248,10 +273,12 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, setOpenSessio
 
                         <div>
                             <input
+                                required
                                 type="text"
+                                value={partnerTags}
                                 onChange={(e) => {
                                     const value = e.target.value;
-                                    setPartnerTags(value ? value.split(',').map((tag) => tag.trim()) : []);
+                                    setPartnerTags(value);
                                 }}
                                 placeholder="Tag"
                                 className="w-full rounded border p-2"

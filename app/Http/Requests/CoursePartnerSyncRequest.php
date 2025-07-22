@@ -14,7 +14,8 @@ class CoursePartnerSyncRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'partner_ids' => 'sometimes|array',
+            'reference_tag' => 'sometimes|string|max:255',
+            'partner_ids'   => 'sometimes|array',
             'partner_ids.*' => 'exists:partners,id',
         ];
     }

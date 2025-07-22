@@ -30,8 +30,17 @@ class PartnerRepository extends Repository
         return self::query()
             ->where('is_active', true)
             ->where('is_reference', true)
-            ->where('tag', $tag)
-            ->with('media');
+            ->when($tag, function ($query) use ($tag) {
+                return $query->where(function ($query) use ($tag) {
+                    $query->where('tag', $tag)
+                        ->orWhere('tag', 'like', "%;$tag;%")
+                        ->orWhere('tag', 'like', "$tag;%")
+                        ->orWhere('tag', 'like', "%;$tag");
+                });
+                return $query;
+            })
+            ->with('media')
+            ->get();
     }
 
     /**

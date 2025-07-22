@@ -49,7 +49,7 @@ export default function CourseCategoryPage() {
                         <Hero title={course.title} description={''} course={course} breadcrumbItems={breadcrumb} gradient="style-2" />
                         {/* <OurCurrentCourses coursesData={category.children} showSidebar={true} /> */}
                         <CourseDetail course={course} />
-                        {course.reference_tag && <ReferenceLogos references={references} tag={course.reference_tag} />}
+                        {course.reference_tag && <ReferenceLogos tag={course.reference_tag} imgHeight='h-32' />}
                     </>
                 )}
                 <Testimonials />

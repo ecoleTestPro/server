@@ -10,6 +10,7 @@ use App\Http\Requests\CourseStoreRequest;
 use App\Http\Requests\CourseUpdateRequest;
 use App\Http\Requests\CoursePartnerSyncRequest;
 use App\Models\Course;
+use App\Models\Partner;
 use App\Models\User;
 use App\Repositories\CategoryRepository;
 use App\Repositories\ContentRepository;
@@ -207,7 +208,9 @@ class CourseController extends Controller
                 ], 404);
             }
 
-            $course->partners()->sync($request->validated('partner_ids') ?? []);
+            $tag = $request->reference_tag ?? "";
+            $partnerModel = new Partner();
+            $partnerModel->saveTagFromCourse($course, $tag, $request->partner_ids);
             $course->load('partners');
 
             return response()->json([
