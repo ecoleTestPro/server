@@ -301,6 +301,7 @@ class JobOfferSeeder extends Seeder
         ];
 
         foreach ($offers as $offer) {
+            $offer['expires_at'] = now()->addMonth();
             JobOfferRepository::create($offer);
         }
     }

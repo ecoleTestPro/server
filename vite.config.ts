@@ -5,6 +5,12 @@ import { resolve } from 'node:path';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
+    optimizeDeps: {
+        include: [
+            '@ckeditor/ckeditor5-react',
+            '@ckeditor/ckeditor5-build-classic',
+        ],
+    },
     plugins: [
         laravel({
             input: ['resources/css/app.css', 'resources/js/app.tsx'],

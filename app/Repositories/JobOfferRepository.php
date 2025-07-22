@@ -15,26 +15,28 @@ class JobOfferRepository extends Repository
     public static function storeByRequest($request)
     {
         return self::create([
-            'title' => $request->title,
-            'company' => $request->company,
-            'location' => $request->location,
-            'type' => $request->type,
-            'salary' => $request->salary,
+            'title'       => $request->title,
+            'company'     => $request->company,
+            'location'    => $request->location,
+            'type'        => $request->type,
+            'salary'      => $request->salary,
             'description' => $request->description,
-            'is_active' => $request->has('is_active') ? true : false,
+            'expires_at'  => $request->expires_at,
+            'is_active'   => $request->has('is_active') ? true : false,
         ]);
     }
 
     public static function updateByRequest($request, JobOffer $offer)
     {
         return self::update($offer, [
-            'title' => $request->title ?? $offer->title,
-            'company' => $request->company ?? $offer->company,
-            'location' => $request->location ?? $offer->location,
-            'type' => $request->type ?? $offer->type,
-            'salary' => $request->salary ?? $offer->salary,
+            'title'       => $request->title ?? $offer->title,
+            'company'     => $request->company ?? $offer->company,
+            'location'    => $request->location ?? $offer->location,
+            'type'        => $request->type ?? $offer->type,
+            'salary'      => $request->salary ?? $offer->salary,
             'description' => $request->description ?? $offer->description,
-            'is_active' => $request->has('is_active') ? true : $offer->is_active,
+            'expires_at'  => $request->expires_at ?? $offer->expires_at,
+            'is_active'   => $request->has('is_active') ? true : $offer->is_active,
         ]);
     }
 }

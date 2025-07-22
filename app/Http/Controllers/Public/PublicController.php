@@ -42,48 +42,91 @@ class PublicController extends PublicAbstractController
         ]);
     }
 
+    /**
+     * Display the consulting page with active references for 'audit-conseil'.
+     *
+     * This function prepares the data array by including active references
+     * related to 'audit-conseil' from the PartnerRepository. It then renders
+     * the 'consulting' page using Inertia with the prepared data.
+     */
     public function consulting()
     {
         $data =  $this->default_data;
+        $data['references'] = PartnerRepository::getActiveReferences('audit-conseil');
 
         return Inertia::render('consulting', [
             'data' => $data,
         ]);
     }
 
+    /**
+     * Display the auditMaturity page with active references for 'audit-conseil'.
+     *
+     * This function prepares the data array by including active references
+     * related to 'audit-conseil' from the PartnerRepository. It then renders
+     * the 'public/consulting/consulting-audit' page using Inertia with the
+     * prepared data.
+     */
     public function auditMaturity()
     {
         $data = $this->default_data;
-        $data['references'] = PartnerRepository::query()
-            ->where('is_active', true)
-            ->where('is_reference', true)
-            ->where('tag', 'audit-conseil')
-            ->with('media')
-            ->get();
+        $data['references'] = PartnerRepository::getActiveReferences('audit-conseil');
 
         return Inertia::render('public/consulting/consulting-audit', [
             'data'  => $data,
         ]);
     }
 
+    /**
+     * Display the consulting-test page with active references for 'audit-conseil'.
+     *
+     * This function prepares the data array by including active references
+     * related to 'audit-conseil' from the PartnerRepository. It then renders
+     * the 'public/consulting/consulting-test' page using Inertia with the
+     * prepared data.
+     */
     public function consultingTesting()
     {
+        $data = $this->default_data;
+        $data['references'] = PartnerRepository::getActiveReferences('audit-conseil');
+
         return Inertia::render('public/consulting/consulting-test', [
-            'data'  => $this->default_data,
+            'data'  => $data,
         ]);
     }
 
+    /**
+     * Display the service-test-outsourcing page with active references for 'audit-conseil'.
+     *
+     * This function prepares the data array by including active references
+     * related to 'audit-conseil' from the PartnerRepository. It then renders
+     * the 'public/our-services/service-test-outsourcing' page using Inertia with the
+     * prepared data.
+     */
     public function serviceTestOutsourcingServices()
     {
+        $data = $this->default_data;
+        $data['references'] = PartnerRepository::getActiveReferences('audit-conseil');
+
         return Inertia::render('public/our-services/service-test-outsourcing', [
-            'data'  => $this->default_data,
+            'data'  => $data,
         ]);
     }
 
+    /**
+     * Display the service-integration-specialists page with active references for 'audit-conseil'.
+     *
+     * This function prepares the data array by including active references
+     * related to 'audit-conseil' from the PartnerRepository. It then renders
+     * the 'public/our-services/service-integration-specialists' page using Inertia with the
+     * prepared data.
+     */
     public function serviceIntegrationSpecialists()
     {
+        $data = $this->default_data;
+        $data['references'] = PartnerRepository::getActiveReferences('audit-conseil');
         return Inertia::render('public/our-services/service-integration-specialists', [
-            'data'  => $this->default_data,
+            'data'  => $data,
         ]);
     }
 
@@ -147,6 +190,9 @@ class PublicController extends PublicAbstractController
     public function reconversionMetier()
     {
         $data = $this->default_data;
+        $data['references'] = PartnerRepository::getActiveReferences('reconversion');
+
+
         return Inertia::render('public/reconversion-metier', [
             'data' => $data,
         ]);

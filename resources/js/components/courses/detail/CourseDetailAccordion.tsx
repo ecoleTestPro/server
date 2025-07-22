@@ -36,7 +36,11 @@ export default function CourseDetailAccordion({ section, sectionTitle, toggleSec
                     </span>
                 </div>
             </button>
-            {isOpen[section] && <div className="toc-accordion-collapse px-[20px] pb-[20px] md:px-[25px] ">{content}</div>}
+            {isOpen[section] && (
+                <div className="toc-accordion-collapse px-[20px] pb-[20px] md:px-[25px]" id="detail-course-html">
+                    {content}
+                </div>
+            )}
         </div>
     );
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Repositories\SettingRepository;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -15,7 +16,10 @@ class NotificationInstanceResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $setting = SettingRepository::query()->get()->first();
+        $setting = SettingRepository::query()->first();
+        if (!$setting) {
+            $setting = new Setting();
+        }
 
         return [
             'id' => $this->id,

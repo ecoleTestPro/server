@@ -14,12 +14,13 @@ class JobOfferStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|string',
-            'company' => 'nullable|string',
-            'location' => 'nullable|string',
-            'type' => 'nullable|string',
-            'salary' => 'nullable|integer',
+            'title'       => 'required|string',
+            'company'     => 'nullable|string',
+            'location'    => 'nullable|string',
+            'type'        => 'nullable|string',
+            'salary'      => 'nullable|integer',
             'description' => 'nullable|string',
+            'expires_at'  => 'nullable|date',
         ];
     }
 }

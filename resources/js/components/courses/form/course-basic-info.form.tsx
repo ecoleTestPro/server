@@ -7,7 +7,8 @@ import { Label } from '@/components/ui/label';
 import SelectCustom, { ISelectItem } from '@/components/ui/select-custom';
 import { ICourse, ICourseCategory } from '@/types/course';
 import { Logger } from '@/utils/console.util';
-import { lazy, useEffect } from 'react';
+import { getMediaUrl } from '@/utils/utils';
+import { lazy, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import 'react-quill/dist/quill.snow.css';
 import { Textarea } from '../../ui/text-area';
@@ -48,6 +49,22 @@ export default function CourseBasicInfoForm({
 }: CourseBasicInfoFormProps) {
     const { t } = useTranslation();
 
+    const thumbnailPreview = useMemo(
+        () => (courseSelected?.media ? [getMediaUrl(courseSelected.media)] : undefined),
+        [courseSelected?.media]
+    );
+    const logoPreview = useMemo(
+        () => (courseSelected?.logo ? [getMediaUrl(courseSelected.logo)] : undefined),
+        [courseSelected?.logo]
+    );
+    const orgLogoPreview = useMemo(
+        () =>
+            courseSelected?.organization_logo
+                ? [getMediaUrl(courseSelected.organization_logo)]
+                : undefined,
+        [courseSelected?.organization_logo]
+    );
+
     const category_list = (): ISelectItem[] => {
         return categories.map((category) => ({
             id: category.id!,
@@ -63,13 +80,6 @@ export default function CourseBasicInfoForm({
     };
 
     useEffect(() => {
-        Logger.log('CourseBasicInfoForm mounted', {
-            fieldsetClasses,
-            data,
-            processing,
-            errors,
-            categories,
-        });
         if (courseSelected) {
             if (data.category_id === '' && courseSelected.category_id) {
                 setData('category_id', courseSelected.category_id.toString());
@@ -155,6 +165,7 @@ export default function CourseBasicInfoForm({
                             accept="image/*"
                             multiple={false}
                             disabled={processing}
+                            previewUrls={thumbnailPreview}
                         />
                         <InputError message={errors.media} />
                     </div>
@@ -166,6 +177,7 @@ export default function CourseBasicInfoForm({
                             accept="image/*"
                             multiple={false}
                             disabled={processing}
+                            previewUrls={logoPreview}
                         />
                         <InputError message={errors.logo} />
                     </div>
@@ -177,6 +189,7 @@ export default function CourseBasicInfoForm({
                             accept="image/*"
                             multiple={false}
                             disabled={processing}
+                            previewUrls={orgLogoPreview}
                         />
                         <InputError message={errors.organization_logo} />
                     </div>

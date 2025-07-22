@@ -41,6 +41,9 @@ export const JobCard: React.FC<{
                 </p>
             )}
             <p className="text-gray-600 dark:text-gray-300 mt-2 line-clamp-2">{job.description}</p>
+            {job.expires_at && (
+                <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">Expire le {job.expires_at}</p>
+            )}
             <p className="text-sm text-gray-400 dark:text-gray-500 mt-2">Publié le {job.created_at}</p>
             <BtnSecondary
                 label="Postuler"

@@ -9,7 +9,7 @@ interface DrawerProps {
     
 }
 
-export default function Drawer({  title, open, setOpen, component, maxWidth="max-w-1/2" }: DrawerProps) {
+export default function Drawer({  title, open, setOpen, component, maxWidth=" w-full lg:max-w-1/2 " }: DrawerProps) {
   if (!open) return null; // Optionally hide when not open
 
   const CloseBtn = () => {

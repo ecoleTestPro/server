@@ -5,6 +5,7 @@ import { Label } from '@/components/ui/label';
 // import { PeriodicityUnitEnum } from '@/types/course';
 import { Switch } from '@/components/ui/switch';
 import TooltipCustom from '@/components/ui/TooltipCustom';
+import { ICourse } from '@/types/course';
 import { Info } from 'lucide-react';
 import { lazy, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -12,7 +13,6 @@ import 'react-quill/dist/quill.snow.css';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '../../ui/select';
 import { ICourseForm, PERIODICITY_UNIT } from './course.form.util';
 import { ICourseFormErrors } from './edit-course.form';
-import { ICourse } from '@/types/course';
 
 // const ReactQuill = lazy(() => import('react-quill'));
 const ReactQuill = lazy(() => import('react-quill-new'));
@@ -24,15 +24,17 @@ interface CourseAdditionnalFormProps {
     setData: (data: string, value: string | number) => void;
     processing: boolean;
     errors: ICourseFormErrors;
+    partnerTags?: string[];
 }
 
-export default function CourseAdditionnalForm({ fieldsetClasses, data, courseSelected, setData, processing, errors }: CourseAdditionnalFormProps) {
+export default function CourseAdditionnalForm({ fieldsetClasses, data, courseSelected, setData, processing, errors, partnerTags = [] }: CourseAdditionnalFormProps) {
     const [displayPrice, setDisplayPrice] = useState<string>(() => (data.price ? Number(data.price).toLocaleString('fr-FR') : ''));
 
     useEffect(() => {
         setDisplayPrice(data.price ? Number(data.price).toLocaleString('fr-FR') : '');
-        if(courseSelected ) {
-            courseSelected.price && data.price == '' && setData('price', courseSelected.price.toString()); 
+        if (courseSelected) {
+            courseSelected.price && data.price == '' && setData('price', courseSelected.price.toString());
+            courseSelected.periodicity_unit && data.periodicity_unit == '' && setData('periodicity_unit', courseSelected.periodicity_unit);
         }
     }, [data.price]);
     const { t } = useTranslation();
@@ -97,7 +99,8 @@ export default function CourseAdditionnalForm({ fieldsetClasses, data, courseSel
 
                 <div className="grid gap-2">
                     <Label htmlFor="duration">
-                        {t('courses.duration', 'Durée')} <span className="text-red-500">*</span>
+                        {t('courses.duration', 'Durée')}
+                        {/*  <span className="text-red-500">*</span> */}
                     </Label>
                     <Input
                         id="duration"
@@ -112,9 +115,15 @@ export default function CourseAdditionnalForm({ fieldsetClasses, data, courseSel
 
                 <div className="grid gap-2">
                     <Label htmlFor="periodicity_unit">
-                        {t('courses.periodicity_unit', 'Periodicité')} <span className="text-red-500">*</span>
+                        {t('courses.periodicity_unit', 'Periodicité')}
+                        {/* <span className="text-red-500">*</span> */}
                     </Label>
-                    <Select disabled={processing} value={data.periodicity_unit} onValueChange={(value) => setData('periodicity_unit', value)}>
+                    <Select
+                        disabled={processing}
+                        value={data.periodicity_unit}
+                        defaultValue={data.periodicity_unit}
+                        onValueChange={(value) => setData('periodicity_unit', value)}
+                    >
                         <SelectTrigger className="w-full">
                             <SelectValue placeholder="Sélectionner une catégorie" />
                         </SelectTrigger>
@@ -149,29 +158,37 @@ export default function CourseAdditionnalForm({ fieldsetClasses, data, courseSel
                     />
                     <InputError message={errors.attachment} />
                 </div>
+                {false && (
+                    <div className="grid gap-2">
+                        {/* LECTURES */}
+                        <Label htmlFor="lectures">{t('courses.lectures', 'Nombre de leçons')}</Label>
+                        <Input
+                            id="lectures"
+                            type="number"
+                            value={data.lectures}
+                            onChange={(e) => setData('lectures', e.target.value)}
+                            disabled={processing}
+                            placeholder={t('courses.lectures', 'Nombre de leçons')}
+                        />
+                        <InputError message={errors.lectures} />
+                    </div>
+                )}
                 <div className="grid gap-2">
-                    {/* LECTURES */}
-                    <Label htmlFor="lectures">{t('courses.lectures', 'Nombre de leçons')}</Label>
+                    <Label htmlFor="reference_tag">Tag de référence</Label>
                     <Input
-                        id="lectures"
-                        type="number"
-                        value={data.lectures}
-                        onChange={(e) => setData('lectures', e.target.value)}
-                        disabled={processing}
-                        placeholder={t('courses.lectures', 'Nombre de leçons')}
-                    />
-                    <InputError message={errors.lectures} />
-                </div>
-                <div className="grid gap-2">
-                    <Label htmlFor="reference_tag">Tag de références</Label>
-                    <Input
+                        list="partner-tags"
                         id="reference_tag"
                         type="text"
                         value={data.reference_tag ?? ''}
                         onChange={(e) => setData('reference_tag', e.target.value)}
                         disabled={processing}
-                        placeholder="Tag de références (ex: audit-conseil)"
+                        placeholder="Tag de référence (ex: audit-conseil)"
                     />
+                    <datalist id="partner-tags">
+                        {partnerTags.map((tag) => (
+                            <option key={tag} value={tag} />
+                        ))}
+                    </datalist>
                     <InputError message={errors.reference_tag} />
                 </div>
             </div>

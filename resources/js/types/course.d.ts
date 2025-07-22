@@ -21,7 +21,8 @@ export interface IMedia {
     extension: string,
     type: mediaType,
     created_at: string,
-    updated_at: string
+    updated_at: string,
+    url?: string
 }
 
 export type ICoursePeriodicity = 'DAY' | 'WEEK' | 'MONTH' | 'YEAR';
@@ -111,7 +112,7 @@ export interface ICourse {
     nextSession?: string; // Optional next session date
     description: ICourseDescription;
     categories?: ICourseCategory[];
-    media?: IMedia[];
+    media?: IMedia;
     logo?: IMedia;
     organization_logo?: IMedia;
     gallery?: IMedia[];

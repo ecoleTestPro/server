@@ -28,8 +28,8 @@ class Partner extends Model
     public function mediaPath(): Attribute
     {
         $media = null;
-        if ($this->media && Storage::exists($this->media->src)) {
-            $media = Storage::url($this->media->src);
+        if ($this->media && Storage::disk('public')->exists($this->media->src)) {
+            $media = Storage::disk('public')->url($this->media->src);
         }
 
         return Attribute::make(
@@ -40,5 +40,29 @@ class Partner extends Model
     public function courses(): BelongsToMany
     {
         return $this->belongsToMany(Course::class, 'course_partner');
+    }
+
+    public function saveTagFromCourse(Course $course, string $tag, array $partner_ids): void
+    {
+        try {
+            // #0 : Save tag from course
+            $course->partners()->sync($partner_ids);
+
+            // #1 save reference tag to course
+            $course->reference_tag = $tag;
+            $course->save();
+
+            // #2 : add tag to tags string partner
+            $partners = $this->whereIn('id', $partner_ids)->get();
+            foreach ($partners as $partner) {
+                $existingTags = explode(';', $partner->tag ?? '');
+                $newTags      = array_unique(array_merge($existingTags, [$tag]));
+                $partner->tag = implode(';', $newTags);
+                $partner->save();
+            }
+        } catch (\Exception $e) {
+            // Handle exception if needed
+            throw new \Exception('Error saving tag from course: ' . $e->getMessage());
+        }
     }
 }

@@ -12,21 +12,15 @@ use Inertia\Inertia;
 
 class ReferenceController extends Controller
 {
+    /**
+     * Get all references with their media.
+     *
+     * @param  Request  $request
+     * @return \Inertia\Response
+     */
     public function index(Request $request)
     {
-        $search = $request->search ? strtolower($request->search) : null;
-
-        $references = PartnerRepository::query()
-            ->where('is_reference', true)
-            ->when($search, function ($query) use ($search) {
-                $query->where('name', 'like', '%' . $search . '%');
-            })
-            ->with('media')
-            ->withTrashed()
-            ->latest('id')
-            ->paginate(15)
-            ->withQueryString();
-
+        $references = PartnerRepository::allWithMedia();
         $data = [
             'references' => $references,
         ];
@@ -38,9 +32,6 @@ class ReferenceController extends Controller
 
     public function store(PartnerStoreRequest $request)
     {
-        if (app()->isLocal()) {
-            return to_route('dashboard.references.index')->with('error', 'Reference not created in demo mode');
-        }
 
         $request->merge(['is_reference' => true]);
 

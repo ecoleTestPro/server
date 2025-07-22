@@ -46,6 +46,7 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
         Route::get('create',            [CourseController::class, 'create'])->name('dashboard.course.create');
         Route::post('create',           [CourseController::class, 'store'])->name('dashboard.course.store');
         Route::put('update/{slug}',     [CourseController::class, 'update'])->name('dashboard.course.update');
+        Route::post('partners/{slug}',  [CourseController::class, 'syncPartners'])->name('dashboard.course.partners.sync');
         Route::delete('delete/{id}',    [CourseController::class, 'delete'])->name('dashboard.course.delete');
         Route::post('{course}/sessions', [CourseSessionController::class, 'store'])->name('dashboard.course.session.store');
     });

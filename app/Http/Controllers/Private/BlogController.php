@@ -17,6 +17,15 @@ use Inertia\Inertia;
 
 class BlogController extends Controller
 {
+    /**
+     * Display a listing of the blogs.
+     *
+     * This method initializes a query to retrieve all blog entries,
+     * orders them by the latest 'id', and passes the data to the
+     * 'dashboard/blogs/index' view using Inertia.
+     *
+     * @return \Inertia\Response
+     */
     public function index()
     {
         $data = [];
@@ -27,6 +36,14 @@ class BlogController extends Controller
         ]);
     }
 
+    /**
+     * Show the form for creating a new blog.
+     *
+     * This method retrieves all blog categories from the repository 
+     * and passes them to the 'dashboard/blogs/create' view using Inertia.
+     *
+     * @return \Inertia\Response
+     */
     public function create()
     {
         $data = [];
@@ -39,20 +56,27 @@ class BlogController extends Controller
 
     public function store(BlogStoreRequest $request)
     {
-        $blog = BlogRepository::storeByRequest($request);
-
-        return to_route('blog.index')->withSuccess('Blog created');
+        try {
+            $created = BlogRepository::storeByRequest($request);
+            if (!$created) {
+                return response()->json(['message' => 'Error creating blog'], 500);
+            }
+            return response()->json(['message' => 'Blog created successfully'], 201);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error creating blog: ' . $e->getMessage()], 500);
+        }
     }
 
     public function edit(string $slug)
     {
         $blog = BlogRepository::initQuery()->where('slug', $slug)->firstOrFail();
-        // dd($blog);
+
         if (!$blog) {
             return redirect()->back()->withError('Blog introuvable');
         }
 
         $data['blogs']['single'] = $blog;
+        $data['blogs']['categories'] = BlogCategoryRepository::query()->get();
 
         return Inertia::render('dashboard/blogs/create', [
             'data' => $data,
@@ -61,8 +85,15 @@ class BlogController extends Controller
 
     public function update(BlogUpdateRequest $request, Blog $blog)
     {
-        BlogRepository::updateByRequest($request, $blog);
-        return to_route('blog.index')->withSuccess('Blog updated');
+        try {
+            $updated = BlogRepository::updateByRequest($request, $blog);
+            if (!$updated) {
+                return response()->json(['message' => 'Error updating blog'], 500);
+            }
+            return response()->json(['message' => 'Blog updated successfully'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error updating blog: ' . $e->getMessage()], 500);
+        }
     }
 
     /**

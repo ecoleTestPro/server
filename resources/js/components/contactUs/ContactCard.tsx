@@ -4,96 +4,84 @@ import { CONTACT_INFO } from '../layouts/footer/footer';
 
 export const TEAMS = [
     {
-        name: 'Alexis NANA',
-        role: 'Consultant Sénior en Assurance Qualité Logiciel',
-        image: '/assets/images/front-pages/user1.jpg',
+        name: 'Anass EL BEKALI',
+        role: 'EXPERT QUALITÉ LOGICIEL AUDITEUR TMMi ACCRÉDITÉ',
+        image: '/assets/images/teams/01.png',
     },
     {
-        name: 'Anass EL BEKALI',
-        role: 'Consultant Expert en Qualification S.I.',
-        image: '/assets/images/front-pages/user2.jpg',
+        name: 'Alexis NANA',
+        role: 'CONSULTANT SÉNIOR TESTING EXPERT TOSCA',
+        image: '/assets/images/teams/02.png',
     },
     {
         name: 'Abdessalam MOUTTAKI',
-        role: 'Référent Technique & Automatisation des Tests',
-        image: '/assets/images/front-pages/user3.jpg',
+        role: 'RÉFÉRENT TECHNIQUE & AUTOMATISATION DES TESTS',
+        image: '/assets/images/teams/03.png',
     },
     {
         name: 'EL Mehdi TMIMI',
-        role: 'Consultant S.I. Senior',
-        image: '/assets/images/front-pages/user4.jpg',
+        role: 'CONSULTANT SENIOR ASSURANCE QUALITÉ LOGICIEL',
+        image: '/assets/images/teams/04.png',
     },
 ];
 
 const ContactCard = () => {
     return (
-        <section>
-            <section className="body-font text-gray-600 dark:bg-[#0a0e19] dark:text-white">
-                <div className="relative z-[1] container mx-auto py-[40px] md:py-[50px] lg:py-[60px] xl:py-[80px] 2xl:max-w-[1320px]">
-                    <div className="flex items-center justify-center">
-                        <div className="py-[40px] md:py-[50px] lg:py-[60px] xl:py-[80px]">
-                            <div className="flex flex-col justify-between md:flex-row">
-                                <div className="mb-4 w-full md:mb-0 md:w-6/12">
-                                    <p className="text-primary text-xl">Contact & demandes de renseignements</p>
-                                    <h2 className="mt-2 text-4xl font-bold">Besoin d'informations ?</h2>
-                                    <p className="mt-2 text-2xl">Notre équipe se tient à votre disposition pour vous accompagner dans vos projets.</p>
+        <section className="bg-gray-100 dark:bg-[#0a0e19] py-16 px-6 text-gray-800 dark:text-white">
+            <div className="container mx-auto max-w-7xl">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                    {/* Bloc contact */}
+                    <div>
+                        <p className="text-primary text-xl mb-2">Contact & Informations</p>
+                        <h2 className="text-4xl font-bold mb-4">Besoin d’informations ?</h2>
+                        <p className="text-lg mb-6">Notre équipe est à votre écoute pour répondre à vos besoins et vous accompagner.</p>
 
-                                    <div className="my-4">
-                                        <p className="flex items-center">
-                                            <span className="mr-2">✉️</span>
-                                            <a href={`mailto:${CONTACT_INFO.email}`} className="text-lg font-semibold hover:underline">
-                                                {CONTACT_INFO.email}
-                                            </a>
-                                        </p>
-                                        <p className="flex items-center">
-                                            <span className="mr-2">📞</span>
-                                            <a href={`tel:${CONTACT_INFO.phone1}`} className="text-lg font-semibold hover:underline">
-                                                {CONTACT_INFO.phone1}
-                                            </a>
-                                        </p>
-                                        <p className="flex items-center">
-                                            <span className="mr-2">📞</span>
-                                            <a href={`tel:${CONTACT_INFO.phone2}`} className="text-lg font-semibold hover:underline">
-                                                {CONTACT_INFO.phone2}
-                                            </a>
-                                        </p>
-                                        <p className="mt-2">
-                                            <span className="mr-2 text-2xl">📍</span> {CONTACT_INFO.address}
-                                        </p>
-                                    </div>
-
-                                    <Link
-                                        href={ROUTE_MAP.public.contact.link}
-                                        className=" bg-secondary hover:bg-secondary-600 mt-4 cursor-pointer rounded-full px-4 py-2 font-semibold text-white transition duration-300 hover:underline hover:shadow-lg"
-                                    >
-                                        Nous contacter
-                                    </Link>
-                                </div>
-
-                                <div className="mt-4 w-full md:mt-0 md:ml-6 md:w-6/12">
-                                    <div className="item-center flex h-fit flex-col">
-                                        {/* <h3 className="text-xl font-semibold">Notre équipe</h3> */}
-                                        <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
-                                            {TEAMS.map((teamMember, index) => (
-                                                <div key={index} className="flex flex-col items-center">
-                                                    <img
-                                                        src={teamMember.image}
-                                                        alt={teamMember.name}
-                                                        className="h-32 w-32 rounded-full"
-                                                        style={{ objectFit: 'cover' }}
-                                                    />
-                                                    <p className="mt-2 text-sm font-medium">{teamMember.name}</p>
-                                                    <p className="text-xs">{teamMember.role}</p>
-                                                </div>
-                                            ))}
-                                        </div>{' '}
-                                    </div>
-                                </div>
+                        <div className="space-y-4">
+                            <div className="flex items-center space-x-3">
+                                <span className="text-2xl">✉️</span>
+                                <a href={`mailto:${CONTACT_INFO.email}`} className="text-lg font-semibold hover:underline">
+                                    {CONTACT_INFO.email}
+                                </a>
+                            </div>
+                            <div className="flex items-center space-x-3">
+                                <span className="text-2xl">📞</span>
+                                <a href={`tel:${CONTACT_INFO.phone2}`} className="text-lg font-semibold hover:underline">
+                                    {CONTACT_INFO.phone2}
+                                </a>
+                            </div>
+                            <div className="flex items-center space-x-3">
+                                <span className="text-2xl">📍</span>
+                                <p className="text-lg">{CONTACT_INFO.address}</p>
                             </div>
                         </div>
+
+                        <Link
+                            href={ROUTE_MAP.public.contact.link}
+                            className="inline-block mt-6 rounded-full bg-secondary px-6 py-3 font-semibold text-white hover:bg-secondary-600 transition hover:shadow-lg"
+                        >
+                            Nous contacter
+                        </Link>
+                    </div>
+
+                    {/* Bloc équipe */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
+                        {TEAMS.map((member, index) => (
+                            <div
+                                key={index}
+                                className="flex flex-col items-center text-center bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-md hover:shadow-lg transition-transform hover:-translate-y-1"
+                            >
+                                <img
+                                    src={member.image}
+                                    alt={member.name}
+                                    className="w-28 h-28 rounded-full object-cover border-4 border-secondary mb-4"
+                                />
+                                <h3 className="text-lg font-semibold">{member.name}</h3>
+                                <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">{member.role}</p>
+                            </div>
+                        ))}
                     </div>
                 </div>
-            </section>
+            </div>
         </section>
     );
 };

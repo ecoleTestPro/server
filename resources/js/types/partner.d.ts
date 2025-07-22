@@ -1,3 +1,5 @@
+import { IMedia } from "./course";
+
 export interface IPartner {
     id?: number;
     name: string;

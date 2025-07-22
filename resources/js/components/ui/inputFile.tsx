@@ -2,14 +2,16 @@ import * as React from 'react';
 import { cn } from '@/lib/utils';
 
 interface InputFileProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  multiple?: boolean;
-  onFilesChange?: (files: FileList | null) => void;
+    multiple?: boolean;
+    onFilesChange?: (files: FileList | null) => void;
+    previewUrls?: string[];
 }
 
 export function InputFile({
     className,
     multiple = false,
     onFilesChange,
+    previewUrls,
     id: propId,
     ...props
 }: InputFileProps) {
@@ -17,6 +19,16 @@ export function InputFile({
     const [previews, setPreviews] = React.useState<{ src: string; type: string }[]>([]);
     const inputRef = React.useRef<HTMLInputElement>(null);
     const id = propId ?? React.useId();
+
+    React.useEffect(() => {
+        if (previewUrls && previewUrls.length > 0) {
+            const urls = previewUrls.map((u) => ({
+                src: u,
+                type: u.split('.').pop()?.startsWith('mp4') ? 'video' : 'image',
+            }));
+            setPreviews(urls);
+        }
+    }, [previewUrls]);
 
   const handleFiles = (files: FileList | null) => {
     if (onFilesChange) onFilesChange(files);

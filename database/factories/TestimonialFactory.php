@@ -19,12 +19,12 @@ class TestimonialFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->name,
-            'media_id' => Media::factory()->create(['type' => MediaTypeEnum::IMAGE])->id,
+            'name'        => $this->faker->name,
             'designation' => $this->faker->jobTitle,
             'description' => fake()->text(100),
-            'rating' => $this->faker->numberBetween(1, 5),
-            'is_active' => fake()->boolean(),
+            'rating'      => $this->faker->numberBetween(1, 5),
+            'is_active'   => fake()->boolean(),
+            // 'media_id' => Media::factory()->create(['type' => MediaTypeEnum::IMAGE])->id,
         ];
     }
 }

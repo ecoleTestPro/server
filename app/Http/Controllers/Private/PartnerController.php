@@ -23,7 +23,7 @@ class PartnerController extends Controller
             ->with('media')
             ->withTrashed()
             ->latest('id')
-            ->paginate(15)
+            ->paginate(9999)
             ->withQueryString();
 
         $data = [
