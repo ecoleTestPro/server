@@ -1,10 +1,11 @@
+import { IPartner } from '@/types/partner';
+import { getMediaUrl } from '@/utils/utils';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
+import { Button } from '../ui/button/button';
 import { Checkbox } from '../ui/checkbox';
 import { DataTable } from '../ui/dataTable';
-import { Button } from '../ui/button/button';
 import ReferenceActionBtn from './referenceActionBtn';
-import { IPartner } from '@/types/partner';
 
 interface ReferenceDataTableProps {
     references: IPartner[];
@@ -33,18 +34,36 @@ export default function ReferenceDataTable({ references, onEditRow, onDeleteRow 
             accessorKey: 'name',
             header: ({ column }) => (
                 <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-                    Texte
+                    Logo
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             ),
             cell: ({ row }) => {
                 const reference = row.original;
                 const name = reference.name || '';
-                const imageUrl = reference.media?.src || null;
+                const imageUrl = getMediaUrl(reference.media?.src) || null;
 
                 return (
                     <div className="flex items-center gap-2">
-                        {imageUrl && <img src={imageUrl} alt={name} className="h-8 w-8 rounded object-cover" />}
+                        {imageUrl && <img src={imageUrl} alt={name} className="h-24 w-[auto] rounded object-cover" />}
+                    </div>
+                );
+            },
+        },
+        {
+            accessorKey: 'name',
+            header: ({ column }) => (
+                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                    Nom
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            ),
+            cell: ({ row }) => {
+                const reference = row.original;
+                const name = reference.name || '';
+
+                return (
+                    <div className="flex items-center gap-2">
                         <span>{name}</span>
                     </div>
                 );
@@ -58,6 +77,19 @@ export default function ReferenceDataTable({ references, onEditRow, onDeleteRow 
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             ),
+            cell: ({ row }) => {
+                const reference = row.original;
+                const tags = reference.tag || '';
+                const tagList = tags.split(';').map(tag => tag.trim()).filter(tag => tag.length > 0);
+
+                return (
+                    <div className="flex items-center gap-2">
+                        {tagList.map(tag => (
+                            <span key={tag} className='bg-gray-200 px-2 py-1 rounded' >{tag}</span>
+                        ))}
+                    </div>
+                );
+            },
         },
         {
             id: 'actions',

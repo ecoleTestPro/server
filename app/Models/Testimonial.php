@@ -26,8 +26,8 @@ class Testimonial extends Model
     {
         $media = asset('media/blank-user.png');
 
-        if ($this->media && Storage::exists($this->media->src)) {
-            $media = Storage::url($this->media->src);
+        if ($this->media && Storage::disk('public')->exists($this->media->src)) {
+            $media = Storage::disk('public')->url($this->media->src);
         }
 
         return Attribute::make(

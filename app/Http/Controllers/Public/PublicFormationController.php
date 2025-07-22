@@ -139,19 +139,14 @@ class PublicFormationController extends PublicAbstractController
             // Increment view count for the course
             CourseRepository::incrementViewCount($course);
 
+            // set data for the view
             $data = $this->default_data;
-            $category = CategoryRepository::findBySlug($categorySlug);
-
-            $data['category'] = $category;
+            $data['category'] = CategoryRepository::findBySlug($categorySlug);
             $data['course'] = $course;
-            $data['references'] = PartnerRepository::query()
-                ->where('is_active', true)
-                ->where('is_reference', true)
-                ->when($course->reference_tag, function ($query) use ($course) {
-                    $query->where('tag', $course->reference_tag);
-                })
-                ->with('media')
-                ->get();
+            $data['references'] = [];
+            if ($course && $course->reference_tag) {
+                $data['references'] = PartnerRepository::getActiveReferences($course->reference_tag);
+            }
 
             return Inertia::render('public/courses/course-detail.page', [
                 'data' => $data,

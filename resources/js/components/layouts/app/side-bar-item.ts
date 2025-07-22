@@ -71,11 +71,6 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
                 icon: List,
             },
             {
-                title: 'Templates',
-                href: route('dashboard.newsletter-templates.index'),
-                icon: FileStack,
-            },
-            {
                 title: 'Envoie de mail',
                 href: route('dashboard.newsletters.compose'),
                 icon: ClipboardPlus,

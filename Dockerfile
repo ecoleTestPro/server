@@ -1,70 +1,40 @@
-# Use PHP 8.2 with Apache as the base image
-FROM php:8.2-apache
+# syntax=docker/dockerfile:1
 
-# Set working directory inside the web root
-WORKDIR /var/www/html
+# ----- Build Stage -----
+FROM php:8.2-fpm-alpine AS build
 
-# Install required system dependencies
-RUN apt-get update && apt-get install -y \
-    libpng-dev \
-    libjpeg-dev \
-    libfreetype6-dev \
-    zip \
-    unzip \
-    git \
-    curl \
-    libzip-dev \
-    mariadb-server \
+# Install system dependencies and PHP extensions
+RUN apk add --no-cache git curl bash icu-dev oniguruma-dev zip libpng-dev libjpeg-turbo-dev freetype-dev nodejs npm \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd pdo pdo_mysql bcmath zip
+    && docker-php-ext-install pdo pdo_mysql pdo_sqlite intl zip bcmath gd opcache
 
-# Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+WORKDIR /app
 
-# Enable Apache mod_rewrite
-RUN a2enmod rewrite
-RUN a2enmod headers
-# Use the provided Apache vhost configuration
-COPY 000-default.conf /etc/apache2/sites-available/000-default.conf
-# Copy Laravel project files
+# Copy application source
 COPY . .
 
-# Set correct permissions
-# RUN chown -R www-data:www-data /var/www/html \
-#     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+# Install PHP and Node dependencies
+RUN composer install --no-dev --optimize-autoloader --no-interaction \
+    && npm install \
+    && npm run build
 
+# ----- Final Stage -----
+FROM php:8.2-fpm-alpine AS final
 
-# Install Laravel dependencies
-RUN composer install --no-dev --optimize-autoloader
+# Install only runtime dependencies and PHP extensions
+RUN apk add --no-cache bash icu oniguruma libpng libjpeg-turbo freetype \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install pdo pdo_mysql pdo_sqlite intl zip bcmath gd opcache
 
-# Install node js dependencies
-RUN apt-get install -y nodejs npm && \
-    npm install -g n && \
-    n stable && \
-    npm install && \
-    npm run build
+WORKDIR /app
 
-#RUN php artisan config:clear
-RUN php artisan config:clear \
-    && php artisan cache:clear \
-    && php artisan view:clear \
-    && php artisan config:cache
+# Copy built application from the build stage
+COPY --from=build /app /app
 
-# Install phpMyAdmin
-RUN mkdir -p /usr/share/phpmyadmin && \
-    curl -sSL https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.tar.gz | tar -xz --strip-components=1 -C /usr/share/phpmyadmin && \
-    ln -s /usr/share/phpmyadmin /var/www/html/phpmyadmin && \
-    chown -R www-data:www-data /usr/share/phpmyadmin
+# Ensure correct permissions for writable directories
+RUN chown -R www-data:www-data storage bootstrap/cache
 
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd mysqli pdo pdo_mysql bcmath zip
+USER www-data
 
-COPY config.inc.php /usr/share/phpmyadmin/config.inc.php
-# COPY 000-default.conxf /etc/apache2/sites-enabled/000-default.conf
-# RUN cat /etc/apache2/sites-enabled/000-default.conf
-
-# Expose ports
-EXPOSE 80
-
-# Start Apache and MySQL
-CMD apache2-foreground
+EXPOSE 9000
+CMD ["php-fpm"]

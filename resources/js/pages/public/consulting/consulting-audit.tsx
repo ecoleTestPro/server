@@ -38,9 +38,8 @@ const tests: StaticFeatureItem[] = [
 ];
 
 export default function ConsultingAudit() {
-    const { auth, data } = usePage<SharedData>().props;
+    // const { auth, data } = usePage<SharedData>().props;
     const { t } = useTranslation();
-    const references: IPartner[] = (data as any)?.references ?? [];
 
     const breadcrumbItems: IHeroBreadcrumbItems[] = [
         { label: t('PAGES.HOME', 'Accueil'), href: ROUTE_MAP.public.home.link },
@@ -181,7 +180,7 @@ export default function ConsultingAudit() {
 
                 <BlockTwo />
 
-                <ReferenceLogos references={references} />
+                <ReferenceLogos tag='audit-conseil' />
 
                 <PrevNextPage pages={prevNextPage} />
             </div>

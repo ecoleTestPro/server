@@ -397,6 +397,62 @@ function AboutUsCardThree() {
         );
     };
 
+    const BlockAgrement = () => {
+        return (
+            <MotionSection>
+                <div className={`body-font ${CLASS_NAME.bgWhite}`}>
+                    <div className={`${CLASS_NAME.sectionContentPadding}`}>
+                        <div className="container mx-auto px-4 space-y-20">
+                            <h2 className="!mb-[15px] text-2xl font-bold md:text-3xl">Nos Agreements</h2>
+                            {/* Bloc GASQ */}
+                            <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-center">
+                                <div className="col-span-1 md:col-span-1">
+                                    <img src="/assets/images/agrements/gasq.jpeg" alt="Logo GASQ" className="h-16 md:h-20" />
+                                </div>
+                                <div className="space-y-4 col-span-1 md:col-span-5">
+                                    <h2 className="text-2xl md:text-3xl font-bold text-gray-900">TestPro, organisme certifié GASQ Platinium</h2>
+                                    <p className="leading-relaxed text-gray-700 text-justify">
+                                        En tant que centre de formation accrédité GASQ Platinium, <strong>TestPro</strong> propose des parcours de
+                                        formation certifiants tels que <strong>ISTQB</strong>, alignés sur les standards internationaux du test
+                                        logiciel.
+                                        <br />
+                                        Nos formations allient expertise technique et pédagogie de qualité, encadrées par des formateurs certifiés,
+                                        avec des supports officiels à jour. Les examens peuvent être passés sur site dans nos locaux à Cocody ou en
+                                        ligne.
+                                        <br />
+                                        Cette reconnaissance renforce notre crédibilité en tant qu’acteur clé de la formation en assurance qualité
+                                        logicielle.
+                                    </p>
+                                </div>
+                            </div>
+
+                            {/* Divider */}
+                            <div className="w-full border-t border-gray-200 my-4" />
+
+                            {/* Bloc FDFP */}
+                            <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-center">
+                                <div className="col-span-1 md:col-span-1">
+                                    <img src="/assets/images/agrements/logo-fdfp.jpg" alt="Logo FDFP" className="h-20 md:h-24" />
+                                </div>
+                                <div className="space-y-4 col-span-1 md:col-span-5">
+                                    <h2 className="text-2xl md:text-3xl font-bold text-gray-900">TestPro agréé par le FDFP</h2>
+                                    <p className="leading-relaxed text-gray-700 text-justify">
+                                        <strong>TestPro</strong> est agréé par le{' '}
+                                        <strong>Fonds de Développement de la Formation Professionnelle (FDFP)</strong>, ce qui permet aux entreprises
+                                        ivoiriennes de mobiliser leur contribution pour financer les formations de leurs équipes.
+                                        <br />
+                                        Grâce à notre catalogue riche et adapté aux besoins métiers, nous accompagnons efficacement les entreprises
+                                        dans la mise en œuvre de leur plan de formation, avec une prise en charge facilitée par le FDFP.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </MotionSection>
+        );
+    };
+
     return (
         <section className="text-gray-600 dark:bg-[#0a0e19] dark:text-white">
             {/* #1 - Bienvenue et TestPro */}
@@ -416,6 +472,9 @@ function AboutUsCardThree() {
 
             {/* #5 - Ce Que Nous Offrons */}
             <BlockWhatWeOffer />
+
+            {/* #7 - Agréments */}
+            <BlockAgrement />
         </section>
     );
 }

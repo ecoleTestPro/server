@@ -64,34 +64,37 @@ export default function CourseDetailChooseSection({ course, registrationRef }: C
             {/* fixed bottom-0 left-0 w-full z-50  */}
             {/*  ${isVisible ? 'translate-y-0' : 'relative -translate-y-full'} */}
             <div className={`transition-transform duration-300 ease-in-out`}>
-                <h2 className="text-lg font-bold">{t('COURSE.DETAIL.CHOOSE_SESSION', 'Choisissez une session')}</h2>
-                <div className="container mx-auto">
-                    {course.course_sessions &&
-                        course.course_sessions.length > 0 &&
-                        course.course_sessions.map((session, index) => (
-                            <CourseSessionCard
-                                key={index}
-                                session={session}
-                                courseTitle={course.title}
-                                handleClickRegister={() => {
-                                    setSelectedSession(session);
-                                    setIsDialogOpen(true);
-                                }}
-                                periodicity_unit={course.periodicity_unit}
-                                periodicity_value={course.periodicity_value}
-                                price={course.price}
-                                regular_price={course.regular_price}
-                            />
-                        ))}
-                </div>
+                {course.course_sessions && course.course_sessions.length > 0 ? (
+                    <>
+                        <h2 className="text-lg font-bold">{t('COURSE.DETAIL.CHOOSE_SESSION', 'Choisissez une session')}</h2>
+                        <div className="container mx-auto">
+                            {course.course_sessions.map((session, index) => (
+                                <CourseSessionCard
+                                    key={index}
+                                    session={session}
+                                    courseTitle={course.title}
+                                    handleClickRegister={() => {
+                                        setSelectedSession(session);
+                                        setIsDialogOpen(true);
+                                    }}
+                                    periodicity_unit={course.periodicity_unit}
+                                    periodicity_value={course.periodicity_value}
+                                    price={course.price}
+                                    regular_price={course.regular_price}
+                                />
+                            ))}
+                        </div>{' '}
+                    </>
+                ) : (
+                    <div className="p-4">
+                        <p className="text-gray-500 dark:text-gray-400">
+                            {t('COURSE.DETAIL.NO_SESSIONS', 'Aucune session disponible pour le moment.')}
+                        </p>
+                    </div>
+                )}
             </div>
 
-            <CourseInscriptionDialog
-                course={course}
-                session={selectedSession}
-                isOpen={isDialogOpen}
-                onOpenChange={setIsDialogOpen}
-            />
+            <CourseInscriptionDialog course={course} session={selectedSession} isOpen={isDialogOpen} onOpenChange={setIsDialogOpen} />
         </>
     );
 }
@@ -132,21 +135,23 @@ export const CourseSessionCard = ({
                         <FaMapMarker className="inline-block mr-2 text-gray-500 dark:text-gray-400" />
                         <h2>{session.location}</h2>
                     </p>
-                    <p>
-                        <a className="underline" onClick={() => setOpenSessionSchedule(true)}>
-                            Horraires
-                        </a>
-                    </p>
+                    {false && (
+                        <p>
+                            <a className="underline" onClick={() => setOpenSessionSchedule(true)}>
+                                Horraires
+                            </a>
+                        </p>
+                    )}
                 </div>
 
                 <div className="mb-4 md:mb-0 border-b md:border-b-0 md:border-r border-gray-200 dark:border-gray-700 w-full md:w-2/6">
                     <div className="flex items-center">
                         <div className="flex items-center justify-between space-x-4">
-                            <div className="border border-secondary bg-teal-100 dark:bg-teal-300 rounded-full flex items-center justify-center p-2 ">
+                            <div className="border border-secondary bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center p-2 ">
                                 {session.start_date}
                             </div>
                             <ArrowRight className="text-gray-500 dark:text-gray-400" />
-                            <div className="border border-secondary bg-teal-100 dark:bg-teal-300 rounded-full flex items-center justify-center p-2 ">
+                            <div className="border border-secondary bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center p-2 ">
                                 {session.end_date}
                             </div>
                         </div>

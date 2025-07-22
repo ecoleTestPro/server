@@ -71,32 +71,25 @@ export default function Footer() {
                                 </div>
                                 <div className="mt-2 md:mt-5">
                                     <a
-                                        href="#"
+                                        href="https://web.facebook.com/profile.php?id=61571070781870&is_tour_completed"
                                         target="_blank"
                                         className="inline-block text-[20px] leading-none text-gray-600 transition-all hover:text-gray-400 ltr:mr-[5px] ltr:last:mr-0 rtl:ml-[5px] rtl:last:ml-0"
                                     >
                                         <i className="ri-facebook-fill"></i>
                                     </a>
                                     <a
-                                        href="#"
-                                        target="_blank"
-                                        className="inline-block text-[20px] leading-none text-gray-600 transition-all hover:text-gray-400 ltr:mr-[5px] ltr:last:mr-0 rtl:ml-[5px] rtl:last:ml-0"
-                                    >
-                                        <i className="ri-twitter-x-fill"></i>
-                                    </a>
-                                    <a
-                                        href="#"
+                                        href="https://www.linkedin.com/company/105869023/admin/analytics/updates/"
                                         target="_blank"
                                         className="inline-block text-[20px] leading-none text-gray-600 transition-all hover:text-gray-400 ltr:mr-[5px] ltr:last:mr-0 rtl:ml-[5px] rtl:last:ml-0"
                                     >
                                         <i className="ri-linkedin-fill"></i>
                                     </a>
                                     <a
-                                        href="#"
+                                        href="https://wa.me/message/H2CNYKQSQNCAL1"
                                         target="_blank"
                                         className="inline-block text-[20px] leading-none text-gray-600 transition-all hover:text-gray-400 ltr:mr-[5px] ltr:last:mr-0 rtl:ml-[5px] rtl:last:ml-0"
                                     >
-                                        <i className="ri-dribbble-fill"></i>
+                                        <i className="ri-whatsapp-fill"></i>
                                     </a>
                                 </div>
                             </div>{' '}

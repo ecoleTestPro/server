@@ -78,8 +78,8 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     {
         $profilePicture = asset('media/blank-user.png');
 
-        if ($this->profilePicture && Storage::exists($this->profilePicture->src)) {
-            $profilePicture = Storage::url($this->profilePicture->src);
+        if ($this->profilePicture && Storage::disk('public')->exists($this->profilePicture->src)) {
+            $profilePicture = Storage::disk('public')->url($this->profilePicture->src);
         }
 
         return Attribute::make(
@@ -171,8 +171,8 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     {
         $signature = asset('enrollment/upload.png');
 
-        if ($this->signature && Storage::exists($this->signature->src)) {
-            $signature = Storage::url($this->signature->src);
+        if ($this->signature && Storage::disk('public')->exists($this->signature->src)) {
+            $signature = Storage::disk('public')->url($this->signature->src);
         }
 
         return Attribute::make(

@@ -1,10 +1,10 @@
+import { ITestimonial } from '@/types/testimonial';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
+import { Button } from '../ui/button/button';
 import { Checkbox } from '../ui/checkbox';
 import { DataTable } from '../ui/dataTable';
-import { Button } from '../ui/button/button';
 import TestimonialActionBtn from './testimonialActionBtn';
-import { ITestimonial } from '@/types/testimonial';
 
 interface TestimonialDataTableProps {
     testimonials: ITestimonial[];
@@ -44,7 +44,7 @@ export default function TestimonialDataTable({ testimonials, onEditRow, onDelete
 
                 return (
                     <div className="flex items-center gap-2">
-                        {imageUrl && <img src={imageUrl} alt={name} className="h-8 w-8 rounded object-cover" />}
+                        {false && imageUrl && <img src={imageUrl} alt={name} className="h-8 w-8 rounded object-cover" />}
                         <span className="capitalize">{name}</span>
                     </div>
                 );
@@ -54,10 +54,10 @@ export default function TestimonialDataTable({ testimonials, onEditRow, onDelete
             accessorKey: 'designation',
             header: 'Poste',
         },
-        {
-            accessorKey: 'rating',
-            header: 'Note',
-        },
+        // {
+        //     accessorKey: 'rating',
+        //     header: 'Note',
+        // },
         {
             id: 'actions',
             enableHiding: false,

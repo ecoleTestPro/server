@@ -65,8 +65,8 @@ class Instructor extends Model
     {
         $signature = asset('enrollment/upload.png');
 
-        if ($this->signature && Storage::exists($this->signature->src)) {
-            $signature = Storage::url($this->signature->src);
+        if ($this->signature && Storage::disk('public')->exists($this->signature->src)) {
+            $signature = Storage::disk('public')->url($this->signature->src);
         }
 
         return Attribute::make(

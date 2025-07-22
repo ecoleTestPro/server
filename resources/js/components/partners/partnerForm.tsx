@@ -1,5 +1,5 @@
 import { router, useForm } from '@inertiajs/react';
-import { FormEventHandler, useState } from 'react';
+import { FormEventHandler, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import InputError from '@/components/input-error';
@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { InputFile } from '@/components/ui/inputFile';
+import TagInput from '@/components/ui/tag-input';
 import { IPartner } from '@/types/partner';
 
 interface PartnerFormProps {
@@ -17,6 +18,7 @@ interface PartnerFormProps {
 const defaultValues: IPartner = {
     name: '',
     link: '',
+    tag: '',
     is_active: true,
 };
 
@@ -24,6 +26,11 @@ export default function PartnerForm({ closeDrawer, initialData }: PartnerFormPro
     const { t } = useTranslation();
     const [file, setFile] = useState<File | null>(null);
     const { data, setData, processing, errors, reset } = useForm<IPartner>(initialData || defaultValues);
+    const [tags, setTags] = useState<string[]>(initialData?.tag ? initialData.tag.split(';').filter(Boolean) : []);
+
+    useEffect(() => {
+        setData('tag', tags.join(';'));
+    }, [tags]);
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
@@ -40,6 +47,7 @@ export default function PartnerForm({ closeDrawer, initialData }: PartnerFormPro
             data: {
                 name: data.name,
                 link: data.link,
+                tag: data.tag,
                 ...(file && { picture: file }),
                 is_active: data.is_active ? '1' : '0',
             },
@@ -54,7 +62,7 @@ export default function PartnerForm({ closeDrawer, initialData }: PartnerFormPro
     };
 
     return (
-        <form className="mx-auto flex max-w-xl flex-col gap-4" onSubmit={submit}>
+        <form className="mx-auto flex flex-col gap-4" onSubmit={submit}>
             <div className="grid gap-2">
                 <Label htmlFor="name">{t('Name', 'Nom')}</Label>
                 <Input id="name" required value={data.name ?? ''} onChange={(e) => setData('name', e.target.value)} disabled={processing} />
@@ -64,6 +72,11 @@ export default function PartnerForm({ closeDrawer, initialData }: PartnerFormPro
                 <Label htmlFor="link">{t('Link', 'Lien')}</Label>
                 <Input id="link" value={data.link ?? ''} onChange={(e) => setData('link', e.target.value)} disabled={processing} />
                 <InputError message={errors.link} />
+            </div>
+            <div className="grid gap-2">
+                <Label htmlFor="tag">Tag de référence</Label>
+                <TagInput tags={tags} onChange={setTags} placeholder="tag1;tag2" />
+                <InputError message={errors.tag} />
             </div>
             <div className="grid gap-2">
                 <Label htmlFor="picture">{t('Image')}</Label>

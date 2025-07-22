@@ -22,7 +22,7 @@ class MediaRepository extends Repository
 
     public static function storeByRequest(UploadedFile $file, $path, $type = null): Media
     {
-        $src = Storage::put('/' . trim($path, '/'), $file, 'public');
+        $src = Storage::disk('public')->put('/' . trim($path, '/'), $file);
 
         return self::create([
             'extension' => $file->extension(),
@@ -41,7 +41,7 @@ class MediaRepository extends Repository
         $fileName = basename($filePath); // Get the filename
 
         // Use Storage to put the file content into the specified directory
-        $src = Storage::put('/' . trim($path, '/') . '/' . $fileName, $fileContents, 'public');
+        $src = Storage::disk('public')->put('/' . trim($path, '/') . '/' . $fileName, $fileContents);
 
         // Return a new Media record with the stored file details
         return self::create([
@@ -54,10 +54,9 @@ class MediaRepository extends Repository
 
     public static function updateByRequest(UploadedFile $file, Media $media, $path, $type = null): Media
     {
-        $src = Storage::put('/' . trim($path, '/'), $file, 'public');
-
-        if (Storage::exists($media->src)) {
-            Storage::delete($media->src);
+        $src = Storage::disk('public')->put('/' . trim($path, '/'), $file);
+        if (Storage::disk('public')->exists($media->src)) {
+            Storage::disk('public')->delete($media->src);
         }
 
         self::update($media, [
@@ -72,10 +71,9 @@ class MediaRepository extends Repository
 
     public static function updateOrCreateByRequest(UploadedFile $file, $path, $media = null, $type = null): Media
     {
-        $src = Storage::put('/' . trim($path, '/'), $file, 'public');
-
-        if ($media && Storage::exists($media->src)) {
-            Storage::delete($media->src);
+        $src = Storage::disk('public')->put('/' . trim($path, '/'), $file);
+        if ($media && Storage::disk('public')->exists($media->src)) {
+            Storage::disk('public')->delete($media->src);
         }
 
         $media = self::query()->updateOrCreate([

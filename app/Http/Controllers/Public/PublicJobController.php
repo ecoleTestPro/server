@@ -18,7 +18,13 @@ class PublicJobController extends Controller
 
     public function list()
     {
-        $offers = JobOfferRepository::query()->where('is_active', true)->latest('id')->get();
+        $offers = JobOfferRepository::query()
+            ->where('is_active', true)
+            ->where(function ($query) {
+                $query->whereNull('expires_at')->orWhere('expires_at', '>=', now());
+            })
+            ->latest('id')
+            ->get();
         $data['job_offers'] = $offers;
         return Inertia::render('public/careers/careers', [
             'data' => $data,

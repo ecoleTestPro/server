@@ -1,13 +1,16 @@
 import InputError from '@/components/input-error';
 import { Input } from '@/components/ui/input';
 import SelectCustom, { ISelectItem } from '@/components/ui/select-custom';
+import { SharedData } from '@/types';
 import { IBlog, IBlogCategory } from '@/types/blogs';
-import { router, useForm } from '@inertiajs/react';
+import { router, useForm, usePage } from '@inertiajs/react';
+import axios from 'axios';
 import { PlusCircleIcon } from 'lucide-react';
 import { FormEventHandler, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { Button } from '../ui/button/button';
-import RichTextLexical from '../ui/form/TextLexical/RichTextLexical';
+import RichTextQuill from '../ui/form/RichTextQuill';
 import TagInput from '../ui/tag-input';
 import { BlogCategoryDialogEdit } from './BlogCategoryDialogEdit';
 
@@ -20,7 +23,7 @@ export interface BlogForm {
     tagArray?: string[];
     status: boolean;
     category_id?: number;
-    [key: string]: any; // Allow additional properties
+    // [key: string]: any; // Allow additional properties
 }
 
 const createDefaultValues = (blog: IBlog | null): BlogForm => {
@@ -53,6 +56,7 @@ interface BlogFormProps {
 
 export const BlogForm = ({ blog = null, categories = [], onCancel }: BlogFormProps) => {
     const { t } = useTranslation();
+    const { auth } = usePage<SharedData>().props;
 
     const { data, setData, processing, errors, reset } = useForm<BlogForm>(createDefaultValues(blog));
     const [tags, setTags] = useState<string[]>([]); // createDefaultValues(blog).tags ||
@@ -67,24 +71,36 @@ export const BlogForm = ({ blog = null, categories = [], onCancel }: BlogFormPro
         e.preventDefault();
         const routeUrl = blog ? route('dashboard.blogs.update') : route('dashboard.blogs.store');
 
-        router.visit(routeUrl, {
-            method: 'post',
-            data: {
-                ...(blog && { blog: blog.id }),
-                title: data.title,
-                slug: data.slug,
-                excerpt: data.excerpt,
-                description: data.description,
-                category_id: data.category_id,
-                status: data.status ? '1' : '0',
-                // tags: JSON.stringify(tags),
-            },
-            forceFormData: true,
-            preserveScroll: true,
-            onSuccess: () => {
+        console.log(' data.tags', data.tags);
+        let payload = {
+            ...(blog && { blog: blog.id }),
+            title: data.title,
+            slug: data.slug,
+            excerpt: data.excerpt,
+            description: data.description,
+            category_id: data.category_id,
+            status: data.status ? '1' : '0',
+            user_id: auth.user.id,
+            tags: data.tags
+                    ?.split(';')
+                    ?.filter((t) => t != '')
+                    ?.map((tag) => tag.trim()) ?? null, 
+        };
+
+        axios
+            .post(routeUrl, payload)
+            .then((response) => {
+                console.log('Blog saved successfully:', response);
+                
+                toast.success(t('Blog saved successfully', 'Blog enregistré avec succès'));
                 reset();
-            },
-        });
+                onCancel();
+                router.visit(route('dashboard.blogs.index'));
+            })
+            .catch((error) => {
+                toast.error(t('Error saving blog', "Erreur lors de l'enregistrement du blog"));
+                console.error(error);
+            });
     };
 
     const category_list = (): ISelectItem[] => {
@@ -147,19 +163,12 @@ export const BlogForm = ({ blog = null, categories = [], onCancel }: BlogFormPro
                 <div>
                     <label className="block text-sm font-medium">{t('Content')}</label>
 
-                    <RichTextLexical
+                    <RichTextQuill
                         label={t('Description')}
                         labelId="description"
                         value={data.description as string}
                         setData={(value: string) => setData('description', value)}
                     />
-
-                    {/* <RichTextQuill
-                        label={t('Description')}
-                        labelId="description"
-                        value={data.description as string}
-                        setData={(value: string) => setData('description', value)}
-                    /> */}
 
                     <InputError message={errors.description} />
                 </div>

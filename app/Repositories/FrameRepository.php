@@ -15,7 +15,7 @@ class FrameRepository extends Repository
 
     public static function storeByRequest(UploadedFile $file, $path, $type = null): Frame
     {
-        $src = Storage::put('/' . trim($path, '/'), $file, 'public');
+        $src = Storage::disk('public')->put('/' . trim($path, '/'), $file);
 
         return self::create([
             'extension' => $file->extension(),
@@ -34,7 +34,7 @@ class FrameRepository extends Repository
         $fileName = basename($filePath); // Get the filename
 
         // Use Storage to put the file content into the specified directory
-        $src = Storage::put('/' . trim($path, '/') . '/' . $fileName, $fileContents, 'public');
+        $src = Storage::disk('public')->put('/' . trim($path, '/') . '/' . $fileName, $fileContents);
 
         // Return a new Media record with the stored file details
         return self::create([
@@ -47,10 +47,9 @@ class FrameRepository extends Repository
 
     public static function updateByRequest(UploadedFile $file, Frame $frame, $path, $type = null): Frame
     {
-        $src = Storage::put('/' . trim($path, '/'), $file, 'public');
-
-        if (Storage::exists($frame->src)) {
-            Storage::delete($frame->src);
+        $src = Storage::disk('public')->put('/' . trim($path, '/'), $file);
+        if (Storage::disk('public')->exists($frame->src)) {
+            Storage::disk('public')->delete($frame->src);
         }
 
         self::update($frame, [
@@ -65,10 +64,9 @@ class FrameRepository extends Repository
 
     public static function updateOrCreateByRequest(UploadedFile $file, $path, $frame = null, $type = null): Frame
     {
-        $src = Storage::put('/' . trim($path, '/'), $file, 'public');
-
-        if ($frame && Storage::exists($frame->src)) {
-            Storage::delete($frame->src);
+        $src = Storage::disk('public')->put('/' . trim($path, '/'), $file);
+        if ($frame && Storage::disk('public')->exists($frame->src)) {
+            Storage::disk('public')->delete($frame->src);
         }
 
         $frame = self::query()->updateOrCreate([

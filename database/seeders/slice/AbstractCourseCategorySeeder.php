@@ -2,7 +2,9 @@
 
 namespace Database\Seeders\slice;
 
+use App\Enum\MediaTypeEnum;
 use App\Models\Category;
+use App\Models\Media;
 use App\Repositories\CategoryRepository;
 use App\Repositories\CourseRepository;
 use Illuminate\Support\Facades\Log;
@@ -98,9 +100,52 @@ abstract class AbstractCourseCategorySeeder
                 'why_choose'             => $this->fakeWhyChooseCourse, // TODO : remove fake why choose course
                 'target_audience'        => $this->fakeAudience, // TODO : remove fake audience
                 'exam'                   => "<ul><li><ul><li><strong>Langue</strong>&nbsp;: En fran&ccedil;ais</li><li><strong>Dur&eacute;e</strong>&nbsp;: 60 minutes pour l'examen en fran&ccedil;ais pour 40 questions &agrave; choix multiple. (Les personnes dont le fran&ccedil;ais n'est pas la langue maternelle peuvent b&eacute;n&eacute;ficier de 25% de temps suppl&eacute;mentaire)</li><li><strong>Seuil</strong><strong> de </strong><strong>r&eacute;ussite</strong>&nbsp;:&nbsp;65%</li><li><strong>Options d'examen : En ligne ou au centre &agrave; Abidjan :</strong> L'examen peut &ecirc;tre r&eacute;alis&eacute; apr&egrave;s la formation en ligne, soit depuis votre domicile, soit dans notre centre de test situ&eacute; &agrave; Abidjan.</li></ul></li></ul>",
-                'content'                => $this->fakeContent // TODO : remove fake content
+                'content'                => $this->fakeContent, // TODO : remove fake content,
             ]),
         ];
+    }
+
+    protected function saveMedia(array $course)
+    {
+        if (!isset($course['slug']) || empty($course['slug'])) {
+            Log::error('Course slug is required to save media.');
+            return;
+        }
+
+        // thumbnail
+        $mediaThumbnail = Media::create([
+            'type'      => MediaTypeEnum::IMAGE,
+            "extension" => "png",
+            'path'      => "course/thumbnail",
+            "src"       => "course/thumbnail/" . $course['slug'] . ".png"
+        ]);
+
+        // organization-logo
+        $mediaOrganizationLogo = Media::create([
+            'type'      => MediaTypeEnum::IMAGE,
+            "extension" => "png",
+            'path'      => "course/organization-logo",
+            "src"       => "course/organization-logo/" . $course['slug'] . ".png"
+        ]);
+
+        // logo
+        $mediaLogo = Media::create([
+            'type'      => MediaTypeEnum::IMAGE,
+            "extension" => "png",
+            'path'      => "course/logo",
+            "src"       => "course/logo/" . $course['slug'] . ".png"
+        ]);
+
+        return CourseRepository::query()->updateOrCreate(
+            [
+                'slug' => $course['slug'],
+            ],
+            [
+                'media_id'             => $mediaThumbnail->id,
+                // 'organization_logo_id' => $mediaOrganizationLogo->id,
+                // 'logo_id'              => $mediaLogo->id,
+            ]
+        );
     }
 
     protected function saveCourse()
@@ -109,6 +154,7 @@ abstract class AbstractCourseCategorySeeder
             if (isset($course) && is_array($course)) {
                 try {
                     CourseRepository::query()->updateOrCreate($course);
+                    $this->saveMedia($course);
                 } catch (\Exception $e) {
                     Log::error('Error while creating course: ' . $e->getMessage());
                 }

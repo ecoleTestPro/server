@@ -40,6 +40,29 @@ export default function RichTextQuill({ label, labelId, value, setData, classNam
           value={value}
           onChange={(newValue) => setData(newValue)}
           className={className}
+          modules={
+            {
+              toolbar: [
+                ['bold', 'italic', 'underline', 'strike', ], // toggled buttons
+                ['blockquote', 'code-block'],
+                [{ 'header': 1 }, { 'header': 2 }, { 'header': 3 }, { 'header': 4 }, { 'header': 5 }, { 'header': 6 }], // custom button values
+                // [{ 'color': [] }, { 'background': [] }], // dropdown with defaults from theme
+                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                [{ 'script': 'sub' }, { 'script': 'super' }], // superscript/subscript
+                [{ 'indent': '-1' }, { 'indent': '+1' }], // outdent/indent
+                // ['table'], // table
+                // [{ 'direction': 'rtl' }], // text direction
+                ['link', 'image', 'video'], // link and image, video
+                ['clean'] // remove formatting button
+              ]
+            }
+          }
+          formats={[
+            'bold', 'italic', 'underline', 'strike', 'blockquote',
+            'list', 'bullet', 'indent',
+            'link', 'image', 'video', 'code-block',
+            'header', 'align', 'clean'
+          ]}
         />
       </Suspense>
     </div>

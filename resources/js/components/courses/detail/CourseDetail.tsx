@@ -1,12 +1,14 @@
 import { CLASS_NAME } from '@/data/styles/style.constant';
 import { ICourse } from '@/types/course';
+import { getMediaUrl } from '@/utils/utils';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import 'react-quill/dist/quill.snow.css';
 import CourseDetailAccordion from './CourseDetailAccordion';
+import CoursePartners from './CoursePartners';
 import CouseDetailMedia from './CouseDetailMedia';
 import CourseDetailChooseSection from './partial/CourseDetailChooseSection';
 import CourseDetailOverview from './partial/CourseDetailOverview';
-import CoursePartners from './CoursePartners';
 
 const email: string = 'info@ecoletestpro.com';
 
@@ -20,6 +22,7 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ course }) => {
 
     const [isOpen, setIsOpen] = useState<Record<string, boolean>>({
         objectives: true,
+        why_choose: false,
         overviewDetails: false,
         content: false,
         targetAudience: false,
@@ -40,27 +43,11 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ course }) => {
         <section className={`${CLASS_NAME.section} ${CLASS_NAME.sectionContentPadding}`}>
             <div className="container mx-auto">
                 <h1 className="text-2xl font-bold mb-4 text-black dark:text-white">{course.title}</h1>
-                {(course.logo || course.organization_logo) && (
-                    <div className="mb-6 flex items-center gap-4">
-                        {course.logo && (
-                            <img
-                                src={course.logo.src}
-                                alt={`${course.title} logo`}
-                                className="h-16 w-auto object-contain"
-                            />
-                        )}
-                        {course.organization_logo && (
-                            <img
-                                src={course.organization_logo.src}
-                                alt="Organization logo"
-                                className="h-16 w-auto object-contain"
-                            />
-                        )}
-                    </div>
-                )}
-
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className="toc-accordion col-span-1 md:col-span-2" id="tablesOfContentAccordion">
+                    <div
+                        className="toc-accordion col-span-1 md:col-span-2"
+                        id="tablesOfContentAccordion"
+                    >
                         <div className="">
                             {/* Objectifs */}
                             <CourseDetailAccordion
@@ -71,6 +58,16 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ course }) => {
                                 content={<div dangerouslySetInnerHTML={{ __html: course.excerpt }} />}
                             />
                             {/* Public cible */}
+                            {course.description?.why_choose && (
+                                <CourseDetailAccordion
+                                    isOpen={isOpen}
+                                    toggleSection={toggleSection}
+                                    section={'whyChoose'}
+                                    sectionTitle="Pourquoi choisir cette formation ?"
+                                    content={<div dangerouslySetInnerHTML={{ __html: course.description.why_choose }} />}
+                                />
+                            )}
+                            {/* Public cible */}
                             {course.description?.target_audience && (
                                 <CourseDetailAccordion
                                     isOpen={isOpen}
@@ -80,6 +77,7 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ course }) => {
                                     content={<div dangerouslySetInnerHTML={{ __html: course.description.target_audience }} />}
                                 />
                             )}
+
                             {/* Détails de la formation */}
                             {false && (
                                 <CourseDetailAccordion
@@ -148,19 +146,21 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ course }) => {
                                 />
                             )}
                             {/* Téléchargement */}
-                            <CourseDetailAccordion
-                                isOpen={isOpen}
-                                toggleSection={toggleSection}
-                                section={'download'}
-                                sectionTitle={t('COURSE.DETAIL.DOWNLOAD', 'Téléchargement')}
-                                content={
-                                    <p className="text-gray-600 dark:text-gray-300">
-                                        <a href="#" className="text-secondary underline">
-                                            {t('COURSE.DETAIL.DOWNLOAD_PDF', 'Téléchargez les détails du cours au format PDF')}
-                                        </a>
-                                    </p>
-                                }
-                            />
+                            {false && (
+                                <CourseDetailAccordion
+                                    isOpen={isOpen}
+                                    toggleSection={toggleSection}
+                                    section={'download'}
+                                    sectionTitle={t('COURSE.DETAIL.DOWNLOAD', 'Téléchargement')}
+                                    content={
+                                        <p className="text-gray-600 dark:text-gray-300">
+                                            <a href="#" className="text-secondary underline">
+                                                {t('COURSE.DETAIL.DOWNLOAD_PDF', 'Téléchargez les détails du cours au format PDF')}
+                                            </a>
+                                        </p>
+                                    }
+                                />
+                            )}
                             {/* Questions sur le cours */}
                             <CourseDetailAccordion
                                 isOpen={isOpen}
@@ -182,7 +182,29 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ course }) => {
                     </div>
 
                     <div className="col-span-1 md:col-span-1">
-                        <CouseDetailMedia course={course} />
+                        <div className="grid grid-cols-1 gap-y-2">
+                            <div>
+                                <CouseDetailMedia course={course} />
+                            </div>
+                            {(course.logo || course.organization_logo) && (
+                                <div className="flex flex-col gap-2 justify-center items-center">
+                                    <div>
+                                        {course.logo && (
+                                            <img src={getMediaUrl(course.logo)} alt={`${course.title} logo`} className="h-48 w-auto object-contain" />
+                                        )}
+                                    </div>
+                                    <div>
+                                        {course.organization_logo && (
+                                            <img
+                                                src={getMediaUrl(course.organization_logo)}
+                                                alt="Organization logo"
+                                                className="h-48 w-auto object-contain"
+                                            />
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
                     </div>
 
                     <div className="col-span-1 md:col-span-3">
@@ -190,12 +212,13 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ course }) => {
                         {/* Registration Section with ref */}
                         <div className="">
                             {/* ref={registrationRef} */}
-                            <div >
+                            <div>
                                 {/* registrationRef={registrationRef} */}
                                 <CourseDetailChooseSection course={course} />
                             </div>
                         </div>
                     </div>
+
                     <div className="col-span-1 md:col-span-3">
                         <CoursePartners partners={course.partners} />
                     </div>
