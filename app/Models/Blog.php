@@ -68,8 +68,8 @@ class Blog extends Model
     {
         $media = 'https://placehold.co/600x400';
 
-        if ($this->media && Storage::exists($this->media->src)) {
-            $media = Storage::url($this->media->src);
+        if ($this->media && Storage::disk('public')->exists($this->media->src)) {
+            $media = Storage::disk('public')->url($this->media->src);
         }
 
         return Attribute::make(

@@ -23,8 +23,8 @@ class Setting extends Model
     {
         $logo = asset('assets/images/logo-new.png');
 
-        if ($this->logo && Storage::exists($this->logo->src)) {
-            $logo = Storage::url($this->logo->src);
+        if ($this->logo && Storage::disk('public')->exists($this->logo->src)) {
+            $logo = Storage::disk('public')->url($this->logo->src);
         }
 
         return Attribute::make(
@@ -40,8 +40,8 @@ class Setting extends Model
     {
         $footer = asset('assets/images/logo-new.png');
 
-        if ($this->footer && Storage::exists($this->footer->src)) {
-            $footer = Storage::url($this->footer->src);
+        if ($this->footer && Storage::disk('public')->exists($this->footer->src)) {
+            $footer = Storage::disk('public')->url($this->footer->src);
         }
 
         return Attribute::make(
@@ -58,8 +58,8 @@ class Setting extends Model
     {
         $favicon = asset('assets/images/favicon.ico');
 
-        if ($this->favicon && Storage::exists($this->favicon->src)) {
-            $favicon = Storage::url($this->favicon->src);
+        if ($this->favicon && Storage::disk('public')->exists($this->favicon->src)) {
+            $favicon = Storage::disk('public')->url($this->favicon->src);
         }
 
         return Attribute::make(
@@ -76,8 +76,8 @@ class Setting extends Model
     {
         $scaner = asset('assets/website/scaner/scan.png');
 
-        if ($this->scaner && Storage::exists($this->scaner->src)) {
-            $scaner = Storage::url($this->scaner->src);
+        if ($this->scaner && Storage::disk('public')->exists($this->scaner->src)) {
+            $scaner = Storage::disk('public')->url($this->scaner->src);
         }
 
         return Attribute::make(

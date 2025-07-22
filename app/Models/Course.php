@@ -61,8 +61,8 @@ class Course extends Model
     {
         $media = 'https://placehold.co/600x400';
 
-        if ($this->media && Storage::exists($this->media->src)) {
-            $media = Storage::url($this->media->src);
+        if ($this->media && Storage::disk('public')->exists($this->media->src)) {
+            $media = Storage::disk('public')->url($this->media->src);
         }
 
         return Attribute::make(
@@ -79,8 +79,8 @@ class Course extends Model
     {
         $video = null;
 
-        if ($this->video && Storage::exists($this->video->src)) {
-            $video = Storage::url($this->video->src);
+        if ($this->video && Storage::disk('public')->exists($this->video->src)) {
+            $video = Storage::disk('public')->url($this->video->src);
         }
 
         return Attribute::make(
@@ -96,7 +96,7 @@ class Course extends Model
     public function galleryPaths(): Attribute
     {
         $paths = $this->gallery->map(function ($media) {
-            return Storage::exists($media->src) ? Storage::url($media->src) : null;
+            return Storage::disk('public')->exists($media->src) ? Storage::disk('public')->url($media->src) : null;
         })->filter()->values()->toArray();
 
         return Attribute::make(
@@ -113,8 +113,8 @@ class Course extends Model
     {
         $logo = null;
 
-        if ($this->logo && Storage::exists($this->logo->src)) {
-            $logo = Storage::url($this->logo->src);
+        if ($this->logo && Storage::disk('public')->exists($this->logo->src)) {
+            $logo = Storage::disk('public')->url($this->logo->src);
         }
 
         return Attribute::make(
@@ -131,8 +131,8 @@ class Course extends Model
     {
         $logo = null;
 
-        if ($this->organizationLogo && Storage::exists($this->organizationLogo->src)) {
-            $logo = Storage::url($this->organizationLogo->src);
+        if ($this->organizationLogo && Storage::disk('public')->exists($this->organizationLogo->src)) {
+            $logo = Storage::disk('public')->url($this->organizationLogo->src);
         }
 
         return Attribute::make(

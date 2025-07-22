@@ -50,8 +50,8 @@ class Category extends Model
     {
         $image = 'https://placehold.co/512x512';
 
-        if ($this->image && Storage::exists($this->image->src)) {
-            $image = Storage::url($this->image->src);
+        if ($this->image && Storage::disk('public')->exists($this->image->src)) {
+            $image = Storage::disk('public')->url($this->image->src);
         }
 
         return Attribute::make(

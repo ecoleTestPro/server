@@ -14,13 +14,36 @@ class PartnerRepository extends Repository
         return Partner::class;
     }
 
+    /**
+     * Retrieve active references with a specific tag.
+     *
+     * This function queries the database to find all partners 
+     * that are marked as active and referenceable, and have the 
+     * specified tag. It includes associated media in the results.
+     *
+     * @param string $tag The tag to filter the references by.
+     * 
+     * @return \Illuminate\Database\Eloquent\Builder The query builder instance.
+     */
     public static function getActiveReferences(string $tag)
     {
         return self::query()
             ->where('is_active', true)
             ->where('is_reference', true)
             ->where('tag', $tag)
+            ->with('media');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection|Partner[]
+     */
+    public static function allWithMedia()
+    {
+        return static::query()
+            ->where('is_reference', true)
             ->with('media')
+            ->withTrashed()
+            ->latest('id')
             ->get();
     }
 

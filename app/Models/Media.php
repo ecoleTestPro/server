@@ -24,8 +24,8 @@ class Media extends Model
     {
         $url = null;
 
-        if ($this->src && Storage::exists($this->src)) {
-            $url = Storage::url($this->src);
+        if ($this->src && Storage::disk('public')->exists($this->src)) {
+            $url = Storage::disk('public')->url($this->src);
         }
 
         return Attribute::make(

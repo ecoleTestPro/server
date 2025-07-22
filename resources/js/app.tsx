@@ -7,7 +7,7 @@ import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
 import { RECAPTCHA_SITE_KEY_PUBLIC } from './data/data.constant';
 import { initializeTheme } from './hooks/use-appearance';
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+const appName = import.meta.env.VITE_APP_NAME || 'TestPro';
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,

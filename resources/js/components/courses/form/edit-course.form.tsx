@@ -71,8 +71,8 @@ function CourseForm({ course }: ICourseFormProps) {
             partners
                 .map((p) => p.tag)
                 .filter(Boolean)
-                .flatMap((t) => t!.split(';').filter(Boolean))
-        )
+                .flatMap((t) => t!.split(';').filter(Boolean)),
+        ),
     );
     const [thumbnail, setThumbnail] = useState<File | null>(null);
     const [logoFile, setLogoFile] = useState<File | null>(null);
@@ -221,7 +221,6 @@ function CourseForm({ course }: ICourseFormProps) {
             const response = await axios.post(data?.id ? route(routeName, course?.slug) : route(routeName), formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
             });
-
 
             // Handle the response
             setLoading(false);
@@ -419,14 +418,16 @@ function CourseForm({ course }: ICourseFormProps) {
                                         {processing && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
                                         {course && course.id ? t('courses.update', 'Mettre à jour') : t('courses.create', 'Créer une formation')}
                                     </Button>
-                                    <Button
-                                        type="button"
-                                        onClick={() => setOpenPartnerDrawer(true)}
-                                        className="mt-2 bg-blue-400 hover:bg-blue-500"
-                                        disabled={processing}
-                                    >
-                                        {t('courses.partners', 'Associer des partenaires')}
-                                    </Button>
+                                    {false && (
+                                        <Button
+                                            type="button"
+                                            onClick={() => setOpenPartnerDrawer(true)}
+                                            className="mt-2 bg-blue-400 hover:bg-blue-500"
+                                            disabled={processing}
+                                        >
+                                            {t('courses.partners', 'Associer des partenaires')}
+                                        </Button>
+                                    )}
                                     <Button
                                         type="button"
                                         onClick={() => submit(data, true)}
@@ -457,43 +458,6 @@ function CourseForm({ course }: ICourseFormProps) {
                 </p>
             </form>
 
-            <Drawer
-                title={t('courses.partners', 'Associer des partenaires')}
-                open={openPartnerDrawer}
-                setOpen={setOpenPartnerDrawer}
-                component={
-                    <div className="space-y-2">
-                        <input
-                            type="text"
-                            className="w-full rounded border p-2"
-                            placeholder="Rechercher..."
-                            value={partnerFilter}
-                            onChange={(e) => setPartnerFilter(e.target.value)}
-                        />
-                        {partners
-                            .filter((p) => p.name.toLowerCase().includes(partnerFilter.toLowerCase()))
-                            .map((p) => (
-                            <label key={p.id} className="flex items-center space-x-2">
-                                <input
-                                    type="checkbox"
-                                    checked={selectedPartners.includes(p.id!)}
-                                    onChange={(e) => {
-                                        let updated = [...selectedPartners];
-                                        if (e.target.checked) {
-                                            updated.push(p.id!);
-                                        } else {
-                                            updated = updated.filter((id) => id !== p.id);
-                                        }
-                                        setSelectedPartners(updated);
-                                        setData('partner_ids', updated);
-                                    }}
-                                />
-                                <span>{p.name}</span>
-                            </label>
-                        ))}
-                    </div>
-                }
-            />
         </>
     );
 }
