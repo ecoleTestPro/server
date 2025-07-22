@@ -6,6 +6,7 @@ export interface IJobOffer {
     type?: string;
     salary?: number;
     description?: string;
+    expires_at?: string | null;
     is_active?: boolean;
     created_at?: string;
     updated_at?: string;
