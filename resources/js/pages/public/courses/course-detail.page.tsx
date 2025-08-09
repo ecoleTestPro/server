@@ -30,6 +30,8 @@ export default function CourseCategoryPage() {
             // setCategory(data.category);
             setCourse(data.course);
 
+            Logger.log('[COURSE_CATEGORY_PAGE] useEffect - course', data.course);
+
             // Set breadcrumb items based on the category data
             if (data.category) {
                 setBreadcrumb([

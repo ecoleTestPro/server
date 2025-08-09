@@ -32,11 +32,27 @@ export default function CourseAdditionnalForm({ fieldsetClasses, data, courseSel
 
     useEffect(() => {
         setDisplayPrice(data.price ? Number(data.price).toLocaleString('fr-FR') : '');
-        if (courseSelected) {
-            courseSelected.price && data.price == '' && setData('price', courseSelected.price.toString());
-            courseSelected.periodicity_unit && data.periodicity_unit == '' && setData('periodicity_unit', courseSelected.periodicity_unit);
-        }
     }, [data.price]);
+
+    // Effet séparé pour l'initialisation des champs depuis le cours sélectionné
+    useEffect(() => {
+        if (courseSelected) {
+            // Initialisation du prix si vide
+            if (courseSelected.price && (!data.price || data.price === '')) {
+                setData('price', courseSelected.price.toString());
+            }
+            
+            // Initialisation de la périodicité si vide ou non définie
+            if (courseSelected.periodicity_unit && (!data.periodicity_unit || data.periodicity_unit === '')) {
+                setData('periodicity_unit', courseSelected.periodicity_unit);
+            }
+            
+            // Initialisation de la valeur de périodicité si vide ou non définie
+            if (courseSelected.periodicity_value && (!data.periodicity_value || data.periodicity_value === '' || data.periodicity_value === 0)) {
+                setData('periodicity_value', courseSelected.periodicity_value);
+            }
+        }
+    }, [courseSelected, data.periodicity_unit, data.periodicity_value]);
     const { t } = useTranslation();
 
     return (
