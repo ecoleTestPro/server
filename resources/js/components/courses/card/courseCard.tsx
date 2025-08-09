@@ -1,15 +1,11 @@
-import { Button } from '@/components/ui/button/button';
-import Drawer from '@/components/ui/drawer';
+import CourseReferenceDrawer from '@/components/courses/references/CourseReferenceDrawer';
 import { SharedData } from '@/types';
 import { ICourse } from '@/types/course';
 import { IPartner } from '@/types/partner';
 import { ROUTE_MAP } from '@/utils/route.util';
-import { getMediaUrl } from '@/utils/utils';
 import { Link, usePage } from '@inertiajs/react';
-import axios from 'axios';
-import { Calendar1, CirclePlus, Edit2Icon, ExternalLink, Trash2Icon } from 'lucide-react';
+import { Building2, Calendar1, Edit2Icon, ExternalLink, Trash2Icon } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import toast from 'react-hot-toast';
 import { FaClock, FaMapMarkerAlt } from 'react-icons/fa'; // Import icons
 import './CourseCard.css'; // Link to CSS file
 
@@ -25,46 +21,13 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, setOpenSessio
 
     const [openPartnerDrawer, setOpenPartnerDrawer] = useState(false);
     const [partners, setPartners] = useState<IPartner[]>([]);
-    const [partnerTags, setPartnerTags] = useState<string>('');
-    const [selectedPartners, setSelectedPartners] = useState<number[]>(course.partners ? course.partners.map((p) => p.id!) : []);
-    const [partnerFilter, setPartnerFilter] = useState('');
 
     useEffect(() => {
         if ((data as any)?.partners) {
             setPartners((data as any).partners as IPartner[]);
         }
-
-        if (course.reference_tag) {
-            setPartnerTags(course.reference_tag);
-        }
     }, [data]);
 
-    const handleUpdatePartners = async () => {
-        try {
-            if (!selectedPartners || selectedPartners.length === 0) {
-                toast.error('Veuillez sélectionner au moins un partenaire.');
-                return;
-            } else if (!partnerTags) {
-                toast.error('Veuillez entrer un tag de référence.');
-                return;
-            }
-
-            await axios
-                .post(route('dashboard.course.partners.sync', course.slug), {
-                    partner_ids: selectedPartners,
-                    reference_tag: partnerTags,
-                })
-                .then((response) => {
-                    toast.success('Partenaires associés');
-                    setOpenPartnerDrawer(false);
-                })
-                .catch((error) => {
-                    toast.error('Erreur lors de la mise à jour des partenaires');
-                });
-        } catch (error) {
-            toast.error('Erreur lors de la mise à jour');
-        }
-    };
 
     const CourseHeader = () => {
         return (
@@ -137,8 +100,9 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, setOpenSessio
                                     onClick={() => setOpenPartnerDrawer(true)}
                                     className="cursor-pointer text-indigo-500 p-4 rounded-full hover:bg-indigo-400 hover:text-white"
                                     type="button"
+                                    title="Associer des références"
                                 >
-                                    <CirclePlus className="w-4 h-4" />
+                                    <Building2 className="w-4 h-4" />
                                 </button>
                             </>
                         )}
@@ -213,82 +177,11 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, setOpenSessio
                     <CourseFooter />
                 </div>
             </div>
-            <Drawer
-                title="Associer des partenaires"
+            <CourseReferenceDrawer
                 open={openPartnerDrawer}
                 setOpen={setOpenPartnerDrawer}
-                component={
-                    <div className="space-y-2">
-                        <input
-                            type="text"
-                            className="w-full rounded border p-2"
-                            placeholder="Rechercher..."
-                            value={partnerFilter}
-                            onChange={(e) => setPartnerFilter(e.target.value)}
-                        />
-
-                        <div className="flex items-center justify-between my-2">
-                            <a
-                                className="hover:underline cursor-pointer"
-                                onClick={() => setSelectedPartners(partners.map((p) => p.id).filter((id): id is number => id !== undefined))}
-                            >
-                                Tous sélectionner
-                            </a>
-                            <a className="hover:underline cursor-pointer" onClick={() => setSelectedPartners([])}>
-                                Tous désélectionner
-                            </a>
-                        </div>
-
-                        <div className="max-h-[50vh] overflow-y-scroll">
-                            {partners
-                                .filter((p) => p.name.toLowerCase().includes(partnerFilter.toLowerCase()))
-                                .map((p) => (
-                                    <div className="p-0">
-                                        <label key={p.id} className="grid grid-cols-3 items-center border-b border-gray-200 space-x-2">
-                                            <div className="col-span-2">
-                                                <div className="flex space-x-1">
-                                                    <input
-                                                        type="checkbox"
-                                                        checked={selectedPartners.includes(p.id!)}
-                                                        onChange={(e) => {
-                                                            let updated = [...selectedPartners];
-                                                            if (e.target.checked) {
-                                                                updated.push(p.id!);
-                                                            } else {
-                                                                updated = updated.filter((id) => id !== p.id);
-                                                            }
-                                                            setSelectedPartners(updated);
-                                                        }}
-                                                    />
-                                                    <span>{p.name}</span>
-                                                </div>
-                                            </div>
-                                            <div className="flex justify-end border-l pl-2">
-                                                <img src={getMediaUrl(p.media)} alt={p.name} className="h-20 w-[auto] rounded-full" />
-                                            </div>
-                                        </label>
-                                    </div>
-                                ))}
-                        </div>
-
-                        <div>
-                            <input
-                                required
-                                type="text"
-                                value={partnerTags}
-                                onChange={(e) => {
-                                    const value = e.target.value;
-                                    setPartnerTags(value);
-                                }}
-                                placeholder="Tag"
-                                className="w-full rounded border p-2"
-                            />
-                        </div>
-                        <Button className="mt-2" onClick={handleUpdatePartners}>
-                            Enregistrer
-                        </Button>
-                    </div>
-                }
+                course={course}
+                partners={partners}
             />
         </>
     );
