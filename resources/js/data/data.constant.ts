@@ -130,6 +130,7 @@ export const DEFULAT_MAIN_MENU: IMainMenuItem[] = [
 
 export const DEFULAT_MAIN_MENU_RIGHT: IMainMenuItem[] = [
     { id: 'a-propos', label: 'À propos de nous', href: ROUTE_MAP.public.aboutUs.link },
+    { id: 'rendez-vous', label: 'Rendez-vous', href: route('public.appointments.create'), isCta: false },
     { id: 'contact', label: 'Contact', href: ROUTE_MAP.public.contact.link, isCta: true }
 ];
 

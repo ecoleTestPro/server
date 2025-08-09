@@ -19,6 +19,8 @@ use App\Http\Controllers\Private\EnrollmentController;
 use App\Http\Controllers\Private\NotificationController;
 use App\Http\Controllers\Settings\PasswordController;
 use App\Http\Controllers\Settings\ProfileController;
+use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\Admin\BusinessHoursController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -198,5 +200,37 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
     ], function () {
         Route::get('', [NewsletterLogController::class, 'index'])->name('dashboard.newsletter-logs.index');
         Route::post('resend/{newsletterLog}', [NewsletterLogController::class, 'resend'])->name('dashboard.newsletter-logs.resend');
+    });
+});
+
+/**
+ * Routes pour les rendez-vous - Accès public pour la prise de RDV
+ */
+Route::prefix('appointments')->group(function () {
+    // Route publique pour prendre un RDV
+    Route::get('/create', [AppointmentController::class, 'create'])->name('appointments.create');
+    Route::post('/', [AppointmentController::class, 'store'])->name('appointments.store');
+    
+    // Routes protégées pour les utilisateurs connectés
+    Route::middleware(['auth', 'verified'])->group(function () {
+        Route::get('/', [AppointmentController::class, 'index'])->name('appointments.index');
+        Route::patch('/{appointment}/cancel', [AppointmentController::class, 'cancel'])->name('appointments.cancel');
+    });
+});
+
+// Routes API publiques pour les créneaux disponibles
+Route::get('/api/appointments/available-slots', [AppointmentController::class, 'getAvailableSlots'])
+    ->name('api.appointments.available-slots');
+
+/**
+ * Routes admin pour les horaires d'ouverture
+ */
+Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
+    Route::prefix('business-hours')->group(function () {
+        Route::get('/', [BusinessHoursController::class, 'index'])->name('admin.business-hours.index');
+        Route::patch('/', [BusinessHoursController::class, 'update'])->name('admin.business-hours.update');
+        Route::post('/copy', [BusinessHoursController::class, 'copyToOtherDays'])->name('admin.business-hours.copy');
+        Route::get('/preview-slots', [BusinessHoursController::class, 'previewSlots'])->name('admin.business-hours.preview-slots');
+        Route::post('/reset', [BusinessHoursController::class, 'resetToDefaults'])->name('admin.business-hours.reset');
     });
 });
