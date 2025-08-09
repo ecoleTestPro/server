@@ -49,6 +49,7 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
         Route::post('partners/{slug}',  [CourseController::class, 'syncPartners'])->name('dashboard.course.partners.sync');
         Route::delete('delete/{id}',    [CourseController::class, 'delete'])->name('dashboard.course.delete');
         Route::post('{course}/sessions', [CourseSessionController::class, 'store'])->name('dashboard.course.session.store');
+        Route::put('sessions/{session}', [CourseSessionController::class, 'update'])->name('dashboard.course.session.update');
     });
 
     // CATEGORY COURSE MANAGEMENT
