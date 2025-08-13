@@ -29,7 +29,8 @@ class BlogController extends Controller
     public function index()
     {
         $data = [];
-        $data['blogs']['list'] = BlogRepository::initQuery()->latest('id')->get();
+        $data['blogs']['list'] = BlogRepository::getAllBlogs();
+        $data['blogs']['categories'] = BlogCategoryRepository::query()->get();
 
         return Inertia::render('dashboard/blogs/index', [
             'data' => $data,

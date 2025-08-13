@@ -28,6 +28,15 @@ class BlogRepository extends Repository
         ]);
     }
 
+    public static function getAllBlogs() {
+        $blogs = self::initQuery()->latest('id')->get();
+        foreach ($blogs as $blog) {
+            $category = BlogCategoryRepository::find($blog->blog_category_id);
+            $blog->category = $category;
+        }
+        return $blogs;
+    }
+
     public static function storeByRequest(BlogStoreRequest $request)
     {
         $status = $request->status??false;
@@ -38,6 +47,18 @@ class BlogRepository extends Repository
             MediaTypeEnum::IMAGE
         ) : null;
 
+        dd([
+            'user_id'          => $request->user_id,
+            'media_id'         => $media ? $media->id : null,
+            'blog_category_id' => $request->category_id,
+            'title'            => $request->title,
+            'slug'             => Str::slug($request->title),
+            'excerpt'          => $request->excerpt,
+            'description'      => $request->description,
+            'tags'             => $request->tags ? $request->tags : null,
+            'status'           => true,
+        ]);
+
         return self::create([
             'user_id'          => $request->user_id,
             'media_id'         => $media ? $media->id : null,
@@ -47,7 +68,7 @@ class BlogRepository extends Repository
             'excerpt'          => $request->excerpt,
             'description'      => $request->description,
             'tags'             => $request->tags ? $request->tags : null,
-            'status'           => $status,
+            'status'           => true,
         ]);
     }
 

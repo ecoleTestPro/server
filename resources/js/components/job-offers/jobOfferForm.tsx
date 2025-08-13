@@ -7,6 +7,7 @@ import { useForm } from '@inertiajs/react';
 import axios from 'axios';
 import { FormEventHandler, useState } from 'react';
 import toast from 'react-hot-toast';
+import 'react-quill/dist/quill.snow.css';
 import RichTextCKEditor from '../ui/form/RichTextCKEditor';
 import RichTextQuill from '../ui/form/RichTextQuill';
 import SelectCustom, { ISelectItem } from '../ui/select-custom';

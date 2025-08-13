@@ -9,12 +9,13 @@ import { PlusCircleIcon } from 'lucide-react';
 import { FormEventHandler, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
+import 'react-quill/dist/quill.snow.css';
 import { Button } from '../ui/button/button';
 import RichTextQuill from '../ui/form/RichTextQuill';
 import TagInput from '../ui/tag-input';
 import { BlogCategoryDialogEdit } from './BlogCategoryDialogEdit';
 
-export interface BlogForm {
+export interface IBlogForm {
     title: string;
     slug: string;
     excerpt: string;
@@ -23,10 +24,10 @@ export interface BlogForm {
     tagArray?: string[];
     status: boolean;
     category_id?: number;
-    // [key: string]: any; // Allow additional properties
+    [key: string]: any; // Allow additional properties
 }
 
-const createDefaultValues = (blog: IBlog | null): BlogForm => {
+const createDefaultValues = (blog: IBlog | null): IBlogForm => {
     if (blog) {
         return {
             title: blog.title,
@@ -35,7 +36,7 @@ const createDefaultValues = (blog: IBlog | null): BlogForm => {
             description: blog.description,
             tags: blog.tags,
             status: blog.status,
-            // category_id: blog.category_id,
+            category_id: blog.category?.id,
         };
     }
     return {
@@ -44,7 +45,8 @@ const createDefaultValues = (blog: IBlog | null): BlogForm => {
         excerpt: '',
         description: '',
         tags: '',
-        status: false,
+        status: true,
+        category_id: undefined,
     };
 };
 
@@ -58,7 +60,7 @@ export const BlogForm = ({ blog = null, categories = [], onCancel }: BlogFormPro
     const { t } = useTranslation();
     const { auth } = usePage<SharedData>().props;
 
-    const { data, setData, processing, errors, reset } = useForm<BlogForm>(createDefaultValues(blog));
+    const { data, setData, processing, errors, reset } = useForm<IBlogForm>(createDefaultValues(blog));
     const [tags, setTags] = useState<string[]>([]); // createDefaultValues(blog).tags ||
 
     const [openCategoryEdit, setOpenCategoryEdit] = useState(false);
@@ -79,12 +81,11 @@ export const BlogForm = ({ blog = null, categories = [], onCancel }: BlogFormPro
             excerpt: data.excerpt,
             description: data.description,
             category_id: data.category_id,
-            status: data.status ? '1' : '0',
             user_id: auth.user.id,
             tags: data.tags
                     ?.split(';')
-                    ?.filter((t) => t != '')
-                    ?.map((tag) => tag.trim()) ?? null, 
+                    ?.filter((t: string) => t != '')
+                    ?.map((tag: string) => tag.trim()) ?? null, 
         };
 
         axios
@@ -119,7 +120,7 @@ export const BlogForm = ({ blog = null, categories = [], onCancel }: BlogFormPro
         <div className="flex flex-col gap-4 rounded-xl p-4 bg-white dark:bg-gray-800">
             <form className="space-y-4" onSubmit={handleSubmit}>
                 <div>
-                    <label className="block text-sm font-medium">{t('Title')}</label>
+                    <label className="block text-sm font-medium">{t('Title', 'Titre')}</label>
                     <Input
                         type="text"
                         name="title"
@@ -132,7 +133,7 @@ export const BlogForm = ({ blog = null, categories = [], onCancel }: BlogFormPro
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium">{t('Category')}</label>
+                    <label className="block text-sm font-medium">{t('Category', 'Catégorie')}</label>
                     <div className="grid grid-cols-12">
                         <div className="col-span-11">
                             <SelectCustom
@@ -140,6 +141,7 @@ export const BlogForm = ({ blog = null, categories = [], onCancel }: BlogFormPro
                                 selectLabel={t('courses.category', 'Catégorie')}
                                 processing={processing}
                                 onValueChange={(value) => setData('category_id', parseInt(value) ?? 0)}
+                                defaultValue={data.blog_category_id ? String(data.blog_category_id) : undefined}
                                 required
                             />
                         </div>
@@ -156,12 +158,12 @@ export const BlogForm = ({ blog = null, categories = [], onCancel }: BlogFormPro
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium">{t('Tags')}</label>
+                    <label className="block text-sm font-medium">{t('Tags', 'Tags')}</label>
                     <TagInput tags={tags} onChange={setTags} placeholder="e.g., tech, news" />
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium">{t('Content')}</label>
+                    <label className="block text-sm font-medium">{t('Content', 'Contenu')}</label>
 
                     <RichTextQuill
                         label={t('Description')}
@@ -184,10 +186,6 @@ export const BlogForm = ({ blog = null, categories = [], onCancel }: BlogFormPro
                         </Button>
                     </div>
                     <div className="flex space-x-2">
-                        <Button type="button" className="bg-gray-300 hover:bg-gray-600 dark:bg-gray-600 rounded-md" onClick={onCancel}>
-                            Brouillon
-                        </Button>
-
                         <Button type="submit">{blog ? t('Update', 'Modifier') : t('Create', 'Sauvegarder')}</Button>
                     </div>
                 </div>

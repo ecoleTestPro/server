@@ -3,6 +3,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, SquarePen, Trash2 } from 'lucide-react';
 import { Button } from '../ui/button/button';
 import { DataTable } from '../ui/dataTable';
+import { json } from 'stream/consumers';
 
 interface BlogsDataTableProps {
     blogs: IBlog[];
