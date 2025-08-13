@@ -156,7 +156,7 @@ const SessionsTimeline = ({ sessions }: SessionsTimelineProps) => {
         }
     }, [groupedSessions, activeDate]);
 
-    const [pageTitle, setPageTitle] = useState('Timeline des Sessions de Formation');
+    const [pageTitle, setPageTitle] = useState('Sessions de Formation');
     const breadcrumbItems: IHeroBreadcrumbItems[] = [
         { label: 'Accueil', href: ROUTE_MAP.public.home.link },
         { label: pageTitle, href: '#' },
@@ -164,7 +164,7 @@ const SessionsTimeline = ({ sessions }: SessionsTimelineProps) => {
 
     return (
         <DefaultLayout>
-            <Head title="Timeline des Sessions de Formation" />
+            <Head title="Sessions de Formation" />
 
             <div className="min-h-screen bg-gradient-to-br from-slate-50 via-emerald-50/30 to-teal-50/20 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
                 {/* Header */}
