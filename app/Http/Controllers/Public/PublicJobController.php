@@ -39,16 +39,21 @@ class PublicJobController extends Controller
     public function apply(JobApplicationStoreRequest $request)
     {
         try {
+            // Récupérer les détails de l'offre d'emploi
+            $jobOffer = JobOffer::findOrFail($request->job_offer_id);
+            
             Mail::to($this->email)->send(new JobApplicationMail(
                 $request->name,
-                $request->job_offer_id,
+                $request->email,
+                $request->phone,
+                $jobOffer,
                 $request->file('cv')
             ));
 
-            return redirect()->back()->with('success', 'Application sent');
+            return response()->json(['message' => 'Application sent successfully'], 200);
         } catch (\Exception $e) {
             Log::error('Job application email error: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Failed to send application');
+            return response()->json(['message' => 'Failed to send application'], 500);
         }
     }
 }
