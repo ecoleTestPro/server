@@ -47,18 +47,6 @@ class BlogRepository extends Repository
             MediaTypeEnum::IMAGE
         ) : null;
 
-        dd([
-            'user_id'          => $request->user_id,
-            'media_id'         => $media ? $media->id : null,
-            'blog_category_id' => $request->category_id,
-            'title'            => $request->title,
-            'slug'             => Str::slug($request->title),
-            'excerpt'          => $request->excerpt,
-            'description'      => $request->description,
-            'tags'             => $request->tags ? $request->tags : null,
-            'status'           => true,
-        ]);
-
         return self::create([
             'user_id'          => $request->user_id,
             'media_id'         => $media ? $media->id : null,
