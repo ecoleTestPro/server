@@ -14,6 +14,7 @@ class CourseSession extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
+        'course_id',
         'location',
         'country',
         'city',
@@ -36,7 +37,7 @@ class CourseSession extends Model
         'tva'            => 'float',
     ];
 
-    protected $guarded = ['id', 'course_id'];
+    protected $guarded = ['id'];
 
     public function course(): BelongsTo
     {
