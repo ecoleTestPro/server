@@ -25,7 +25,7 @@ class JobApplicationMail extends Mailable
     {
         return new Envelope(
             subject: 'Nouvelle candidature',
-            from: new Address(config('mail.from.address'), config('app.name')),
+            from: new Address(env('CONTACT_EMAIL', EMAIL_DEFAULT), config('app.name')),
         );
     }
 

@@ -41,6 +41,7 @@ interface IROUTE_MAP {
         termsOfService: IRouteMap;
         search: IRouteMap;
         calendar: IRouteMap;
+        sessionsTimeline: IRouteMap;
         courses: {
             list: IRouteMap;
             byCategory: (categorySlug: string) => IRouteMap;
@@ -86,6 +87,9 @@ interface IROUTE_MAP {
         },
         newsletters: {
             index: IRouteMap,
+            compose: IRouteMap,
+            templates: IRouteMap,
+            logs: IRouteMap,
         }
     }
 }
@@ -102,6 +106,7 @@ export const ROUTE_MAP: IROUTE_MAP = {
         termsOfService: createIRouteMap(route('termsOfService'), 'Conditions d’utilisation'),
         search: createIRouteMap(route('search.page'), 'Résultats de recherche'),
         calendar: createIRouteMap(route('courses.calendar'), 'Calendrier des formations'),
+        sessionsTimeline: createIRouteMap(route('sessions.timeline'), 'Timeline des sessions'),
         courses: {
             list: createIRouteMap('/formations', 'Liste des formations'),
             byCategory: (categorySlug: string) => {
