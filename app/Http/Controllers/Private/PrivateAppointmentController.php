@@ -61,12 +61,13 @@ class PrivateAppointmentController extends Controller
             'upcoming' => Appointment::upcoming()->count(),
         ];
 
-        return Inertia::render('Private/Appointments/Index', [
+        return Inertia::render('dashboard/appointments/index', [
             'appointments' => $appointments,
             'filters' => $request->only(['status', 'type', 'date_from', 'date_to', 'search']),
             'stats' => $stats,
             'statusOptions' => $this->getStatusOptions(),
             'typeOptions' => $this->getTypeOptions(),
+            'appointmentTypes' => AppointmentType::active()->orderBy('sort_order')->get(['id', 'name', 'slug', 'color']),
         ]);
     }
 
@@ -78,29 +79,14 @@ class PrivateAppointmentController extends Controller
         $startDate = $request->get('start', now()->startOfMonth()->toDateString());
         $endDate = $request->get('end', now()->endOfMonth()->toDateString());
 
-        $appointments = Appointment::with(['user', 'adminUser'])
+        $appointments = Appointment::with(['user', 'adminUser', 'appointmentType'])
             ->whereBetween('appointment_date', [$startDate, $endDate])
-            ->get()
-            ->map(function ($appointment) {
-                return [
-                    'id' => $appointment->id,
-                    'title' => $appointment->title ?: $appointment->type_label,
-                    'start' => $appointment->appointment_date->toISOString(),
-                    'end' => $appointment->end_time->toISOString(),
-                    'color' => $this->getStatusColor($appointment->status),
-                    'extendedProps' => [
-                        'status' => $appointment->status,
-                        'type' => $appointment->type,
-                        'client_email' => $appointment->client_email,
-                        'client_phone' => $appointment->client_phone,
-                        'duration' => $appointment->duration,
-                    ]
-                ];
-            });
+            ->get();
 
         return Inertia::render('Private/Appointments/Calendar', [
             'appointments' => $appointments,
-            'businessHours' => BusinessHours::active()->get(),
+            'filters' => $request->only(['month', 'year', 'type', 'status']),
+            'appointmentTypes' => AppointmentType::active()->orderBy('sort_order')->get(['id', 'name', 'slug', 'color']),
         ]);
     }
 
@@ -203,10 +189,12 @@ class PrivateAppointmentController extends Controller
      */
     public function settingsTypes(): Response
     {
-        $types = AppointmentType::ordered()->get();
+        $appointmentTypes = AppointmentType::ordered()->get();
+        $appointmentDurations = AppointmentDuration::active()->orderBy('sort_order')->get(['id', 'duration', 'label']);
         
         return Inertia::render('Private/Appointments/Settings/Types', [
-            'types' => $types
+            'appointmentTypes' => $appointmentTypes,
+            'appointmentDurations' => $appointmentDurations,
         ]);
     }
 
@@ -370,9 +358,11 @@ class PrivateAppointmentController extends Controller
     public function settingsHours(): Response
     {
         $businessHours = BusinessHours::orderByRaw("FIELD(day_of_week, 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday')")->get();
+        $appointmentDurations = AppointmentDuration::active()->orderBy('sort_order')->get(['id', 'duration', 'label']);
         
         return Inertia::render('Private/Appointments/Settings/Hours', [
-            'businessHours' => $businessHours
+            'businessHours' => $businessHours,
+            'appointmentDurations' => $appointmentDurations,
         ]);
     }
 

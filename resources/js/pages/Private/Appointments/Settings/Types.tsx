@@ -17,7 +17,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import PrivateLayout from '@/components/layouts/Private/PrivateLayout';
+import AppLayout from '@/layouts/dashboard/app-layout';
 
 interface Props {
     appointmentTypes: AppointmentType[];
@@ -144,7 +144,7 @@ export default function AppointmentTypesSettings({ appointmentTypes, appointment
     };
 
     return (
-        <PrivateLayout>
+        <AppLayout>
             <Head title="Types de rendez-vous" />
             
             <div className="space-y-6">
@@ -493,6 +493,6 @@ export default function AppointmentTypesSettings({ appointmentTypes, appointment
                     </DialogContent>
                 </Dialog>
             </div>
-        </PrivateLayout>
+        </AppLayout>
     );
 }

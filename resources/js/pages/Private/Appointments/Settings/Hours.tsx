@@ -15,7 +15,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import PrivateLayout from '@/components/layouts/Private/PrivateLayout';
+import AppLayout from '@/layouts/dashboard/app-layout';
 
 interface Props {
     businessHours: BusinessHours[];
@@ -215,7 +215,7 @@ export default function BusinessHoursSettings({ businessHours, appointmentDurati
     const stats = getStats();
 
     return (
-        <PrivateLayout>
+        <AppLayout>
             <Head title="Horaires d'ouverture" />
             
             <div className="space-y-6">
@@ -537,6 +537,6 @@ export default function BusinessHoursSettings({ businessHours, appointmentDurati
                     </DialogContent>
                 </Dialog>
             </div>
-        </PrivateLayout>
+        </AppLayout>
     );
 }

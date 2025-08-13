@@ -13,7 +13,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import PrivateLayout from '@/components/layouts/Private/PrivateLayout';
+import AppLayout from '@/layouts/dashboard/app-layout';
 
 interface Props {
     appointments: {
@@ -86,7 +86,7 @@ export default function AppointmentsIndex({ appointments, filters, stats, appoin
     };
 
     return (
-        <PrivateLayout>
+        <AppLayout>
             <Head title="Gestion des rendez-vous" />
             
             <div className="space-y-6">
@@ -357,6 +357,6 @@ export default function AppointmentsIndex({ appointments, filters, stats, appoin
                     </CardContent>
                 </Card>
             </div>
-        </PrivateLayout>
+        </AppLayout>
     );
 }

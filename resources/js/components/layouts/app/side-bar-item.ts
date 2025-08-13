@@ -30,33 +30,6 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
         href: route('dashboard.enrollment.index'),
         icon: ListChecks,
     },
-    {
-        title: 'Rendez-vous',
-        href: route('dashboard.appointments.index'),
-        icon: Calendar,
-        children: [
-            {
-                title: 'Liste des RDV',
-                href: route('dashboard.appointments.index'),
-                icon: List,
-            },
-            {
-                title: 'Calendrier',
-                href: route('dashboard.appointments.calendar'),
-                icon: CalendarDays,
-            },
-            {
-                title: 'Types de RDV',
-                href: route('dashboard.appointments.settings.types'),
-                icon: Settings2,
-            },
-            {
-                title: 'Horaires',
-                href: route('dashboard.appointments.settings.hours'),
-                icon: CalendarCheck,
-            },
-        ],
-    },
     // {
     //     title: 'Partenaires',
     //     href: route('dashboard.partners.index'),
@@ -86,6 +59,33 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
         title: 'Faqs',
         href: route('dashboard.faqs.index'),
         icon: BookOpen,
+    },
+    {
+        title: 'Rendez-vous',
+        href: route('dashboard.appointments.index'),
+        icon: Calendar,
+        children: [
+            {
+                title: 'Liste des RDV',
+                href: route('dashboard.appointments.index'),
+                icon: List,
+            },
+            {
+                title: 'Calendrier',
+                href: route('dashboard.appointments.calendar'),
+                icon: CalendarDays,
+            },
+            {
+                title: 'Types de RDV',
+                href: route('dashboard.appointments.settings.types'),
+                icon: Settings2,
+            },
+            {
+                title: 'Horaires',
+                href: route('dashboard.appointments.settings.hours'),
+                icon: CalendarCheck,
+            },
+        ],
     },
     {
         title: 'Newsletters',

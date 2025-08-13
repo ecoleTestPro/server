@@ -134,21 +134,6 @@ class AppointmentController extends PublicAbstractController
     }
 
     /**
-     * Affiche les rendez-vous de l'utilisateur
-     */
-    public function index(): Response
-    {
-        $appointments = Appointment::where('user_id', auth()->id())
-            ->with(['adminUser'])
-            ->orderBy('appointment_date', 'desc')
-            ->paginate(10);
-
-        return Inertia::render('Appointments/Index', [
-            'appointments' => $appointments
-        ]);
-    }
-
-    /**
      * Annule un rendez-vous
      */
     public function cancel(Request $request, Appointment $appointment): JsonResponse

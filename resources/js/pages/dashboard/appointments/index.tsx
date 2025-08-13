@@ -1,9 +1,10 @@
-import React from 'react';
-import { Head, Link } from '@inertiajs/react';
-import { Button } from '@/components/ui/button/button';
-import { Calendar, Clock, User, Phone, Mail, MessageSquare, Plus } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import AppLayout from '@/layouts/dashboard/app-layout';
+import { Head, Link } from '@inertiajs/react';
+import { Calendar, Clock, Mail, MessageSquare, Phone, Plus, User } from 'lucide-react';
+import React from 'react';
 
 interface Appointment {
     id: number;
@@ -56,7 +57,7 @@ const AppointmentsIndex: React.FC<AppointmentsIndexProps> = ({ appointments }) =
             weekday: 'long',
             day: 'numeric',
             month: 'long',
-            year: 'numeric'
+            year: 'numeric',
         });
     };
 
@@ -64,40 +65,22 @@ const AppointmentsIndex: React.FC<AppointmentsIndexProps> = ({ appointments }) =
         const date = new Date(dateString);
         return date.toLocaleTimeString('fr-FR', {
             hour: '2-digit',
-            minute: '2-digit'
+            minute: '2-digit',
         });
     };
 
     return (
-        <AuthenticatedLayout
-            header={
-                <div className="flex justify-between items-center">
-                    <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
-                        Mes rendez-vous
-                    </h2>
-                    <Link href="/appointments/create">
-                        <Button className="flex items-center gap-2">
-                            <Plus className="w-4 h-4" />
-                            Nouveau rendez-vous
-                        </Button>
-                    </Link>
-                </div>
-            }
-        >
+        <AppLayout>
             <Head title="Mes rendez-vous" />
-            
+
             <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
                     {appointments.data.length === 0 ? (
                         <Card>
                             <CardContent className="text-center py-12">
                                 <Calendar className="w-16 h-16 mx-auto text-gray-400 mb-4" />
-                                <h3 className="text-lg font-medium text-gray-900 mb-2">
-                                    Aucun rendez-vous
-                                </h3>
-                                <p className="text-gray-600 mb-6">
-                                    Vous n'avez pas encore de rendez-vous programmés.
-                                </p>
+                                <h3 className="text-lg font-medium text-gray-900 mb-2">Aucun rendez-vous</h3>
+                                <p className="text-gray-600 mb-6">Vous n'avez pas encore de rendez-vous programmés.</p>
                                 <Link href="/appointments/create">
                                     <Button>
                                         <Plus className="w-4 h-4 mr-2" />
@@ -113,9 +96,7 @@ const AppointmentsIndex: React.FC<AppointmentsIndexProps> = ({ appointments }) =
                                     <CardHeader className="pb-3">
                                         <div className="flex justify-between items-start">
                                             <div>
-                                                <CardTitle className="text-lg mb-1">
-                                                    {appointment.title}
-                                                </CardTitle>
+                                                <CardTitle className="text-lg mb-1">{appointment.title}</CardTitle>
                                                 <div className="flex items-center gap-4 text-sm text-gray-600">
                                                     <span className="flex items-center gap-1">
                                                         <Calendar className="w-4 h-4" />
@@ -128,12 +109,8 @@ const AppointmentsIndex: React.FC<AppointmentsIndexProps> = ({ appointments }) =
                                                 </div>
                                             </div>
                                             <div className="flex gap-2">
-                                                <Badge variant="secondary">
-                                                    {appointment.type_label}
-                                                </Badge>
-                                                <Badge className={getStatusColor(appointment.status)}>
-                                                    {appointment.status_label}
-                                                </Badge>
+                                                <Badge variant="secondary">{appointment.type_label}</Badge>
+                                                <Badge className={getStatusColor(appointment.status)}>{appointment.status_label}</Badge>
                                             </div>
                                         </div>
                                     </CardHeader>
@@ -142,13 +119,11 @@ const AppointmentsIndex: React.FC<AppointmentsIndexProps> = ({ appointments }) =
                                             <div className="mb-4">
                                                 <div className="flex items-start gap-2">
                                                     <MessageSquare className="w-4 h-4 text-gray-500 mt-0.5 flex-shrink-0" />
-                                                    <p className="text-gray-700 text-sm">
-                                                        {appointment.description}
-                                                    </p>
+                                                    <p className="text-gray-700 text-sm">{appointment.description}</p>
                                                 </div>
                                             </div>
                                         )}
-                                        
+
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                                             <div className="space-y-2">
                                                 {appointment.client_email && (
@@ -164,40 +139,36 @@ const AppointmentsIndex: React.FC<AppointmentsIndexProps> = ({ appointments }) =
                                                     </div>
                                                 )}
                                             </div>
-                                            
+
                                             {appointment.admin_user && (
                                                 <div>
                                                     <div className="flex items-center gap-2">
                                                         <User className="w-4 h-4 text-gray-500" />
                                                         <div>
-                                                            <span className="font-medium">
-                                                                {appointment.admin_user.name}
-                                                            </span>
+                                                            <span className="font-medium">{appointment.admin_user.name}</span>
                                                             <br />
-                                                            <span className="text-gray-600 text-xs">
-                                                                {appointment.admin_user.email}
-                                                            </span>
+                                                            <span className="text-gray-600 text-xs">{appointment.admin_user.email}</span>
                                                         </div>
                                                     </div>
                                                 </div>
                                             )}
                                         </div>
 
-                                        {(appointment.status === 'pending' || appointment.status === 'confirmed') && 
-                                         new Date(appointment.appointment_date) > new Date() && (
-                                            <div className="mt-4 pt-4 border-t">
-                                                <Button 
-                                                    variant="outline" 
-                                                    size="sm"
-                                                    onClick={() => {
-                                                        // TODO: Implémenter l'annulation
-                                                        console.log('Annuler RDV', appointment.id);
-                                                    }}
-                                                >
-                                                    Annuler le rendez-vous
-                                                </Button>
-                                            </div>
-                                        )}
+                                        {(appointment.status === 'pending' || appointment.status === 'confirmed') &&
+                                            new Date(appointment.appointment_date) > new Date() && (
+                                                <div className="mt-4 pt-4 border-t">
+                                                    <Button
+                                                        variant="outline"
+                                                        size="sm"
+                                                        onClick={() => {
+                                                            // TODO: Implémenter l'annulation
+                                                            console.log('Annuler RDV', appointment.id);
+                                                        }}
+                                                    >
+                                                        Annuler le rendez-vous
+                                                    </Button>
+                                                </div>
+                                            )}
                                     </CardContent>
                                 </Card>
                             ))}
@@ -205,7 +176,7 @@ const AppointmentsIndex: React.FC<AppointmentsIndexProps> = ({ appointments }) =
                     )}
                 </div>
             </div>
-        </AuthenticatedLayout>
+        </AppLayout>
     );
 };
 

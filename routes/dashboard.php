@@ -240,16 +240,6 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
 });
 
 /**
- * Routes pour les rendez-vous - Accès public pour la prise de RDV
- */
-Route::prefix('appointments')->group(function () {
-    Route::middleware(['auth', 'verified'])->group(function () {
-        Route::get('/', [AppointmentController::class, 'index'])->name('dashboard.appointments.index');
-        Route::patch('/{appointment}/cancel', [AppointmentController::class, 'cancel'])->name('dashboard.appointments.cancel');
-    });
-});
-
-/**
  * Routes admin pour les horaires d'ouverture
  */
 Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {

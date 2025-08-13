@@ -10,7 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import PrivateLayout from '@/components/layouts/Private/PrivateLayout';
+import AppLayout from '@/layouts/dashboard/app-layout';
 
 interface Props {
     appointments: Appointment[];
@@ -125,7 +125,7 @@ export default function AppointmentsCalendar({ appointments, filters, appointmen
     };
 
     return (
-        <PrivateLayout>
+        <AppLayout>
             <Head title="Calendrier des rendez-vous" />
             
             <div className="space-y-6">
@@ -363,6 +363,6 @@ export default function AppointmentsCalendar({ appointments, filters, appointmen
                     </DialogContent>
                 </Dialog>
             </div>
-        </PrivateLayout>
+        </AppLayout>
     );
 }
