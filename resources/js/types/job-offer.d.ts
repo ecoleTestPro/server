@@ -19,4 +19,5 @@ export interface IJobApplication {
     email: string;
     phone: string;
     cv: File | null;
+    [key: string]: string | number | File | null;
 }
