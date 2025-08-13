@@ -18,7 +18,7 @@ class FaqController extends Controller
 
         $faqs = FaqRepository::query()->when($search, function ($query) use ($search) {
             $query->where('question', 'like', '%' . $search . '%');
-        })->withTrashed()->latest('id')->paginate(15)->withQueryString();
+        })->withTrashed()->latest('id')->paginate(999999)->withQueryString();
 
         $data = [
             'faqs' => $faqs,

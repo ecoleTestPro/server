@@ -23,7 +23,7 @@ export interface IBlogForm {
     tags?: string;
     tagArray?: string[];
     status: boolean;
-    category_id?: number;
+    blog_category_id?: number;
     [key: string]: any; // Allow additional properties
 }
 
@@ -36,7 +36,7 @@ const createDefaultValues = (blog: IBlog | null): IBlogForm => {
             description: blog.description,
             tags: blog.tags,
             status: blog.status,
-            category_id: blog.category?.id,
+            blog_category_id: blog.blog_category_id,
         };
     }
     return {
@@ -46,7 +46,7 @@ const createDefaultValues = (blog: IBlog | null): IBlogForm => {
         description: '',
         tags: '',
         status: true,
-        category_id: undefined,
+        blog_category_id: undefined,
     };
 };
 
@@ -80,8 +80,9 @@ export const BlogForm = ({ blog = null, categories = [], onCancel }: BlogFormPro
             slug: data.slug,
             excerpt: data.excerpt,
             description: data.description,
-            category_id: data.category_id,
+            category_id: data.blog_category_id,
             user_id: auth.user.id,
+            status: data.status,
             tags: data.tags
                     ?.split(';')
                     ?.filter((t: string) => t != '')
@@ -140,7 +141,7 @@ export const BlogForm = ({ blog = null, categories = [], onCancel }: BlogFormPro
                                 data={category_list()}
                                 selectLabel={t('courses.category', 'Catégorie')}
                                 processing={processing}
-                                onValueChange={(value) => setData('category_id', parseInt(value) ?? 0)}
+                                onValueChange={(value) => setData('blog_category_id', parseInt(value) ?? 0))
                                 defaultValue={data.blog_category_id ? String(data.blog_category_id) : undefined}
                                 required
                             />
