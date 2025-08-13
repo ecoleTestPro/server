@@ -1,6 +1,5 @@
 import React from 'react';
 import { Head, Link } from '@inertiajs/react';
-import AuthenticatedLayout from '@/layouts/authenticated-layout';
 import { Button } from '@/components/ui/button/button';
 import { Calendar, Clock, User, Phone, Mail, MessageSquare, Plus } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';

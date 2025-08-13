@@ -4,9 +4,10 @@ import SelectCustom, { ISelectItem } from '@/components/ui/select-custom';
 import { CLASS_NAME } from '@/data/styles/style.constant';
 import { DashbordCourseView } from '@/pages/dashboard/courses';
 import { ICourse } from '@/types/course';
-import { Link } from '@inertiajs/react';
-import { Filter, LayoutGrid, PlusSquare, TableOfContents } from 'lucide-react';
+import { Link, router } from '@inertiajs/react';
+import { Filter, LayoutGrid, PlusSquare, TableOfContents, RefreshCw } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useState } from 'react';
 // import DashboardCategoryList from '../categories/dashboardCategoryList';
 
 interface ICategoryToolBarProps {
@@ -22,6 +23,17 @@ interface ICategoryToolBarProps {
 
 export default function CourseToolBarTwo({ setSearchTerm, searchTerm, viewMode, handleChangeViewMode, courses, setCourses }: ICategoryToolBarProps) {
     const { t, i18n } = useTranslation();
+    const [isRefreshing, setIsRefreshing] = useState(false);
+
+    const handleRefresh = () => {
+        setIsRefreshing(true);
+        router.reload({
+            only: ['courses'],
+            onFinish: () => {
+                setIsRefreshing(false);
+            },
+        });
+    };
 
     const filters: {
         id: 'all' | 'published' | 'featured' | 'no-published';
@@ -127,9 +139,19 @@ export default function CourseToolBarTwo({ setSearchTerm, searchTerm, viewMode, 
                     </div>
 
                     <div className="flex items-center justify-end space-x-2">
-                        <button onClick={() => handleChangeViewMode(viewMode === 'card' ? 'list' : 'card')}>
-                            {viewMode === 'card' ? <TableOfContents className="h-5 w-5" /> : <LayoutGrid className="h-5 w-5" />}
+                        <button 
+                            onClick={handleRefresh}
+                            disabled={isRefreshing}
+                            className={`cursor-pointer bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 flex items-center px-3 py-2 rounded-md transition-all hover:bg-gray-300 dark:hover:bg-gray-600`}
+                            title="Rafraîchir les données"
+                        >
+                            <RefreshCw className={`h-5 w-5 ${isRefreshing ? 'animate-spin' : ''}`} />
                         </button>
+                        {false && (
+                            <button onClick={() => handleChangeViewMode(viewMode === 'card' ? 'list' : 'card')}>
+                                {viewMode === 'card' ? <TableOfContents className="h-5 w-5" /> : <LayoutGrid className="h-5 w-5" />}
+                            </button>
+                        )}
                         <Link className={`${CLASS_NAME.btn.primary}`} href={route('dashboard.course.create')}>
                             <span className="flex items-center">
                                 <PlusSquare className="h-5 w-5" />
