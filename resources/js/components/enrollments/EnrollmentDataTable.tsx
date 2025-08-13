@@ -19,7 +19,7 @@ export default function EnrollmentDataTable({ enrollments, onDeleteRow }: Enroll
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             ),
-            cell: ({ row }) => <span>{row.original.user?.name || '-'}</span>,
+            cell: ({ row }) => <span>{row.original.user_fullname || '-'}</span>,
         },
         {
             id: 'email',
@@ -29,7 +29,7 @@ export default function EnrollmentDataTable({ enrollments, onDeleteRow }: Enroll
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             ),
-            cell: ({ row }) => <span>{row.original.user?.email || '-'}</span>,
+            cell: ({ row }) => <span>{row.original.user_email || '-'}</span>,
         },
         {
             id: 'phone',
@@ -39,24 +39,24 @@ export default function EnrollmentDataTable({ enrollments, onDeleteRow }: Enroll
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             ),
-            cell: ({ row }) => <span>{row.original.user?.phone || '-'}</span>,
+            cell: ({ row }) => <span>{row.original.user_phone || '-'}</span>,
         },
         {
             id: 'contact',
             header: 'Contact',
             cell: ({ row }) => (
                 <div className="flex space-x-2">
-                    {row.original.user?.email && (
+                    {row.original.user_email && (
                         <Button variant="ghost" size="icon" asChild>
-                            <a href={`mailto:${row.original.user.email}`}>
+                            <a href={`mailto:${row.original.user_email}`}>
                                 <Mail className="h-4 w-4" />
                                 <span className="sr-only">Mail</span>
                             </a>
                         </Button>
                     )}
-                    {row.original.user?.phone && (
+                    {row.original.user_phone && (
                         <Button variant="ghost" size="icon" asChild>
-                            <a href={`tel:${row.original.user.phone}`}>
+                            <a href={`tel:${row.original.user_phone}`}>
                                 <Phone className="h-4 w-4" />
                                 <span className="sr-only">Téléphone</span>
                             </a>
