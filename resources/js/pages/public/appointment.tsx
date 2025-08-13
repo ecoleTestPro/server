@@ -1,7 +1,7 @@
 import React from 'react';
 import { Head } from '@inertiajs/react';
-import FrontLayout from '@/layouts/public/front.layout';
 import AppointmentCalendar from '@/components/appointments/AppointmentCalendar';
+import DefaultLayout from '@/layouts/public/front.layout';
 
 interface PublicAppointmentCreateProps {
     businessHours?: any;
@@ -13,7 +13,7 @@ const PublicAppointmentCreate: React.FC<PublicAppointmentCreateProps> = ({
     appointmentTypes 
 }) => {
     return (
-        <FrontLayout>
+        <DefaultLayout>
             <Head title="Prendre un rendez-vous - EcoleTestPro" />
             
             {/* Hero Section */}
@@ -143,7 +143,7 @@ const PublicAppointmentCreate: React.FC<PublicAppointmentCreateProps> = ({
                     </div>
                 </div>
             </section>
-        </FrontLayout>
+        </DefaultLayout>
     );
 };
 

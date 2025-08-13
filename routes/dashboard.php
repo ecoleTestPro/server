@@ -207,20 +207,11 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
  * Routes pour les rendez-vous - Accès public pour la prise de RDV
  */
 Route::prefix('appointments')->group(function () {
-    // Route publique pour prendre un RDV
-    Route::get('/create', [AppointmentController::class, 'create'])->name('appointments.create');
-    Route::post('/', [AppointmentController::class, 'store'])->name('appointments.store');
-    
-    // Routes protégées pour les utilisateurs connectés
     Route::middleware(['auth', 'verified'])->group(function () {
-        Route::get('/', [AppointmentController::class, 'index'])->name('appointments.index');
-        Route::patch('/{appointment}/cancel', [AppointmentController::class, 'cancel'])->name('appointments.cancel');
+        Route::get('/', [AppointmentController::class, 'index'])->name('dashboard.appointments.index');
+        Route::patch('/{appointment}/cancel', [AppointmentController::class, 'cancel'])->name('dashboard.appointments.cancel');
     });
 });
-
-// Routes API publiques pour les créneaux disponibles
-Route::get('/api/appointments/available-slots', [AppointmentController::class, 'getAvailableSlots'])
-    ->name('api.appointments.available-slots');
 
 /**
  * Routes admin pour les horaires d'ouverture

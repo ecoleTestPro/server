@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Private\NewsletterController;
+use App\Http\Controllers\Public\AppointmentController;
 use App\Http\Controllers\Public\ContactUsController;
 use App\Http\Controllers\Public\EnrollController;
 use App\Http\Controllers\Public\PublicController;
@@ -36,9 +38,12 @@ Route::group(["prefix" => "/"], function () {
     /**
      * Rendez-vous public
      */
-    Route::get('rendez-vous', [\App\Http\Controllers\AppointmentController::class, 'create'])->name('public.appointments.create');
+    Route::get('rendez-vous', [AppointmentController::class, 'create'])->name('appointments.create');
+    Route::post('/', [AppointmentController::class, 'store'])->name('appointments.store');
+    // Routes API publiques pour les créneaux disponibles
+    Route::get('/api/appointments/available-slots', [AppointmentController::class, 'getAvailableSlots'])->name('appointments.available-slots');
 
-    Route::post('newsletter', [\App\Http\Controllers\Public\NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
+    Route::post('newsletter', [NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
 
     /**
      * Consulting routes
