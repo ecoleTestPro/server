@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Private\NewsletterController;
+use App\Http\Controllers\Public\AppointmentController;
 use App\Http\Controllers\Public\ContactUsController;
 use App\Http\Controllers\Public\EnrollController;
 use App\Http\Controllers\Public\PublicController;
@@ -36,9 +38,17 @@ Route::group(["prefix" => "/"], function () {
     /**
      * Rendez-vous public
      */
-    Route::get('rendez-vous', [\App\Http\Controllers\AppointmentController::class, 'create'])->name('public.appointments.create');
+    Route::get('rendez-vous', [AppointmentController::class, 'create'])->name('appointments.create');
+    Route::post('appointments', [AppointmentController::class, 'store'])->name('appointments.store');
+    
+    // Routes API publiques pour les créneaux disponibles
+    Route::prefix('api/appointments')->group(function () {
+        Route::get('available-slots', [AppointmentController::class, 'getAvailableSlots'])->name('appointments.available-slots');
+        Route::get('types', [\App\Http\Controllers\Private\PrivateAppointmentController::class, 'getActiveTypes'])->name('appointments.types');
+        Route::get('durations', [\App\Http\Controllers\Private\PrivateAppointmentController::class, 'getActiveDurations'])->name('appointments.durations');
+    });
 
-    Route::post('newsletter', [\App\Http\Controllers\Public\NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
+    Route::post('newsletter', [NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
 
     /**
      * Consulting routes

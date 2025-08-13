@@ -21,15 +21,15 @@ class Blog extends Model
         'description',
         'tags',
         'status',
+        'user_id',
+        'blog_category_id',
+        'media_id',
         'created_at',
         'updated_at',
     ];
 
     protected $guarded = [
         'id',
-        'blog_category_id',
-        // 'user_id',
-        'media_id',
     ];
 
     protected $casts = [

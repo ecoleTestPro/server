@@ -1,5 +1,5 @@
 import { NavItem } from "@/types";
-import { BookOpen, FileStack, Folder, HomeIcon, LayoutGrid, List, ClipboardPlus, Settings2, ListTodo, BookAIcon, ListChecks, Mail, Calendar } from 'lucide-react';
+import { BookOpen, FileStack, Folder, HomeIcon, LayoutGrid, List, ClipboardPlus, Settings2, ListTodo, BookAIcon, ListChecks, Mail, Calendar, CalendarDays, CalendarCheck } from 'lucide-react';
 
 
 export const MAIN_NAV_ITEMS: NavItem[] = [
@@ -31,23 +31,6 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
         icon: ListChecks,
     },
     // {
-    //     title: 'Rendez-vous',
-    //     href: '/appointments',
-    //     icon: Calendar,
-    //     children: [
-    //         {
-    //             title: 'Mes RDV',
-    //             href: '/appointments',
-    //             icon: List,
-    //         },
-    //         {
-    //             title: 'Prendre RDV',
-    //             href: '/appointments/create',
-    //             icon: ClipboardPlus,
-    //         },
-    //     ],
-    // },
-    // {
     //     title: 'Partenaires',
     //     href: route('dashboard.partners.index'),
     //     icon: FileStack,
@@ -76,6 +59,28 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
         title: 'Faqs',
         href: route('dashboard.faqs.index'),
         icon: BookOpen,
+    },
+    {
+        title: 'Rendez-vous',
+        href: route('dashboard.appointments.index'),
+        icon: Calendar,
+        children: [
+            {
+                title: 'Liste des RDV',
+                href: route('dashboard.appointments.index'),
+                icon: List,
+            },
+            {
+                title: 'Types de RDV',
+                href: route('dashboard.appointments.settings.types'),
+                icon: Settings2,
+            },
+            {
+                title: 'Horaires',
+                href: route('dashboard.appointments.settings.hours'),
+                icon: CalendarCheck,
+            },
+        ],
     },
     {
         title: 'Newsletters',

@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\JobOffer;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Address;
@@ -17,15 +18,18 @@ class JobApplicationMail extends Mailable
 
     public function __construct(
         public string $name,
-        public int $jobOfferId,
+        public string $email,
+        public string $phone,
+        public JobOffer $jobOffer,
         public UploadedFile $cv
     ) {}
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Nouvelle candidature',
-            from: new Address(env('CONTACT_EMAIL', EMAIL_DEFAULT), config('app.name')),
+            subject: 'Nouvelle candidature - ' . $this->jobOffer->title . ' - ' . $this->name,
+            from: new Address(env('CONTACT_EMAIL', 'contact@example.com'), config('app.name')),
+            replyTo: [new Address($this->email, $this->name)]
         );
     }
 
@@ -34,8 +38,13 @@ class JobApplicationMail extends Mailable
         return new Content(
             view: 'mail.job-application.mail',
             with: [
-                'name' => $this->name,
-                'job_offer_id' => $this->jobOfferId,
+                'candidateName' => $this->name,
+                'candidateEmail' => $this->email,
+                'candidatePhone' => $this->phone,
+                'jobOffer' => $this->jobOffer,
+                'applicationDate' => now()->format('d/m/Y \\à H:i'),
+                'cvFileName' => $this->cv->getClientOriginalName(),
+                'cvFileSize' => round($this->cv->getSize() / 1024, 2) . ' KB'
             ]
         );
     }

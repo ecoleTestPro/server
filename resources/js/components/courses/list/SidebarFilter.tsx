@@ -1,7 +1,6 @@
 import { Button } from '@/components/ui/button/button';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ICourse, ICourseCategory } from '@/types/course';
+import { ICourse } from '@/types/course';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -14,24 +13,14 @@ export default function SidebarFilter({ courses, onFilterChange }: SidebarFilter
     const { t } = useTranslation();
     const [title, setTitle] = useState('');
     const [priceRange, setPriceRange] = useState([0, 1000000]); // Plage de prix initiale
-    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const [nextSession, setNextSession] = useState<string>('');
-    const [categories, setCategories] = useState<ICourseCategory[]>([]);
-
-    // Extraire les catégories uniques des cours
-    useEffect(() => {
-        const uniqueCategories = Array.from(
-            new Map(courses.flatMap((course) => course.categories || []).map((category) => [category.id, category])).values(),
-        );
-        setCategories(uniqueCategories);
-    }, [courses]);
 
     // Appliquer les filtres
     useEffect(() => {
         let filteredCourses = [...courses];
 
         // Filtre par titre
-        if (title) {
+        if (title.trim()) {
             filteredCourses = filteredCourses.filter((course) =>
                 course.title.toLowerCase().includes(title.toLowerCase()),
             );
@@ -42,22 +31,25 @@ export default function SidebarFilter({ courses, onFilterChange }: SidebarFilter
             (course) => course.price >= priceRange[0] && course.price <= priceRange[1],
         );
 
-        // Filtre par catégorie
-        if (selectedCategory) {
-            filteredCourses = filteredCourses.filter((course) =>
-                course.categories?.some((category) => category.id === Number(selectedCategory)),
-            );
-        }
-
         // Filtre par prochaine session
-        if (nextSession) {
-            filteredCourses = filteredCourses.filter(
-                (course) => course.nextSession && course.nextSession.includes(nextSession),
-            );
+        if (nextSession.trim()) {
+            filteredCourses = filteredCourses.filter((course) => {
+                if (!course.course_sessions || course.course_sessions.length === 0) return false;
+                
+                const now = new Date();
+                const upcomingSession = course.course_sessions
+                    .filter((session) => new Date(session.start_date) > now)
+                    .sort((a, b) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime())[0];
+                
+                if (!upcomingSession) return false;
+                
+                const sessionDate = upcomingSession.start_date;
+                return sessionDate.toLowerCase().includes(nextSession.toLowerCase());
+            });
         }
 
         onFilterChange(filteredCourses);
-    }, [title, priceRange, selectedCategory, nextSession, courses, onFilterChange]);
+    }, [title, priceRange, nextSession, courses, onFilterChange]);
 
     // Gestion des changements de la plage de prix
     const handlePriceChange = (index: number, value: string) => {
@@ -70,7 +62,6 @@ export default function SidebarFilter({ courses, onFilterChange }: SidebarFilter
     const resetFilters = () => {
         setTitle('');
         setPriceRange([0, 1000000]);
-        setSelectedCategory(null);
         setNextSession('');
     };
 
@@ -80,7 +71,7 @@ export default function SidebarFilter({ courses, onFilterChange }: SidebarFilter
 
             {/* Filtre par titre */}
             <div className="mb-4">
-                <label className="block text-sm font-medium mb-1 text-black dark:text-white">{t('FILTER.TITLE_LABEL', 'Titre du cours')}</label>
+                <label className="block text-sm font-medium mb-1 text-black dark:text-white">{t('FILTER.TITLE_LABEL', 'Titre')}</label>
                 <Input
                     type="text"
                     value={title}
@@ -93,9 +84,9 @@ export default function SidebarFilter({ courses, onFilterChange }: SidebarFilter
             {/* Filtre par prix */}
             <div className="mb-4">
                 <label className="block text-sm font-medium mb-1 text-black dark:text-white">
-                    {t('FILTER.PRICE_LABEL', 'Plage de prix (FCFA)')}: {priceRange[0] / 100} - {priceRange[1] / 100}
+                    {t('FILTER.PRICE_LABEL', 'Plage de prix (FCFA)')}: {priceRange[0]*100 / 100} - {priceRange[1]*100 / 100}
                 </label>
-                <div className="flex gap-2">
+                <div className="gird grid-cols-1 gap-2">
                     <input
                         type="range"
                         min="0"
@@ -115,23 +106,6 @@ export default function SidebarFilter({ courses, onFilterChange }: SidebarFilter
                         className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
                     />
                 </div>
-            </div>
-
-            {/* Filtre par catégorie */}
-            <div className="mb-4">
-                <label className="block text-sm font-medium mb-1 text-black dark:text-white">{t('FILTER.CATEGORY_LABEL', 'Catégorie')}</label>
-                <Select onValueChange={setSelectedCategory} value={selectedCategory || ''}>
-                    <SelectTrigger className="w-full">
-                        <SelectValue placeholder={t('FILTER.CATEGORY_PLACEHOLDER', 'Sélectionner une catégorie')} />
-                    </SelectTrigger>
-                    <SelectContent>
-                        {categories.map((category) => (
-                            <SelectItem key={category.id} value={(category?.id ?? '##').toString()}>
-                                {category.title}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
             </div>
 
             {/* Filtre par prochaine session */}

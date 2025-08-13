@@ -73,3 +73,62 @@ export * from './notification';
 export * from './job-offer';
 export * from './newsletterTemplate';
 export * from './newsletterLog';
+
+// Appointment types
+export interface Appointment {
+    id: number;
+    title: string;
+    description?: string;
+    appointment_date: string;
+    duration: number;
+    type: string;
+    status: 'pending' | 'confirmed' | 'completed' | 'cancelled';
+    client_email?: string;
+    client_phone?: string;
+    metadata?: Record<string, any>;
+    user_id?: number;
+    admin_user_id?: number;
+    user?: User;
+    adminUser?: User;
+    appointmentType?: AppointmentType;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface AppointmentType {
+    id: number;
+    name: string;
+    slug: string;
+    icon?: string;
+    color: string;
+    description?: string;
+    default_duration: number;
+    is_active: boolean;
+    sort_order: number;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface AppointmentDuration {
+    id: number;
+    duration: number;
+    label: string;
+    description?: string;
+    is_active: boolean;
+    sort_order: number;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface BusinessHours {
+    id: number;
+    day_of_week: string;
+    is_open: boolean;
+    opening_time?: string;
+    closing_time?: string;
+    lunch_break_start?: string;
+    lunch_break_end?: string;
+    slot_duration?: number;
+    created_at: string;
+    updated_at: string;
+}
