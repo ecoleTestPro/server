@@ -154,6 +154,9 @@ export const createCourseCategory = (): ICourseCategory => {
 
 export interface ICourseEnrollment {
     user_id: number,
+    user_fullname: string | null,
+    user_email: string | null,
+    user_phone: string | null,
     course_id: number,
     course_session_id: number,
     user: User,
@@ -162,6 +165,9 @@ export interface ICourseEnrollment {
     progress: number,
     last_activity: string,
     is_certificate_downloaded: boolean,
+    created_at: string,
+    updated_at: string,
+    id: number,
 }
 
 export interface ICourseSession {

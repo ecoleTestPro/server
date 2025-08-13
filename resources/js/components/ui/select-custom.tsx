@@ -10,7 +10,7 @@ import {
 } from '../ui/select';
 
 export interface ISelectItem {
-  id: number;
+  id: number | string;
   title: string;
   value: string | number;
   canSelectParent?: boolean;

@@ -30,23 +30,23 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
         href: route('dashboard.enrollment.index'),
         icon: ListChecks,
     },
-    {
-        title: 'Rendez-vous',
-        href: '/appointments',
-        icon: Calendar,
-        children: [
-            {
-                title: 'Mes RDV',
-                href: '/appointments',
-                icon: List,
-            },
-            {
-                title: 'Prendre RDV',
-                href: '/appointments/create',
-                icon: ClipboardPlus,
-            },
-        ],
-    },
+    // {
+    //     title: 'Rendez-vous',
+    //     href: '/appointments',
+    //     icon: Calendar,
+    //     children: [
+    //         {
+    //             title: 'Mes RDV',
+    //             href: '/appointments',
+    //             icon: List,
+    //         },
+    //         {
+    //             title: 'Prendre RDV',
+    //             href: '/appointments/create',
+    //             icon: ClipboardPlus,
+    //         },
+    //     ],
+    // },
     // {
     //     title: 'Partenaires',
     //     href: route('dashboard.partners.index'),

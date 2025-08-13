@@ -22,14 +22,11 @@ export default function Welcome() {
             <div className="bg-gray-100 dark:bg-[#0a0e19]">
                 <HeroHomePage />
                 <AboutUsCard />
-                {/* <Bestseller /> */}
-                {/* <FeaturesSection /> */}
                 <AboutUsServices />
                 <OurCurrentCourses coursesData={data.categories_with_courses} coursesDataSlice={5} />
                 <AboutUsCardTwo />
                 <Testimonials />
                 <Faq />
-                {/* <ContactCard /> */}
             </div>
         </DefaultLayout>
     );

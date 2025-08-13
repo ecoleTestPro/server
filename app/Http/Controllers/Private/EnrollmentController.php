@@ -27,7 +27,7 @@ class EnrollmentController extends Controller
             ->with(['user', 'course', 'course_session'])
             ->withTrashed()
             ->latest('id')
-            ->paginate(15)
+            ->paginate(99999)
             ->withQueryString();
 
         $currentYear = now()->year;
