@@ -11,7 +11,11 @@ export const JobCard: React.FC<{
     setApplySelected: React.Dispatch<React.SetStateAction<number | null>>;
     openApplyModal: boolean;
     setOpenApplyModal: React.Dispatch<React.SetStateAction<boolean>>;
-}> = ({ job, applySelected, setApplySelected, openApplyModal, setOpenApplyModal }) => {
+    detailSelected: number | null;
+    setDetailSelected: React.Dispatch<React.SetStateAction<number | null>>;
+    openDetailModal: boolean;
+    setOpenDetailModal: React.Dispatch<React.SetStateAction<boolean>>;
+}> = ({ job, applySelected, setApplySelected, openApplyModal, setOpenApplyModal, detailSelected, setDetailSelected, openDetailModal, setOpenDetailModal }) => {
     const cardVariants: Variants = {
         hidden: { opacity: 0, scale: 0.95 },
         visible: { opacity: 1, scale: 1, transition: { duration: 0.4, ease: 'easeOut' } },
@@ -45,11 +49,24 @@ export const JobCard: React.FC<{
                 <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">Expire le {job.expires_at}</p>
             )}
             <p className="text-sm text-gray-400 dark:text-gray-500 mt-2">Publié le {job.created_at}</p>
-            <BtnSecondary
-                label="Postuler"
-                onClick={() => setOpenApplyModal(true)}
-                className="mt-4 inline-block px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600"
-            />
+            <div className="flex gap-2 mt-4">
+                <BtnSecondary
+                    label="Voir détails"
+                    onClick={() => {
+                        setDetailSelected(job.id || 0);
+                        setOpenDetailModal(true);
+                    }}
+                    className="inline-block px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 dark:bg-gray-500 dark:hover:bg-gray-600"
+                />
+                <BtnSecondary
+                    label="Postuler"
+                    onClick={() => {
+                        setApplySelected(job.id || 0);
+                        setOpenApplyModal(true);
+                    }}
+                    className="inline-block px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600"
+                />
+            </div>
         </motion.div>
     );
 };

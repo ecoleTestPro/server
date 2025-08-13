@@ -15,6 +15,8 @@ export default function JobApplyModal({ jobId, open, onClose }: Props) {
     const [form, setForm] = useState<IJobApplication>({
         job_offer_id: jobId,
         name: '',
+        email: '',
+        phone: '',
         cv: null,
     });
 
@@ -41,15 +43,32 @@ export default function JobApplyModal({ jobId, open, onClose }: Props) {
                 <h2 className="text-xl font-bold">Postuler</h2>
                 <input
                     className="w-full rounded border p-2"
-                    placeholder="Nom"
+                    placeholder="Nom complet"
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
+                    required
+                />
+                <input
+                    type="email"
+                    className="w-full rounded border p-2"
+                    placeholder="Email"
+                    value={form.email}
+                    onChange={(e) => setForm({ ...form, email: e.target.value })}
+                    required
+                />
+                <input
+                    type="tel"
+                    className="w-full rounded border p-2"
+                    placeholder="Téléphone"
+                    value={form.phone}
+                    onChange={(e) => setForm({ ...form, phone: e.target.value })}
                     required
                 />
                 <input
                     type="file"
                     className="w-full rounded border p-2"
                     onChange={(e) => setForm({ ...form, cv: e.target.files ? e.target.files[0] : null })}
+                    accept=".pdf,.doc,.docx"
                     required
                 />
                 <div className="flex justify-end gap-2">
