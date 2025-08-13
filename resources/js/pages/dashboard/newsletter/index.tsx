@@ -1,5 +1,5 @@
 import AppLayout from '@/layouts/dashboard/app-layout';
-import { Head, router, usePage } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button/button';
 import { Input } from '@/components/ui/input';
@@ -14,6 +14,7 @@ import { DataTable } from '@/components/ui/dataTable';
 import { ColumnDef } from '@tanstack/react-table';
 import { Mail, Users, Send, AlertTriangle, CheckCircle, Clock, TrendingUp } from 'lucide-react';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 // import { format } from 'date-fns';
 // import { fr } from 'date-fns/locale';
 
@@ -68,8 +69,9 @@ export default function NewsletterIndex() {
             setLoading(true);
             const response = await axios.get(route('dashboard.newsletters.analytics'));
             setAnalytics(response.data);
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error loading analytics:', error);
+            toast.error(t('Error loading analytics', 'Erreur lors du chargement des statistiques'));
         } finally {
             setLoading(false);
         }
@@ -78,9 +80,11 @@ export default function NewsletterIndex() {
     const loadLogs = async () => {
         try {
             const response = await axios.get(route('dashboard.newsletters.logs'));
-            setLogs(response.data.data);
-        } catch (error) {
+            setLogs(response.data.data || []);
+        } catch (error: any) {
             console.error('Error loading logs:', error);
+            toast.error(t('Error loading logs', 'Erreur lors du chargement des logs'));
+            setLogs([]);
         }
     };
 
@@ -93,16 +97,55 @@ export default function NewsletterIndex() {
     const submit = async (e: React.FormEvent) => {
         e.preventDefault();
         setSending(true);
+        
         try {
-            router.post(route('dashboard.newsletters.send'), { subject, content }, {
-                onSuccess: () => {
-                    setSubject('');
-                    setContent('');
-                    setTemplateId('');
-                    loadAnalytics();
-                    setActiveTab('analytics');
-                },
+            const response = await axios.post(route('dashboard.newsletters.send'), {
+                subject,
+                content
             });
+            
+            // Afficher le message de succès avec les statistiques
+            if (response.data.stats) {
+                const { success, failed, total } = response.data.stats;
+                if (failed > 0) {
+                    toast.error(`Newsletter envoyée avec ${failed} échec(s) sur ${total} emails`);
+                } else {
+                    toast.success(`Newsletter envoyée avec succès à ${success} abonné(s)`);
+                }
+            } else {
+                toast.success(response.data.message || t('Newsletter sent successfully', 'Newsletter envoyée avec succès'));
+            }
+            
+            // Réinitialiser le formulaire
+            setSubject('');
+            setContent('');
+            setTemplateId('');
+            
+            // Recharger les analytics et passer à l'onglet analytics
+            await loadAnalytics();
+            setActiveTab('analytics');
+            
+        } catch (error: any) {
+            console.error('Error sending newsletter:', error);
+            
+            // Gestion des erreurs détaillée
+            if (error.response?.data?.message) {
+                toast.error(error.response.data.message);
+            } else if (error.response?.status === 400) {
+                toast.error(t('No subscribers found', 'Aucun abonné trouvé'));
+            } else if (error.response?.status === 422) {
+                // Erreurs de validation
+                const errors = error.response.data.errors;
+                if (errors) {
+                    Object.values(errors).flat().forEach((err: any) => {
+                        toast.error(err);
+                    });
+                } else {
+                    toast.error(t('Validation error', 'Erreur de validation'));
+                }
+            } else {
+                toast.error(t('Error sending newsletter', 'Erreur lors de l\'envoi de la newsletter'));
+            }
         } finally {
             setSending(false);
         }
