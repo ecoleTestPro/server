@@ -1,22 +1,18 @@
 import React, { useState } from 'react';
-import { Head } from '@inertiajs/react';
-import { Plus, Edit, Trash2, Eye, EyeOff, GripVertical, Palette, Type, Clock, FileText } from 'lucide-react';
+import { Head, useForm } from '@inertiajs/react';
+import { Plus, Edit, Trash2, Eye, EyeOff, GripVertical, Type, Clock } from 'lucide-react';
 import { motion, Reorder } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { AppointmentType } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+import { Textarea } from '@/components/ui/text-area';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
+import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/dashboard/app-layout';
 
 interface Props {
@@ -27,17 +23,6 @@ interface Props {
         label: string;
     }>;
 }
-
-const typeSchema = z.object({
-    name: z.string().min(1, 'Le nom est requis'),
-    icon: z.string().optional(),
-    color: z.string().min(1, 'La couleur est requise'),
-    description: z.string().optional(),
-    default_duration: z.number().min(15, 'Durée minimum 15 minutes'),
-    is_active: z.boolean().default(true)
-});
-
-type TypeFormData = z.infer<typeof typeSchema>;
 
 const PREDEFINED_COLORS = [
     '#3b82f6', // blue
@@ -61,22 +46,19 @@ export default function AppointmentTypesSettings({ appointmentTypes, appointment
     const [editingType, setEditingType] = useState<AppointmentType | null>(null);
     const [types, setTypes] = useState(appointmentTypes);
 
-    const form = useForm<TypeFormData>({
-        resolver: zodResolver(typeSchema),
-        defaultValues: {
-            name: '',
-            icon: '',
-            color: PREDEFINED_COLORS[0],
-            description: '',
-            default_duration: 30,
-            is_active: true
-        }
+    const { data, setData, post, put, delete: destroy, processing, errors, reset } = useForm({
+        name: '',
+        icon: '',
+        color: PREDEFINED_COLORS[0],
+        description: '',
+        default_duration: 30,
+        is_active: true
     });
 
     const openDialog = (type?: AppointmentType) => {
         if (type) {
             setEditingType(type);
-            form.reset({
+            setData({
                 name: type.name,
                 icon: type.icon || '',
                 color: type.color,
@@ -86,56 +68,53 @@ export default function AppointmentTypesSettings({ appointmentTypes, appointment
             });
         } else {
             setEditingType(null);
-            form.reset({
-                name: '',
-                icon: '',
+            reset();
+            setData(prev => ({
+                ...prev,
                 color: PREDEFINED_COLORS[0],
-                description: '',
                 default_duration: 30,
                 is_active: true
-            });
+            }));
         }
         setIsDialogOpen(true);
     };
 
-    const handleSubmit = async (data: TypeFormData) => {
-        try {
-            // TODO: Implement API call
-            console.log('Saving type:', data);
-            setIsDialogOpen(false);
-            form.reset();
-        } catch (error) {
-            console.error('Error saving type:', error);
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        
+        if (editingType) {
+            put(route('dashboard.appointments.settings.types.update', editingType.id), {
+                onSuccess: () => {
+                    setIsDialogOpen(false);
+                    reset();
+                }
+            });
+        } else {
+            post(route('dashboard.appointments.settings.types.store'), {
+                onSuccess: () => {
+                    setIsDialogOpen(false);
+                    reset();
+                }
+            });
         }
     };
 
-    const handleToggleStatus = async (typeId: number) => {
-        try {
-            // TODO: Implement API call
-            setTypes(prev => prev.map(type => 
-                type.id === typeId 
-                    ? { ...type, is_active: !type.is_active }
-                    : type
-            ));
-        } catch (error) {
-            console.error('Error toggling status:', error);
-        }
+    const handleToggleStatus = (typeId: number) => {
+        put(route('dashboard.appointments.settings.types.toggle', typeId));
     };
 
-    const handleDelete = async (typeId: number) => {
+    const handleDelete = (typeId: number) => {
         if (confirm('Êtes-vous sûr de vouloir supprimer ce type de rendez-vous ?')) {
-            try {
-                // TODO: Implement API call
-                setTypes(prev => prev.filter(type => type.id !== typeId));
-            } catch (error) {
-                console.error('Error deleting type:', error);
-            }
+            destroy(route('dashboard.appointments.settings.types.destroy', typeId));
         }
     };
 
     const handleReorder = (newOrder: AppointmentType[]) => {
         setTypes(newOrder);
         // TODO: Update sort_order via API
+        post(route('dashboard.appointments.settings.types.reorder'), {
+            types: newOrder.map((type, index) => ({ id: type.id, sort_order: index + 1 }))
+        });
     };
 
     const getDurationLabel = (duration: number) => {
@@ -328,168 +307,135 @@ export default function AppointmentTypesSettings({ appointmentTypes, appointment
                             </DialogDescription>
                         </DialogHeader>
 
-                        <Form {...form}>
-                            <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
-                                <div className="grid grid-cols-2 gap-4">
-                                    <FormField
-                                        control={form.control}
-                                        name="name"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>Nom du type</FormLabel>
-                                                <FormControl>
-                                                    <Input placeholder="Consultation..." {...field} />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
+                        <form onSubmit={handleSubmit} className="space-y-6">
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="name">Nom du type</Label>
+                                    <Input
+                                        id="name"
+                                        value={data.name}
+                                        onChange={(e) => setData('name', e.target.value)}
+                                        placeholder="Consultation..."
+                                        className={errors.name ? 'border-red-500' : ''}
                                     />
-
-                                    <FormField
-                                        control={form.control}
-                                        name="default_duration"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>Durée par défaut</FormLabel>
-                                                <Select value={field.value.toString()} onValueChange={(value) => field.onChange(parseInt(value))}>
-                                                    <FormControl>
-                                                        <SelectTrigger>
-                                                            <SelectValue />
-                                                        </SelectTrigger>
-                                                    </FormControl>
-                                                    <SelectContent>
-                                                        {appointmentDurations.map(duration => (
-                                                            <SelectItem key={duration.id} value={duration.duration.toString()}>
-                                                                {duration.label}
-                                                            </SelectItem>
-                                                        ))}
-                                                    </SelectContent>
-                                                </Select>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
+                                    {errors.name && (
+                                        <p className="text-sm text-red-600">{errors.name}</p>
+                                    )}
                                 </div>
 
-                                <FormField
-                                    control={form.control}
-                                    name="description"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Description</FormLabel>
-                                            <FormControl>
-                                                <Textarea 
-                                                    placeholder="Description du type de rendez-vous..." 
-                                                    {...field} 
-                                                />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
+                                <div className="space-y-2">
+                                    <Label htmlFor="default_duration">Durée par défaut</Label>
+                                    <Select 
+                                        value={data.default_duration.toString()} 
+                                        onValueChange={(value) => setData('default_duration', parseInt(value))}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {appointmentDurations.map(duration => (
+                                                <SelectItem key={duration.id} value={duration.duration.toString()}>
+                                                    {duration.label}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                    {errors.default_duration && (
+                                        <p className="text-sm text-red-600">{errors.default_duration}</p>
                                     )}
+                                </div>
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="description">Description</Label>
+                                <Textarea
+                                    id="description"
+                                    value={data.description}
+                                    onChange={(e) => setData('description', e.target.value)}
+                                    placeholder="Description du type de rendez-vous..."
                                 />
+                                {errors.description && (
+                                    <p className="text-sm text-red-600">{errors.description}</p>
+                                )}
+                            </div>
 
-                                <div className="grid grid-cols-2 gap-4">
-                                    <FormField
-                                        control={form.control}
-                                        name="icon"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>Icône</FormLabel>
-                                                <div className="space-y-2">
-                                                    <FormControl>
-                                                        <Input 
-                                                            placeholder="Emoji ou icône..." 
-                                                            {...field} 
-                                                        />
-                                                    </FormControl>
-                                                    <div className="flex flex-wrap gap-1">
-                                                        {PREDEFINED_ICONS.map(icon => (
-                                                            <button
-                                                                key={icon}
-                                                                type="button"
-                                                                onClick={() => field.onChange(icon)}
-                                                                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded text-lg"
-                                                            >
-                                                                {icon}
-                                                            </button>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="icon">Icône</Label>
+                                    <Input
+                                        id="icon"
+                                        value={data.icon}
+                                        onChange={(e) => setData('icon', e.target.value)}
+                                        placeholder="Emoji ou icône..."
                                     />
-
-                                    <FormField
-                                        control={form.control}
-                                        name="color"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>Couleur</FormLabel>
-                                                <div className="space-y-2">
-                                                    <FormControl>
-                                                        <Input 
-                                                            type="color" 
-                                                            {...field} 
-                                                            className="h-10"
-                                                        />
-                                                    </FormControl>
-                                                    <div className="flex flex-wrap gap-1">
-                                                        {PREDEFINED_COLORS.map(color => (
-                                                            <button
-                                                                key={color}
-                                                                type="button"
-                                                                onClick={() => field.onChange(color)}
-                                                                className="w-6 h-6 rounded border-2 border-gray-300 hover:scale-110 transition-transform"
-                                                                style={{ backgroundColor: color }}
-                                                            />
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
+                                    <div className="flex flex-wrap gap-1">
+                                        {PREDEFINED_ICONS.map(icon => (
+                                            <button
+                                                key={icon}
+                                                type="button"
+                                                onClick={() => setData('icon', icon)}
+                                                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded text-lg"
+                                            >
+                                                {icon}
+                                            </button>
+                                        ))}
+                                    </div>
                                 </div>
 
-                                <FormField
-                                    control={form.control}
-                                    name="is_active"
-                                    render={({ field }) => (
-                                        <FormItem className="flex items-center justify-between">
-                                            <div>
-                                                <FormLabel>Statut</FormLabel>
-                                                <FormDescription>
-                                                    Les types inactifs ne sont pas proposés lors de la prise de rendez-vous
-                                                </FormDescription>
-                                            </div>
-                                            <FormControl>
-                                                <Switch
-                                                    checked={field.value}
-                                                    onCheckedChange={field.onChange}
-                                                />
-                                            </FormControl>
-                                        </FormItem>
-                                    )}
-                                />
+                                <div className="space-y-2">
+                                    <Label htmlFor="color">Couleur</Label>
+                                    <Input
+                                        id="color"
+                                        type="color"
+                                        value={data.color}
+                                        onChange={(e) => setData('color', e.target.value)}
+                                        className="h-10"
+                                    />
+                                    <div className="flex flex-wrap gap-1">
+                                        {PREDEFINED_COLORS.map(color => (
+                                            <button
+                                                key={color}
+                                                type="button"
+                                                onClick={() => setData('color', color)}
+                                                className="w-6 h-6 rounded border-2 border-gray-300 hover:scale-110 transition-transform"
+                                                style={{ backgroundColor: color }}
+                                            />
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
 
-                                <DialogFooter>
-                                    <Button
-                                        type="button"
-                                        variant="outline"
-                                        onClick={() => setIsDialogOpen(false)}
-                                    >
-                                        Annuler
-                                    </Button>
-                                    <Button
-                                        type="submit"
-                                        className="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700"
-                                    >
-                                        {editingType ? 'Modifier' : 'Créer'}
-                                    </Button>
-                                </DialogFooter>
-                            </form>
-                        </Form>
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <Label htmlFor="is_active">Statut</Label>
+                                    <p className="text-sm text-gray-600">
+                                        Les types inactifs ne sont pas proposés lors de la prise de rendez-vous
+                                    </p>
+                                </div>
+                                <Switch
+                                    id="is_active"
+                                    checked={data.is_active}
+                                    onCheckedChange={(checked) => setData('is_active', checked)}
+                                />
+                            </div>
+
+                            <DialogFooter>
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    onClick={() => setIsDialogOpen(false)}
+                                >
+                                    Annuler
+                                </Button>
+                                <Button
+                                    type="submit"
+                                    disabled={processing}
+                                    className="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700"
+                                >
+                                    {processing ? 'En cours...' : (editingType ? 'Modifier' : 'Créer')}
+                                </Button>
+                            </DialogFooter>
+                        </form>
                     </DialogContent>
                 </Dialog>
             </div>

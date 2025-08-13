@@ -83,7 +83,7 @@ class PrivateAppointmentController extends Controller
             ->whereBetween('appointment_date', [$startDate, $endDate])
             ->get();
 
-        return Inertia::render('Private/Appointments/Calendar', [
+        return Inertia::render('dashboard/appointments/calendar', [
             'appointments' => $appointments,
             'filters' => $request->only(['month', 'year', 'type', 'status']),
             'appointmentTypes' => AppointmentType::active()->orderBy('sort_order')->get(['id', 'name', 'slug', 'color']),
@@ -97,7 +97,7 @@ class PrivateAppointmentController extends Controller
     {
         $appointment->load(['user', 'adminUser']);
         
-        return Inertia::render('Private/Appointments/Show', [
+        return Inertia::render('dashboard/appointments/show', [
             'appointment' => $appointment,
         ]);
     }
@@ -192,7 +192,7 @@ class PrivateAppointmentController extends Controller
         $appointmentTypes = AppointmentType::ordered()->get();
         $appointmentDurations = AppointmentDuration::active()->orderBy('sort_order')->get(['id', 'duration', 'label']);
         
-        return Inertia::render('Private/Appointments/Settings/Types', [
+        return Inertia::render('dashboard/appointments/settings/types', [
             'appointmentTypes' => $appointmentTypes,
             'appointmentDurations' => $appointmentDurations,
         ]);
@@ -311,7 +311,7 @@ class PrivateAppointmentController extends Controller
     {
         $durations = AppointmentDuration::ordered()->get();
         
-        return Inertia::render('Private/Appointments/Settings/Durations', [
+        return Inertia::render('dashboard/appointments/settings/durations', [
             'durations' => $durations
         ]);
     }
@@ -360,7 +360,7 @@ class PrivateAppointmentController extends Controller
         $businessHours = BusinessHours::orderByRaw("FIELD(day_of_week, 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday')")->get();
         $appointmentDurations = AppointmentDuration::active()->orderBy('sort_order')->get(['id', 'duration', 'label']);
         
-        return Inertia::render('Private/Appointments/Settings/Hours', [
+        return Inertia::render('dashboard/appointments/settings/hours', [
             'businessHours' => $businessHours,
             'appointmentDurations' => $appointmentDurations,
         ]);

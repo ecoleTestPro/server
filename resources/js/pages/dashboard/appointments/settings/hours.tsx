@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Head } from '@inertiajs/react';
-import { Clock, Plus, Edit, Trash2, Eye, EyeOff, Coffee, Save, RotateCcw } from 'lucide-react';
+import { Head, useForm } from '@inertiajs/react';
+import { Clock, Edit, Eye, EyeOff, Save, RotateCcw } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { BusinessHours } from '@/types';
@@ -9,12 +9,8 @@ import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
+import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/dashboard/app-layout';
 
 interface Props {
@@ -25,26 +21,6 @@ interface Props {
         label: string;
     }>;
 }
-
-const hoursSchema = z.object({
-    day_of_week: z.string(),
-    is_open: z.boolean().default(true),
-    opening_time: z.string().regex(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/, 'Format HH:MM requis'),
-    closing_time: z.string().regex(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/, 'Format HH:MM requis'),
-    lunch_break_start: z.string().optional(),
-    lunch_break_end: z.string().optional(),
-    slot_duration: z.number().min(15).max(120)
-}).refine(data => {
-    if (!data.is_open) return true;
-    const opening = new Date(`1970-01-01T${data.opening_time}:00`);
-    const closing = new Date(`1970-01-01T${data.closing_time}:00`);
-    return closing > opening;
-}, {
-    message: "L'heure de fermeture doit être après l'ouverture",
-    path: ["closing_time"]
-});
-
-type HoursFormData = z.infer<typeof hoursSchema>;
 
 const DAYS_OF_WEEK = [
     { key: 'monday', label: 'Lundi', shortLabel: 'Lun' },
@@ -84,19 +60,21 @@ export default function BusinessHoursSettings({ businessHours, appointmentDurati
     const [editingDay, setEditingDay] = useState<string | null>(null);
     const [hasChanges, setHasChanges] = useState(false);
 
-    const form = useForm<HoursFormData>({
-        resolver: zodResolver(hoursSchema),
-        defaultValues: {
-            is_open: true,
-            ...DEFAULT_HOURS
-        }
+    const { data, setData, post, processing, errors, reset } = useForm({
+        day_of_week: '',
+        is_open: true,
+        opening_time: DEFAULT_HOURS.opening_time,
+        closing_time: DEFAULT_HOURS.closing_time,
+        lunch_break_start: '',
+        lunch_break_end: '',
+        slot_duration: DEFAULT_HOURS.slot_duration
     });
 
     const openDialog = (dayKey: string) => {
         const dayHours = hours.find(h => h.day_of_week === dayKey);
         if (dayHours) {
             setEditingDay(dayKey);
-            form.reset({
+            setData({
                 day_of_week: dayHours.day_of_week,
                 is_open: dayHours.is_open,
                 opening_time: dayHours.opening_time || DEFAULT_HOURS.opening_time,
@@ -109,32 +87,28 @@ export default function BusinessHoursSettings({ businessHours, appointmentDurati
         }
     };
 
-    const handleSubmit = async (data: HoursFormData) => {
-        try {
-            setHours(prev => prev.map(hour => 
-                hour.day_of_week === editingDay 
-                    ? { ...hour, ...data }
-                    : hour
-            ));
-            setHasChanges(true);
-            setIsDialogOpen(false);
-        } catch (error) {
-            console.error('Error updating hours:', error);
-        }
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        
+        setHours(prev => prev.map(hour => 
+            hour.day_of_week === editingDay 
+                ? { ...hour, ...data }
+                : hour
+        ));
+        setHasChanges(true);
+        setIsDialogOpen(false);
     };
 
-    const saveAllChanges = async () => {
-        try {
-            // TODO: Implement API call to save all hours
-            console.log('Saving all hours:', hours);
-            setHasChanges(false);
-        } catch (error) {
-            console.error('Error saving hours:', error);
-        }
+    const saveAllChanges = () => {
+        post(route('dashboard.appointments.settings.hours.update'), {
+            hours: hours,
+            onSuccess: () => {
+                setHasChanges(false);
+            }
+        });
     };
 
     const resetChanges = () => {
-        // Reset to original state
         const hoursMap = businessHours.reduce((acc, hour) => {
             acc[hour.day_of_week] = hour;
             return acc;
@@ -196,7 +170,6 @@ export default function BusinessHoursSettings({ businessHours, appointmentDurati
             const closing = new Date(`1970-01-01T${hour.closing_time}:00`);
             let diff = (closing.getTime() - opening.getTime()) / (1000 * 60 * 60);
             
-            // Subtract lunch break if exists
             if (hour.lunch_break_start && hour.lunch_break_end) {
                 const lunchStart = new Date(`1970-01-01T${hour.lunch_break_start}:00`);
                 const lunchEnd = new Date(`1970-01-01T${hour.lunch_break_end}:00`);
@@ -239,10 +212,11 @@ export default function BusinessHoursSettings({ businessHours, appointmentDurati
                                 </Button>
                                 <Button 
                                     onClick={saveAllChanges}
+                                    disabled={processing}
                                     className="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700"
                                 >
                                     <Save className="w-4 h-4 mr-2" />
-                                    Enregistrer
+                                    {processing ? 'En cours...' : 'Enregistrer'}
                                 </Button>
                             </>
                         )}
@@ -406,134 +380,109 @@ export default function BusinessHoursSettings({ businessHours, appointmentDurati
                             </DialogDescription>
                         </DialogHeader>
 
-                        <Form {...form}>
-                            <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
-                                <FormField
-                                    control={form.control}
-                                    name="is_open"
-                                    render={({ field }) => (
-                                        <FormItem className="flex items-center justify-between">
-                                            <div>
-                                                <FormLabel>Ouvert ce jour</FormLabel>
-                                                <FormDescription>
-                                                    Désactiver si vous ne prenez pas de rendez-vous ce jour
-                                                </FormDescription>
-                                            </div>
-                                            <FormControl>
-                                                <Switch
-                                                    checked={field.value}
-                                                    onCheckedChange={field.onChange}
-                                                />
-                                            </FormControl>
-                                        </FormItem>
-                                    )}
+                        <form onSubmit={handleSubmit} className="space-y-6">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <Label htmlFor="is_open">Ouvert ce jour</Label>
+                                    <p className="text-sm text-gray-600">
+                                        Désactiver si vous ne prenez pas de rendez-vous ce jour
+                                    </p>
+                                </div>
+                                <Switch
+                                    id="is_open"
+                                    checked={data.is_open}
+                                    onCheckedChange={(checked) => setData('is_open', checked)}
                                 />
+                            </div>
 
-                                {form.watch('is_open') && (
-                                    <>
-                                        <div className="grid grid-cols-2 gap-4">
-                                            <FormField
-                                                control={form.control}
-                                                name="opening_time"
-                                                render={({ field }) => (
-                                                    <FormItem>
-                                                        <FormLabel>Heure d'ouverture</FormLabel>
-                                                        <FormControl>
-                                                            <Input type="time" {...field} />
-                                                        </FormControl>
-                                                        <FormMessage />
-                                                    </FormItem>
-                                                )}
+                            {data.is_open && (
+                                <>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="space-y-2">
+                                            <Label htmlFor="opening_time">Heure d'ouverture</Label>
+                                            <Input
+                                                id="opening_time"
+                                                type="time"
+                                                value={data.opening_time}
+                                                onChange={(e) => setData('opening_time', e.target.value)}
+                                                className={errors.opening_time ? 'border-red-500' : ''}
                                             />
-
-                                            <FormField
-                                                control={form.control}
-                                                name="closing_time"
-                                                render={({ field }) => (
-                                                    <FormItem>
-                                                        <FormLabel>Heure de fermeture</FormLabel>
-                                                        <FormControl>
-                                                            <Input type="time" {...field} />
-                                                        </FormControl>
-                                                        <FormMessage />
-                                                    </FormItem>
-                                                )}
-                                            />
-                                        </div>
-
-                                        <div className="grid grid-cols-2 gap-4">
-                                            <FormField
-                                                control={form.control}
-                                                name="lunch_break_start"
-                                                render={({ field }) => (
-                                                    <FormItem>
-                                                        <FormLabel>Début pause déjeuner <span className="text-gray-400">(optionnel)</span></FormLabel>
-                                                        <FormControl>
-                                                            <Input type="time" {...field} />
-                                                        </FormControl>
-                                                        <FormMessage />
-                                                    </FormItem>
-                                                )}
-                                            />
-
-                                            <FormField
-                                                control={form.control}
-                                                name="lunch_break_end"
-                                                render={({ field }) => (
-                                                    <FormItem>
-                                                        <FormLabel>Fin pause déjeuner <span className="text-gray-400">(optionnel)</span></FormLabel>
-                                                        <FormControl>
-                                                            <Input type="time" {...field} />
-                                                        </FormControl>
-                                                        <FormMessage />
-                                                    </FormItem>
-                                                )}
-                                            />
-                                        </div>
-
-                                        <FormField
-                                            control={form.control}
-                                            name="slot_duration"
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel>Durée des créneaux (minutes)</FormLabel>
-                                                    <FormControl>
-                                                        <Input 
-                                                            type="number" 
-                                                            min={15} 
-                                                            max={120} 
-                                                            step={15}
-                                                            value={field.value}
-                                                            onChange={(e) => field.onChange(parseInt(e.target.value))}
-                                                        />
-                                                    </FormControl>
-                                                    <FormDescription>
-                                                        Durée minimum entre chaque rendez-vous possible
-                                                    </FormDescription>
-                                                    <FormMessage />
-                                                </FormItem>
+                                            {errors.opening_time && (
+                                                <p className="text-sm text-red-600">{errors.opening_time}</p>
                                             )}
-                                        />
-                                    </>
-                                )}
+                                        </div>
 
-                                <DialogFooter>
-                                    <Button
-                                        type="button"
-                                        variant="outline"
-                                        onClick={() => setIsDialogOpen(false)}
-                                    >
-                                        Annuler
-                                    </Button>
-                                    <Button
-                                        type="submit"
-                                        className="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700"
-                                    >
-                                        Appliquer
-                                    </Button>
-                                </DialogFooter>
-                            </form>
-                        </Form>
+                                        <div className="space-y-2">
+                                            <Label htmlFor="closing_time">Heure de fermeture</Label>
+                                            <Input
+                                                id="closing_time"
+                                                type="time"
+                                                value={data.closing_time}
+                                                onChange={(e) => setData('closing_time', e.target.value)}
+                                                className={errors.closing_time ? 'border-red-500' : ''}
+                                            />
+                                            {errors.closing_time && (
+                                                <p className="text-sm text-red-600">{errors.closing_time}</p>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="space-y-2">
+                                            <Label htmlFor="lunch_break_start">Début pause déjeuner <span className="text-gray-400">(optionnel)</span></Label>
+                                            <Input
+                                                id="lunch_break_start"
+                                                type="time"
+                                                value={data.lunch_break_start}
+                                                onChange={(e) => setData('lunch_break_start', e.target.value)}
+                                            />
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <Label htmlFor="lunch_break_end">Fin pause déjeuner <span className="text-gray-400">(optionnel)</span></Label>
+                                            <Input
+                                                id="lunch_break_end"
+                                                type="time"
+                                                value={data.lunch_break_end}
+                                                onChange={(e) => setData('lunch_break_end', e.target.value)}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <Label htmlFor="slot_duration">Durée des créneaux (minutes)</Label>
+                                        <Input
+                                            id="slot_duration"
+                                            type="number"
+                                            min={15}
+                                            max={120}
+                                            step={15}
+                                            value={data.slot_duration}
+                                            onChange={(e) => setData('slot_duration', parseInt(e.target.value) || 30)}
+                                        />
+                                        <p className="text-sm text-gray-600">
+                                            Durée minimum entre chaque rendez-vous possible
+                                        </p>
+                                    </div>
+                                </>
+                            )}
+
+                            <DialogFooter>
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    onClick={() => setIsDialogOpen(false)}
+                                >
+                                    Annuler
+                                </Button>
+                                <Button
+                                    type="submit"
+                                    className="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700"
+                                >
+                                    Appliquer
+                                </Button>
+                            </DialogFooter>
+                        </form>
                     </DialogContent>
                 </Dialog>
             </div>
