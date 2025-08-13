@@ -39,9 +39,14 @@ Route::group(["prefix" => "/"], function () {
      * Rendez-vous public
      */
     Route::get('rendez-vous', [AppointmentController::class, 'create'])->name('appointments.create');
-    Route::post('/', [AppointmentController::class, 'store'])->name('appointments.store');
+    Route::post('appointments', [AppointmentController::class, 'store'])->name('appointments.store');
+    
     // Routes API publiques pour les créneaux disponibles
-    Route::get('/api/appointments/available-slots', [AppointmentController::class, 'getAvailableSlots'])->name('appointments.available-slots');
+    Route::prefix('api/appointments')->group(function () {
+        Route::get('available-slots', [AppointmentController::class, 'getAvailableSlots'])->name('appointments.available-slots');
+        Route::get('types', [\App\Http\Controllers\Private\PrivateAppointmentController::class, 'getActiveTypes'])->name('appointments.types');
+        Route::get('durations', [\App\Http\Controllers\Private\PrivateAppointmentController::class, 'getActiveDurations'])->name('appointments.durations');
+    });
 
     Route::post('newsletter', [NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
 

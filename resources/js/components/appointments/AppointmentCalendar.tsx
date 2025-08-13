@@ -70,80 +70,98 @@ const AppointmentCalendar: React.FC = () => {
         client_name: ''
     });
 
-    const appointmentTypes = [
+    const [appointmentTypes, setAppointmentTypes] = useState([
         { value: 'consultation', label: 'Consultation', icon: '💡', description: 'Conseil personnalisé', color: 'bg-blue-500' },
         { value: 'information', label: 'Information', icon: '📋', description: 'Demande d\'information', color: 'bg-green-500' },
         { value: 'support', label: 'Support', icon: '🛠️', description: 'Assistance technique', color: 'bg-orange-500' },
         { value: 'enrollment', label: 'Inscription', icon: '📚', description: 'Inscription formation', color: 'bg-purple-500' },
         { value: 'other', label: 'Autre', icon: '❓', description: 'Autre motif', color: 'bg-gray-500' }
-    ];
+    ]);
 
-    const durations = [
+    const [durations, setDurations] = useState([
         { value: 15, label: '15 min', description: 'Question rapide' },
         { value: 30, label: '30 min', description: 'Consultation standard' },
         { value: 45, label: '45 min', description: 'Entretien approfondi' },
         { value: 60, label: '1h', description: 'Rendez-vous détaillé' },
         { value: 90, label: '1h30', description: 'Session complète' },
         { value: 120, label: '2h', description: 'Accompagnement personnalisé' }
-    ];
-
-    // Générer les créneaux horaires (mock - remplacer par API)
-    const generateTimeSlots = (date: Date): TimeSlot[] => {
-        const slots: TimeSlot[] = [];
-        const startHour = 9;
-        const endHour = 18;
-        const lunchStart = 12;
-        const lunchEnd = 14;
-        
-        for (let hour = startHour; hour < endHour; hour++) {
-            // Skip lunch break
-            if (hour >= lunchStart && hour < lunchEnd) continue;
+    ]);
+    
+    // Charger les types et durées depuis l'API
+    useEffect(() => {
+        // Charger les types
+        axios.get(route('dashboard.appointments.api.types'))
+            .then(response => {
+                if (response.data.success && response.data.types) {
+                    const formattedTypes = response.data.types.map((type: any) => ({
+                        value: type.slug,
+                        label: type.name,
+                        icon: type.icon || '📅',
+                        description: type.description,
+                        color: type.color || 'bg-blue-500'
+                    }));
+                    setAppointmentTypes(formattedTypes);
+                }
+            })
+            .catch(error => {
+                console.error('Erreur lors du chargement des types:', error);
+            });
             
-            for (let minute = 0; minute < 60; minute += 30) {
-                const timeStr = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
-                const datetime = new Date(date);
-                datetime.setHours(hour, minute, 0, 0);
-                
-                // Simuler la disponibilité (remplacer par logique réelle)
-                const isAvailable = Math.random() > 0.3;
-                
-                slots.push({
-                    time: timeStr,
-                    datetime: datetime.toISOString(),
-                    display: timeStr,
-                    available: isAvailable
-                });
-            }
-        }
-        
-        return slots;
-    };
+        // Charger les durées
+        axios.get(route('dashboard.appointments.api.durations'))
+            .then(response => {
+                if (response.data.success && response.data.durations) {
+                    const formattedDurations = response.data.durations.map((duration: any) => ({
+                        value: duration.duration,
+                        label: duration.label,
+                        description: duration.description
+                    }));
+                    setDurations(formattedDurations);
+                }
+            })
+            .catch(error => {
+                console.error('Erreur lors du chargement des durées:', error);
+            });
+    }, []);
+
+    // Cette fonction est remplacée par l'API
 
     // Gérer la sélection de date
     const handleDateChange = (value: CalendarValue) => {
         if (value instanceof Date) {
             setSelectedDate(value);
             setSelectedTime('');
-            setShowTimeSlots(true);
+            setLoading(true);
             
-            // Générer les créneaux (remplacer par appel API)
-            const slots = generateTimeSlots(value);
-            setAvailableSlots(slots);
-            
-            // Mock business hours
-            setBusinessHours({
-                opening: '09:00',
-                closing: '18:00',
-                lunchBreak: { start: '12:00', end: '14:00' }
-            });
-            
-            // Scroll vers les créneaux horaires
-            setTimeout(() => {
-                const timeSlotsElement = document.getElementById('time-slots');
-                if (timeSlotsElement) {
-                    timeSlotsElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            // Appel API pour récupérer les créneaux disponibles
+            axios.get(route('appointments.available-slots'), {
+                params: {
+                    date: value.toISOString().split('T')[0]
                 }
-            }, 100);
+            })
+            .then(response => {
+                if (response.data.success) {
+                    setAvailableSlots(response.data.slots);
+                    setShowTimeSlots(true);
+                    
+                    // Scroll vers les créneaux horaires
+                    setTimeout(() => {
+                        const timeSlotsElement = document.getElementById('time-slots');
+                        if (timeSlotsElement) {
+                            timeSlotsElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }, 100);
+                } else {
+                    toast.error('Erreur lors de la récupération des créneaux');
+                }
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+                toast.error('Erreur lors de la récupération des créneaux');
+            })
+            .finally(() => {
+                setLoading(false);
+            });
         }
     };
 
@@ -166,15 +184,30 @@ const AppointmentCalendar: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         
-        if (!form.appointment_date || !form.client_name.trim()) {
+        if (!form.appointment_date || !form.client_name.trim() || !form.client_email.trim()) {
             toast.error('Veuillez remplir tous les champs obligatoires');
             return;
         }
 
         setSubmitting(true);
         try {
-            // Mock API call - remplacer par vraie API
-            await new Promise(resolve => setTimeout(resolve, 2000));
+            // Soumettre via le formulaire existant ou créer une nouvelle route
+            const formData = new FormData();
+            formData.append('title', form.title);
+            formData.append('description', form.description);
+            formData.append('appointment_date', form.appointment_date);
+            formData.append('duration', form.duration.toString());
+            formData.append('type', form.type);
+            formData.append('client_email', form.client_email);
+            formData.append('client_phone', form.client_phone);
+            formData.append('client_name', form.client_name);
+            
+            await axios.post(route('appointments.store'), formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                }
+            });
             
             toast.success('Rendez-vous confirmé ! Vous recevrez une confirmation par email.');
             setStep('confirmation');
