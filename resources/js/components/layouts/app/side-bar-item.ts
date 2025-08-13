@@ -71,11 +71,6 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
                 icon: List,
             },
             {
-                title: 'Calendrier',
-                href: route('dashboard.appointments.calendar'),
-                icon: CalendarDays,
-            },
-            {
                 title: 'Types de RDV',
                 href: route('dashboard.appointments.settings.types'),
                 icon: Settings2,

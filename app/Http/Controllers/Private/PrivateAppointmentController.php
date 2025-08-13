@@ -72,25 +72,6 @@ class PrivateAppointmentController extends Controller
     }
 
     /**
-     * Affichage du calendrier des rendez-vous
-     */
-    public function calendar(Request $request): Response
-    {
-        $startDate = $request->get('start', now()->startOfMonth()->toDateString());
-        $endDate = $request->get('end', now()->endOfMonth()->toDateString());
-
-        $appointments = Appointment::with(['user', 'adminUser', 'appointmentType'])
-            ->whereBetween('appointment_date', [$startDate, $endDate])
-            ->get();
-
-        return Inertia::render('dashboard/appointments/calendar', [
-            'appointments' => $appointments,
-            'filters' => $request->only(['month', 'year', 'type', 'status']),
-            'appointmentTypes' => AppointmentType::active()->orderBy('sort_order')->get(['id', 'name', 'slug', 'color']),
-        ]);
-    }
-
-    /**
      * Voir les détails d'un rendez-vous
      */
     public function show(Appointment $appointment): Response
