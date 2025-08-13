@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils';
 import { AppointmentType } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
 import { Reorder } from 'framer-motion';
-import { Clock, Edit, Eye, EyeOff, GripVertical, Plus, Trash2, Type } from 'lucide-react';
+import { Edit, Eye, EyeOff, GripVertical, Plus, Trash2, Type } from 'lucide-react';
 import React, { useState } from 'react';
 
 interface Props {
@@ -34,7 +34,6 @@ const PREDEFINED_COLORS = [
     '#ec4899', // pink
     '#6b7280', // gray
 ];
-
 
 export default function AppointmentTypesSettings({ appointmentTypes, appointmentDurations }: Props) {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -115,7 +114,6 @@ export default function AppointmentTypesSettings({ appointmentTypes, appointment
 
     const handleReorder = (newOrder: AppointmentType[]) => {
         setTypes(newOrder);
-        // TODO: Update sort_order via API
         post(route('dashboard.appointments.settings.types.reorder'), {
             types: newOrder.map((type, index) => ({ id: type.id, sort_order: index + 1 })),
         });
