@@ -183,6 +183,8 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
         Route::post('send', [NewsletterController::class, 'send'])->name('dashboard.newsletters.send');
         Route::post('create', [NewsletterController::class, 'store'])->name('dashboard.newsletters.store');
         Route::delete('delete/{newsletter}', [NewsletterController::class, 'destroy'])->name('dashboard.newsletters.delete');
+        Route::get('logs', [NewsletterController::class, 'logs'])->name('dashboard.newsletters.logs');
+        Route::get('analytics', [NewsletterController::class, 'analytics'])->name('dashboard.newsletters.analytics');
     });
 
     // NEWSLETTER TEMPLATES
