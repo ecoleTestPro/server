@@ -14,8 +14,10 @@ class FaqUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'question' => 'required|string',
-            'answer' => 'required|string',
+            'id'        => 'required|exists:faqs,id',
+            'is_active' => 'nullable|boolean',
+            'question'  => 'required|string',
+            'answer'    => 'required|string',
         ];
     }
 }

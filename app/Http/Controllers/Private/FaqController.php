@@ -31,12 +31,7 @@ class FaqController extends Controller
 
     public function store(FaqStoreRequest $request)
     {
-        if (app()->isLocal()) {
-            return to_route('dashboard.faqs.index')->with('error', 'Faq not created in demo mode');
-        }
-
         FaqRepository::storeByRequest($request);
-
         return to_route('dashboard.faqs.index')->withSuccess('Faq created successfully.');
     }
 

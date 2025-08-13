@@ -1,13 +1,13 @@
-import { router, useForm } from '@inertiajs/react';
-import { FormEventHandler } from 'react';
-import toast from 'react-hot-toast';
-import { useTranslation } from 'react-i18next';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/text-area';
 import { IFaq } from '@/types/faq';
+import { router, useForm } from '@inertiajs/react';
+import { FormEventHandler } from 'react';
+import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 interface FaqFormProps {
     closeDrawer?: () => void;
@@ -15,6 +15,7 @@ interface FaqFormProps {
 }
 
 const defaultValues: IFaq = {
+    id: undefined,
     question: '',
     answer: '',
     is_active: true,
@@ -26,13 +27,12 @@ export default function FaqForm({ closeDrawer, initialData }: FaqFormProps) {
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        const routeUrl = initialData?.id
-            ? route('dashboard.faqs.update', initialData.id)
-            : route('dashboard.faqs.store');
+        const routeUrl = initialData?.id ? route('dashboard.faqs.update', initialData.id) : route('dashboard.faqs.store');
 
         router.visit(routeUrl, {
             method: initialData?.id ? 'put' : 'post',
             data: {
+                id: initialData?.id,
                 question: data.question,
                 answer: data.answer,
                 is_active: data.is_active ? '1' : '0',
@@ -40,9 +40,7 @@ export default function FaqForm({ closeDrawer, initialData }: FaqFormProps) {
             forceFormData: true,
             preserveScroll: true,
             onSuccess: () => {
-                toast.success(
-                    initialData?.id ? t('faqs.updated', 'FAQ mise à jour !') : t('faqs.created', 'FAQ créée !')
-                );
+                toast.success(initialData?.id ? t('faqs.updated', 'FAQ mise à jour !') : t('faqs.created', 'FAQ créée !'));
                 reset();
                 closeDrawer?.();
             },

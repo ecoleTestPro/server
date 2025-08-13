@@ -15,8 +15,8 @@ class FaqRepository extends Repository
     public static function storeByRequest($request)
     {
         return self::create([
-            'question' => $request->question,
-            'answer' => $request->answer,
+            'question'  => $request->question,
+            'answer'    => $request->answer,
             'is_active' => $request->has('is_active') ? true : false,
         ]);
     }
@@ -24,8 +24,9 @@ class FaqRepository extends Repository
     public static function updateByRequest($request, Faq $faq)
     {
         return self::update($faq, [
-            'question' => $request->question ?? $faq->question,
-            'answer' => $request->answer ?? $faq->answer,
+            'id'        => $faq->id,
+            'question'  => $request->question ?? $faq->question,
+            'answer'    => $request->answer ?? $faq->answer,
             'is_active' => $request->has('is_active') ? true : $faq->is_active,
         ]);
     }
