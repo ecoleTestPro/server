@@ -3,6 +3,10 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 
+// CUSTOM
+define('EMAIL_DEFAULT', 'keraste38@gmail.com');
+// CUSTOM END
+
 define('LARAVEL_START', microtime(true));
 
 // Determine if the application is in maintenance mode...

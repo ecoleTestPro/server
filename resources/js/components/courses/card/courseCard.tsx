@@ -1,31 +1,32 @@
 import CourseReferenceDrawer from '@/components/courses/references/CourseReferenceDrawer';
-import { Button } from '@/components/ui/button/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { SharedData } from '@/types';
 import { ICourse } from '@/types/course';
 import { IPartner } from '@/types/partner';
 import { ROUTE_MAP } from '@/utils/route.util';
 import { Link, usePage } from '@inertiajs/react';
-import { 
-    Building2, 
-    Calendar1, 
-    Edit2Icon, 
-    ExternalLink, 
-    Trash2Icon, 
-    ChevronDown, 
+import {
+    Building2,
+    Calendar1,
+    CalendarDays,
+    ChevronDown,
     ChevronUp,
+    Clock,
+    DollarSign,
+    Edit2Icon,
+    ExternalLink,
     Eye,
     EyeOff,
-    MoreHorizontal,
-    Globe,
     MapPin,
-    Clock,
-    Users,
-    DollarSign
+    MoreHorizontal,
+    Trash2Icon,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
+import { FaClock, FaMapMarkerAlt } from 'react-icons/fa';
 import './CourseCard.css'; // Link to CSS file
 
 interface CourseCardProps {
@@ -37,12 +38,35 @@ interface CourseCardProps {
 
 const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, setOpenSessionDrawer, setSelectedCourseSessionSession }) => {
     const { auth, data } = usePage<SharedData>().props;
+    const { t } = useTranslation();
 
     const [openPartnerDrawer, setOpenPartnerDrawer] = useState(false);
     const [partners, setPartners] = useState<IPartner[]>([]);
     const [showFullDescription, setShowFullDescription] = useState(false);
     const [showConfirmDelete, setShowConfirmDelete] = useState(false);
     const [isPublishing, setIsPublishing] = useState(false);
+
+    const getNextSession = (): string => {
+        if (!course.course_sessions || course.course_sessions.length === 0) {
+            return t('COURSE.TABLE.NO_UPCOMING_SESSION', 'N/A');
+        }
+
+        const now = new Date();
+        const upcomingSessions = course.course_sessions
+            .filter((session) => new Date(session.start_date) > now)
+            .sort((a, b) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime());
+
+        const next = upcomingSessions[0];
+        if (!next) {
+            return t('COURSE.TABLE.NO_UPCOMING_SESSION', 'N/A');
+        }
+
+        if (next.end_date) {
+            return `${next.start_date} - ${next.end_date}`;
+        }
+
+        return next.start_date;
+    };
 
     useEffect(() => {
         if ((data as any)?.partners) {
@@ -54,7 +78,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, setOpenSessio
         setIsPublishing(true);
         try {
             // Simuler l'appel API pour publier/dépublier
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            await new Promise((resolve) => setTimeout(resolve, 1000));
             toast.success(course.is_published ? 'Formation dépubliée' : 'Formation publiée');
             window.location.reload(); // À remplacer par une mise à jour locale
         } catch (error) {
@@ -80,7 +104,6 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, setOpenSessio
         if (text.length <= maxLength) return text;
         return text.substring(0, maxLength) + '...';
     };
-
 
     const CourseHeader = () => {
         return (
@@ -218,14 +241,10 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, setOpenSessio
                 <div className="px-6 pt-6 pb-4 border-b border-gray-100">
                     <div className="flex items-start justify-between mb-3">
                         <div className="flex items-center gap-2">
-                            <Badge variant="secondary" className="text-xs font-medium">
+                            <Badge variant="secondary" className="text-xs font-medium text-white ">
                                 Formation
                             </Badge>
-                            {course.is_featured && (
-                                <Badge className="bg-yellow-500 hover:bg-yellow-600 text-xs">
-                                    ⭐ FEATURED
-                                </Badge>
-                            )}
+                            {course.is_featured && <Badge className="bg-yellow-500 hover:bg-yellow-600 text-xs">⭐</Badge>}
                             {auth?.user?.is_admin && (
                                 <Badge variant="outline" className="text-xs">
                                     #{course.id}
@@ -246,11 +265,9 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, setOpenSessio
                             )}
                         </Badge>
                     </div>
-                    
+
                     {/* Titre avec hiérarchie marquée */}
-                    <h2 className="text-xl font-bold text-gray-900 mb-2 leading-tight group-hover:text-blue-600 transition-colors">
-                        {course.title}
-                    </h2>
+                    <h2 className="text-xl font-bold text-gray-900 mb-2 leading-tight group-hover:text-blue-600 transition-colors">{course.title}</h2>
                 </div>
 
                 {/* Corps de la carte */}
@@ -286,7 +303,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, setOpenSessio
                     </div>
 
                     {/* Informations clés */}
-                    <div className="grid grid-cols-2 gap-3 mb-4">
+                    <div className="grid grid-cols-1 gap-3 mb-4">
                         <div className="flex items-center gap-2 text-sm text-gray-600">
                             <Clock className="w-4 h-4 text-blue-500" />
                             <span>{course.duration} jours</span>
@@ -301,6 +318,10 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, setOpenSessio
                                 <span>{course.partners.length} référence(s)</span>
                             </div>
                         )}
+                        <div className="flex items-center gap-2 text-sm text-gray-600 col-span-2">
+                            <CalendarDays className="w-4 h-4 text-orange-500" />
+                            <span className="font-medium">Prochaine session : {getNextSession()}</span>
+                        </div>
                     </div>
                 </div>
 
@@ -310,13 +331,9 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, setOpenSessio
                     <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-2">
                             <DollarSign className="w-4 h-4 text-green-500" />
-                            <span className="text-xl font-bold text-gray-900">
-                                {course.price.toLocaleString()} XOF
-                            </span>
+                            <span className="text-xl font-bold text-gray-900">{course.price.toLocaleString()} XOF</span>
                             {course.regular_price !== course.price && (
-                                <span className="text-sm text-gray-500 line-through">
-                                    {course.regular_price.toLocaleString()} XOF
-                                </span>
+                                <span className="text-sm text-gray-500 line-through">{course.regular_price.toLocaleString()} XOF</span>
                             )}
                         </div>
                         <Link
@@ -352,7 +369,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, setOpenSessio
                                             <p>Gérer les sessions de formation</p>
                                         </TooltipContent>
                                     </Tooltip>
-                                    
+
                                     <Tooltip>
                                         <TooltipTrigger asChild>
                                             <Button
@@ -368,7 +385,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, setOpenSessio
                                             <p>Associer des références partenaires</p>
                                         </TooltipContent>
                                     </Tooltip>
-                                    
+
                                     <Tooltip>
                                         <TooltipTrigger asChild>
                                             <Button
@@ -391,23 +408,20 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, setOpenSessio
                                                 )}
                                             </Button>
                                         </TooltipTrigger>
-                                        <TooltipContent>
-                                            <p>{course.is_published ? 'Dépublier la formation' : 'Publier la formation'}</p>
-                                        </TooltipContent>
+                                        {false && (
+                                            <TooltipContent>
+                                                <p>{course.is_published ? 'Dépublier la formation' : 'Publier la formation'}</p>
+                                            </TooltipContent>
+                                        )}
                                     </Tooltip>
                                 </>
                             )}
                         </div>
-                        
+
                         <div className="flex items-center gap-1">
                             <Tooltip>
                                 <TooltipTrigger asChild>
-                                    <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        asChild
-                                        className="text-blue-600 hover:text-blue-800 hover:bg-blue-50"
-                                    >
+                                    <Button variant="ghost" size="sm" asChild className="text-blue-600 hover:text-blue-800 hover:bg-blue-50">
                                         <Link href={ROUTE_MAP.dashboard.course.edit(course.slug).link}>
                                             <Edit2Icon className="w-4 h-4" />
                                         </Link>
@@ -417,7 +431,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, setOpenSessio
                                     <p>Modifier la formation</p>
                                 </TooltipContent>
                             </Tooltip>
-                            
+
                             {showConfirmDelete ? (
                                 <div className="flex items-center gap-1">
                                     <Tooltip>
@@ -435,7 +449,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, setOpenSessio
                                             <p>Annuler la suppression</p>
                                         </TooltipContent>
                                     </Tooltip>
-                                    
+
                                     <Tooltip>
                                         <TooltipTrigger asChild>
                                             <Button
@@ -473,12 +487,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, setOpenSessio
                     </div>
                 </div>
             </div>
-            <CourseReferenceDrawer
-                open={openPartnerDrawer}
-                setOpen={setOpenPartnerDrawer}
-                course={course}
-                partners={partners}
-            />
+            <CourseReferenceDrawer open={openPartnerDrawer} setOpen={setOpenPartnerDrawer} course={course} partners={partners} />
         </TooltipProvider>
     );
 };

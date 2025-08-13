@@ -26,6 +26,9 @@ export const cleanQuillHTML = (html: string): string => {
     // Clean up extra whitespace and empty tags
     cleanHtml = cleanupWhitespace(cleanHtml);
     
+    // Add Tailwind CSS classes for proper styling
+    cleanHtml = addTailwindClasses(cleanHtml);
+    
     return cleanHtml;
 };
 
@@ -167,6 +170,58 @@ const cleanupWhitespace = (html: string): string => {
     
     // Trim leading/trailing whitespace
     result = result.trim();
+    
+    return result;
+};
+
+/**
+ * Adds Tailwind CSS classes to HTML elements for proper styling
+ */
+const addTailwindClasses = (html: string): string => {
+    let result = html;
+    
+    // Add classes to headers
+    result = result.replace(/<h1(?![^>]*class)/gi, '<h1 class="text-4xl font-bold mb-4 text-gray-900"');
+    result = result.replace(/<h2(?![^>]*class)/gi, '<h2 class="text-3xl font-bold mb-3 text-gray-900"');
+    result = result.replace(/<h3(?![^>]*class)/gi, '<h3 class="text-2xl font-semibold mb-3 text-gray-800"');
+    result = result.replace(/<h4(?![^>]*class)/gi, '<h4 class="text-xl font-semibold mb-2 text-gray-800"');
+    result = result.replace(/<h5(?![^>]*class)/gi, '<h5 class="text-lg font-medium mb-2 text-gray-700"');
+    result = result.replace(/<h6(?![^>]*class)/gi, '<h6 class="text-base font-medium mb-2 text-gray-700"');
+    
+    // Add classes to paragraphs
+    result = result.replace(/<p(?![^>]*class)/gi, '<p class="mb-4 text-gray-600 leading-relaxed"');
+    
+    // Add classes to lists
+    result = result.replace(/<ul(?![^>]*class)/gi, '<ul class="list-disc list-inside mb-4 text-gray-600 space-y-2"');
+    result = result.replace(/<ol(?![^>]*class)/gi, '<ol class="list-decimal list-inside mb-4 text-gray-600 space-y-2"');
+    result = result.replace(/<li(?![^>]*class)/gi, '<li class="ml-4"');
+    
+    // Add classes to blockquotes
+    result = result.replace(/<blockquote(?![^>]*class)/gi, '<blockquote class="border-l-4 border-gray-300 pl-4 py-2 mb-4 italic text-gray-700"');
+    
+    // Add classes to code blocks
+    result = result.replace(/<pre(?![^>]*class)/gi, '<pre class="bg-gray-100 rounded-md p-4 mb-4 overflow-x-auto"');
+    result = result.replace(/<code(?![^>]*class)/gi, '<code class="bg-gray-100 text-red-600 px-1 py-0.5 rounded text-sm"');
+    
+    // Add classes to links
+    result = result.replace(/<a(?![^>]*class)/gi, '<a class="text-blue-600 hover:text-blue-800 underline"');
+    
+    // Add classes to tables
+    result = result.replace(/<table(?![^>]*class)/gi, '<table class="min-w-full divide-y divide-gray-200 mb-4"');
+    result = result.replace(/<thead(?![^>]*class)/gi, '<thead class="bg-gray-50"');
+    result = result.replace(/<tbody(?![^>]*class)/gi, '<tbody class="bg-white divide-y divide-gray-200"');
+    result = result.replace(/<th(?![^>]*class)/gi, '<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"');
+    result = result.replace(/<td(?![^>]*class)/gi, '<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"');
+    
+    // Add classes to horizontal rules
+    result = result.replace(/<hr(?![^>]*class)/gi, '<hr class="my-6 border-gray-300"');
+    
+    // Add classes to strong and em tags
+    result = result.replace(/<strong(?![^>]*class)/gi, '<strong class="font-semibold text-gray-900"');
+    result = result.replace(/<em(?![^>]*class)/gi, '<em class="italic"');
+    
+    // Add classes to images
+    result = result.replace(/<img(?![^>]*class)/gi, '<img class="max-w-full h-auto rounded-lg shadow-md mb-4"');
     
     return result;
 };

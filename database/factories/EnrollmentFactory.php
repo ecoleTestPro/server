@@ -36,6 +36,9 @@ class EnrollmentFactory extends Factory
             'course_id'                 => $course->id,
             'course_session_id'         => $session->id,
             'mode'                      => $selectedMode,
+            'user_fullname'             => $this->faker->name,
+            'user_email'                => $this->faker->email,
+            'user_phone'                => $this->faker->phoneNumber,
             'is_certificate_downloaded' => $certificateDownloaded,
         ];
     }

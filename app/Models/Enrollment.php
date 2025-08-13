@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\CourseSession;
 
@@ -15,6 +14,9 @@ class Enrollment extends Model
 
     protected $fillable = [
         'user_id',
+        'user_fullname',
+        'user_email',
+        'user_phone',
         'course_id',
         'course_session_id',
         // 'coupon_id',

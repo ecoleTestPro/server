@@ -33,8 +33,8 @@ class Contact extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: $this->subjectMessage, // Use the subject passed to the constructor
-            from: new Address('keraste38@gmail.com', config('app.name')),
+            subject: "TESTPRO - CONTACT US : " . $this->subjectMessage, // Use the subject passed to the constructor
+            from: new Address(env('CONTACT_EMAIL', EMAIL_DEFAULT), config('app.name')),
         );
     }
 
@@ -46,7 +46,7 @@ class Contact extends Mailable
         return new Content(
             view: 'mail.contact-us.mail',
             with: [
-                'appLogo'        => 'http://localhost:8000/logo.png', // Replace with your logo URL
+                'appLogo'        => app('path.public') . '/logo.png', // Replace with your logo URL
                 'firstName'      => $this->firstName,
                 'lastName'       => $this->lastName,
                 'email'          => $this->email,

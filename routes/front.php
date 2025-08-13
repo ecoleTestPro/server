@@ -6,6 +6,7 @@ use App\Http\Controllers\Public\PublicController;
 use App\Http\Controllers\Public\PublicJobController;
 use App\Http\Controllers\Public\PublicFormationController;
 use App\Http\Controllers\Public\PublicFormationSessionController;
+use App\Http\Controllers\Public\SessionsTimelineController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -77,6 +78,7 @@ Route::group(["prefix" => "/"], function () {
 
     Route::get('formations-calendar', [PublicFormationController::class, 'calendar'])->name('courses.calendar');
     Route::get('formations-calendar/sessions', [PublicFormationSessionController::class, 'listSessions'])->name('courses.calendar.sessions');
+    Route::get('timeline-sessions', [SessionsTimelineController::class, 'index'])->name('sessions.timeline');
 
     /** 
      * formation routes

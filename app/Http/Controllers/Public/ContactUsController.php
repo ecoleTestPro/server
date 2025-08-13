@@ -17,7 +17,7 @@ use Inertia\Inertia;
  *     version="1.0.0",
  *     description="API pour gérer les soumissions de formulaires de contact",
  *     @OA\Contact(
- *         email="keraste38@gmail.com"
+ *         email="contact@example.com"
  *     )
  * )
  */
@@ -25,11 +25,12 @@ class ContactUsController extends PublicAbstractController
 {
     private $default_data = [];
 
-    private $email = 'keraste38@gmail.com';
+    private $email;
 
     public function __construct()
     {
         $this->default_data = $this->getDefaultData();
+        $this->email = env('CONTACT_EMAIL', EMAIL_DEFAULT);
     }
 
     public function contact()

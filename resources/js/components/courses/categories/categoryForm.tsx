@@ -32,8 +32,10 @@ export const categoryFormToICourseCategory = (category: ICategoryForm): ICourseC
     return {
         id: category.id,
         title: category.title,
+        slug: '', // Le slug sera généré côté serveur
         is_featured: category.is_featured,
         media: category.media,
+        parent_id: category.parent_id ? Number(category.parent_id) : undefined,
     };
 };
 
@@ -153,7 +155,7 @@ function CategoryForm({ closeDrawer, initialData }: CategoryFormProps) {
                     selectLabel={t('courses.category', 'Catégorie')}
                     processing={processing}
                     onValueChange={(value) => setData('parent_id', value)}
-                    defaultValue={data.parent_id?.toString()}
+                    value={data.parent_id?.toString()}
                     required
                 />
                 <InputError message={errors.parent_id} />

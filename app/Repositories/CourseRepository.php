@@ -54,14 +54,13 @@ class CourseRepository extends Repository
     public static function findAll($search = null)
     {
         try {
-            return static::query()
+            return static::queryBase()
                 ->when($search, function ($query) use ($search) {
                     $query->where('title', 'like', '%' . $search . '%')
                         ->orWhereHas('instructor.user', function ($query) use ($search) {
                             $query->where('name', 'like', '%' . $search . '%');
                         });
                 })
-                ->with(['category', 'instructor', 'media', 'video'])
                 ->latest('id')
                 ->withTrashed()
                 ->get();

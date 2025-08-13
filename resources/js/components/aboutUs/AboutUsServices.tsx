@@ -75,7 +75,7 @@ export default function AboutUsServices() {
                                     Faites-nous confiance pour être votre partenaire dans votre transformation numérique. Nos solutions de test
                                     garantissent qualité, efficacité et innovation pour mener vos projets au succès.
                                 </p>
-                                <BtnSecondary href={ROUTE_MAP.public.services.testSerivces.index.link} label="En savoir plus sur nous" />
+                                <BtnSecondary href={ROUTE_MAP.public.aboutUs.link} label="En savoir plus sur nous" />
                                 <div
                                     className="grid grid-cols-1 lg:grid-cols-2 gap-6"
                                     data-aos="fade-right"
