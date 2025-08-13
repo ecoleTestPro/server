@@ -52,7 +52,7 @@ const OurCurrentCourses = ({ coursesData, showSidebar = false, coursesDataSlice 
             setError(null);
 
             const newCourses = createCoursesFromCategory(coursesData, coursesDataSlice);
-            // setCourses(newCourses);
+            setCourses(newCourses);
             setFilteredCourses(newCourses);
 
             setLoading(false);
@@ -82,6 +82,15 @@ const OurCurrentCourses = ({ coursesData, showSidebar = false, coursesDataSlice 
                 <div className="text-center text-3xl text-gray-500 dark:text-gray-400">
                     {t('COURSE.TABLE.NO_COURSES', 'Aucun cours disponible pour le moment.')}
                 </div>
+            </div>
+        );
+    }
+
+    if (!courses) {
+        return (
+            <div className="container mx-auto p-4">
+                <div className="text-center text-3xl text-gray-500 dark:text-gray-400">{t('COURSE.TABLE.LOADING', 'Chargement des cours...')}</div>
+                <Skeleton className="mb-4" />
             </div>
         );
     }
