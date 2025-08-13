@@ -1,8 +1,10 @@
 import { IJobOffer } from '@/types';
 import { motion, Variants } from 'framer-motion';
 import React from 'react';
-import { FaMapMarkerAlt } from 'react-icons/fa';
-import BtnSecondary from '../ui/button/btn-secondary';
+import { MapPin, Calendar, Euro, Eye, Send, Clock, Building2 } from 'lucide-react';
+import { Button } from '../ui/button/button';
+import { Badge } from '../ui/badge';
+import { Card, CardContent, CardFooter, CardHeader } from '../ui/card';
 
 // Composant pour une carte d'offre d'emploi
 export const JobCard: React.FC<{
@@ -22,51 +24,134 @@ export const JobCard: React.FC<{
         hover: { y: -5, boxShadow: '0 8px 16px rgba(0, 0, 0, 0.1)', transition: { duration: 0.3 } },
     };
 
+    const formatDate = (dateString: string) => {
+        return new Date(dateString).toLocaleDateString('fr-FR', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric'
+        });
+    };
+
+    const isExpiringSoon = (dateString: string) => {
+        const expiryDate = new Date(dateString);
+        const today = new Date();
+        const diffTime = expiryDate.getTime() - today.getTime();
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        return diffDays <= 7 && diffDays > 0;
+    };
+
+    const isExpired = (dateString: string) => {
+        const expiryDate = new Date(dateString);
+        const today = new Date();
+        return expiryDate < today;
+    };
+
     return (
         <motion.div
-            className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-lg"
             variants={cardVariants}
             initial="hidden"
             animate="visible"
             whileHover="hover"
+            className="h-full"
         >
-            <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100">{job.title}</h3>
-            <p className="text-gray-600 dark:text-gray-300 flex items-center gap-1">
-                {job.company}
-                {job.location && (
-                    <span className="flex items-center gap-1">
-                        - <FaMapMarkerAlt className="inline" /> {job.location}
-                    </span>
-                )}
-            </p>
-            {job?.salary && (
-                <p className="text-gray-500 dark:text-gray-400">
-                    {job.type} - {job?.salary?.toLocaleString()} €/an
-                </p>
-            )}
-            <p className="text-gray-600 dark:text-gray-300 mt-2 line-clamp-2">{job.description}</p>
-            {job.expires_at && (
-                <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">Expire le {job.expires_at}</p>
-            )}
-            <p className="text-sm text-gray-400 dark:text-gray-500 mt-2">Publié le {job.created_at}</p>
-            <div className="flex gap-2 mt-4">
-                <BtnSecondary
-                    label="Voir détails"
-                    onClick={() => {
-                        setDetailSelected(job.id || 0);
-                        setOpenDetailModal(true);
-                    }}
-                    className="inline-block px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 dark:bg-gray-500 dark:hover:bg-gray-600"
-                />
-                <BtnSecondary
-                    label="Postuler"
-                    onClick={() => {
-                        setApplySelected(job.id || 0);
-                        setOpenApplyModal(true);
-                    }}
-                    className="inline-block px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600"
-                />
-            </div>
+            <Card className="h-full flex flex-col hover:shadow-lg transition-all duration-300 border-l-4 border-l-primary/30">
+                <CardHeader className="pb-3">
+                    <div className="flex items-start justify-between gap-3">
+                        <div className="flex-1">
+                            <h3 className="text-lg font-semibold text-foreground leading-tight mb-2">
+                                {job.title}
+                            </h3>
+                            
+                            <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+                                {job.company && (
+                                    <div className="flex items-center gap-1">
+                                        <Building2 className="h-4 w-4" />
+                                        <span>{job.company}</span>
+                                    </div>
+                                )}
+                                {job.location && (
+                                    <div className="flex items-center gap-1">
+                                        <MapPin className="h-4 w-4" />
+                                        <span>{job.location}</span>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                        
+                        <div className="flex flex-col gap-1 items-end">
+                            {job.type && (
+                                <Badge variant="secondary" className="text-xs">
+                                    {job.type}
+                                </Badge>
+                            )}
+                            {job.expires_at && (
+                                <Badge 
+                                    variant={isExpired(job.expires_at) ? "destructive" : isExpiringSoon(job.expires_at) ? "secondary" : "outline"}
+                                    className="text-xs"
+                                >
+                                    {isExpired(job.expires_at) ? "Expiré" : "Actif"}
+                                </Badge>
+                            )}
+                        </div>
+                    </div>
+                </CardHeader>
+                
+                <CardContent className="flex-1 pb-3">
+                    {job.salary && (
+                        <div className="flex items-center gap-1 text-sm font-medium text-foreground mb-3">
+                            <Euro className="h-4 w-4 text-green-600" />
+                            <span className="text-green-600">{job.salary.toLocaleString()} €/an</span>
+                        </div>
+                    )}
+                    
+                    <div className="space-y-2 text-xs text-muted-foreground">
+                        {job.created_at && (
+                            <div className="flex items-center gap-1">
+                                <Calendar className="h-3 w-3" />
+                                <span>Publié le {formatDate(job.created_at)}</span>
+                            </div>
+                        )}
+                        {job.expires_at && (
+                            <div className="flex items-center gap-1">
+                                <Clock className="h-3 w-3" />
+                                <span className={isExpiringSoon(job.expires_at) ? "text-amber-600 font-medium" : ""}>
+                                    {isExpired(job.expires_at) 
+                                        ? `Expiré le ${formatDate(job.expires_at)}`
+                                        : `Expire le ${formatDate(job.expires_at)}`
+                                    }
+                                </span>
+                            </div>
+                        )}
+                    </div>
+                </CardContent>
+                
+                <CardFooter className="pt-0 gap-2">
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        className="flex-1"
+                        onClick={() => {
+                            setDetailSelected(job.id || 0);
+                            setOpenDetailModal(true);
+                        }}
+                    >
+                        <Eye className="h-4 w-4 mr-1" />
+                        Détails
+                    </Button>
+                    <Button
+                        size="sm"
+                        className="flex-1"
+                        disabled={job.expires_at ? isExpired(job.expires_at) : false}
+                        onClick={() => {
+                            setApplySelected(job.id || 0);
+                            setOpenApplyModal(true);
+                        }}
+                    >
+                        <Send className="h-4 w-4 mr-1" />
+                        Postuler
+                    </Button>
+                </CardFooter>
+            </Card>
         </motion.div>
     );
 };
