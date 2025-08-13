@@ -58,17 +58,25 @@ class NewsletterController extends Controller
     public function send(Request $request)
     {
         $validated = $request->validate([
-            'subject' => 'required|string',
+            'subject' => 'required|string|max:255',
             'content' => 'required|string',
         ]);
 
         $emails = Newsletter::pluck('email');
+
+        if ($emails->isEmpty()) {
+            return response()->json(['message' => 'Aucun abonné trouvé'], 400);
+        }
+
+        $successCount = 0;
+        $failureCount = 0;
 
         foreach ($emails as $email) {
             $log = NewsletterLog::create([
                 'email' => $email,
                 'subject' => $validated['subject'],
                 'content' => $validated['content'],
+                'is_sent' => false,
             ]);
 
             try {
@@ -77,13 +85,65 @@ class NewsletterController extends Controller
                     'is_sent' => true,
                     'sent_at' => now(),
                 ]);
+                $successCount++;
             } catch (\Exception $e) {
                 $log->update([
+                    'is_sent' => false,
                     'error' => $e->getMessage(),
                 ]);
+                $failureCount++;
             }
         }
 
-        return back()->with('success', 'Newsletter envoyée');
+        $message = "Newsletter envoyée: {$successCount} succès";
+        if ($failureCount > 0) {
+            $message .= ", {$failureCount} échecs";
+        }
+
+        return response()->json([
+            'message' => $message,
+            'stats' => [
+                'success' => $successCount,
+                'failed' => $failureCount,
+                'total' => $emails->count()
+            ]
+        ]);
+    }
+
+    public function logs(Request $request)
+    {
+        $search = $request->search ? strtolower($request->search) : null;
+        
+        $logs = NewsletterLog::query()
+            ->when($search, fn($query) => $query->where('email', 'like', "%{$search}%")
+                ->orWhere('subject', 'like', "%{$search}%"))
+            ->latest('id')
+            ->paginate(20)
+            ->withQueryString();
+
+        return response()->json($logs);
+    }
+
+    public function analytics()
+    {
+        $totalSent = NewsletterLog::where('is_sent', true)->count();
+        $totalFailed = NewsletterLog::where('is_sent', false)->whereNotNull('error')->count();
+        $totalPending = NewsletterLog::whereNull('is_sent')->count();
+        $totalSubscribers = Newsletter::count();
+
+        $recentLogs = NewsletterLog::with([])
+            ->latest('id')
+            ->take(10)
+            ->get();
+
+        return response()->json([
+            'stats' => [
+                'total_sent' => $totalSent,
+                'total_failed' => $totalFailed,
+                'total_pending' => $totalPending,
+                'total_subscribers' => $totalSubscribers,
+            ],
+            'recent_logs' => $recentLogs,
+        ]);
     }
 }

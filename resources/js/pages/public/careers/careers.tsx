@@ -1,4 +1,5 @@
 import JobApplyModal from '@/components/careers/JobApplyModal';
+import JobDetailModal from '@/components/careers/JobDetailModal';
 import { JobList } from '@/components/careers/JobList';
 import JobPagination from '@/components/careers/JobPagination';
 import { JobSearchFilters } from '@/components/careers/JobSearchFilters';
@@ -32,6 +33,8 @@ export default function Careers() {
     const [viewMode, setViewMode] = useState<'card' | 'list'>('card');
     const [applySelected, setApplySelected] = useState<number | null>(null);
     const [openApplyModal, setOpenApplyModal] = useState<boolean>(false);
+    const [detailSelected, setDetailSelected] = useState<number | null>(null);
+    const [openDetailModal, setOpenDetailModal] = useState<boolean>(false);
     const [currentPage, setCurrentPage] = useState(1);
     const jobsPerPage = 6;
 
@@ -102,9 +105,31 @@ export default function Careers() {
                                 </div>
                             </div>
                             <JobSearchFilters onFilterChange={setFilters} />
-                            <JobList applySelected={applySelected} setApplySelected={setApplySelected} openApplyModal={openApplyModal} setOpenApplyModal={setOpenApplyModal} jobs={paginatedJobs} view={viewMode} />
+                            <JobList 
+                                applySelected={applySelected} 
+                                setApplySelected={setApplySelected} 
+                                openApplyModal={openApplyModal} 
+                                setOpenApplyModal={setOpenApplyModal}
+                                detailSelected={detailSelected}
+                                setDetailSelected={setDetailSelected}
+                                openDetailModal={openDetailModal}
+                                setOpenDetailModal={setOpenDetailModal}
+                                jobs={paginatedJobs} 
+                                view={viewMode} 
+                            />
                             <JobPagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
                             <JobApplyModal jobId={applySelected || 0} open={openApplyModal} onClose={() => setOpenApplyModal(false)} />
+                            {detailSelected && (
+                                <JobDetailModal 
+                                    job={jobs.find(j => j.id === detailSelected) || {} as IJobOffer}
+                                    open={openDetailModal} 
+                                    onClose={() => setOpenDetailModal(false)}
+                                    onApply={() => {
+                                        setApplySelected(detailSelected);
+                                        setOpenApplyModal(true);
+                                    }}
+                                />
+                            )}
                         </div>
                     </motion.div>
                 </MotionSection>

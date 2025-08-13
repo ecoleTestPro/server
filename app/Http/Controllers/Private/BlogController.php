@@ -29,7 +29,8 @@ class BlogController extends Controller
     public function index()
     {
         $data = [];
-        $data['blogs']['list'] = BlogRepository::initQuery()->latest('id')->get();
+        $data['blogs']['list'] = BlogRepository::getAllBlogs();
+        $data['blogs']['categories'] = BlogCategoryRepository::query()->get();
 
         return Inertia::render('dashboard/blogs/index', [
             'data' => $data,
@@ -83,9 +84,10 @@ class BlogController extends Controller
         ]);
     }
 
-    public function update(BlogUpdateRequest $request, Blog $blog)
+    public function update(BlogUpdateRequest $request)
     {
         try {
+            $blog = Blog::findOrFail($request->blog);
             $updated = BlogRepository::updateByRequest($request, $blog);
             if (!$updated) {
                 return response()->json(['message' => 'Error updating blog'], 500);

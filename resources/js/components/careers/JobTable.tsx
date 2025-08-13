@@ -8,7 +8,11 @@ export const JobTable: React.FC<{
     setApplySelected: React.Dispatch<React.SetStateAction<number | null>>;
     openApplyModal: boolean;
     setOpenApplyModal: React.Dispatch<React.SetStateAction<boolean>>;
-}> = ({ jobs, setApplySelected, applySelected, openApplyModal, setOpenApplyModal }) => {
+    detailSelected: number | null;
+    setDetailSelected: React.Dispatch<React.SetStateAction<number | null>>;
+    openDetailModal: boolean;
+    setOpenDetailModal: React.Dispatch<React.SetStateAction<boolean>>;
+}> = ({ jobs, setApplySelected, applySelected, openApplyModal, setOpenApplyModal, detailSelected, setDetailSelected, openDetailModal, setOpenDetailModal }) => {
 
     return (
         <div className="overflow-x-auto">
@@ -33,20 +37,30 @@ export const JobTable: React.FC<{
                                 <td className="px-4 py-2 whitespace-nowrap">{job.type}</td>
                                 <td className="px-4 py-2 whitespace-nowrap">{job.expires_at}</td>
                                 <td className="px-4 py-2 whitespace-nowrap">
-                                    <BtnSecondary
-                                        label="Postuler"
-                                        onClick={() => {
-                                            setApplySelected(job.id ?? 0);
-                                            setOpenApplyModal(true);
-                                        }}
-                                        className="inline-block rounded bg-primary-600 px-3 py-1 text-white hover:bg-primary-700"
-                                    />
+                                    <div className="flex gap-2">
+                                        <BtnSecondary
+                                            label="Détails"
+                                            onClick={() => {
+                                                setDetailSelected(job.id ?? 0);
+                                                setOpenDetailModal(true);
+                                            }}
+                                            className="inline-block rounded bg-gray-600 px-3 py-1 text-white hover:bg-gray-700"
+                                        />
+                                        <BtnSecondary
+                                            label="Postuler"
+                                            onClick={() => {
+                                                setApplySelected(job.id ?? 0);
+                                                setOpenApplyModal(true);
+                                            }}
+                                            className="inline-block rounded bg-primary-600 px-3 py-1 text-white hover:bg-primary-700"
+                                        />
+                                    </div>
                                 </td>
                             </tr>
                         ))
                     ) : (
                         <tr>
-                            <td colSpan={5} className="px-4 py-6 text-center text-gray-600 dark:text-gray-300">
+                            <td colSpan={6} className="px-4 py-6 text-center text-gray-600 dark:text-gray-300">
                                 Aucune offre trouvée.
                             </td>
                         </tr>

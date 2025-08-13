@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Public;
 
+use App\Http\Controllers\PublicAbstractController;
 use App\Models\Appointment;
 use App\Models\BusinessHours;
 use Carbon\Carbon;
@@ -10,27 +11,21 @@ use Illuminate\Http\JsonResponse;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class AppointmentController extends Controller
+class AppointmentController extends PublicAbstractController
 {
     /**
      * Affiche le formulaire de prise de rendez-vous
      */
     public function create(): Response
     {
+        $data = $this->getDefaultData();
         $businessHours = BusinessHours::active()->get()->keyBy('day_of_week');
-        
-        // Si l'utilisateur est connecté, utiliser le layout dashboard
-        if (auth()->check()) {
-            return Inertia::render('Appointments/Create', [
-                'businessHours' => $businessHours,
-                'appointmentTypes' => $this->getAppointmentTypes()
-            ]);
-        }
+        $data['businessHours'] = $businessHours;
+        $data['appointmentTypes'] = $this->getAppointmentTypes();
         
         // Sinon, utiliser le layout public
-        return Inertia::render('Public/AppointmentCreate', [
-            'businessHours' => $businessHours,
-            'appointmentTypes' => $this->getAppointmentTypes()
+        return Inertia::render('public/appointment', [
+            'data' => $data
         ]);
     }
 
@@ -136,21 +131,6 @@ class AppointmentController extends Controller
             'message' => 'Rendez-vous créé avec succès',
             'appointment' => $appointment->load(['user', 'adminUser'])
         ], 201);
-    }
-
-    /**
-     * Affiche les rendez-vous de l'utilisateur
-     */
-    public function index(): Response
-    {
-        $appointments = Appointment::where('user_id', auth()->id())
-            ->with(['adminUser'])
-            ->orderBy('appointment_date', 'desc')
-            ->paginate(10);
-
-        return Inertia::render('Appointments/Index', [
-            'appointments' => $appointments
-        ]);
     }
 
     /**

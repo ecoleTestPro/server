@@ -15,11 +15,16 @@ interface IOurCurrentCoursesProps {
     coursesData?: ICourseCategory[];
     coursesDataSlice?: number;
     showSidebar?: boolean;
+    showViewAllButton?: boolean;
 }
 
-const OurCurrentCourses = ({ coursesData, showSidebar = false, coursesDataSlice }: IOurCurrentCoursesProps) => {
+const OurCurrentCourses = ({ coursesData, showSidebar = false, coursesDataSlice, showViewAllButton }: IOurCurrentCoursesProps) => {
     const { t } = useTranslation();
-    const { auth, data } = usePage<SharedData>().props;
+    const { auth, data, url } = usePage<SharedData>().props;
+    
+    // Déterminer si on est sur la page d'accueil
+    const isHomePage = url === '/' || url === '/home';
+    const shouldShowButton = showViewAllButton !== undefined ? showViewAllButton : isHomePage;
 
     const [courses, setCourses] = useState<ICourseCategory[] | undefined>(undefined);
     const [filteredCourses, setFilteredCourses] = useState<ICourseCategory[] | undefined>(undefined);
@@ -52,7 +57,7 @@ const OurCurrentCourses = ({ coursesData, showSidebar = false, coursesDataSlice 
             setError(null);
 
             const newCourses = createCoursesFromCategory(coursesData, coursesDataSlice);
-            // setCourses(newCourses);
+            setCourses(newCourses);
             setFilteredCourses(newCourses);
 
             setLoading(false);
@@ -82,6 +87,15 @@ const OurCurrentCourses = ({ coursesData, showSidebar = false, coursesDataSlice 
                 <div className="text-center text-3xl text-gray-500 dark:text-gray-400">
                     {t('COURSE.TABLE.NO_COURSES', 'Aucun cours disponible pour le moment.')}
                 </div>
+            </div>
+        );
+    }
+
+    if (!courses) {
+        return (
+            <div className="container mx-auto p-4">
+                <div className="text-center text-3xl text-gray-500 dark:text-gray-400">{t('COURSE.TABLE.LOADING', 'Chargement des cours...')}</div>
+                <Skeleton className="mb-4" />
             </div>
         );
     }
@@ -118,7 +132,7 @@ const OurCurrentCourses = ({ coursesData, showSidebar = false, coursesDataSlice 
                 </div>
             </div>
 
-            {allCourses && allCourses.length > 0 && (
+            {allCourses && allCourses.length > 0 && shouldShowButton && (
                 <div className="mt-6 flex justify-center">
                     <BtnSecondary label="Voir toutes les formations" href={ROUTE_MAP.public.courses.list.link} />
                 </div>

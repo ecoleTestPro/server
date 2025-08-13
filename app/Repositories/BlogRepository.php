@@ -28,6 +28,15 @@ class BlogRepository extends Repository
         ]);
     }
 
+    public static function getAllBlogs() {
+        $blogs = self::initQuery()->latest('id')->get();
+        foreach ($blogs as $blog) {
+            $category = BlogCategoryRepository::find($blog->blog_category_id);
+            $blog->category = $category;
+        }
+        return $blogs;
+    }
+
     public static function storeByRequest(BlogStoreRequest $request)
     {
         $status = $request->status??false;
@@ -47,7 +56,7 @@ class BlogRepository extends Repository
             'excerpt'          => $request->excerpt,
             'description'      => $request->description,
             'tags'             => $request->tags ? $request->tags : null,
-            'status'           => $status,
+            'status'           => true,
         ]);
     }
 

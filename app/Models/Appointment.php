@@ -171,7 +171,7 @@ class Appointment extends Model
     /**
      * Confirme le rendez-vous
      */
-    public function confirm(int $adminUserId = null): bool
+    public function confirm(?int $adminUserId = null): bool
     {
         return $this->update([
             'status' => self::STATUS_CONFIRMED,
@@ -182,7 +182,7 @@ class Appointment extends Model
     /**
      * Annule le rendez-vous
      */
-    public function cancel(string $reason = null): bool
+    public function cancel(?string $reason = null): bool
     {
         return $this->update([
             'status' => self::STATUS_CANCELLED,
@@ -193,7 +193,7 @@ class Appointment extends Model
     /**
      * Marque le rendez-vous comme terminé
      */
-    public function complete(string $notes = null): bool
+    public function complete(?string $notes = null): bool
     {
         return $this->update([
             'status' => self::STATUS_COMPLETED,
@@ -204,7 +204,7 @@ class Appointment extends Model
     /**
      * Vérifie s'il y a un conflit avec un autre rendez-vous
      */
-    public static function hasConflict(Carbon $startTime, int $duration, int $excludeId = null): bool
+    public static function hasConflict(Carbon $startTime, int $duration, ?int $excludeId = null): bool
     {
         $endTime = $startTime->copy()->addMinutes($duration);
         

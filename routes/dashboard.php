@@ -19,9 +19,9 @@ use App\Http\Controllers\Private\EnrollmentController;
 use App\Http\Controllers\Private\NotificationController;
 use App\Http\Controllers\Settings\PasswordController;
 use App\Http\Controllers\Settings\ProfileController;
-use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\Admin\BusinessHoursController;
-
+use App\Http\Controllers\Private\PrivateAppointmentController;
+use App\Http\Controllers\Public\AppointmentController;
 use Illuminate\Support\Facades\Route;
 
 use Inertia\Inertia;
@@ -183,6 +183,8 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
         Route::post('send', [NewsletterController::class, 'send'])->name('dashboard.newsletters.send');
         Route::post('create', [NewsletterController::class, 'store'])->name('dashboard.newsletters.store');
         Route::delete('delete/{newsletter}', [NewsletterController::class, 'destroy'])->name('dashboard.newsletters.delete');
+        Route::get('logs', [NewsletterController::class, 'logs'])->name('dashboard.newsletters.logs');
+        Route::get('analytics', [NewsletterController::class, 'analytics'])->name('dashboard.newsletters.analytics');
     });
 
     // NEWSLETTER TEMPLATES
@@ -201,26 +203,43 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
         Route::get('', [NewsletterLogController::class, 'index'])->name('dashboard.newsletter-logs.index');
         Route::post('resend/{newsletterLog}', [NewsletterLogController::class, 'resend'])->name('dashboard.newsletter-logs.resend');
     });
-});
 
-/**
- * Routes pour les rendez-vous - Accès public pour la prise de RDV
- */
-Route::prefix('appointments')->group(function () {
-    // Route publique pour prendre un RDV
-    Route::get('/create', [AppointmentController::class, 'create'])->name('appointments.create');
-    Route::post('/', [AppointmentController::class, 'store'])->name('appointments.store');
-    
-    // Routes protégées pour les utilisateurs connectés
-    Route::middleware(['auth', 'verified'])->group(function () {
-        Route::get('/', [AppointmentController::class, 'index'])->name('appointments.index');
-        Route::patch('/{appointment}/cancel', [AppointmentController::class, 'cancel'])->name('appointments.cancel');
+    // APPOINTMENTS MANAGEMENT
+    Route::group([
+        'prefix' => 'appointments',
+    ], function () {
+        // Liste et gestion des rendez-vous
+        Route::get('', [PrivateAppointmentController::class, 'index'])->name('dashboard.appointments.index');
+        Route::get('calendar', [PrivateAppointmentController::class, 'calendar'])->name('dashboard.appointments.calendar');
+        Route::get('{appointment}', [PrivateAppointmentController::class, 'show'])->name('dashboard.appointments.show');
+        
+        // Actions sur les rendez-vous
+        Route::post('{appointment}/confirm', [PrivateAppointmentController::class, 'confirm'])->name('dashboard.appointments.confirm');
+        Route::post('{appointment}/cancel', [PrivateAppointmentController::class, 'cancel'])->name('dashboard.appointments.cancel');
+        Route::post('{appointment}/complete', [PrivateAppointmentController::class, 'complete'])->name('dashboard.appointments.complete');
+        
+        // Paramètres des rendez-vous
+        Route::prefix('settings')->group(function () {
+            Route::get('types', [PrivateAppointmentController::class, 'settingsTypes'])->name('dashboard.appointments.settings.types');
+            Route::post('types', [PrivateAppointmentController::class, 'storeType'])->name('dashboard.appointments.settings.types.store');
+            Route::put('types/{type}', [PrivateAppointmentController::class, 'updateType'])->name('dashboard.appointments.settings.types.update');
+            Route::delete('types/{type}', [PrivateAppointmentController::class, 'destroyType'])->name('dashboard.appointments.settings.types.destroy');
+            
+            Route::get('durations', [PrivateAppointmentController::class, 'settingsDurations'])->name('dashboard.appointments.settings.durations');
+            Route::post('durations', [PrivateAppointmentController::class, 'storeDuration'])->name('dashboard.appointments.settings.durations.store');
+            
+            Route::get('hours', [PrivateAppointmentController::class, 'settingsHours'])->name('dashboard.appointments.settings.hours');
+            Route::post('hours', [PrivateAppointmentController::class, 'updateHours'])->name('dashboard.appointments.settings.hours.update');
+        });
+        
+        // APIs publiques pour le frontend
+        Route::prefix('api')->group(function () {
+            Route::get('available-slots', [PrivateAppointmentController::class, 'getAvailableSlots'])->name('api.appointments.available-slots');
+            Route::get('types', [PrivateAppointmentController::class, 'getActiveTypes'])->name('api.appointments.types');
+            Route::get('durations', [PrivateAppointmentController::class, 'getActiveDurations'])->name('api.appointments.durations');
+        });
     });
 });
-
-// Routes API publiques pour les créneaux disponibles
-Route::get('/api/appointments/available-slots', [AppointmentController::class, 'getAvailableSlots'])
-    ->name('api.appointments.available-slots');
 
 /**
  * Routes admin pour les horaires d'ouverture

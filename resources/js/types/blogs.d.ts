@@ -24,6 +24,7 @@ export interface IBlog {
     created_at: string;
     updated_at: string;
     category?: IBlogCategory;
+    blog_category_id?: number;
     author?: User;
     // category_id: number;
     // author_id: number;

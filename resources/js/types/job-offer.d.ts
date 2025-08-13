@@ -16,5 +16,8 @@ export interface IJobOffer {
 export interface IJobApplication {
     job_offer_id: number;
     name: string;
+    email: string;
+    phone: string;
     cv: File | null;
+    [key: string]: string | number | File | null;
 }
