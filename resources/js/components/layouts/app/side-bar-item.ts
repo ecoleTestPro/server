@@ -1,5 +1,5 @@
 import { NavItem } from "@/types";
-import { BookOpen, FileStack, Folder, HomeIcon, LayoutGrid, List, ClipboardPlus, Settings2, ListTodo, BookAIcon, ListChecks, Mail } from 'lucide-react';
+import { BookOpen, FileStack, Folder, HomeIcon, LayoutGrid, List, ClipboardPlus, Settings2, ListTodo, BookAIcon, ListChecks, Mail, Calendar } from 'lucide-react';
 
 
 export const MAIN_NAV_ITEMS: NavItem[] = [
@@ -29,6 +29,23 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
         title: 'Inscriptions',
         href: route('dashboard.enrollment.index'),
         icon: ListChecks,
+    },
+    {
+        title: 'Rendez-vous',
+        href: '/appointments',
+        icon: Calendar,
+        children: [
+            {
+                title: 'Mes RDV',
+                href: '/appointments',
+                icon: List,
+            },
+            {
+                title: 'Prendre RDV',
+                href: '/appointments/create',
+                icon: ClipboardPlus,
+            },
+        ],
     },
     // {
     //     title: 'Partenaires',

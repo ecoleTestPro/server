@@ -1,54 +1,57 @@
-version: "3.8"
+version: '3.8'
 
 services:
-  php-app:
+  testpro_app:
     build:
       context: .
       dockerfile: Dockerfile
-      target: final
-    container_name: php-app
-    restart: unless-stopped
-    init: true
+    container_name: testpro_app
     ports:
-      - "9000:9000"
-    # env_file: ./.env
-    networks:
-      - appnet
+      - "8000:80"
     depends_on:
-      - db
-
-  db:
-    image: mysql:8.0
-    container_name: db
-    restart: unless-stopped
+      - testpro_db
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: root
-      MYSQL_USER: root
-      MYSQL_PASSWORD: root
+      DB_CONNECTION: mysql
+      DB_HOST: testpro_db
+      DB_PORT: 3306
+      DB_DATABASE: testpro
+      DB_USERNAME: root
+      DB_PASSWORD: root
     volumes:
-      - dbdata:/var/lib/mysql
+      - ./public:/var/www/html/public:cached
+      - ./src:/var/www/html
     networks:
-      - appnet
+      - testpro_network
 
-  phpmyadmin:
+  testpro_phpmyadmin:
     image: phpmyadmin/phpmyadmin
-    container_name: phpmyadmin
-    restart: unless-stopped
+    container_name: testpro_phpmyadmin
+    restart: always
     depends_on:
-      - db
-    environment:
-      PMA_HOST: db
-      PMA_USER: root
-      PMA_PASSWORD: root
+      - testpro_db
     ports:
       - "8080:80"
+    environment:
+      PMA_HOST: testpro_db
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: root
     networks:
-      - appnet
+      - testpro_network
 
-networks:
-  appnet:
-    driver: bridge
+  testpro_db:
+    image: mysql:8.0
+    restart: always
+    container_name: testpro_db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: testpro
+    ports:
+      - "3306:3306"
 
 volumes:
-  dbdata:
+  mysql_data:
+
+networks:
+  testpro_network:
+    driver: bridge

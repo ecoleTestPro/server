@@ -32,6 +32,11 @@ Route::group(["prefix" => "/"], function () {
 
     Route::get('reconversion-metier', [PublicController::class, 'reconversionMetier'])->name('reconversion.metier');
 
+    /**
+     * Rendez-vous public
+     */
+    Route::get('rendez-vous', [\App\Http\Controllers\AppointmentController::class, 'create'])->name('public.appointments.create');
+
     Route::post('newsletter', [\App\Http\Controllers\Public\NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
 
     /**

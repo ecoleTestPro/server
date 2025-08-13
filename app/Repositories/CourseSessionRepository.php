@@ -24,12 +24,6 @@ class CourseSessionRepository extends Repository
     public static function store(CourseSessionStoreRequest $request): CourseSession
     {
         try {
-            $course = CourseRepository::findById($request->course_id);
-            if (!$course) {
-                throw new \Exception('Formation introuvable.');
-            }
-
-
             return self::create([
                 'course_id'      => $request->course_id,
                 'location'       => $request->location ?? null,

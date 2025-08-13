@@ -141,6 +141,42 @@ Exemples :
 - Mailhog (pour tester les mails en dev)
 
 ---
+## 🚀 Mise en ligne sur un serveur
+
+Ces étapes expliquent comment déployer l'application sur un serveur distant.
+
+1. **Préparer le serveur**
+   - Installer Docker et Docker Compose.
+   - Cloner ce dépôt sur le serveur :
+
+   ```bash
+   git clone <votre_repo> lms && cd lms
+   ```
+
+2. **Configurer l'environnement**
+   Copiez le fichier `.env.example` puis générez la clé de l'application :
+
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
+
+3. **Lancer les services**
+   Construisez et démarrez les conteneurs en arrière-plan :
+
+   ```bash
+   docker compose up -d --build
+   ```
+
+4. **Exposer l'application**
+   Placez un serveur web (Nginx ou Apache) en tant que proxy inverse devant le conteneur PHP-FPM. Le fichier `000-default.conf` fournit un exemple de configuration Apache.
+
+5. **Automatiser le démarrage**
+   Configurez `systemd` ou un autre service de supervision pour relancer automatiquement les conteneurs après un redémarrage du serveur.
+
+Une fois ces étapes terminées, l'application sera accessible en ligne via l'URL de votre serveur.
+
+---
 
 ## 📚 Documentation additionnelle
 
@@ -160,6 +196,3 @@ Toute contribution à ce projet est la bienvenue ! Merci de respecter les bonnes
 
 MIT License – voir le fichier [LICENSE](LICENSE) pour plus d'informations.
 
----
-
-Avec ce README mis à jour, votre projet sera beaucoup plus facile à comprendre, à maintenir et à partager avec d'autres développeurs ou équipes. Souhaitez-vous aussi que je génère un exemple de `docker-compose.yml` ou `.env.example` ?

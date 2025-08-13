@@ -1,6 +1,7 @@
 import { CLASS_NAME } from '@/data/styles/style.constant';
 import { ICourse } from '@/types/course';
 import { getMediaUrl } from '@/utils/utils';
+import { sanitizeHTML } from '@/utils/quill-html-parser';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import 'react-quill/dist/quill.snow.css';
@@ -18,6 +19,17 @@ interface CourseDetailProps {
 
 const CourseDetail: React.FC<CourseDetailProps> = ({ course }) => {
     const { t } = useTranslation();
+    
+    // Styles pour le rendu du contenu HTML riche
+    const proseClasses = "prose prose-sm max-w-none prose-headings:text-gray-900 prose-h1:text-xl prose-h2:text-lg prose-h3:text-base prose-p:text-gray-700 prose-p:leading-relaxed prose-strong:text-gray-900 prose-strong:font-semibold prose-em:text-gray-700 prose-ul:text-gray-700 prose-ol:text-gray-700 prose-li:text-gray-700 prose-li:marker:text-blue-500 prose-a:text-blue-600 prose-a:hover:text-blue-800 prose-blockquote:text-gray-600 prose-blockquote:border-l-blue-500";
+    
+    // Composant helper pour rendre le HTML avec les styles appropriés
+    const RichContent = ({ html }: { html: string }) => {
+        const cleanedHTML = sanitizeHTML(html);
+        return (
+            <div className={proseClasses} dangerouslySetInnerHTML={{ __html: cleanedHTML }} />
+        );
+    };
     const registrationRef = useRef<HTMLDivElement>(null);
 
     const [isOpen, setIsOpen] = useState<Record<string, boolean>>({
@@ -55,7 +67,7 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ course }) => {
                                 toggleSection={toggleSection}
                                 section={'objectives'}
                                 sectionTitle="Objectifs"
-                                content={<div dangerouslySetInnerHTML={{ __html: course.excerpt }} />}
+                                content={<RichContent html={course.excerpt} />}
                             />
                             {/* Public cible */}
                             {course.description?.why_choose && (
@@ -64,7 +76,7 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ course }) => {
                                     toggleSection={toggleSection}
                                     section={'whyChoose'}
                                     sectionTitle="Pourquoi choisir cette formation ?"
-                                    content={<div dangerouslySetInnerHTML={{ __html: course.description.why_choose }} />}
+                                    content={<RichContent html={course.description.why_choose} />}
                                 />
                             )}
                             {/* Public cible */}
@@ -74,7 +86,7 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ course }) => {
                                     toggleSection={toggleSection}
                                     section={'targetAudience'}
                                     sectionTitle="A qui s'adresse cette formation ?"
-                                    content={<div dangerouslySetInnerHTML={{ __html: course.description.target_audience }} />}
+                                    content={<RichContent html={course.description.target_audience} />}
                                 />
                             )}
 
@@ -95,7 +107,7 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ course }) => {
                                     toggleSection={toggleSection}
                                     section={'prerequisites'}
                                     sectionTitle="Prérequis"
-                                    content={<div dangerouslySetInnerHTML={{ __html: course.description?.prerequisites ?? '' }} />}
+                                    content={<RichContent html={course.description?.prerequisites ?? ''} />}
                                 />
                             )}
                             {/* Contenu */}
@@ -104,7 +116,7 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ course }) => {
                                 toggleSection={toggleSection}
                                 sectionTitle="Contenu"
                                 section={'content'}
-                                content={<div dangerouslySetInnerHTML={{ __html: course.description?.content ?? '' }} />}
+                                content={<RichContent html={course.description?.content ?? ''} />}
                             />
                             {/* Évaluation */}
                             {course.description?.evaluation && (
@@ -113,7 +125,7 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ course }) => {
                                     toggleSection={toggleSection}
                                     section={'evaluation'}
                                     sectionTitle="Évaluation"
-                                    content={<div dangerouslySetInnerHTML={{ __html: course.description?.evaluation ?? '' }} />}
+                                    content={<RichContent html={course.description?.evaluation ?? ''} />}
                                 />
                             )}
                             {/* Objectifs pédagogiques */}
@@ -123,7 +135,7 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ course }) => {
                                     toggleSection={toggleSection}
                                     section={'pedagogicalObjectives'}
                                     sectionTitle="Objectifs pédagogiques"
-                                    content={<div dangerouslySetInnerHTML={{ __html: course.description?.pedagogical_objectives ?? '' }} />}
+                                    content={<RichContent html={course.description?.pedagogical_objectives ?? ''} />}
                                 />
                             )}
                             {/* Points forts du cours */}
@@ -133,7 +145,7 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ course }) => {
                                     toggleSection={toggleSection}
                                     section={'course_strengths'}
                                     sectionTitle="Points forts du cours"
-                                    content={<div dangerouslySetInnerHTML={{ __html: course.description?.course_strengths ?? '' }} />}
+                                    content={<RichContent html={course.description?.course_strengths ?? ''} />}
                                 />
                             )}
                             {course.description?.exam && (
@@ -142,7 +154,7 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ course }) => {
                                     toggleSection={toggleSection}
                                     section={'exam'}
                                     sectionTitle="Détails de l'examen"
-                                    content={<div dangerouslySetInnerHTML={{ __html: course.description?.exam ?? '' }} />}
+                                    content={<RichContent html={course.description?.exam ?? ''} />}
                                 />
                             )}
                             {/* Téléchargement */}
