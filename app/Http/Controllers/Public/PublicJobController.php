@@ -14,7 +14,12 @@ use Inertia\Inertia;
 
 class PublicJobController extends Controller
 {
-    private string $email = 'keraste38@gmail.com';
+    private string $email;
+
+    public function __construct()
+    {
+        $this->email = env('CONTACT_EMAIL', 'contact@example.com');
+    }
 
     public function list()
     {
