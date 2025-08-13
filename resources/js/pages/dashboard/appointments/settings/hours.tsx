@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
-import { Head, useForm } from '@inertiajs/react';
-import { Clock, Edit, Eye, EyeOff, Save, RotateCcw } from 'lucide-react';
-import { motion } from 'framer-motion';
-import { cn } from '@/lib/utils';
-import { BusinessHours } from '@/types';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
 import AppLayout from '@/layouts/dashboard/app-layout';
+import { cn } from '@/lib/utils';
+import { BusinessHours } from '@/types';
+import { Head, useForm } from '@inertiajs/react';
+import { motion } from 'framer-motion';
+import { Clock, Edit, Eye, RotateCcw, Save } from 'lucide-react';
+import React, { useState } from 'react';
 
 interface Props {
     businessHours: BusinessHours[];
@@ -29,7 +29,7 @@ const DAYS_OF_WEEK = [
     { key: 'thursday', label: 'Jeudi', shortLabel: 'Jeu' },
     { key: 'friday', label: 'Vendredi', shortLabel: 'Ven' },
     { key: 'saturday', label: 'Samedi', shortLabel: 'Sam' },
-    { key: 'sunday', label: 'Dimanche', shortLabel: 'Dim' }
+    { key: 'sunday', label: 'Dimanche', shortLabel: 'Dim' },
 ];
 
 const DEFAULT_HOURS = {
@@ -37,22 +37,26 @@ const DEFAULT_HOURS = {
     closing_time: '18:00',
     lunch_break_start: '12:00',
     lunch_break_end: '13:00',
-    slot_duration: 30
+    slot_duration: 30,
 };
 
 export default function BusinessHoursSettings({ businessHours, appointmentDurations }: Props) {
     const [hours, setHours] = useState(() => {
-        const hoursMap = businessHours.reduce((acc, hour) => {
-            acc[hour.day_of_week] = hour;
-            return acc;
-        }, {} as Record<string, BusinessHours>);
+        const hoursMap = businessHours.reduce(
+            (acc, hour) => {
+                acc[hour.day_of_week] = hour;
+                return acc;
+            },
+            {} as Record<string, BusinessHours>,
+        );
 
-        return DAYS_OF_WEEK.map(day => 
-            hoursMap[day.key] || {
-                day_of_week: day.key,
-                is_open: day.key !== 'sunday',
-                ...DEFAULT_HOURS
-            }
+        return DAYS_OF_WEEK.map(
+            (day) =>
+                hoursMap[day.key] || {
+                    day_of_week: day.key,
+                    is_open: day.key !== 'sunday',
+                    ...DEFAULT_HOURS,
+                },
         );
     });
 
@@ -67,11 +71,11 @@ export default function BusinessHoursSettings({ businessHours, appointmentDurati
         closing_time: DEFAULT_HOURS.closing_time,
         lunch_break_start: '',
         lunch_break_end: '',
-        slot_duration: DEFAULT_HOURS.slot_duration
+        slot_duration: DEFAULT_HOURS.slot_duration,
     });
 
     const openDialog = (dayKey: string) => {
-        const dayHours = hours.find(h => h.day_of_week === dayKey);
+        const dayHours = hours.find((h) => h.day_of_week === dayKey);
         if (dayHours) {
             setEditingDay(dayKey);
             setData({
@@ -81,7 +85,7 @@ export default function BusinessHoursSettings({ businessHours, appointmentDurati
                 closing_time: dayHours.closing_time || DEFAULT_HOURS.closing_time,
                 lunch_break_start: dayHours.lunch_break_start || '',
                 lunch_break_end: dayHours.lunch_break_end || '',
-                slot_duration: dayHours.slot_duration || DEFAULT_HOURS.slot_duration
+                slot_duration: dayHours.slot_duration || DEFAULT_HOURS.slot_duration,
             });
             setIsDialogOpen(true);
         }
@@ -89,12 +93,8 @@ export default function BusinessHoursSettings({ businessHours, appointmentDurati
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        
-        setHours(prev => prev.map(hour => 
-            hour.day_of_week === editingDay 
-                ? { ...hour, ...data }
-                : hour
-        ));
+
+        setHours((prev) => prev.map((hour) => (hour.day_of_week === editingDay ? { ...hour, ...data } : hour)));
         setHasChanges(true);
         setIsDialogOpen(false);
     };
@@ -104,46 +104,50 @@ export default function BusinessHoursSettings({ businessHours, appointmentDurati
             hours: hours,
             onSuccess: () => {
                 setHasChanges(false);
-            }
+            },
         });
     };
 
     const resetChanges = () => {
-        const hoursMap = businessHours.reduce((acc, hour) => {
-            acc[hour.day_of_week] = hour;
-            return acc;
-        }, {} as Record<string, BusinessHours>);
+        const hoursMap = businessHours.reduce(
+            (acc, hour) => {
+                acc[hour.day_of_week] = hour;
+                return acc;
+            },
+            {} as Record<string, BusinessHours>,
+        );
 
-        setHours(DAYS_OF_WEEK.map(day => 
-            hoursMap[day.key] || {
-                day_of_week: day.key,
-                is_open: day.key !== 'sunday',
-                ...DEFAULT_HOURS
-            }
-        ));
+        setHours(
+            DAYS_OF_WEEK.map(
+                (day) =>
+                    hoursMap[day.key] || {
+                        day_of_week: day.key,
+                        is_open: day.key !== 'sunday',
+                        ...DEFAULT_HOURS,
+                    },
+            ),
+        );
         setHasChanges(false);
     };
 
     const toggleDay = (dayKey: string) => {
-        setHours(prev => prev.map(hour => 
-            hour.day_of_week === dayKey 
-                ? { ...hour, is_open: !hour.is_open }
-                : hour
-        ));
+        setHours((prev) => prev.map((hour) => (hour.day_of_week === dayKey ? { ...hour, is_open: !hour.is_open } : hour)));
         setHasChanges(true);
     };
 
     const copyToAllDays = (sourceDay: string) => {
-        const sourceHours = hours.find(h => h.day_of_week === sourceDay);
+        const sourceHours = hours.find((h) => h.day_of_week === sourceDay);
         if (sourceHours) {
-            setHours(prev => prev.map(hour => ({
-                ...hour,
-                opening_time: sourceHours.opening_time,
-                closing_time: sourceHours.closing_time,
-                lunch_break_start: sourceHours.lunch_break_start,
-                lunch_break_end: sourceHours.lunch_break_end,
-                slot_duration: sourceHours.slot_duration
-            })));
+            setHours((prev) =>
+                prev.map((hour) => ({
+                    ...hour,
+                    opening_time: sourceHours.opening_time,
+                    closing_time: sourceHours.closing_time,
+                    lunch_break_start: sourceHours.lunch_break_start,
+                    lunch_break_end: sourceHours.lunch_break_end,
+                    slot_duration: sourceHours.slot_duration,
+                })),
+            );
             setHasChanges(true);
         }
     };
@@ -159,29 +163,31 @@ export default function BusinessHoursSettings({ businessHours, appointmentDurati
     };
 
     const getDayLabel = (dayKey: string) => {
-        return DAYS_OF_WEEK.find(d => d.key === dayKey)?.label || dayKey;
+        return DAYS_OF_WEEK.find((d) => d.key === dayKey)?.label || dayKey;
     };
 
     const getStats = () => {
-        const openDays = hours.filter(h => h.is_open).length;
+        const openDays = hours.filter((h) => h.is_open).length;
         const totalHours = hours.reduce((acc, hour) => {
             if (!hour.is_open || !hour.opening_time || !hour.closing_time) return acc;
             const opening = new Date(`1970-01-01T${hour.opening_time}:00`);
             const closing = new Date(`1970-01-01T${hour.closing_time}:00`);
             let diff = (closing.getTime() - opening.getTime()) / (1000 * 60 * 60);
-            
+
             if (hour.lunch_break_start && hour.lunch_break_end) {
                 const lunchStart = new Date(`1970-01-01T${hour.lunch_break_start}:00`);
                 const lunchEnd = new Date(`1970-01-01T${hour.lunch_break_end}:00`);
                 const lunchDiff = (lunchEnd.getTime() - lunchStart.getTime()) / (1000 * 60 * 60);
                 diff -= lunchDiff;
             }
-            
+
             return acc + diff;
         }, 0);
-        
-        const avgSlotDuration = hours.filter(h => h.is_open && h.slot_duration).reduce((acc, hour) => acc + (hour.slot_duration || 0), 0) / hours.filter(h => h.is_open).length;
-        
+
+        const avgSlotDuration =
+            hours.filter((h) => h.is_open && h.slot_duration).reduce((acc, hour) => acc + (hour.slot_duration || 0), 0) /
+            hours.filter((h) => h.is_open).length;
+
         return { openDays, totalHours: Math.round(totalHours), avgSlotDuration: Math.round(avgSlotDuration || 0) };
     };
 
@@ -190,27 +196,22 @@ export default function BusinessHoursSettings({ businessHours, appointmentDurati
     return (
         <AppLayout>
             <Head title="Horaires d'ouverture" />
-            
+
             <div className="space-y-6">
                 {/* Header */}
                 <div className="flex items-center justify-between">
                     <div>
                         <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">Horaires d'ouverture</h1>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
-                            Configurez vos heures de disponibilité pour les rendez-vous
-                        </p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">Configurez vos heures de disponibilité pour les rendez-vous</p>
                     </div>
                     <div className="flex space-x-2">
                         {hasChanges && (
                             <>
-                                <Button
-                                    variant="outline"
-                                    onClick={resetChanges}
-                                >
+                                <Button variant="outline" onClick={resetChanges}>
                                     <RotateCcw className="w-4 h-4 mr-2" />
                                     Annuler
                                 </Button>
-                                <Button 
+                                <Button
                                     onClick={saveAllChanges}
                                     disabled={processing}
                                     className="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700"
@@ -266,11 +267,11 @@ export default function BusinessHoursSettings({ businessHours, appointmentDurati
                             <div className="flex items-center justify-between">
                                 <div>
                                     <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Modifications</p>
-                                    <p className={cn("text-2xl font-bold", hasChanges ? "text-orange-600" : "text-gray-400")}>
+                                    <p className={cn('text-2xl font-bold', hasChanges ? 'text-orange-600' : 'text-gray-400')}>
                                         {hasChanges ? 'Oui' : 'Non'}
                                     </p>
                                 </div>
-                                <Save className={cn("w-5 h-5", hasChanges ? "text-orange-400" : "text-gray-400")} />
+                                <Save className={cn('w-5 h-5', hasChanges ? 'text-orange-400' : 'text-gray-400')} />
                             </div>
                         </CardContent>
                     </Card>
@@ -280,13 +281,11 @@ export default function BusinessHoursSettings({ businessHours, appointmentDurati
                 <Card>
                     <CardHeader>
                         <CardTitle>Configuration hebdomadaire</CardTitle>
-                        <CardDescription>
-                            Cliquez sur un jour pour modifier ses horaires en détail
-                        </CardDescription>
+                        <CardDescription>Cliquez sur un jour pour modifier ses horaires en détail</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         {hours.map((dayHours) => {
-                            const day = DAYS_OF_WEEK.find(d => d.key === dayHours.day_of_week);
+                            const day = DAYS_OF_WEEK.find((d) => d.key === dayHours.day_of_week);
                             if (!day) return null;
 
                             return (
@@ -295,24 +294,17 @@ export default function BusinessHoursSettings({ businessHours, appointmentDurati
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     className={cn(
-                                        "flex items-center justify-between p-4 border rounded-lg transition-all duration-200",
-                                        "hover:border-indigo-200 hover:bg-indigo-50 dark:hover:bg-indigo-950/20",
-                                        !dayHours.is_open && "opacity-60"
+                                        'flex items-center justify-between p-4 border rounded-lg transition-all duration-200',
+                                        'hover:border-indigo-200 hover:bg-indigo-50 dark:hover:bg-indigo-950/20',
+                                        !dayHours.is_open && 'opacity-60',
                                     )}
                                 >
                                     <div className="flex items-center space-x-4 flex-1">
                                         <div className="flex items-center space-x-3">
-                                            <Switch
-                                                checked={dayHours.is_open}
-                                                onCheckedChange={() => toggleDay(dayHours.day_of_week)}
-                                            />
+                                            <Switch checked={dayHours.is_open} onCheckedChange={() => toggleDay(dayHours.day_of_week)} />
                                             <div>
-                                                <h3 className="font-medium text-gray-900 dark:text-white">
-                                                    {day.label}
-                                                </h3>
-                                                <p className="text-sm text-gray-500 dark:text-gray-400">
-                                                    {day.shortLabel}
-                                                </p>
+                                                <h3 className="font-medium text-gray-900 dark:text-white">{day.label}</h3>
+                                                <p className="text-sm text-gray-500 dark:text-gray-400">{day.shortLabel}</p>
                                             </div>
                                         </div>
 
@@ -372,27 +364,17 @@ export default function BusinessHoursSettings({ businessHours, appointmentDurati
                 <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                     <DialogContent className="max-w-lg">
                         <DialogHeader>
-                            <DialogTitle>
-                                Horaires du {editingDay && getDayLabel(editingDay)}
-                            </DialogTitle>
-                            <DialogDescription>
-                                Configurez les horaires d'ouverture et les créneaux disponibles
-                            </DialogDescription>
+                            <DialogTitle>Horaires du {editingDay && getDayLabel(editingDay)}</DialogTitle>
+                            <DialogDescription>Configurez les horaires d'ouverture et les créneaux disponibles</DialogDescription>
                         </DialogHeader>
 
                         <form onSubmit={handleSubmit} className="space-y-6">
                             <div className="flex items-center justify-between">
                                 <div>
                                     <Label htmlFor="is_open">Ouvert ce jour</Label>
-                                    <p className="text-sm text-gray-600">
-                                        Désactiver si vous ne prenez pas de rendez-vous ce jour
-                                    </p>
+                                    <p className="text-sm text-gray-600">Désactiver si vous ne prenez pas de rendez-vous ce jour</p>
                                 </div>
-                                <Switch
-                                    id="is_open"
-                                    checked={data.is_open}
-                                    onCheckedChange={(checked) => setData('is_open', checked)}
-                                />
+                                <Switch id="is_open" checked={data.is_open} onCheckedChange={(checked) => setData('is_open', checked)} />
                             </div>
 
                             {data.is_open && (
@@ -407,9 +389,7 @@ export default function BusinessHoursSettings({ businessHours, appointmentDurati
                                                 onChange={(e) => setData('opening_time', e.target.value)}
                                                 className={errors.opening_time ? 'border-red-500' : ''}
                                             />
-                                            {errors.opening_time && (
-                                                <p className="text-sm text-red-600">{errors.opening_time}</p>
-                                            )}
+                                            {errors.opening_time && <p className="text-sm text-red-600">{errors.opening_time}</p>}
                                         </div>
 
                                         <div className="space-y-2">
@@ -421,15 +401,15 @@ export default function BusinessHoursSettings({ businessHours, appointmentDurati
                                                 onChange={(e) => setData('closing_time', e.target.value)}
                                                 className={errors.closing_time ? 'border-red-500' : ''}
                                             />
-                                            {errors.closing_time && (
-                                                <p className="text-sm text-red-600">{errors.closing_time}</p>
-                                            )}
+                                            {errors.closing_time && <p className="text-sm text-red-600">{errors.closing_time}</p>}
                                         </div>
                                     </div>
 
                                     <div className="grid grid-cols-2 gap-4">
                                         <div className="space-y-2">
-                                            <Label htmlFor="lunch_break_start">Début pause déjeuner <span className="text-gray-400">(optionnel)</span></Label>
+                                            <Label htmlFor="lunch_break_start">
+                                                Début pause déjeuner <span className="text-gray-400">(optionnel)</span>
+                                            </Label>
                                             <Input
                                                 id="lunch_break_start"
                                                 type="time"
@@ -439,7 +419,9 @@ export default function BusinessHoursSettings({ businessHours, appointmentDurati
                                         </div>
 
                                         <div className="space-y-2">
-                                            <Label htmlFor="lunch_break_end">Fin pause déjeuner <span className="text-gray-400">(optionnel)</span></Label>
+                                            <Label htmlFor="lunch_break_end">
+                                                Fin pause déjeuner <span className="text-gray-400">(optionnel)</span>
+                                            </Label>
                                             <Input
                                                 id="lunch_break_end"
                                                 type="time"
@@ -460,19 +442,13 @@ export default function BusinessHoursSettings({ businessHours, appointmentDurati
                                             value={data.slot_duration}
                                             onChange={(e) => setData('slot_duration', parseInt(e.target.value) || 30)}
                                         />
-                                        <p className="text-sm text-gray-600">
-                                            Durée minimum entre chaque rendez-vous possible
-                                        </p>
+                                        <p className="text-sm text-gray-600">Durée minimum entre chaque rendez-vous possible</p>
                                     </div>
                                 </>
                             )}
 
                             <DialogFooter>
-                                <Button
-                                    type="button"
-                                    variant="outline"
-                                    onClick={() => setIsDialogOpen(false)}
-                                >
+                                <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
                                     Annuler
                                 </Button>
                                 <Button
