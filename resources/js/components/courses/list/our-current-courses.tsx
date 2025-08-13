@@ -15,11 +15,16 @@ interface IOurCurrentCoursesProps {
     coursesData?: ICourseCategory[];
     coursesDataSlice?: number;
     showSidebar?: boolean;
+    showViewAllButton?: boolean;
 }
 
-const OurCurrentCourses = ({ coursesData, showSidebar = false, coursesDataSlice }: IOurCurrentCoursesProps) => {
+const OurCurrentCourses = ({ coursesData, showSidebar = false, coursesDataSlice, showViewAllButton }: IOurCurrentCoursesProps) => {
     const { t } = useTranslation();
-    const { auth, data } = usePage<SharedData>().props;
+    const { auth, data, url } = usePage<SharedData>().props;
+    
+    // Déterminer si on est sur la page d'accueil
+    const isHomePage = url === '/' || url === '/home';
+    const shouldShowButton = showViewAllButton !== undefined ? showViewAllButton : isHomePage;
 
     const [courses, setCourses] = useState<ICourseCategory[] | undefined>(undefined);
     const [filteredCourses, setFilteredCourses] = useState<ICourseCategory[] | undefined>(undefined);
@@ -127,7 +132,7 @@ const OurCurrentCourses = ({ coursesData, showSidebar = false, coursesDataSlice 
                 </div>
             </div>
 
-            {allCourses && allCourses.length > 0 && (
+            {allCourses && allCourses.length > 0 && shouldShowButton && (
                 <div className="mt-6 flex justify-center">
                     <BtnSecondary label="Voir toutes les formations" href={ROUTE_MAP.public.courses.list.link} />
                 </div>
