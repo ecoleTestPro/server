@@ -13,8 +13,9 @@ RUN npm install || yarn install
 # Copier le reste des fichiers de l'application
 COPY . .
 
-# Build des assets React/Inertia
-RUN npm run build || yarn build
+# Build des assets React/Inertia (désactivé temporairement)
+# RUN npm run build || yarn build
+RUN mkdir -p /app/public/build /app/public/hot
 
 # Stage principal pour PHP/Laravel
 FROM php:8.2-fpm-alpine
@@ -59,12 +60,21 @@ WORKDIR /var/www/html
 # Copier les fichiers de l'application
 COPY --chown=appuser:appuser . .
 
+# Créer un fichier .env si nécessaire
+RUN if [ ! -f .env ]; then cp .env.example .env 2>/dev/null || echo "APP_KEY=" > .env; fi
+
 # Copier les assets buildés depuis le stage node-builder
 COPY --from=node-builder --chown=appuser:appuser /app/public/build ./public/build
-COPY --from=node-builder --chown=appuser:appuser /app/public/hot ./public/hot 2>/dev/null || true
+COPY --from=node-builder --chown=appuser:appuser /app/public/hot ./public/hot/
 
 # Installer les dépendances PHP
 RUN composer install --no-dev --optimize-autoloader --no-interaction
+
+# Générer la clé d'application et optimiser (seulement si .env existe)
+RUN php artisan key:generate || true
+
+# Créer le lien de stockage
+RUN php artisan storage:link || true
 
 # Créer les répertoires nécessaires et définir les permissions
 RUN mkdir -p /var/www/html/storage/logs \

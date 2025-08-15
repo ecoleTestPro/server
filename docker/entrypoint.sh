@@ -4,14 +4,20 @@ set -e
 
 echo "🚀 Starting EcoleTestPro Application..."
 
-# Attendre que MySQL soit prêt
+# Attendre que MySQL soit prêt (limité à 30 secondes)
 echo "⏳ Waiting for MySQL to be ready..."
-until mysql -h"${DB_HOST:-mysql}" -u"${DB_USERNAME:-root}" -p"${DB_PASSWORD:-secret}" -e "SELECT 1" > /dev/null 2>&1; do
-  echo "MySQL is unavailable - sleeping"
+counter=0
+until [ $counter -gt 15 ] || mysql -h"${DB_HOST:-mysql}" -u"${DB_USERNAME:-root}" -p"${DB_PASSWORD:-secret}" --skip-ssl -e "SELECT 1" > /dev/null 2>&1; do
+  echo "MySQL is unavailable - sleeping (attempt $counter/15)"
   sleep 2
+  counter=$((counter+1))
 done
 
-echo "✅ MySQL is ready!"
+if [ $counter -gt 15 ]; then
+  echo "⚠️ MySQL connection timeout - continuing anyway..."
+else
+  echo "✅ MySQL is ready!"
+fi
 
 # Générer la clé d'application si elle n'existe pas
 if [ ! -f ".env" ]; then

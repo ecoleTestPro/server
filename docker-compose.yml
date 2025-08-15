@@ -24,7 +24,7 @@ services:
       - DB_HOST=mysql
       - DB_PORT=3306
       - DB_DATABASE=${DB_DATABASE:-ecoletestpro}
-      - DB_USERNAME=${DB_USERNAME:-root}
+      - DB_USERNAME=root
       - DB_PASSWORD=${DB_PASSWORD:-secret}
       - REDIS_HOST=redis
       - REDIS_PASSWORD=null
@@ -63,11 +63,11 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-secret}
       MYSQL_DATABASE: ${DB_DATABASE:-ecoletestpro}
-      MYSQL_USER: ${DB_USERNAME:-ecoletestpro_user}
+      MYSQL_USER: ecoletestpro_user
       MYSQL_PASSWORD: ${DB_PASSWORD:-secret}
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - /docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - ecoletestpro_network
     healthcheck:
@@ -128,7 +128,7 @@ services:
     working_dir: /var/www/html
     volumes:
       - ./:/var/www/html
-    command: sh -c "npm install && npm run dev"
+    command: sh -c "npm install --legacy-peer-deps && npm run dev"
     ports:
       - "3000:3000"
       - "3001:3001"

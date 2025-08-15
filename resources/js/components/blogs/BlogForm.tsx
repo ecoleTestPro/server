@@ -141,7 +141,7 @@ export const BlogForm = ({ blog = null, categories = [], onCancel }: BlogFormPro
                                 data={category_list()}
                                 selectLabel={t('courses.category', 'Catégorie')}
                                 processing={processing}
-                                onValueChange={(value) => setData('blog_category_id', parseInt(value) ?? 0))
+                                onValueChange={(value) => setData('blog_category_id', parseInt(value) ?? 0)}
                                 defaultValue={data.blog_category_id ? String(data.blog_category_id) : undefined}
                                 required
                             />
