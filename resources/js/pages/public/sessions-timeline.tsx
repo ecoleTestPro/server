@@ -20,6 +20,7 @@ const SessionsTimeline = ({ sessions }: SessionsTimelineProps) => {
     const [selectedSession, setSelectedSession] = useState<ICourseSession | null>(null);
     const [isInscriptionDialogOpen, setIsInscriptionDialogOpen] = useState(false);
     const [activeDate, setActiveDate] = useState<string | null>(null);
+    const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
     // Refs pour la navigation par dates
     const dateRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
@@ -172,10 +173,25 @@ const SessionsTimeline = ({ sessions }: SessionsTimelineProps) => {
 
                 {/* Content Layout */}
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                    <div className="flex gap-6">
+                    <div className="flex flex-col lg:flex-row gap-6">
+                        {/* Filtres Mobile Toggle */}
+                        <div className="lg:hidden">
+                            <Button
+                                onClick={() => setMobileFiltersOpen(!mobileFiltersOpen)}
+                                variant="outline"
+                                className="w-full mb-4 flex items-center justify-between"
+                            >
+                                <span className="flex items-center gap-2">
+                                    <Filter className="w-4 h-4" />
+                                    Filtres et recherche
+                                </span>
+                                <ChevronDown className={`w-4 h-4 transition-transform ${mobileFiltersOpen ? 'rotate-180' : ''}`} />
+                            </Button>
+                        </div>
+
                         {/* Sticky Sidebar */}
-                        <div className="w-80 flex-shrink-0">
-                            <div className="sticky top-10">
+                        <div className={`w-full lg:w-80 lg:flex-shrink-0 ${mobileFiltersOpen ? 'block' : 'hidden lg:block'}`}>
+                            <div className="lg:sticky lg:top-10">
                                 <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border dark:border-gray-700">
                                     <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
                                         <Filter className="w-5 h-5 text-emerald-600" />
@@ -200,7 +216,7 @@ const SessionsTimeline = ({ sessions }: SessionsTimelineProps) => {
                                     {/* Filter buttons */}
                                     <div className="mb-6">
                                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Période</label>
-                                        <div className="space-y-2">
+                                        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-2">
                                             {[
                                                 { key: 'all', label: 'Toutes les sessions' },
                                                 { key: 'upcoming', label: 'Sessions à venir' },
@@ -209,15 +225,18 @@ const SessionsTimeline = ({ sessions }: SessionsTimelineProps) => {
                                                 <Button
                                                     key={filter.key}
                                                     variant={selectedFilter === filter.key ? 'default' : 'outline'}
-                                                    onClick={() => setSelectedFilter(filter.key as any)}
-                                                    className={`w-full justify-start h-11 ${
+                                                    onClick={() => {
+                                                        setSelectedFilter(filter.key as any);
+                                                        setMobileFiltersOpen(false);
+                                                    }}
+                                                    className={`w-full justify-start h-11 text-sm ${
                                                         selectedFilter === filter.key
                                                             ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
                                                             : 'hover:bg-emerald-50 dark:hover:bg-gray-700 dark:text-gray-300 dark:border-gray-600'
                                                     }`}
                                                 >
                                                     <Filter className="w-4 h-4 mr-2" />
-                                                    {filter.label}
+                                                    <span className="truncate">{filter.label}</span>
                                                 </Button>
                                             ))}
                                         </div>
@@ -226,22 +245,22 @@ const SessionsTimeline = ({ sessions }: SessionsTimelineProps) => {
                                     {/* Stats */}
                                     <div className="space-y-4">
                                         <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Statistiques</h3>
-                                        <div className="space-y-3">
-                                            <div className="p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg border dark:border-emerald-800">
-                                                <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
+                                        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-3">
+                                            <div className="p-3 sm:p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg border dark:border-emerald-800">
+                                                <div className="text-xl sm:text-2xl font-bold text-emerald-600 dark:text-emerald-400">
                                                     {filteredSessions.filter((s) => isUpcoming(s.start_date)).length}
                                                 </div>
-                                                <div className="text-sm text-emerald-700 dark:text-emerald-300">Sessions à venir</div>
+                                                <div className="text-xs sm:text-sm text-emerald-700 dark:text-emerald-300">Sessions à venir</div>
                                             </div>
-                                            <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border dark:border-blue-800">
-                                                <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{filteredSessions.length}</div>
-                                                <div className="text-sm text-blue-700 dark:text-blue-300">Total sessions</div>
+                                            <div className="p-3 sm:p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border dark:border-blue-800">
+                                                <div className="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400">{filteredSessions.length}</div>
+                                                <div className="text-xs sm:text-sm text-blue-700 dark:text-blue-300">Total sessions</div>
                                             </div>
-                                            <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg border dark:border-purple-800">
-                                                <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
+                                            <div className="p-3 sm:p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg border dark:border-purple-800">
+                                                <div className="text-xl sm:text-2xl font-bold text-purple-600 dark:text-purple-400">
                                                     {new Set(filteredSessions.map((s) => s.course?.id)).size}
                                                 </div>
-                                                <div className="text-sm text-purple-700 dark:text-purple-300">Formations distinctes</div>
+                                                <div className="text-xs sm:text-sm text-purple-700 dark:text-purple-300">Formations distinctes</div>
                                             </div>
                                         </div>
                                     </div>
@@ -254,10 +273,10 @@ const SessionsTimeline = ({ sessions }: SessionsTimelineProps) => {
                             {/* Timeline */}
                             <div className="relative">
                                 {/* Timeline line */}
-                                <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-emerald-500 to-teal-500" />
+                                <div className="absolute left-4 sm:left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-emerald-500 to-teal-500" />
 
                                 {/* Timeline content */}
-                                <div className="space-y-12">
+                                <div className="space-y-8 sm:space-y-12">
                                     {groupedSessions.length === 0 ? (
                                         <div className="text-center py-12">
                                             <div className="w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -270,19 +289,25 @@ const SessionsTimeline = ({ sessions }: SessionsTimelineProps) => {
                                         </div>
                                     ) : (
                                         groupedSessions.map((group) => (
-                                            <div key={group.date} className="relative" ref={(el) => (dateRefs.current[group.date] = el)}>
+                                            <div 
+                                                key={group.date} 
+                                                className="relative" 
+                                                ref={(el) => {
+                                                    dateRefs.current[group.date] = el;
+                                                }}
+                                            >
                                                 {/* Date header */}
                                                 <div className="flex items-center mb-6">
-                                                    <div className="absolute left-6 w-4 h-4 bg-emerald-500 rounded-full border-4 border-white dark:border-gray-900 shadow-md" />
-                                                    <div className="ml-16 bg-white dark:bg-gray-800 rounded-xl shadow-lg px-6 py-3 border dark:border-gray-700">
-                                                        <h2 className="text-lg font-semibold text-gray-900 dark:text-white capitalize">
+                                                    <div className="absolute left-2 sm:left-6 w-4 h-4 bg-emerald-500 rounded-full border-4 border-white dark:border-gray-900 shadow-md" />
+                                                    <div className="ml-8 sm:ml-16 bg-white dark:bg-gray-800 rounded-xl shadow-lg px-4 sm:px-6 py-3 border dark:border-gray-700">
+                                                        <h2 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white capitalize">
                                                             {formatDate(group.date)}
                                                         </h2>
                                                     </div>
                                                 </div>
 
                                                 {/* Sessions for this date */}
-                                                <div className="ml-16 space-y-4">
+                                                <div className="ml-8 sm:ml-16 space-y-4">
                                                     {group.sessions.map((session) => (
                                                         <div
                                                             key={session.id}
@@ -292,17 +317,17 @@ const SessionsTimeline = ({ sessions }: SessionsTimelineProps) => {
                                                                     : 'border-l-4 border-gray-300 dark:border-gray-600'
                                                             }`}
                                                         >
-                                                            <div className="p-6">
+                                                            <div className="p-4 sm:p-6">
                                                                 <div className="mb-4">
                                                                     <div className="">
-                                                                        <div className="flex items-center justify-between gap-3 mb-2">
-                                                                            <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+                                                                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3 mb-3">
+                                                                            <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
                                                                                 {session.course?.title || 'Formation'}
                                                                             </h3>
                                                                             {getStatusBadge(session)}
                                                                         </div>
 
-                                                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600 dark:text-gray-300">
+                                                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-sm text-gray-600 dark:text-gray-300">
                                                                             {false && (
                                                                                 <div className="flex items-center gap-2">
                                                                                     <Clock className="w-4 h-4 text-emerald-500" />
@@ -326,14 +351,14 @@ const SessionsTimeline = ({ sessions }: SessionsTimelineProps) => {
                                                                     </div>
 
                                                                     {session.course?.excerpt && (
-                                                                        <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-5">
+                                                                        <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-4 sm:mb-5">
                                                                             {session.course.excerpt}
                                                                         </p>
                                                                     )}
 
                                                                     {isUpcoming(session.start_date) && (
                                                                         <Button
-                                                                            className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                                                                            className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white"
                                                                             onClick={() => handleInscriptionClick(session)}
                                                                         >
                                                                             <span>S'inscrire</span>
@@ -353,8 +378,8 @@ const SessionsTimeline = ({ sessions }: SessionsTimelineProps) => {
                         </div>
 
                         {/* Right Navigation Sidebar */}
-                        <div className="w-56 flex-shrink-0">
-                            <div className="sticky top-10">
+                        <div className="w-full lg:w-56 lg:flex-shrink-0 order-first lg:order-last">
+                            <div className="lg:sticky lg:top-10">
                                 <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-4 border dark:border-gray-700">
                                     <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                                         <Calendar className="w-4 h-4 text-emerald-600" />
@@ -362,57 +387,95 @@ const SessionsTimeline = ({ sessions }: SessionsTimelineProps) => {
                                     </h3>
 
                                     {groupedSessions.length > 0 ? (
-                                        <div className="space-y-2 overflow-y-auto max-h-[calc(100vh-300px)]">
-                                            {groupedSessions.map((group) => {
-                                                const isActive = activeDate === group.date;
-                                                const sessionsCount = group.sessions.length;
-                                                const upcomingSessions = group.sessions.filter((s) => isUpcoming(s.start_date)).length;
+                                        <div className="lg:space-y-2 lg:overflow-y-auto lg:max-h-[calc(100vh-300px)]">
+                                            {/* Mobile: horizontal scroll */}
+                                            <div className="flex lg:hidden gap-2 overflow-x-auto pb-2 -mx-4 px-4">
+                                                {groupedSessions.map((group) => {
+                                                    const isActive = activeDate === group.date;
+                                                    const sessionsCount = group.sessions.length;
+                                                    const upcomingSessions = group.sessions.filter((s) => isUpcoming(s.start_date)).length;
 
-                                                return (
-                                                    <button
-                                                        key={group.date}
-                                                        onClick={() => scrollToDate(group.date)}
-                                                        className={`w-full text-left p-3 rounded-lg transition-all duration-200 border ${
-                                                            isActive
-                                                                ? 'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-800 shadow-sm'
-                                                                : 'bg-gray-50 dark:bg-gray-700/50 border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700'
-                                                        }`}
-                                                    >
-                                                        <div className="flex items-center justify-between mb-1">
-                                                            <div
-                                                                className={`text-sm font-medium ${
-                                                                    isActive
-                                                                        ? 'text-emerald-700 dark:text-emerald-300'
-                                                                        : 'text-gray-900 dark:text-white'
-                                                                }`}
-                                                            >
-                                                                {formatDateFull(group.date)}
+                                                    return (
+                                                        <button
+                                                            key={group.date}
+                                                            onClick={() => scrollToDate(group.date)}
+                                                            className={`flex-shrink-0 w-24 p-2 rounded-lg transition-all duration-200 border text-center ${
+                                                                isActive
+                                                                    ? 'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-800 shadow-sm'
+                                                                    : 'bg-gray-50 dark:bg-gray-700/50 border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700'
+                                                            }`}
+                                                        >
+                                                            <div className={`text-xs font-medium mb-1 ${
+                                                                isActive
+                                                                    ? 'text-emerald-700 dark:text-emerald-300'
+                                                                    : 'text-gray-900 dark:text-white'
+                                                            }`}>
+                                                                {formatDateShort(group.date)}
                                                             </div>
-                                                            <ChevronDown
-                                                                className={`w-4 h-4 transition-transform ${
-                                                                    isActive ? 'text-emerald-600 rotate-180' : 'text-gray-400'
-                                                                }`}
-                                                            />
-                                                        </div>
-                                                        <div className="flex items-center justify-between text-xs">
-                                                            <span
-                                                                className={`${
-                                                                    isActive
-                                                                        ? 'text-emerald-600 dark:text-emerald-400'
-                                                                        : 'text-gray-500 dark:text-gray-400'
-                                                                }`}
-                                                            >
-                                                                {sessionsCount} session{sessionsCount > 1 ? 's' : ''}
-                                                            </span>
+                                                            <div className="text-xs text-gray-500 dark:text-gray-400">
+                                                                {sessionsCount}
+                                                            </div>
                                                             {upcomingSessions > 0 && (
-                                                                <span className="px-2 py-0.5 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full text-xs font-medium">
-                                                                    {upcomingSessions} à venir
-                                                                </span>
+                                                                <div className="w-2 h-2 bg-blue-500 rounded-full mx-auto mt-1"></div>
                                                             )}
-                                                        </div>
-                                                    </button>
-                                                );
-                                            })}
+                                                        </button>
+                                                    );
+                                                })}
+                                            </div>
+
+                                            {/* Desktop: vertical list */}
+                                            <div className="hidden lg:block space-y-2">
+                                                {groupedSessions.map((group) => {
+                                                    const isActive = activeDate === group.date;
+                                                    const sessionsCount = group.sessions.length;
+                                                    const upcomingSessions = group.sessions.filter((s) => isUpcoming(s.start_date)).length;
+
+                                                    return (
+                                                        <button
+                                                            key={group.date}
+                                                            onClick={() => scrollToDate(group.date)}
+                                                            className={`w-full text-left p-3 rounded-lg transition-all duration-200 border ${
+                                                                isActive
+                                                                    ? 'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-800 shadow-sm'
+                                                                    : 'bg-gray-50 dark:bg-gray-700/50 border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700'
+                                                            }`}
+                                                        >
+                                                            <div className="flex items-center justify-between mb-1">
+                                                                <div
+                                                                    className={`text-sm font-medium ${
+                                                                        isActive
+                                                                            ? 'text-emerald-700 dark:text-emerald-300'
+                                                                            : 'text-gray-900 dark:text-white'
+                                                                    }`}
+                                                                >
+                                                                    {formatDateFull(group.date)}
+                                                                </div>
+                                                                <ChevronDown
+                                                                    className={`w-4 h-4 transition-transform ${
+                                                                        isActive ? 'text-emerald-600 rotate-180' : 'text-gray-400'
+                                                                    }`}
+                                                                />
+                                                            </div>
+                                                            <div className="flex items-center justify-between text-xs">
+                                                                <span
+                                                                    className={`${
+                                                                        isActive
+                                                                            ? 'text-emerald-600 dark:text-emerald-400'
+                                                                            : 'text-gray-500 dark:text-gray-400'
+                                                                    }`}
+                                                                >
+                                                                    {sessionsCount} session{sessionsCount > 1 ? 's' : ''}
+                                                                </span>
+                                                                {upcomingSessions > 0 && (
+                                                                    <span className="px-2 py-0.5 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full text-xs font-medium">
+                                                                        {upcomingSessions} à venir
+                                                                    </span>
+                                                                )}
+                                                            </div>
+                                                        </button>
+                                                    );
+                                                })}
+                                            </div>
                                         </div>
                                     ) : (
                                         <div className="text-center py-6">

@@ -1,13 +1,13 @@
 'use client';
 
+import AppLogo from '@/components/app-logo';
+import AppearanceToggleDropdown from '@/components/appearance-dropdown';
 import { IMainMenuItem, MenuChildItem } from '@/types/header.type';
 import { Link, router } from '@inertiajs/react';
 import { ChevronDownIcon, ChevronRightIcon, XIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import AppLogo from '@/components/app-logo';
 import HeaderUserAction from './headerUserAction';
-import AppearanceToggleDropdown from '@/components/appearance-dropdown';
 
 interface HeaderMobileProps {
     menu: IMainMenuItem[];
@@ -66,9 +66,9 @@ export default function HeaderMobile({ menu, menuRight, isOpen, onClose, classNa
     }, [isOpen, onClose]);
 
     const toggleExpanded = (itemId: string) => {
-        setExpandedItems(prev => ({
+        setExpandedItems((prev) => ({
             ...prev,
-            [itemId]: !prev[itemId]
+            [itemId]: !prev[itemId],
         }));
     };
 
@@ -101,18 +101,16 @@ export default function HeaderMobile({ menu, menuRight, isOpen, onClose, classNa
                                 )}
                             </button>
                         </div>
-                        
+
                         {isExpanded && item.children && (
                             <div className="bg-gray-50 dark:bg-gray-800">
-                                {item.children.items.map((childItem) => 
-                                    renderChildMenuItem(childItem, level + 1)
-                                )}
+                                {item.children.items.map((childItem) => renderChildMenuItem(childItem, level + 1))}
                             </div>
                         )}
                     </div>
                 ) : (
                     <Link
-                        href={item.href??''}
+                        href={item.href ?? ''}
                         onClick={onClose}
                         className="block px-4 py-3 text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-800"
                         style={{ paddingLeft: paddingLeft + 16 }}
@@ -141,13 +139,7 @@ export default function HeaderMobile({ menu, menuRight, isOpen, onClose, classNa
                                 style={{ paddingLeft: paddingLeft + 16 }}
                             >
                                 <div className="flex items-center">
-                                    {item.image && (
-                                        <img 
-                                            src={item.image} 
-                                            alt={item.label}
-                                            className="mr-3 h-8 w-8 rounded object-cover"
-                                        />
-                                    )}
+                                    {item.image && <img src={item.image} alt={item.label} className="mr-3 h-8 w-8 rounded object-cover" />}
                                     <div>
                                         <span className="block text-sm font-medium">{item.label}</span>
                                         {item.description && (
@@ -169,12 +161,10 @@ export default function HeaderMobile({ menu, menuRight, isOpen, onClose, classNa
                                 )}
                             </button>
                         </div>
-                        
+
                         {isExpanded && item.subItems && (
                             <div className="bg-gray-100 dark:bg-gray-700">
-                                {item.subItems.map((subItem) => 
-                                    renderChildMenuItem(subItem, level + 1)
-                                )}
+                                {item.subItems.map((subItem) => renderChildMenuItem(subItem, level + 1))}
                             </div>
                         )}
                     </div>
@@ -186,19 +176,11 @@ export default function HeaderMobile({ menu, menuRight, isOpen, onClose, classNa
                         style={{ paddingLeft: paddingLeft + 16 }}
                     >
                         <div className="flex items-center">
-                            {item.image && (
-                                <img 
-                                    src={item.image} 
-                                    alt={item.label}
-                                    className="mr-3 h-8 w-8 rounded object-cover"
-                                />
-                            )}
+                            {item.image && <img src={item.image} alt={item.label} className="mr-3 h-8 w-8 rounded object-cover" />}
                             <div>
                                 <span className="block text-sm font-medium">{item.label}</span>
                                 {item.description && (
-                                    <span className="block text-xs text-gray-500 dark:text-gray-400">
-                                        {item.description.substring(0, 60)}...
-                                    </span>
+                                    <span className="block text-xs text-gray-500 dark:text-gray-400">{item.description.substring(0, 60)}...</span>
                                 )}
                             </div>
                         </div>
@@ -211,23 +193,23 @@ export default function HeaderMobile({ menu, menuRight, isOpen, onClose, classNa
     return (
         <div className={`fixed inset-0 z-50 ${className} ${isOpen ? 'block' : 'hidden'}`}>
             {/* Overlay */}
-            <div 
-                className={`fixed inset-0 bg-black transition-opacity duration-300 ${
-                    isOpen ? 'bg-opacity-50' : 'bg-opacity-0'
-                }`}
+            <div
+                className={`fixed inset-0 bg-black transition-opacity duration-300 ${isOpen ? 'bg-opacity-50' : 'bg-opacity-0'}`}
                 onClick={onClose}
             />
-            
+
             {/* Mobile Menu Sidebar */}
-            <div className={`fixed left-0 top-0 h-full w-full max-w-sm bg-white shadow-xl dark:bg-gray-900 transform transition-transform duration-300 ease-in-out ${
-                isOpen ? 'translate-x-0' : '-translate-x-full'
-            }`}>
+            <div
+                className={`fixed left-0 top-0 h-full w-full max-w-sm bg-white shadow-xl dark:bg-gray-900 transform transition-transform duration-300 ease-in-out ${
+                    isOpen ? 'translate-x-0' : '-translate-x-full'
+                }`}
+            >
                 {/* Header du menu mobile */}
                 <div className="flex items-center justify-between border-b border-gray-200 px-4 py-3 dark:border-gray-700">
                     <Link href="/" onClick={onClose} className="flex items-center">
                         <AppLogo width={120} height={48} className="" />
                     </Link>
-                    
+
                     <button
                         onClick={onClose}
                         className="rounded-lg p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200"
@@ -237,14 +219,15 @@ export default function HeaderMobile({ menu, menuRight, isOpen, onClose, classNa
                     </button>
                 </div>
 
-
                 {/* Actions utilisateur mobile */}
-                <div className="border-b border-gray-200 px-4 py-3 dark:border-gray-700">
-                    <div className="flex items-center justify-between">
-                        <HeaderUserAction />
-                        <AppearanceToggleDropdown />
+                {false && (
+                    <div className="border-b border-gray-200 px-4 py-3 dark:border-gray-700">
+                        <div className="flex items-center justify-between">
+                            <HeaderUserAction />
+                            <AppearanceToggleDropdown />
+                        </div>
                     </div>
-                </div>
+                )}
 
                 {/* Menu de navigation */}
                 <div className="h-full overflow-y-auto pb-20">
