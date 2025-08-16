@@ -172,20 +172,37 @@ const SessionsTimeline = ({ sessions }: SessionsTimelineProps) => {
                 <Hero breadcrumbItems={breadcrumbItems} title={pageTitle} />
 
                 {/* Content Layout */}
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
                     <div className="flex flex-col lg:flex-row gap-6">
                         {/* Filtres Mobile Toggle */}
-                        <div className="lg:hidden">
+                        <div className="lg:hidden mb-6">
                             <Button
                                 onClick={() => setMobileFiltersOpen(!mobileFiltersOpen)}
                                 variant="outline"
-                                className="w-full mb-4 flex items-center justify-between"
+                                className={`w-full flex items-center justify-between p-4 rounded-2xl border-2 transition-all duration-300 ${
+                                    mobileFiltersOpen 
+                                        ? 'border-emerald-200 bg-emerald-50 dark:border-emerald-700 dark:bg-emerald-900/20' 
+                                        : 'border-gray-200 hover:border-emerald-200 dark:border-gray-700 dark:hover:border-emerald-700'
+                                }`}
                             >
-                                <span className="flex items-center gap-2">
-                                    <Filter className="w-4 h-4" />
-                                    Filtres et recherche
+                                <span className="flex items-center gap-3">
+                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                                        mobileFiltersOpen 
+                                            ? 'bg-emerald-500 text-white' 
+                                            : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300'
+                                    }`}>
+                                        <Filter className="w-5 h-5" />
+                                    </div>
+                                    <div className="text-left">
+                                        <div className="font-semibold text-gray-900 dark:text-white">Filtres & Recherche</div>
+                                        <div className="text-sm text-gray-500 dark:text-gray-400">
+                                            {filteredSessions.length} session{filteredSessions.length > 1 ? 's' : ''} trouvée{filteredSessions.length > 1 ? 's' : ''}
+                                        </div>
+                                    </div>
                                 </span>
-                                <ChevronDown className={`w-4 h-4 transition-transform ${mobileFiltersOpen ? 'rotate-180' : ''}`} />
+                                <ChevronDown className={`w-5 h-5 transition-transform duration-300 ${
+                                    mobileFiltersOpen ? 'rotate-180 text-emerald-600' : 'text-gray-400'
+                                }`} />
                             </Button>
                         </div>
 
@@ -272,11 +289,11 @@ const SessionsTimeline = ({ sessions }: SessionsTimelineProps) => {
                         <div className="flex-1 min-w-0">
                             {/* Timeline */}
                             <div className="relative">
-                                {/* Timeline line */}
-                                <div className="absolute left-4 sm:left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-emerald-500 to-teal-500" />
+                                {/* Timeline line - cachée sur mobile pour un design plus épuré */}
+                                <div className="hidden sm:block absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-emerald-500 to-teal-500" />
 
                                 {/* Timeline content */}
-                                <div className="space-y-8 sm:space-y-12">
+                                <div className="space-y-4 sm:space-y-6 lg:space-y-12">
                                     {groupedSessions.length === 0 ? (
                                         <div className="text-center py-12">
                                             <div className="w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -297,73 +314,111 @@ const SessionsTimeline = ({ sessions }: SessionsTimelineProps) => {
                                                 }}
                                             >
                                                 {/* Date header */}
-                                                <div className="flex items-center mb-6">
-                                                    <div className="absolute left-2 sm:left-6 w-4 h-4 bg-emerald-500 rounded-full border-4 border-white dark:border-gray-900 shadow-md" />
-                                                    <div className="ml-8 sm:ml-16 bg-white dark:bg-gray-800 rounded-xl shadow-lg px-4 sm:px-6 py-3 border dark:border-gray-700">
-                                                        <h2 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white capitalize">
-                                                            {formatDate(group.date)}
-                                                        </h2>
+                                                <div className="mb-4 sm:mb-6">
+                                                    {/* Mobile: Design épuré sans timeline */}
+                                                    <div className="sm:hidden">
+                                                        <div className="bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-2xl p-4 border-l-4 border-emerald-500">
+                                                            <div className="flex items-center justify-between">
+                                                                <div>
+                                                                    <h2 className="text-lg font-bold text-gray-900 dark:text-white capitalize">
+                                                                        {formatDate(group.date)}
+                                                                    </h2>
+                                                                    <p className="text-sm text-emerald-600 dark:text-emerald-400 font-medium">
+                                                                        {group.sessions.length} session{group.sessions.length > 1 ? 's' : ''} programmée{group.sessions.length > 1 ? 's' : ''}
+                                                                    </p>
+                                                                </div>
+                                                                <div className="w-12 h-12 bg-emerald-500 rounded-full flex items-center justify-center">
+                                                                    <Calendar className="w-6 h-6 text-white" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Desktop: Design avec timeline */}
+                                                    <div className="hidden sm:flex items-center">
+                                                        <div className="absolute left-6 w-4 h-4 bg-emerald-500 rounded-full border-4 border-white dark:border-gray-900 shadow-md" />
+                                                        <div className="ml-16 bg-white dark:bg-gray-800 rounded-xl shadow-lg px-6 py-3 border dark:border-gray-700">
+                                                            <h2 className="text-lg font-semibold text-gray-900 dark:text-white capitalize">
+                                                                {formatDate(group.date)}
+                                                            </h2>
+                                                        </div>
                                                     </div>
                                                 </div>
 
                                                 {/* Sessions for this date */}
-                                                <div className="ml-8 sm:ml-16 space-y-4">
+                                                <div className="sm:ml-16 space-y-3 sm:space-y-4">
                                                     {group.sessions.map((session) => (
                                                         <div
                                                             key={session.id}
-                                                            className={`bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 overflow-hidden border dark:border-gray-700 ${
+                                                            className={`group bg-white dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border-0 transform hover:-translate-y-1 ${
                                                                 isUpcoming(session.start_date)
-                                                                    ? 'border-l-4 border-emerald-500'
-                                                                    : 'border-l-4 border-gray-300 dark:border-gray-600'
+                                                                    ? 'ring-2 ring-emerald-100 dark:ring-emerald-900/30'
+                                                                    : 'ring-1 ring-gray-200 dark:ring-gray-700'
                                                             }`}
                                                         >
-                                                            <div className="p-4 sm:p-6">
-                                                                <div className="mb-4">
-                                                                    <div className="">
-                                                                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3 mb-3">
-                                                                            <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
-                                                                                {session.course?.title || 'Formation'}
-                                                                            </h3>
-                                                                            {getStatusBadge(session)}
-                                                                        </div>
-
-                                                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-sm text-gray-600 dark:text-gray-300">
-                                                                            {false && (
-                                                                                <div className="flex items-center gap-2">
-                                                                                    <Clock className="w-4 h-4 text-emerald-500" />
-                                                                                    <span>
-                                                                                        {formatTime(session.start_date)}
-                                                                                        {session.end_date && ` - ${formatTime(session.end_date)}`}
-                                                                                    </span>
-                                                                                </div>
-                                                                            )}
-
-                                                                            <div className="flex items-center gap-2">
-                                                                                <MapPin className="w-4 h-4 text-blue-500" />
-                                                                                <span>{session.location}</span>
+                                                            {/* Badge de statut en overlay pour mobile */}
+                                                            <div className="relative">
+                                                                <div className={`absolute top-4 right-4 z-10 ${isUpcoming(session.start_date) ? 'block' : 'block'}`}>
+                                                                    {getStatusBadge(session)}
+                                                                </div>
+                                                                
+                                                                {/* Barre colorée en haut pour mobile */}
+                                                                <div className={`h-1 w-full ${
+                                                                    isUpcoming(session.start_date)
+                                                                        ? 'bg-gradient-to-r from-emerald-500 to-teal-500'
+                                                                        : 'bg-gradient-to-r from-gray-300 to-gray-400 dark:from-gray-600 dark:to-gray-700'
+                                                                }`} />
+                                                                
+                                                                <div className="p-4 sm:p-6">
+                                                                    <div className="mb-4">
+                                                                        <div className="">
+                                                                            <div className="mb-3">
+                                                                                <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white pr-20 sm:pr-0 leading-tight">
+                                                                                    {session.course?.title || 'Formation'}
+                                                                                </h3>
                                                                             </div>
 
-                                                                            <div className="flex items-center gap-2">
-                                                                                <BookOpen className="w-4 h-4 text-orange-500" />
-                                                                                <span>{session.course?.duration || 'N/A'} jours</span>
+                                                                            {/* Informations de la session avec design moderne */}
+                                                                            <div className="space-y-3 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
+                                                                                <div className="flex items-center gap-3 p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                                                                                    <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                                                                        <MapPin className="w-4 h-4 text-white" />
+                                                                                    </div>
+                                                                                    <div className="min-w-0">
+                                                                                        <p className="text-xs text-blue-600 dark:text-blue-400 font-medium">Lieu</p>
+                                                                                        <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">{session.location}</p>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                                <div className="flex items-center gap-3 p-2 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
+                                                                                    <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                                                                        <BookOpen className="w-4 h-4 text-white" />
+                                                                                    </div>
+                                                                                    <div className="min-w-0">
+                                                                                        <p className="text-xs text-orange-600 dark:text-orange-400 font-medium">Durée</p>
+                                                                                        <p className="text-sm font-semibold text-gray-900 dark:text-white">{session.course?.duration || 'N/A'} jours</p>
+                                                                                    </div>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
 
                                                                     {session.course?.excerpt && (
-                                                                        <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-4 sm:mb-5">
+                                                                        <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-4 sm:mb-5 bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg italic">
                                                                             {session.course.excerpt}
                                                                         </p>
                                                                     )}
 
                                                                     {isUpcoming(session.start_date) && (
-                                                                        <Button
-                                                                            className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white"
-                                                                            onClick={() => handleInscriptionClick(session)}
-                                                                        >
-                                                                            <span>S'inscrire</span>
-                                                                            <ChevronRight className="w-4 h-4" />
-                                                                        </Button>
+                                                                        <div className="pt-2 border-t border-gray-100 dark:border-gray-700">
+                                                                            <Button
+                                                                                className="w-full group bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-semibold py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+                                                                                onClick={() => handleInscriptionClick(session)}
+                                                                            >
+                                                                                <span>S'inscrire à cette session</span>
+                                                                                <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                                                                            </Button>
+                                                                        </div>
                                                                     )}
                                                                 </div>
                                                             </div>
@@ -388,8 +443,8 @@ const SessionsTimeline = ({ sessions }: SessionsTimelineProps) => {
 
                                     {groupedSessions.length > 0 ? (
                                         <div className="lg:space-y-2 lg:overflow-y-auto lg:max-h-[calc(100vh-300px)]">
-                                            {/* Mobile: horizontal scroll */}
-                                            <div className="flex lg:hidden gap-2 overflow-x-auto pb-2 -mx-4 px-4">
+                                            {/* Mobile: horizontal scroll amélioré */}
+                                            <div className="flex lg:hidden gap-3 overflow-x-auto pb-3 -mx-4 px-4 snap-x">
                                                 {groupedSessions.map((group) => {
                                                     const isActive = activeDate === group.date;
                                                     const sessionsCount = group.sessions.length;
@@ -399,24 +454,34 @@ const SessionsTimeline = ({ sessions }: SessionsTimelineProps) => {
                                                         <button
                                                             key={group.date}
                                                             onClick={() => scrollToDate(group.date)}
-                                                            className={`flex-shrink-0 w-24 p-2 rounded-lg transition-all duration-200 border text-center ${
+                                                            className={`flex-shrink-0 w-20 h-20 p-2 rounded-2xl transition-all duration-300 text-center snap-center transform ${
                                                                 isActive
-                                                                    ? 'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-800 shadow-sm'
-                                                                    : 'bg-gray-50 dark:bg-gray-700/50 border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700'
+                                                                    ? 'bg-gradient-to-br from-emerald-500 to-teal-500 text-white shadow-lg scale-105'
+                                                                    : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 shadow-md hover:shadow-lg hover:scale-105 border border-gray-200 dark:border-gray-700'
                                                             }`}
                                                         >
-                                                            <div className={`text-xs font-medium mb-1 ${
-                                                                isActive
-                                                                    ? 'text-emerald-700 dark:text-emerald-300'
-                                                                    : 'text-gray-900 dark:text-white'
+                                                            <div className={`text-xs font-bold mb-1 ${
+                                                                isActive ? 'text-white' : 'text-gray-700 dark:text-white'
                                                             }`}>
                                                                 {formatDateShort(group.date)}
                                                             </div>
-                                                            <div className="text-xs text-gray-500 dark:text-gray-400">
+                                                            
+                                                            <div className={`text-lg font-bold ${
+                                                                isActive ? 'text-white' : 'text-emerald-600 dark:text-emerald-400'
+                                                            }`}>
                                                                 {sessionsCount}
                                                             </div>
+                                                            
+                                                            <div className={`text-xs ${
+                                                                isActive ? 'text-emerald-100' : 'text-gray-500 dark:text-gray-400'
+                                                            }`}>
+                                                                session{sessionsCount > 1 ? 's' : ''}
+                                                            </div>
+                                                            
                                                             {upcomingSessions > 0 && (
-                                                                <div className="w-2 h-2 bg-blue-500 rounded-full mx-auto mt-1"></div>
+                                                                <div className={`w-2 h-2 rounded-full mx-auto mt-1 ${
+                                                                    isActive ? 'bg-white' : 'bg-blue-500'
+                                                                }`}></div>
                                                             )}
                                                         </button>
                                                     );
