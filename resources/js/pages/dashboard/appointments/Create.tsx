@@ -1,6 +1,6 @@
 import React from 'react';
 import { Head } from '@inertiajs/react';
-import AuthenticatedLayout from '@/layouts/authenticated-layout';
+import AuthenticatedLayout from '@/layouts/dashboard/layout';
 import AppointmentCalendar from '@/components/appointments/AppointmentCalendar';
 
 interface CreateAppointmentPageProps {

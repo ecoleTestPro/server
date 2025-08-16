@@ -1,4 +1,0 @@
-FROM php:8.2-apache
-# Set working directory
-
-    
