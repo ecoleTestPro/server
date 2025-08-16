@@ -6,12 +6,12 @@ import { ROUTE_MAP } from '@/utils/route.util';
 import { Link, usePage } from '@inertiajs/react';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { HeaderNavTwoSidebar } from './HeaderNavTwoMobile';
 import { HeaderNavTwo } from './header-nav-two';
 import HeaderSearch from './header-search';
 import HeaderUserAction from './headerUserAction';
 import AppLogo from '@/components/app-logo';
 import AppearanceToggleDropdown from '@/components/appearance-dropdown';
+import HeaderMobile from './HeaderMobile';
 
 export default function Header() {
     const { auth, data } = usePage<SharedData>().props;
@@ -198,23 +198,32 @@ export default function Header() {
                             </div>
 
                             <div className="ml-auto flex items-center gap-3">
-                                <HeaderUserAction />
-                                <AppearanceToggleDropdown />
+                                <div className="hidden md:flex items-center gap-3">
+                                    <HeaderUserAction />
+                                    <AppearanceToggleDropdown />
+                                </div>
                                 <button
                                     onClick={toggleSidebar}
                                     aria-label={t('HEADER.TOGGLE_MENU', 'Ouvrir/fermer le menu')}
-                                    className="rounded-sm bg-gray-100 p-2 text-gray-600 hover:text-gray-800 md:hidden dark:bg-gray-700 dark:text-gray-300 dark:hover:text-white"
+                                    className="relative rounded-lg bg-gray-100 p-2 text-gray-600 transition-all duration-200 hover:bg-gray-200 hover:text-gray-800 md:hidden dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
                                 >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        className="size-5"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                    >
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-                                    </svg>
+                                    <div className="relative h-5 w-5">
+                                        <span
+                                            className={`absolute left-0 top-0 block h-0.5 w-5 bg-current transition-all duration-300 ${
+                                                isSidebarOpen ? 'rotate-45 translate-y-2' : 'translate-y-0'
+                                            }`}
+                                        />
+                                        <span
+                                            className={`absolute left-0 top-2 block h-0.5 w-5 bg-current transition-all duration-300 ${
+                                                isSidebarOpen ? 'opacity-0' : 'opacity-100'
+                                            }`}
+                                        />
+                                        <span
+                                            className={`absolute left-0 top-4 block h-0.5 w-5 bg-current transition-all duration-300 ${
+                                                isSidebarOpen ? '-rotate-45 -translate-y-2' : 'translate-y-0'
+                                            }`}
+                                        />
+                                    </div>
                                 </button>
                             </div>
                         </div>
@@ -226,13 +235,13 @@ export default function Header() {
                 </section>
             </header>
 
-            {/* <HeaderNavTwoSidebar
+            <HeaderMobile
                 menu={mainMenu}
                 menuRight={mainMenuRight}
                 isOpen={isSidebarOpen}
                 onClose={() => setIsSidebarOpen(false)}
                 className="md:hidden"
-            /> */}
+            />
         </>
     );
 }
