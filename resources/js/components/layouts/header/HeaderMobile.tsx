@@ -6,7 +6,6 @@ import { ChevronDownIcon, ChevronRightIcon, XIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import AppLogo from '@/components/app-logo';
-import HeaderSearch from './header-search';
 import HeaderUserAction from './headerUserAction';
 import AppearanceToggleDropdown from '@/components/appearance-dropdown';
 
@@ -82,18 +81,26 @@ export default function HeaderMobile({ menu, menuRight, isOpen, onClose, classNa
             <div key={item.id} className="border-b border-gray-100 dark:border-gray-700">
                 {hasChildren ? (
                     <div>
-                        <button
-                            onClick={() => toggleExpanded(item.id)}
-                            className="flex w-full items-center justify-between px-4 py-3 text-left text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-800"
-                            style={{ paddingLeft: paddingLeft + 16 }}
-                        >
-                            <span className="font-medium">{item.label}</span>
-                            {isExpanded ? (
-                                <ChevronDownIcon className="h-5 w-5 text-gray-400" />
-                            ) : (
-                                <ChevronRightIcon className="h-5 w-5 text-gray-400" />
-                            )}
-                        </button>
+                        <div className="flex">
+                            <Link
+                                href={item.href ?? ''}
+                                onClick={onClose}
+                                className="flex-1 px-4 py-3 text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-800"
+                                style={{ paddingLeft: paddingLeft + 16 }}
+                            >
+                                <span className="font-medium">{item.label}</span>
+                            </Link>
+                            <button
+                                onClick={() => toggleExpanded(item.id)}
+                                className="flex items-center justify-center px-3 py-3 text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-800"
+                            >
+                                {isExpanded ? (
+                                    <ChevronDownIcon className="h-5 w-5 text-gray-400" />
+                                ) : (
+                                    <ChevronRightIcon className="h-5 w-5 text-gray-400" />
+                                )}
+                            </button>
+                        </div>
                         
                         {isExpanded && item.children && (
                             <div className="bg-gray-50 dark:bg-gray-800">
@@ -126,34 +133,42 @@ export default function HeaderMobile({ menu, menuRight, isOpen, onClose, classNa
             <div key={item.id} className="border-b border-gray-100 dark:border-gray-700">
                 {hasSubItems ? (
                     <div>
-                        <button
-                            onClick={() => toggleExpanded(item.id)}
-                            className="flex w-full items-center justify-between px-4 py-3 text-left text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
-                            style={{ paddingLeft: paddingLeft + 16 }}
-                        >
-                            <div className="flex items-center">
-                                {item.image && (
-                                    <img 
-                                        src={item.image} 
-                                        alt={item.label}
-                                        className="mr-3 h-8 w-8 rounded object-cover"
-                                    />
-                                )}
-                                <div>
-                                    <span className="block text-sm font-medium">{item.label}</span>
-                                    {item.description && (
-                                        <span className="block text-xs text-gray-500 dark:text-gray-400">
-                                            {item.description.substring(0, 60)}...
-                                        </span>
+                        <div className="flex">
+                            <Link
+                                href={item.href}
+                                onClick={onClose}
+                                className="flex-1 px-4 py-3 text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
+                                style={{ paddingLeft: paddingLeft + 16 }}
+                            >
+                                <div className="flex items-center">
+                                    {item.image && (
+                                        <img 
+                                            src={item.image} 
+                                            alt={item.label}
+                                            className="mr-3 h-8 w-8 rounded object-cover"
+                                        />
                                     )}
+                                    <div>
+                                        <span className="block text-sm font-medium">{item.label}</span>
+                                        {item.description && (
+                                            <span className="block text-xs text-gray-500 dark:text-gray-400">
+                                                {item.description.substring(0, 60)}...
+                                            </span>
+                                        )}
+                                    </div>
                                 </div>
-                            </div>
-                            {isExpanded ? (
-                                <ChevronDownIcon className="h-4 w-4 text-gray-400" />
-                            ) : (
-                                <ChevronRightIcon className="h-4 w-4 text-gray-400" />
-                            )}
-                        </button>
+                            </Link>
+                            <button
+                                onClick={() => toggleExpanded(item.id)}
+                                className="flex items-center justify-center px-3 py-3 text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
+                            >
+                                {isExpanded ? (
+                                    <ChevronDownIcon className="h-4 w-4 text-gray-400" />
+                                ) : (
+                                    <ChevronRightIcon className="h-4 w-4 text-gray-400" />
+                                )}
+                            </button>
+                        </div>
                         
                         {isExpanded && item.subItems && (
                             <div className="bg-gray-100 dark:bg-gray-700">
@@ -222,10 +237,6 @@ export default function HeaderMobile({ menu, menuRight, isOpen, onClose, classNa
                     </button>
                 </div>
 
-                {/* Barre de recherche mobile */}
-                <div className="border-b border-gray-200 px-4 py-3 dark:border-gray-700 sm:hidden">
-                    <HeaderSearch className="w-full" />
-                </div>
 
                 {/* Actions utilisateur mobile */}
                 <div className="border-b border-gray-200 px-4 py-3 dark:border-gray-700">

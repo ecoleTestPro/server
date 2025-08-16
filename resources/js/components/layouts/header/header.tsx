@@ -12,6 +12,9 @@ import HeaderUserAction from './headerUserAction';
 import AppLogo from '@/components/app-logo';
 import AppearanceToggleDropdown from '@/components/appearance-dropdown';
 import HeaderMobile from './HeaderMobile';
+import SearchMobile from './SearchMobile';
+import CalendarMenu from './CalendarMenu';
+import { Search } from 'lucide-react';
 
 export default function Header() {
     const { auth, data } = usePage<SharedData>().props;
@@ -25,6 +28,7 @@ export default function Header() {
     const [mainMenu, setMainMenu] = useState<IMainMenuItem[]>(DEFULAT_MAIN_MENU);
     const [mainMenuRight, setMainMenuRight] = useState<IMainMenuItem[]>(DEFULAT_MAIN_MENU_RIGHT);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
 
     const logo = { href: '/' };
 
@@ -161,6 +165,12 @@ export default function Header() {
 
     const toggleSidebar = () => {
         setIsSidebarOpen(!isSidebarOpen);
+        setIsSearchOpen(false); // Fermer la recherche si le menu s'ouvre
+    };
+
+    const toggleSearch = () => {
+        setIsSearchOpen(!isSearchOpen);
+        setIsSidebarOpen(false); // Fermer le menu si la recherche s'ouvre
     };
 
     return (
@@ -188,7 +198,8 @@ export default function Header() {
                     <div className="flex items-center justify-between px-4 py-2 sm:px-6 lg:px-8">
                         <div className="flex flex-1">
                             <Link href={logo.href} className="flex items-center space-x-2">
-                                <AppLogo width={150} height={60} className="" />
+                                <AppLogo width={150} height={60} className="hidden sm:block" />
+                                <AppLogo width={120} height={48} className="block sm:hidden" />
                             </Link>
 
                             <div className="flex-1">
@@ -202,29 +213,49 @@ export default function Header() {
                                     <HeaderUserAction />
                                     <AppearanceToggleDropdown />
                                 </div>
-                                <button
-                                    onClick={toggleSidebar}
-                                    aria-label={t('HEADER.TOGGLE_MENU', 'Ouvrir/fermer le menu')}
-                                    className="relative rounded-lg bg-gray-100 p-2 text-gray-600 transition-all duration-200 hover:bg-gray-200 hover:text-gray-800 md:hidden dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-                                >
-                                    <div className="relative h-5 w-5">
-                                        <span
-                                            className={`absolute left-0 top-0 block h-0.5 w-5 bg-current transition-all duration-300 ${
-                                                isSidebarOpen ? 'rotate-45 translate-y-2' : 'translate-y-0'
-                                            }`}
-                                        />
-                                        <span
-                                            className={`absolute left-0 top-2 block h-0.5 w-5 bg-current transition-all duration-300 ${
-                                                isSidebarOpen ? 'opacity-0' : 'opacity-100'
-                                            }`}
-                                        />
-                                        <span
-                                            className={`absolute left-0 top-4 block h-0.5 w-5 bg-current transition-all duration-300 ${
-                                                isSidebarOpen ? '-rotate-45 -translate-y-2' : 'translate-y-0'
-                                            }`}
-                                        />
-                                    </div>
-                                </button>
+                                
+                                {/* Mobile actions */}
+                                <div className="flex items-center gap-2 md:hidden">
+                                    {/* Timeline button - prominant sur mobile */}
+                                    <CalendarMenu />
+                                    
+                                    {/* Search icon - ouvre le sidebar de recherche */}
+                                    <button
+                                        onClick={toggleSearch}
+                                        aria-label={t('HEADER.SEARCH', 'Rechercher')}
+                                        className="rounded-lg bg-primary-500 p-2 text-black darktext-white transition-all duration-200 hover:bg-primary-600"
+                                    >
+                                        <Search className="h-5 w-5" />
+                                    </button>
+                                    
+                                    {/* Mode selector */}
+                                    <AppearanceToggleDropdown />
+                                    
+                                    {/* Menu hamburger */}
+                                    <button
+                                        onClick={toggleSidebar}
+                                        aria-label={t('HEADER.TOGGLE_MENU', 'Ouvrir/fermer le menu')}
+                                        className="relative rounded-lg bg-gray-100 p-2 text-gray-600 transition-all duration-200 hover:bg-gray-200 hover:text-gray-800 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                                    >
+                                        <div className="relative h-5 w-5">
+                                            <span
+                                                className={`absolute left-0 top-0 block h-0.5 w-5 bg-current transition-all duration-300 ${
+                                                    isSidebarOpen ? 'rotate-45 translate-y-2' : 'translate-y-0'
+                                                }`}
+                                            />
+                                            <span
+                                                className={`absolute left-0 top-2 block h-0.5 w-5 bg-current transition-all duration-300 ${
+                                                    isSidebarOpen ? 'opacity-0' : 'opacity-100'
+                                                }`}
+                                            />
+                                            <span
+                                                className={`absolute left-0 top-4 block h-0.5 w-5 bg-current transition-all duration-300 ${
+                                                    isSidebarOpen ? '-rotate-45 -translate-y-2' : 'translate-y-0'
+                                                }`}
+                                            />
+                                        </div>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -240,6 +271,12 @@ export default function Header() {
                 menuRight={mainMenuRight}
                 isOpen={isSidebarOpen}
                 onClose={() => setIsSidebarOpen(false)}
+                className="md:hidden"
+            />
+            
+            <SearchMobile
+                isOpen={isSearchOpen}
+                onClose={() => setIsSearchOpen(false)}
                 className="md:hidden"
             />
         </>
