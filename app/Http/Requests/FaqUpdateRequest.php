@@ -15,9 +15,8 @@ class FaqUpdateRequest extends FormRequest
     {
         return [
             'id'        => 'required|exists:faqs,id',
-            'is_active' => 'nullable|boolean',
-            'question'  => 'required|string',
-            'answer'    => 'required|string',
+            'question'  => 'nullable|string',
+            'answer'    => 'nullable|string',
         ];
     }
 }
