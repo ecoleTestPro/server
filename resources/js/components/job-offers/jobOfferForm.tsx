@@ -8,7 +8,6 @@ import axios from 'axios';
 import { FormEventHandler, useState } from 'react';
 import toast from 'react-hot-toast';
 import 'react-quill/dist/quill.snow.css';
-import RichTextCKEditor from '../ui/form/RichTextCKEditor';
 import RichTextQuill from '../ui/form/RichTextQuill';
 import SelectCustom, { ISelectItem } from '../ui/select-custom';
 
@@ -41,31 +40,33 @@ const defaultValues: JobOfferFormData = {
 };
 
 export default function JobOfferForm({ closeDrawer, initialData }: Props) {
-    const formData = initialData ? {
-        title: initialData.title || '',
-        company: initialData.company || '',
-        location: initialData.location || '',
-        type: initialData.type || 'CDI',
-        salary: initialData.salary || 0,
-        description: initialData.description || '',
-        expires_at: initialData.expires_at || '',
-        is_active: initialData.is_active !== undefined ? initialData.is_active : true,
-    } : defaultValues;
-    
+    const formData = initialData
+        ? {
+              title: initialData.title || '',
+              company: initialData.company || '',
+              location: initialData.location || '',
+              type: initialData.type || 'CDI',
+              salary: initialData.salary || 0,
+              description: initialData.description || '',
+              expires_at: initialData.expires_at || '',
+              is_active: initialData.is_active !== undefined ? initialData.is_active : true,
+          }
+        : defaultValues;
+
     const { data, setData, processing, reset } = useForm<JobOfferFormData>(formData);
 
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        
+
         const payload = {
             ...data,
             expires_at: data.expires_at || null,
             is_active: data.is_active ? '1' : '0',
         };
 
-        const request = initialData?.id 
+        const request = initialData?.id
             ? axios.put(route('dashboard.job-offers.update', initialData.id), payload)
             : axios.post(route('dashboard.job-offers.store'), payload);
 
@@ -79,7 +80,7 @@ export default function JobOfferForm({ closeDrawer, initialData }: Props) {
             })
             .catch((error) => {
                 console.log('Error submitting job offer:', error);
-                
+
                 if (error.response?.data?.errors) {
                     Object.keys(error.response.data.errors).forEach((key) => {
                         toast.error(error.response.data.errors[key]);
@@ -106,8 +107,13 @@ export default function JobOfferForm({ closeDrawer, initialData }: Props) {
         { value: 'Stage de découverte', title: 'Stage de découverte', id: 12 },
     ];
 
+    const parseDate = (dateString: string): string => {
+        if (!dateString) return '';
+        return dateString;
+    };
+
     return (
-        <form className="mx-auto flex flex-col gap-4" >
+        <form className="mx-auto flex flex-col gap-4">
             <div className="grid gap-2">
                 <Label htmlFor="title">
                     Titre <span className="text-red-500">*</span>
@@ -161,7 +167,7 @@ export default function JobOfferForm({ closeDrawer, initialData }: Props) {
                 <Input
                     id="expires_at"
                     type="date"
-                    value={data.expires_at || ''}
+                    value={parseDate(data.expires_at)}
                     onChange={(e) => setData('expires_at', e.target.value)}
                     disabled={processing}
                 />
@@ -169,20 +175,18 @@ export default function JobOfferForm({ closeDrawer, initialData }: Props) {
             </div>
             <div className="grid gap-2">
                 <Label htmlFor="description">Description</Label>
-                {false && (
-                    <RichTextQuill
-                        label="Description"
-                        labelId="description"
-                        value={data.description ?? ''}
-                        setData={(value: string) => setData('description', value)}
-                    />
-                )}
-                <RichTextCKEditor
+                <RichTextQuill
                     label="Description"
                     labelId="description"
                     value={data.description ?? ''}
                     setData={(value: string) => setData('description', value)}
                 />
+                {/* <RichTextCKEditor
+                    label="Description"
+                    labelId="description"
+                    value={data.description ?? ''}
+                    setData={(value: string) => setData('description', value)}
+                /> */}
                 <InputError message={errors.description} />
             </div>
             <Button type="submit" onClick={submit} className="mt-2 w-full" disabled={processing}>

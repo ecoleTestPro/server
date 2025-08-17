@@ -18,6 +18,7 @@ class JobOfferController extends Controller
         $data = [
             'offers' => $offers,
         ];
+        // dd($data);
         return Inertia::render('dashboard/job-offers/index', [
             'data' => $data,
         ]);
