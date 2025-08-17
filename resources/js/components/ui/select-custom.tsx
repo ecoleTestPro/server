@@ -44,7 +44,8 @@ export default function SelectCustom({
     <Select
       disabled={processing}
       required={required}
-      value={value ?? defaultValue}
+      value={value || undefined}
+      defaultValue={defaultValue}
       onValueChange={onValueChange}
     >
       <SelectTrigger className="w-full">

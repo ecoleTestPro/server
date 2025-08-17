@@ -31,8 +31,17 @@ class JobOfferController extends Controller
 
     public function update(JobOfferUpdateRequest $request, JobOffer $jobOffer)
     {
-        JobOfferRepository::updateByRequest($request, $jobOffer);
-        return redirect()->back()->withSuccess('Offer updated');
+        try {
+            JobOfferRepository::updateByRequest($request, $jobOffer);
+            return response()->json([
+                'message' => 'Offer updated successfully',
+                'offer' => $jobOffer,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to update offer: ' . $e->getMessage(),
+            ], 500);
+        }
     }
 
     public function destroy(JobOffer $jobOffer)

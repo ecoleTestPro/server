@@ -1,8 +1,8 @@
 import AppLogoIcon from '@/components/app-logo-icon';
 import { type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
+import { Award, BookOpen, Sparkles, TrendingUp, Users } from 'lucide-react';
 import { type PropsWithChildren } from 'react';
-import { BookOpen, Users, TrendingUp, Award, Sparkles } from 'lucide-react';
 
 interface AuthLayoutProps {
     title?: string;
@@ -13,23 +13,23 @@ const features = [
     {
         icon: BookOpen,
         title: 'Formations expertes',
-        description: 'Accédez à plus de 100+ formations certifiantes'
+        description: 'Accédez à plus de 100+ formations certifiantes',
     },
     {
         icon: Users,
         title: 'Communauté active',
-        description: 'Rejoignez 5000+ apprenants motivés'
+        description: 'Rejoignez 5000+ apprenants motivés',
     },
     {
         icon: TrendingUp,
         title: 'Progression suivie',
-        description: 'Suivez vos progrès en temps réel'
+        description: 'Suivez vos progrès en temps réel',
     },
     {
         icon: Award,
         title: 'Certifications reconnues',
-        description: 'Obtenez des certificats validés par l\'industrie'
-    }
+        description: "Obtenez des certificats validés par l'industrie",
+    },
 ];
 
 export default function AuthSplitLayout({ children, title, description }: PropsWithChildren<AuthLayoutProps>) {
@@ -39,7 +39,7 @@ export default function AuthSplitLayout({ children, title, description }: PropsW
         <div className="min-h-screen bg-gradient-to-br from-slate-50 via-emerald-50/30 to-teal-50/20">
             {/* Background Pattern */}
             <div className="absolute inset-0 bg-grid-slate-200/50 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] -z-10" />
-            
+
             <div className="relative grid min-h-screen lg:grid-cols-2">
                 {/* Left Panel - Hero Section */}
                 <div className="relative hidden lg:flex flex-col justify-between bg-gradient-to-br from-emerald-600 via-emerald-700 to-teal-800 p-8 xl:p-12 overflow-hidden">
@@ -47,7 +47,7 @@ export default function AuthSplitLayout({ children, title, description }: PropsW
                     <div className="absolute inset-0 bg-gradient-to-br from-emerald-600/90 to-teal-800/90" />
                     <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-white/10 to-transparent rounded-full blur-3xl" />
                     <div className="absolute bottom-0 left-0 w-72 h-72 bg-gradient-to-tr from-teal-400/20 to-transparent rounded-full blur-2xl" />
-                    
+
                     {/* Content */}
                     <div className="relative z-10">
                         {/* Logo and Brand */}
@@ -69,7 +69,11 @@ export default function AuthSplitLayout({ children, title, description }: PropsW
                                     Nouvelle génération d'apprentissage
                                 </div>
                                 <h1 className="text-4xl xl:text-5xl font-bold text-white leading-tight">
-                                    Développez vos <span className="text-gradient bg-gradient-to-r from-emerald-200 to-teal-200 bg-clip-text text-transparent">compétences</span> avec les meilleurs experts
+                                    Développez vos{' '}
+                                    <span className="text-gradient bg-gradient-to-r from-emerald-200 to-teal-200 bg-clip-text text-transparent">
+                                        compétences
+                                    </span>{' '}
+                                    avec les meilleurs experts
                                 </h1>
                                 <p className="text-emerald-100 text-lg leading-relaxed max-w-md">
                                     Transformez votre carrière grâce à nos formations certifiantes et notre communauté d'experts.
@@ -81,7 +85,7 @@ export default function AuthSplitLayout({ children, title, description }: PropsW
                                 {features.map((feature, index) => {
                                     const Icon = feature.icon;
                                     return (
-                                        <div 
+                                        <div
                                             key={feature.title}
                                             className="group p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 hover:bg-white/10 transition-all duration-300"
                                             style={{ animationDelay: `${index * 100}ms` }}
@@ -103,7 +107,7 @@ export default function AuthSplitLayout({ children, title, description }: PropsW
                     </div>
 
                     {/* Bottom Quote/Testimonial */}
-                    <div className="relative z-10">
+                    {false && <div className="relative z-10">
                         <div className="p-6 bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10">
                             <div className="flex items-start space-x-4">
                                 <div className="flex-shrink-0">
@@ -113,7 +117,8 @@ export default function AuthSplitLayout({ children, title, description }: PropsW
                                 </div>
                                 <div className="flex-1">
                                     <p className="text-white font-medium text-sm mb-2">
-                                        "Une plateforme exceptionnelle qui m'a permis d'évoluer rapidement dans ma carrière. Les formations sont de qualité professionnelle."
+                                        "Une plateforme exceptionnelle qui m'a permis d'évoluer rapidement dans ma carrière. Les formations sont de
+                                        qualité professionnelle."
                                     </p>
                                     <div className="text-emerald-200 text-xs">
                                         <span className="font-semibold">Sarah M.</span> • Développeuse Full-Stack
@@ -121,7 +126,7 @@ export default function AuthSplitLayout({ children, title, description }: PropsW
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>}
                 </div>
 
                 {/* Right Panel - Form Section */}
@@ -144,35 +149,29 @@ export default function AuthSplitLayout({ children, title, description }: PropsW
                         <div className="text-center space-y-3">
                             {title && (
                                 <div className="space-y-2">
-                                    <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
-                                        {title}
-                                    </h1>
+                                    <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{title}</h1>
                                     {description && (
-                                        <p className="text-gray-600 text-sm sm:text-base leading-relaxed max-w-sm mx-auto">
-                                            {description}
-                                        </p>
+                                        <p className="text-gray-600 text-sm sm:text-base leading-relaxed max-w-sm mx-auto">{description}</p>
                                     )}
                                 </div>
                             )}
                         </div>
 
                         {/* Form Content */}
-                        <div className="bg-white rounded-2xl shadow-xl shadow-emerald-500/10 p-6 sm:p-8 border border-gray-100">
-                            {children}
-                        </div>
+                        <div className="bg-white rounded-2xl shadow-xl shadow-emerald-500/10 p-6 sm:p-8 border border-gray-100">{children}</div>
 
                         {/* Bottom Links */}
                         <div className="text-center space-y-4">
                             <div className="flex items-center justify-center space-x-1 text-sm text-gray-500">
                                 <span>En vous connectant, vous acceptez nos</span>
-                                <Link 
-                                    href="#" 
+                                <Link
+                                    href="#"
                                     className="text-emerald-600 hover:text-emerald-700 font-medium underline underline-offset-4 decoration-2 decoration-emerald-200 hover:decoration-emerald-300 transition-colors"
                                 >
                                     conditions d'utilisation
                                 </Link>
                             </div>
-                            
+
                             <div className="hidden lg:block">
                                 <div className="flex items-center justify-center space-x-6 text-xs text-gray-400">
                                     <span>© 2024 EcoleTestPro</span>

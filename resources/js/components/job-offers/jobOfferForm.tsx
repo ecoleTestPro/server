@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { IJobOffer } from '@/types';
-import { useForm } from '@inertiajs/react';
+import { router, useForm } from '@inertiajs/react';
 import axios from 'axios';
 import { FormEventHandler, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -17,11 +17,23 @@ interface Props {
     initialData?: IJobOffer;
 }
 
-const defaultValues: IJobOffer = {
+interface JobOfferFormData {
+    title: string;
+    company: string;
+    location: string;
+    type: string;
+    salary: number;
+    description: string;
+    expires_at: string;
+    is_active: boolean;
+    [key: string]: any;
+}
+
+const defaultValues: JobOfferFormData = {
     title: '',
     company: '',
     location: '',
-    type: '',
+    type: 'CDI',
     salary: 0,
     description: '',
     expires_at: '',
@@ -29,48 +41,53 @@ const defaultValues: IJobOffer = {
 };
 
 export default function JobOfferForm({ closeDrawer, initialData }: Props) {
-    const { data, setData, processing, reset } = useForm<IJobOffer>(initialData || defaultValues);
+    const formData = initialData ? {
+        title: initialData.title || '',
+        company: initialData.company || '',
+        location: initialData.location || '',
+        type: initialData.type || 'CDI',
+        salary: initialData.salary || 0,
+        description: initialData.description || '',
+        expires_at: initialData.expires_at || '',
+        is_active: initialData.is_active !== undefined ? initialData.is_active : true,
+    } : defaultValues;
+    
+    const { data, setData, processing, reset } = useForm<JobOfferFormData>(formData);
 
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        const routeUrl = initialData?.id ? route('dashboard.job-offers.update', initialData.id) : route('dashboard.job-offers.store');
-
-        // router.visit(routeUrl, {
-        //     method: initialData?.id ? 'put' : 'post',
-        //     data: {
-        //         ...data,
-        //         is_active: data.is_active ? '1' : '0',
-        //     },
-        //     forceFormData: true,
-        //     preserveScroll: true,
-        //     onSuccess: () => {
-        //         reset();
-        //         closeDrawer?.();
-        //         toast.success(initialData?.id ? 'Offre mise à jour' : 'Offre créée');
-        //     },
-        //     onError: (errors) => {
-        //         Object.keys(errors).forEach((key) => {
-        //             toast.error(errors[key]);
-        //         });
-        //     },
-        // });
-
-        axios[initialData?.id ? 'put' : 'post'](routeUrl, {
+        
+        const payload = {
             ...data,
+            expires_at: data.expires_at || null,
             is_active: data.is_active ? '1' : '0',
-        })
-            .then((response) => {
+        };
+
+        const request = initialData?.id 
+            ? axios.put(route('dashboard.job-offers.update', initialData.id), payload)
+            : axios.post(route('dashboard.job-offers.store'), payload);
+
+        request
+            .then(() => {
                 toast.success(initialData?.id ? 'Offre mise à jour' : 'Offre créée');
+                router.reload();
+                setErrors({});
                 reset();
                 closeDrawer?.();
             })
             .catch((error) => {
-                Object.keys(error.response.data.errors).forEach((key) => {
-                    toast.error(error.response.data.errors[key]);
-                    setErrors((prev) => ({ ...prev, [key]: error.response.data.errors[key] }));
-                });
+                console.log('Error submitting job offer:', error);
+                
+                if (error.response?.data?.errors) {
+                    Object.keys(error.response.data.errors).forEach((key) => {
+                        toast.error(error.response.data.errors[key]);
+                        setErrors((prev) => ({ ...prev, [key]: error.response.data.errors[key] }));
+                    });
+                } else {
+                    toast.error('Une erreur est survenue');
+                }
             });
     };
 
@@ -90,7 +107,7 @@ export default function JobOfferForm({ closeDrawer, initialData }: Props) {
     ];
 
     return (
-        <form className="mx-auto flex flex-col gap-4" onSubmit={submit}>
+        <form className="mx-auto flex flex-col gap-4" >
             <div className="grid gap-2">
                 <Label htmlFor="title">
                     Titre <span className="text-red-500">*</span>
@@ -122,7 +139,7 @@ export default function JobOfferForm({ closeDrawer, initialData }: Props) {
                         processing={processing}
                         onValueChange={(value) => setData('type', value)}
                         value={data.type}
-                        defaultValue={initialData?.type ?? 'CDI'}
+                        defaultValue={'CDI'}
                         required
                     />
                     <InputError message={errors.type} />
@@ -168,7 +185,7 @@ export default function JobOfferForm({ closeDrawer, initialData }: Props) {
                 />
                 <InputError message={errors.description} />
             </div>
-            <Button type="submit" className="mt-2 w-full" disabled={processing}>
+            <Button type="submit" onClick={submit} className="mt-2 w-full" disabled={processing}>
                 {initialData?.id ? 'Mettre à jour' : 'Créer'}
             </Button>
         </form>
