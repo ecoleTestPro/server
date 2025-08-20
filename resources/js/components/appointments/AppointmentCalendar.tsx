@@ -1,16 +1,15 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Calendar, Clock, Phone, Mail, MessageSquare, CheckCircle, User, CalendarDays, ChevronRight, MapPin, Sparkles, Zap, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+import { cn } from '@/lib/utils';
 import axios from 'axios';
-import toast from 'react-hot-toast';
+import { AnimatePresence, motion, useScroll, useTransform } from 'framer-motion';
+import { ArrowRight, Calendar, CalendarDays, CheckCircle, Clock, MessageSquare, Sparkles, User } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
 import ReactCalendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-import { cn } from '@/lib/utils';
+import toast from 'react-hot-toast';
 
 interface TimeSlot {
     time: string;
@@ -50,15 +49,15 @@ const AppointmentCalendar: React.FC = () => {
     const [submitting, setSubmitting] = useState(false);
     const [step, setStep] = useState<'select' | 'details' | 'confirmation'>('select');
     const [showTimeSlots, setShowTimeSlots] = useState(false);
-    
+
     const containerRef = useRef<HTMLDivElement>(null);
     const { scrollYProgress } = useScroll({
         target: containerRef,
-        offset: ["start start", "end end"]
+        offset: ['start start', 'end end'],
     });
-    
-    const progressWidth = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
-    
+
+    const progressWidth = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
+
     const [form, setForm] = useState<AppointmentForm>({
         title: '',
         description: '',
@@ -67,15 +66,15 @@ const AppointmentCalendar: React.FC = () => {
         type: 'consultation',
         client_email: '',
         client_phone: '',
-        client_name: ''
+        client_name: '',
     });
 
     const [appointmentTypes, setAppointmentTypes] = useState([
         { value: 'consultation', label: 'Consultation', icon: '💡', description: 'Conseil personnalisé', color: 'bg-blue-500' },
-        { value: 'information', label: 'Information', icon: '📋', description: 'Demande d\'information', color: 'bg-green-500' },
+        { value: 'information', label: 'Information', icon: '📋', description: "Demande d'information", color: 'bg-green-500' },
         { value: 'support', label: 'Support', icon: '🛠️', description: 'Assistance technique', color: 'bg-orange-500' },
         { value: 'enrollment', label: 'Inscription', icon: '📚', description: 'Inscription formation', color: 'bg-purple-500' },
-        { value: 'other', label: 'Autre', icon: '❓', description: 'Autre motif', color: 'bg-gray-500' }
+        { value: 'other', label: 'Autre', icon: '❓', description: 'Autre motif', color: 'bg-gray-500' },
     ]);
 
     const [durations, setDurations] = useState([
@@ -84,42 +83,44 @@ const AppointmentCalendar: React.FC = () => {
         { value: 45, label: '45 min', description: 'Entretien approfondi' },
         { value: 60, label: '1h', description: 'Rendez-vous détaillé' },
         { value: 90, label: '1h30', description: 'Session complète' },
-        { value: 120, label: '2h', description: 'Accompagnement personnalisé' }
+        { value: 120, label: '2h', description: 'Accompagnement personnalisé' },
     ]);
-    
+
     // Charger les types et durées depuis l'API
     useEffect(() => {
         // Charger les types
-        axios.get(route('dashboard.appointments.api.types'))
-            .then(response => {
+        axios
+            .get(route('appointments.types'))
+            .then((response) => {
                 if (response.data.success && response.data.types) {
                     const formattedTypes = response.data.types.map((type: any) => ({
                         value: type.slug,
                         label: type.name,
                         icon: type.icon || '📅',
                         description: type.description,
-                        color: type.color || 'bg-blue-500'
+                        color: type.color || 'bg-blue-500',
                     }));
                     setAppointmentTypes(formattedTypes);
                 }
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error('Erreur lors du chargement des types:', error);
             });
-            
+
         // Charger les durées
-        axios.get(route('dashboard.appointments.api.durations'))
-            .then(response => {
+        axios
+            .get(route('appointments.durations'))
+            .then((response) => {
                 if (response.data.success && response.data.durations) {
                     const formattedDurations = response.data.durations.map((duration: any) => ({
                         value: duration.duration,
                         label: duration.label,
-                        description: duration.description
+                        description: duration.description,
                     }));
                     setDurations(formattedDurations);
                 }
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error('Erreur lors du chargement des durées:', error);
             });
     }, []);
@@ -127,55 +128,56 @@ const AppointmentCalendar: React.FC = () => {
     // Cette fonction est remplacée par l'API
 
     // Gérer la sélection de date
-    const handleDateChange = (value: CalendarValue) => {
+    const handleDateChange = (value: CalendarValue, event: React.MouseEvent<HTMLButtonElement>) => {
         if (value instanceof Date) {
             setSelectedDate(value);
             setSelectedTime('');
             setLoading(true);
-            
+
             // Appel API pour récupérer les créneaux disponibles
-            axios.get(route('appointments.available-slots'), {
-                params: {
-                    date: value.toISOString().split('T')[0]
-                }
-            })
-            .then(response => {
-                if (response.data.success) {
-                    setAvailableSlots(response.data.slots);
-                    setShowTimeSlots(true);
-                    
-                    // Scroll vers les créneaux horaires
-                    setTimeout(() => {
-                        const timeSlotsElement = document.getElementById('time-slots');
-                        if (timeSlotsElement) {
-                            timeSlotsElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        }
-                    }, 100);
-                } else {
+            axios
+                .get(route('appointments.available-slots'), {
+                    params: {
+                        date: value.toISOString().split('T')[0],
+                    },
+                })
+                .then((response) => {
+                    if (response.data.success) {
+                        setAvailableSlots(response.data.slots);
+                        setShowTimeSlots(true);
+
+                        // Scroll vers les créneaux horaires
+                        setTimeout(() => {
+                            const timeSlotsElement = document.getElementById('time-slots');
+                            if (timeSlotsElement) {
+                                timeSlotsElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            }
+                        }, 100);
+                    } else {
+                        toast.error('Erreur lors de la récupération des créneaux');
+                    }
+                })
+                .catch((error) => {
+                    console.error('Erreur:', error);
                     toast.error('Erreur lors de la récupération des créneaux');
-                }
-            })
-            .catch(error => {
-                console.error('Erreur:', error);
-                toast.error('Erreur lors de la récupération des créneaux');
-            })
-            .finally(() => {
-                setLoading(false);
-            });
+                })
+                .finally(() => {
+                    setLoading(false);
+                });
         }
     };
 
     // Gérer la sélection de créneau
     const handleTimeSelect = (slot: TimeSlot) => {
         if (!slot.available) return;
-        
+
         setSelectedTime(slot.time);
-        setForm(prev => ({
+        setForm((prev) => ({
             ...prev,
-            appointment_date: slot.datetime
+            appointment_date: slot.datetime,
         }));
         setStep('details');
-        
+
         // Scroll to top of form
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
@@ -183,7 +185,7 @@ const AppointmentCalendar: React.FC = () => {
     // Soumettre le formulaire
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         if (!form.appointment_date || !form.client_name.trim() || !form.client_email.trim()) {
             toast.error('Veuillez remplir tous les champs obligatoires');
             return;
@@ -201,14 +203,14 @@ const AppointmentCalendar: React.FC = () => {
             formData.append('client_email', form.client_email);
             formData.append('client_phone', form.client_phone);
             formData.append('client_name', form.client_name);
-            
+
             await axios.post(route('appointments.store'), formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
-                }
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+                },
             });
-            
+
             toast.success('Rendez-vous confirmé ! Vous recevrez une confirmation par email.');
             setStep('confirmation');
         } catch (error: any) {
@@ -234,7 +236,7 @@ const AppointmentCalendar: React.FC = () => {
             type: 'consultation',
             client_email: '',
             client_phone: '',
-            client_name: ''
+            client_name: '',
         });
     };
 
@@ -242,10 +244,10 @@ const AppointmentCalendar: React.FC = () => {
     const isDateDisabled = ({ date }: { date: Date }) => {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
-        
+
         // Désactiver les dates passées
         if (date < today) return true;
-        
+
         // Désactiver les week-ends
         const day = date.getDay();
         return day === 0 || day === 6;
@@ -276,15 +278,15 @@ const AppointmentCalendar: React.FC = () => {
                         <motion.div
                             className="absolute inset-y-0 left-0 bg-gradient-to-r from-primary to-primary/80 rounded-full"
                             animate={{
-                                width: step === 'select' ? '33%' : step === 'details' ? '66%' : '100%'
+                                width: step === 'select' ? '33%' : step === 'details' ? '66%' : '100%',
                             }}
-                            transition={{ duration: 0.5, ease: "easeInOut" }}
+                            transition={{ duration: 0.5, ease: 'easeInOut' }}
                         />
                     </div>
-                    
+
                     {/* Quick Summary */}
                     {(selectedDate || selectedTime) && (
-                        <motion.div 
+                        <motion.div
                             className="mt-3 flex flex-wrap items-center gap-3 text-sm"
                             initial={{ opacity: 0, y: -10 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -293,10 +295,10 @@ const AppointmentCalendar: React.FC = () => {
                                 <div className="flex items-center gap-1 px-3 py-1 bg-primary/10 text-primary rounded-full">
                                     <Calendar className="w-3 h-3" />
                                     <span className="font-medium">
-                                        {selectedDate.toLocaleDateString('fr-FR', { 
-                                            weekday: 'short', 
-                                            day: 'numeric', 
-                                            month: 'short' 
+                                        {selectedDate.toLocaleDateString('fr-FR', {
+                                            weekday: 'short',
+                                            day: 'numeric',
+                                            month: 'short',
                                         })}
                                     </span>
                                 </div>
@@ -334,10 +336,7 @@ const AppointmentCalendar: React.FC = () => {
                                 >
                                     <Card className="shadow-2xl border-0 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800">
                                         <CardHeader className="text-center pb-4">
-                                            <motion.div 
-                                                className="flex items-center justify-center gap-3 mb-2"
-                                                whileHover={{ scale: 1.02 }}
-                                            >
+                                            <motion.div className="flex items-center justify-center gap-3 mb-2" whileHover={{ scale: 1.02 }}>
                                                 <div className="p-2 bg-primary/10 rounded-lg">
                                                     <CalendarDays className="w-6 h-6 text-primary" />
                                                 </div>
@@ -345,13 +344,11 @@ const AppointmentCalendar: React.FC = () => {
                                                     Choisissez votre date
                                                 </CardTitle>
                                             </motion.div>
-                                            <p className="text-muted-foreground text-sm">
-                                                Sélectionnez un jour disponible pour votre rendez-vous
-                                            </p>
+                                            <p className="text-muted-foreground text-sm">Sélectionnez un jour disponible pour votre rendez-vous</p>
                                         </CardHeader>
                                         <CardContent className="flex justify-center pb-6">
                                             <div className="calendar-container w-full max-w-md">
-                                                <style jsx>{`
+                                                <style>{`
                                                     .calendar-container .react-calendar {
                                                         border: none;
                                                         border-radius: 16px;
@@ -439,7 +436,7 @@ const AppointmentCalendar: React.FC = () => {
                                                     minDate={new Date()}
                                                     tileDisabled={isDateDisabled}
                                                     locale="fr-FR"
-                                                    formatShortWeekday={(locale, date) => 
+                                                    formatShortWeekday={(locale, date) =>
                                                         ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'][date.getDay()]
                                                     }
                                                     showNeighboringMonth={false}
@@ -465,9 +462,7 @@ const AppointmentCalendar: React.FC = () => {
                                                 <div className="p-2 bg-primary/20 rounded-lg">
                                                     <Clock className="w-5 h-5 text-primary" />
                                                 </div>
-                                                <h3 className="font-semibold text-lg text-primary">
-                                                    Horaires d'ouverture
-                                                </h3>
+                                                <h3 className="font-semibold text-lg text-primary">Horaires d'ouverture</h3>
                                             </div>
                                             <div className="space-y-2 text-sm">
                                                 <div className="flex justify-between">
@@ -493,9 +488,7 @@ const AppointmentCalendar: React.FC = () => {
                                                 <div className="p-2 bg-green-500/20 rounded-lg">
                                                     <Sparkles className="w-5 h-5 text-green-600 dark:text-green-400" />
                                                 </div>
-                                                <h3 className="font-semibold text-lg text-green-700 dark:text-green-400">
-                                                    Disponibilités
-                                                </h3>
+                                                <h3 className="font-semibold text-lg text-green-700 dark:text-green-400">Disponibilités</h3>
                                             </div>
                                             <div className="grid grid-cols-2 gap-4 text-sm">
                                                 <div className="text-center">
@@ -523,10 +516,7 @@ const AppointmentCalendar: React.FC = () => {
                                 >
                                     <Card className="shadow-xl border-0 bg-gradient-to-br from-white via-gray-50 to-primary/5 dark:from-gray-900 dark:via-gray-800 dark:to-primary/10">
                                         <CardHeader className="text-center pb-6">
-                                            <motion.div 
-                                                className="flex items-center justify-center gap-3 mb-3"
-                                                whileHover={{ scale: 1.02 }}
-                                            >
+                                            <motion.div className="flex items-center justify-center gap-3 mb-3" whileHover={{ scale: 1.02 }}>
                                                 <div className="p-3 bg-gradient-to-br from-primary to-primary/70 rounded-xl shadow-lg">
                                                     <Clock className="w-6 h-6 text-white" />
                                                 </div>
@@ -534,7 +524,7 @@ const AppointmentCalendar: React.FC = () => {
                                                     Choisissez l'heure
                                                 </CardTitle>
                                             </motion.div>
-                                            <motion.div 
+                                            <motion.div
                                                 className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full text-primary font-medium"
                                                 animate={{ scale: [1, 1.02, 1] }}
                                                 transition={{ duration: 2, repeat: Infinity }}
@@ -545,7 +535,7 @@ const AppointmentCalendar: React.FC = () => {
                                                         weekday: 'long',
                                                         day: 'numeric',
                                                         month: 'long',
-                                                        year: 'numeric'
+                                                        year: 'numeric',
                                                     })}
                                                 </span>
                                             </motion.div>
@@ -553,14 +543,14 @@ const AppointmentCalendar: React.FC = () => {
                                         <CardContent className="pb-8">
                                             {/* Available Slots Info */}
                                             <div className="mb-8 text-center">
-                                                <motion.div 
+                                                <motion.div
                                                     className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-100 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30 rounded-full"
                                                     animate={{ scale: [1, 1.05, 1] }}
                                                     transition={{ duration: 3, repeat: Infinity }}
                                                 >
                                                     <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
                                                     <span className="text-green-700 dark:text-green-300 font-medium text-sm">
-                                                        {availableSlots.filter(s => s.available).length} créneaux disponibles
+                                                        {availableSlots.filter((s) => s.available).length} créneaux disponibles
                                                     </span>
                                                 </motion.div>
                                             </div>
@@ -574,34 +564,40 @@ const AppointmentCalendar: React.FC = () => {
                                                         disabled={!slot.available}
                                                         onClick={() => handleTimeSelect(slot)}
                                                         className={cn(
-                                                            "group relative p-4 rounded-xl border-2 transition-all duration-300 text-sm font-semibold min-h-[70px] flex flex-col items-center justify-center",
+                                                            'group relative p-4 rounded-xl border-2 transition-all duration-300 text-sm font-semibold min-h-[70px] flex flex-col items-center justify-center',
                                                             slot.available
                                                                 ? selectedTime === slot.time
-                                                                    ? "border-primary bg-gradient-to-br from-primary to-primary/80 text-white shadow-xl scale-105 ring-4 ring-primary/20"
-                                                                    : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-primary hover:bg-gradient-to-br hover:from-primary/5 hover:to-primary/10 hover:shadow-lg hover:scale-105 text-gray-900 dark:text-white"
-                                                                : "border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50 text-gray-400 dark:text-gray-500 cursor-not-allowed opacity-60"
+                                                                    ? 'border-primary bg-gradient-to-br from-primary to-primary/80 text-white shadow-xl scale-105 ring-4 ring-primary/20'
+                                                                    : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-primary hover:bg-gradient-to-br hover:from-primary/5 hover:to-primary/10 hover:shadow-lg hover:scale-105 text-gray-900 dark:text-white'
+                                                                : 'border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50 text-gray-400 dark:text-gray-500 cursor-not-allowed opacity-60',
                                                         )}
                                                         initial={{ opacity: 0, y: 20 }}
                                                         animate={{ opacity: 1, y: 0 }}
                                                         transition={{ delay: index * 0.05, duration: 0.3 }}
-                                                        whileHover={slot.available ? { 
-                                                            y: -2,
-                                                            transition: { duration: 0.2 }
-                                                        } : {}}
-                                                        whileTap={slot.available ? { 
-                                                            scale: 0.95,
-                                                            transition: { duration: 0.1 } 
-                                                        } : {}}
+                                                        whileHover={
+                                                            slot.available
+                                                                ? {
+                                                                      y: -2,
+                                                                      transition: { duration: 0.2 },
+                                                                  }
+                                                                : {}
+                                                        }
+                                                        whileTap={
+                                                            slot.available
+                                                                ? {
+                                                                      scale: 0.95,
+                                                                      transition: { duration: 0.1 },
+                                                                  }
+                                                                : {}
+                                                        }
                                                     >
                                                         {/* Time Display */}
-                                                        <div className="text-base font-bold mb-1">
-                                                            {slot.display}
-                                                        </div>
-                                                        
+                                                        <div className="text-base font-bold mb-1">{slot.display}</div>
+
                                                         {/* Status Indicator */}
                                                         {slot.available ? (
                                                             selectedTime === slot.time ? (
-                                                                <motion.div 
+                                                                <motion.div
                                                                     className="flex items-center gap-1 text-xs opacity-90"
                                                                     initial={{ scale: 0 }}
                                                                     animate={{ scale: 1 }}
@@ -615,11 +611,9 @@ const AppointmentCalendar: React.FC = () => {
                                                                 </div>
                                                             )
                                                         ) : (
-                                                            <div className="text-xs text-red-500 font-medium">
-                                                                Occupé
-                                                            </div>
+                                                            <div className="text-xs text-red-500 font-medium">Occupé</div>
                                                         )}
-                                                        
+
                                                         {/* Highlight for selected */}
                                                         {selectedTime === slot.time && (
                                                             <motion.div
@@ -634,12 +628,12 @@ const AppointmentCalendar: React.FC = () => {
                                             </div>
 
                                             {selectedTime && (
-                                                <motion.div 
+                                                <motion.div
                                                     className="mt-8 flex justify-center"
                                                     initial={{ opacity: 0, y: 20 }}
                                                     animate={{ opacity: 1, y: 0 }}
                                                 >
-                                                    <Button 
+                                                    <Button
                                                         onClick={() => setStep('details')}
                                                         size="lg"
                                                         className="px-8 py-4 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-xl hover:shadow-2xl transition-all duration-300"
@@ -681,16 +675,16 @@ const AppointmentCalendar: React.FC = () => {
                                             <div className="space-y-4">
                                                 <Label className="text-base font-semibold">Type de rendez-vous</Label>
                                                 <div className="grid grid-cols-1 gap-3">
-                                                    {appointmentTypes.map(type => (
+                                                    {appointmentTypes.map((type) => (
                                                         <motion.div
                                                             key={type.value}
                                                             className={cn(
-                                                                "p-4 border-2 rounded-xl cursor-pointer transition-all duration-300",
+                                                                'p-4 border-2 rounded-xl cursor-pointer transition-all duration-300',
                                                                 form.type === type.value
                                                                     ? 'border-primary bg-primary/10 ring-4 ring-primary/20'
-                                                                    : 'border-gray-200 dark:border-gray-700 hover:border-primary/50 bg-white dark:bg-gray-800'
+                                                                    : 'border-gray-200 dark:border-gray-700 hover:border-primary/50 bg-white dark:bg-gray-800',
                                                             )}
-                                                            onClick={() => setForm(prev => ({ ...prev, type: type.value }))}
+                                                            onClick={() => setForm((prev) => ({ ...prev, type: type.value }))}
                                                             whileHover={{ scale: 1.02 }}
                                                             whileTap={{ scale: 0.98 }}
                                                         >
@@ -702,9 +696,7 @@ const AppointmentCalendar: React.FC = () => {
                                                                         <div className="text-xs text-muted-foreground">{type.description}</div>
                                                                     </div>
                                                                 </div>
-                                                                {form.type === type.value && (
-                                                                    <CheckCircle className="w-5 h-5 text-primary" />
-                                                                )}
+                                                                {form.type === type.value && <CheckCircle className="w-5 h-5 text-primary" />}
                                                             </div>
                                                         </motion.div>
                                                     ))}
@@ -714,16 +706,16 @@ const AppointmentCalendar: React.FC = () => {
                                             <div className="space-y-4">
                                                 <Label className="text-base font-semibold">Durée souhaitée</Label>
                                                 <div className="grid grid-cols-2 gap-3">
-                                                    {durations.map(duration => (
+                                                    {durations.map((duration) => (
                                                         <motion.div
                                                             key={duration.value}
                                                             className={cn(
-                                                                "p-3 border-2 rounded-lg cursor-pointer transition-all duration-300",
+                                                                'p-3 border-2 rounded-lg cursor-pointer transition-all duration-300',
                                                                 form.duration === duration.value
                                                                     ? 'border-primary bg-primary/10'
-                                                                    : 'border-gray-200 dark:border-gray-700 hover:border-primary/50 bg-white dark:bg-gray-800'
+                                                                    : 'border-gray-200 dark:border-gray-700 hover:border-primary/50 bg-white dark:bg-gray-800',
                                                             )}
-                                                            onClick={() => setForm(prev => ({ ...prev, duration: duration.value }))}
+                                                            onClick={() => setForm((prev) => ({ ...prev, duration: duration.value }))}
                                                             whileHover={{ scale: 1.02 }}
                                                             whileTap={{ scale: 0.98 }}
                                                         >
@@ -743,7 +735,7 @@ const AppointmentCalendar: React.FC = () => {
                                                 <User className="w-5 h-5" />
                                                 Vos informations
                                             </h3>
-                                            
+
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                                 <div className="space-y-2">
                                                     <Label htmlFor="client_name">Nom complet *</Label>
@@ -752,12 +744,12 @@ const AppointmentCalendar: React.FC = () => {
                                                         type="text"
                                                         placeholder="Votre nom et prénom"
                                                         value={form.client_name}
-                                                        onChange={(e) => setForm(prev => ({ ...prev, client_name: e.target.value }))}
+                                                        onChange={(e) => setForm((prev) => ({ ...prev, client_name: e.target.value }))}
                                                         required
                                                         className="h-12"
                                                     />
                                                 </div>
-                                                
+
                                                 <div className="space-y-2">
                                                     <Label htmlFor="client_email">Email *</Label>
                                                     <Input
@@ -765,7 +757,7 @@ const AppointmentCalendar: React.FC = () => {
                                                         type="email"
                                                         placeholder="votre.email@exemple.com"
                                                         value={form.client_email}
-                                                        onChange={(e) => setForm(prev => ({ ...prev, client_email: e.target.value }))}
+                                                        onChange={(e) => setForm((prev) => ({ ...prev, client_email: e.target.value }))}
                                                         required
                                                         className="h-12"
                                                     />
@@ -780,11 +772,11 @@ const AppointmentCalendar: React.FC = () => {
                                                         type="tel"
                                                         placeholder="+225 XX XX XX XX"
                                                         value={form.client_phone}
-                                                        onChange={(e) => setForm(prev => ({ ...prev, client_phone: e.target.value }))}
+                                                        onChange={(e) => setForm((prev) => ({ ...prev, client_phone: e.target.value }))}
                                                         className="h-12"
                                                     />
                                                 </div>
-                                                
+
                                                 <div className="space-y-2">
                                                     <Label htmlFor="title">Sujet du rendez-vous</Label>
                                                     <Input
@@ -792,7 +784,7 @@ const AppointmentCalendar: React.FC = () => {
                                                         type="text"
                                                         placeholder="Ex: Inscription formation comptabilité"
                                                         value={form.title}
-                                                        onChange={(e) => setForm(prev => ({ ...prev, title: e.target.value }))}
+                                                        onChange={(e) => setForm((prev) => ({ ...prev, title: e.target.value }))}
                                                         className="h-12"
                                                     />
                                                 </div>
@@ -805,7 +797,7 @@ const AppointmentCalendar: React.FC = () => {
                                                     className="flex min-h-[120px] w-full rounded-md border border-input bg-background dark:bg-gray-800 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                                                     placeholder="Décrivez brièvement l'objet de votre rendez-vous ou toute information utile..."
                                                     value={form.description}
-                                                    onChange={(e) => setForm(prev => ({ ...prev, description: e.target.value }))}
+                                                    onChange={(e) => setForm((prev) => ({ ...prev, description: e.target.value }))}
                                                     rows={4}
                                                 />
                                             </div>
@@ -827,7 +819,7 @@ const AppointmentCalendar: React.FC = () => {
                                                                 weekday: 'short',
                                                                 day: 'numeric',
                                                                 month: 'short',
-                                                                year: 'numeric'
+                                                                year: 'numeric',
                                                             })}
                                                         </div>
                                                     </div>
@@ -836,31 +828,30 @@ const AppointmentCalendar: React.FC = () => {
                                                     <Clock className="w-4 h-4 text-green-600 dark:text-green-400" />
                                                     <div>
                                                         <div className="font-medium text-green-700 dark:text-green-300">Heure</div>
-                                                        <div className="text-green-600 dark:text-green-400">{selectedTime} ({form.duration} min)</div>
+                                                        <div className="text-green-600 dark:text-green-400">
+                                                            {selectedTime} ({form.duration} min)
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div className="flex items-center gap-3 p-3 bg-white/50 dark:bg-gray-800/50 rounded-lg">
                                                     <MessageSquare className="w-4 h-4 text-green-600 dark:text-green-400" />
                                                     <div>
                                                         <div className="font-medium text-green-700 dark:text-green-300">Type</div>
-                                                        <div className="text-green-600 dark:text-green-400">{appointmentTypes.find(t => t.value === form.type)?.label}</div>
+                                                        <div className="text-green-600 dark:text-green-400">
+                                                            {appointmentTypes.find((t) => t.value === form.type)?.label}
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
 
                                         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-6">
-                                            <Button 
-                                                type="button"
-                                                variant="outline" 
-                                                onClick={() => setStep('select')}
-                                                className="w-full sm:w-auto"
-                                            >
+                                            <Button type="button" variant="outline" onClick={() => setStep('select')} className="w-full sm:w-auto">
                                                 ← Modifier le créneau
                                             </Button>
-                                            
-                                            <Button 
-                                                type="submit" 
+
+                                            <Button
+                                                type="submit"
                                                 disabled={submitting || !form.client_name.trim() || !form.client_email.trim()}
                                                 className="px-8 w-full sm:w-auto bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70"
                                                 size="lg"
@@ -869,7 +860,7 @@ const AppointmentCalendar: React.FC = () => {
                                                     <>
                                                         <motion.div
                                                             animate={{ rotate: 360 }}
-                                                            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                                                            transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
                                                             className="w-5 h-5 border-2 border-white border-t-transparent rounded-full mr-2"
                                                         />
                                                         Confirmation...
@@ -899,16 +890,14 @@ const AppointmentCalendar: React.FC = () => {
                                     <motion.div
                                         initial={{ scale: 0 }}
                                         animate={{ scale: 1 }}
-                                        transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+                                        transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
                                         className="w-24 h-24 bg-gradient-to-br from-green-100 to-emerald-100 dark:from-green-900/50 dark:to-emerald-900/50 rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl"
                                     >
                                         <CheckCircle className="w-12 h-12 text-green-600 dark:text-green-400" />
                                     </motion.div>
-                                    
-                                    <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-                                        🎉 Rendez-vous confirmé !
-                                    </h2>
-                                    
+
+                                    <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">🎉 Rendez-vous confirmé !</h2>
+
                                     <div className="bg-gradient-to-br from-gray-50 to-white dark:from-gray-800 dark:to-gray-700 p-8 rounded-2xl mb-6 text-left shadow-inner">
                                         <h3 className="font-semibold mb-4 text-lg">Détails de votre rendez-vous :</h3>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
@@ -917,7 +906,10 @@ const AppointmentCalendar: React.FC = () => {
                                                 <div>
                                                     <span className="font-medium">Date : </span>
                                                     {selectedDate?.toLocaleDateString('fr-FR', {
-                                                        weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+                                                        weekday: 'long',
+                                                        day: 'numeric',
+                                                        month: 'long',
+                                                        year: 'numeric',
                                                     })}
                                                 </div>
                                             </div>
@@ -932,7 +924,7 @@ const AppointmentCalendar: React.FC = () => {
                                                 <MessageSquare className="w-4 h-4 text-primary" />
                                                 <div>
                                                     <span className="font-medium">Type : </span>
-                                                    {appointmentTypes.find(t => t.value === form.type)?.label}
+                                                    {appointmentTypes.find((t) => t.value === form.type)?.label}
                                                 </div>
                                             </div>
                                             {form.title && (
@@ -946,14 +938,14 @@ const AppointmentCalendar: React.FC = () => {
                                             )}
                                         </div>
                                     </div>
-                                    
+
                                     <p className="text-gray-600 dark:text-gray-300 mb-8">
-                                        Un email de confirmation a été envoyé à <strong>{form.client_email}</strong> 
+                                        Un email de confirmation a été envoyé à <strong>{form.client_email}</strong>
                                         avec tous les détails de votre rendez-vous et les instructions de connexion.
                                     </p>
-                                    
+
                                     <div className="space-y-4">
-                                        <Button 
+                                        <Button
                                             onClick={resetForm}
                                             className="w-full sm:w-auto bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70"
                                             size="lg"
