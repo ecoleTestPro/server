@@ -6,6 +6,7 @@ import { InputFile } from '@/components/ui/inputFile';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/text-area';
 import { ITestimonial } from '@/types/testimonial';
+import { Logger } from '@/utils/console.util';
 import { router, useForm } from '@inertiajs/react';
 import axios from 'axios';
 import { FormEventHandler, useState } from 'react';
@@ -68,7 +69,7 @@ export default function TestimonialForm({ closeDrawer, initialData }: Testimonia
                 router.reload();
             })
             .catch((error) => {
-                console.error('Erreur lors de la soumission:', error);
+                Logger.error('Erreur lors de la soumission:', error);
                 
                 if (error.response?.data?.errors) {
                     // Gestion des erreurs de validation Laravel

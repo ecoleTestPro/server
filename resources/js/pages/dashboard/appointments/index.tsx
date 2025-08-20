@@ -9,6 +9,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import AppLayout from '@/layouts/dashboard/app-layout';
 import { cn } from '@/lib/utils';
 import { Appointment } from '@/types';
+import { Logger } from '@/utils/console.util';
 import { Head } from '@inertiajs/react';
 import { AlertCircle, Calendar, CheckCircle, Clock, Download, Edit, Eye, Mail, MoreHorizontal, Phone, Search, Trash2, XCircle } from 'lucide-react';
 import { useState } from 'react';
@@ -80,7 +81,7 @@ export default function AppointmentsIndex({ appointments, filters, stats, appoin
 
     const handleStatusChange = (appointmentId: number, newStatus: string) => {
         // TODO: Implement status change via API
-        console.log('Changing status', appointmentId, newStatus);
+        Logger.log('Changing status', appointmentId, newStatus);
     };
 
     return (

@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Logger } from '@/utils/console.util';
 
 type ILoginForm = {
     email: string;
@@ -45,7 +46,7 @@ export default function LoginForm({ status, canResetPassword, onCloseDialog }: L
                 }
             },
             onError: (errors) => {
-                console.log('Login error:', errors);
+                Logger.log('Login error:', errors);
                 setLoginError(errors.email || errors.password || t('login.error', 'Login failed. Please try again.'));
             },
         });

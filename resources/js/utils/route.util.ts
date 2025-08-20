@@ -1,3 +1,5 @@
+import { Logger } from "./console.util";
+
 interface IRouteMap {
     link: string;
     linkFile?: string;
@@ -20,7 +22,7 @@ const createIRouteMap = (link: string, title?: string, linkFile?: string): IRout
             linkFile,
         };
     } catch (error) {
-        console.error('Error creating IRouteMap:', error);
+        Logger.error('Error creating IRouteMap:', error);
         return {
             link: '/',
             title: '',

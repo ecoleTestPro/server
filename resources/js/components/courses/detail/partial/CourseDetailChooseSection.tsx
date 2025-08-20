@@ -3,6 +3,7 @@ import { Calendar, MapPin, ArrowRight } from 'lucide-react';
 import { RefObject, useEffect, useState } from 'react'; // Add necessary imports
 import { useTranslation } from 'react-i18next';
 import CourseInscriptionDialog from './CourseInscriptionDialog';
+import { Logger } from '@/utils/console.util';
 
 interface CourseDetailChooseSectionProps {
     course: ICourse;
@@ -46,7 +47,7 @@ export default function CourseDetailChooseSection({ course, registrationRef }: C
 
     // Handle form submission (placeholder)
     const handleSubmit = (formData: { name: string; email: string; phone?: string; company?: string }) => {
-        console.log('Form submitted:', { courseId: course.id, ...formData }); // Replace with API call
+        Logger.log('Form submitted:', { courseId: course.id, ...formData }); // Replace with API call
     };
 
     return (

@@ -1,20 +1,21 @@
+import AppLogo from '@/components/app-logo';
+import AppearanceToggleDropdown from '@/components/appearance-dropdown';
 import { DEFULAT_MAIN_MENU, DEFULAT_MAIN_MENU_RIGHT } from '@/data/data.constant';
 import { SharedData } from '@/types';
 import { ICourseCategory } from '@/types/course';
 import { IMainMenuItem, MenuChildItem } from '@/types/header.type';
+import { Logger } from '@/utils/console.util';
 import { ROUTE_MAP } from '@/utils/route.util';
 import { Link, usePage } from '@inertiajs/react';
+import { Search } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import CalendarMenu from './CalendarMenu';
 import { HeaderNavTwo } from './header-nav-two';
 import HeaderSearch from './header-search';
-import HeaderUserAction from './headerUserAction';
-import AppLogo from '@/components/app-logo';
-import AppearanceToggleDropdown from '@/components/appearance-dropdown';
 import HeaderMobile from './HeaderMobile';
+import HeaderUserAction from './headerUserAction';
 import SearchMobile from './SearchMobile';
-import CalendarMenu from './CalendarMenu';
-import { Search } from 'lucide-react';
 
 export default function Header() {
     const { auth, data } = usePage<SharedData>().props;
@@ -61,13 +62,12 @@ export default function Header() {
         setMainMenuRight(mainMenuRightInit);
 
         if (data && data.categories_with_courses && data.categories_with_courses.length > 0) {
-            // console.log('[Header] categories_with_courses', data.categories_with_courses);
+            Logger.log('[Header] categories_with_courses', data.categories_with_courses);
             updateCourseMenuPart(mainMenuInit, setMainMenu, data);
         }
     }, [data, page]);
 
     const buildCourseItems = (category: ICourseCategory): MenuChildItem[] => {
-        // console.log('[buildCourseItems] category courses', category?.courses);
         if (!category.courses || category.courses.length === 0) return [];
 
         return category.courses.slice(0, 4).map((course) => ({
@@ -84,8 +84,6 @@ export default function Header() {
         const filteredCategories = categories.filter((category) => category); // .parent_id === parentId
 
         const output: MenuChildItem[] = filteredCategories.map((category) => {
-            // console.log('[buildCategoryItems] category title', category.title);
-
             const defaultDescription =
                 'Les formations vous préparent au passage de nombreuses certifications internationales. Validez vos compétences et accroissez votre employabilité ainsi que votre efficacité au sein de votre entreprise.';
 
@@ -93,7 +91,6 @@ export default function Header() {
 
             // Appeler récursivement uniquement sur les enfants directs
             if (category.children && category.children.length > 0) {
-                // console.log('[buildCategoryItems] category children', category.children);
                 childItems = buildCategoryItems(category.children, category.id || null);
             } else {
                 childItems = buildCourseItems(category);
@@ -110,15 +107,6 @@ export default function Header() {
 
             return menuChildItem;
         });
-
-        // // TODO : ajouter dynamiquement
-        // output.push({
-        //     id: 'programmes-de-reconversion',
-        //     label: PROGRAMMES_DE_RECONVERSION.label,
-        //     href: PROGRAMMES_DE_RECONVERSION.href,
-        //     description: PROGRAMMES_DE_RECONVERSION.description,
-        //     image: PROGRAMMES_DE_RECONVERSION.image,
-        // });
 
         return output;
     };
@@ -142,23 +130,16 @@ export default function Header() {
                 return item;
             }
 
-            // console.log('[CATEGORIES_WITH_COURSES]', data.categories_with_courses);
-
             return {
                 ...item,
                 children: {
                     id: 'formations-children',
                     title: 'Formations',
                     description: 'Liste des formations',
-                    items: [
-                        ...buildCategoryItems(data.categories_with_courses),
-                        PROGRAMMES_DE_RECONVERSION,
-                    ],
+                    items: [...buildCategoryItems(data.categories_with_courses), PROGRAMMES_DE_RECONVERSION],
                 },
             };
         });
-
-        console.log('[Header] Updated main menu with courses', updatedMenu);
 
         setMainMenu(updatedMenu);
     };
@@ -213,12 +194,12 @@ export default function Header() {
                                     <HeaderUserAction />
                                     <AppearanceToggleDropdown />
                                 </div>
-                                
+
                                 {/* Mobile actions */}
                                 <div className="flex items-center gap-2 md:hidden">
                                     {/* Timeline button - prominant sur mobile */}
                                     <CalendarMenu />
-                                    
+
                                     {/* Search icon - ouvre le sidebar de recherche */}
                                     <button
                                         onClick={toggleSearch}
@@ -227,10 +208,10 @@ export default function Header() {
                                     >
                                         <Search className="h-5 w-5" />
                                     </button>
-                                    
+
                                     {/* Mode selector */}
                                     <AppearanceToggleDropdown />
-                                    
+
                                     {/* Menu hamburger */}
                                     <button
                                         onClick={toggleSidebar}
@@ -273,12 +254,8 @@ export default function Header() {
                 onClose={() => setIsSidebarOpen(false)}
                 className="md:hidden"
             />
-            
-            <SearchMobile
-                isOpen={isSearchOpen}
-                onClose={() => setIsSearchOpen(false)}
-                className="md:hidden"
-            />
+
+            <SearchMobile isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} className="md:hidden" />
         </>
     );
 }

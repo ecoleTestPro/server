@@ -21,6 +21,7 @@ import RichTextCKEditor from '@/components/ui/form/RichTextCKEditor';
 import { ROUTE_MAP } from '@/utils/route.util';
 import axios from 'axios';
 import { COURSE_DEFAULT_VALUES, createPayload, ICourseForm, PeriodicityUnitEnum } from './course.form.util';
+import { Logger } from '@/utils/console.util';
 
 export type ICourseFormErrors = { [key in keyof ICourseForm]?: string[] };
 
@@ -171,8 +172,8 @@ function CourseForm({ course }: ICourseFormProps) {
             course.description.exam && setData('exam', course.description.exam);
         }
 
-        console.log('[handleInitializeForm] course:', course);
-        console.log('[handleInitializeForm] data:', data);
+        Logger.log('[handleInitializeForm] course:', course);
+        Logger.log('[handleInitializeForm] data:', data);
 
         setFormHasBeenInitialized(true);
     };
@@ -190,11 +191,11 @@ function CourseForm({ course }: ICourseFormProps) {
         try {
             const isValid = validationBeformSubmitForm();
             if (!isValid) {
-                console.log('[submit] Validation failed', errors);
+                Logger.log('[submit] Validation failed', errors);
                 setLoading(false);
                 return;
             }
-            console.log('[submit] Preparing form data', { data, draft, thumbnail, logoFile, orgLogoFile, videoFile, galleryFiles });
+            Logger.log('[submit] Preparing form data', { data, draft, thumbnail, logoFile, orgLogoFile, videoFile, galleryFiles });
             const routeName = data?.id ? 'dashboard.course.update' : 'dashboard.course.store';
             const formData = new FormData();
             const payload = createPayload(data, draft);
@@ -211,12 +212,12 @@ function CourseForm({ course }: ICourseFormProps) {
             if (videoFile) formData.append('video', videoFile);
             if (galleryFiles) Array.from(galleryFiles).forEach((file) => formData.append('gallery[]', file));
             if (data?.id) formData.append('_method', 'PUT');
-            console.log(' data.partner_ids', data.partner_ids);
+            Logger.log(' data.partner_ids', data.partner_ids);
             // if(!data?.partner_ids || data?.partner_ids?.length <= 0) {
             //     formData.append('partner_ids', JSON.stringify([]));
             // }
 
-            console.log('[submit] formData:', formData);
+            Logger.log('[submit] formData:', formData);
 
             const response = await axios.post(data?.id ? route(routeName, course?.slug) : route(routeName), formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
@@ -225,14 +226,14 @@ function CourseForm({ course }: ICourseFormProps) {
             // Handle the response
             setLoading(false);
             if (response.status === 200 || response.status === 201) {
-                console.log('[submit] Course submitted successfully', response.data);
+                Logger.log('[submit] Course submitted successfully', response.data);
                 toast.success(t('COURSE.FORM.SUBMIT_SUCCESS', 'Formation soumise avec succès !'));
                 router.visit(ROUTE_MAP.dashboard.course.list.link, { preserveScroll: true, preserveState: true });
             } else {
-                console.error('[submit] Error submitting course', response);
+                Logger.error('[submit] Error submitting course', response);
                 toast.error(t('COURSE.FORM.SUBMIT_ERROR', 'Erreur lors de la soumission de la formation'));
             }
-            console.log('Course creation response:', response);
+            Logger.log('Course creation response:', response);
 
             // toast.success(t('courses.createSuccess', 'Formation créée avec succès !'));
             // return router.visit(ROUTE_MAP.dashboard.course.list.link);
@@ -254,7 +255,7 @@ function CourseForm({ course }: ICourseFormProps) {
     }, [course]);
 
     useEffect(() => {
-        console.log('{{ sharedData }}', sharedData);
+        Logger.log('{{ sharedData }}', sharedData);
 
         if (sharedData && sharedData.categories_with_courses) {
             setCategories(sharedData.categories_with_courses);

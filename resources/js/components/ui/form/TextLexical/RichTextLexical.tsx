@@ -6,6 +6,7 @@ import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import { LexicalErrorBoundary as DefaultLexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
 import { EditorState } from 'lexical';
+import { Logger } from '@/utils/console.util';
 
 // Define the props type for LexicalErrorBoundary to include onError
 interface LexicalErrorBoundaryProps {
@@ -28,7 +29,7 @@ class LexicalErrorBoundary extends React.Component<LexicalErrorBoundaryProps, { 
     // Call the onError prop to handle the error as required by Lexical
     this.props.onError(error);
     // Optionally log the error for debugging
-    // console.error(error, errorInfo);
+    // Logger.error(error, errorInfo);
   }
 
   render() {
@@ -128,7 +129,7 @@ export default function RichTextLexical({
   // Configuration initiale de Lexical
   const initialConfig = {
     namespace: 'MyEditor',
-    onError: (error: Error) => console.error(error),
+    onError: (error: Error) => Logger.error("Une erreur est survenue dans l'éditeur.",error),
     editorState: value ? value : null,
     theme: theme
   };

@@ -4,6 +4,7 @@ import { getMediaUrl } from '@/utils/utils';
 import { usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import TitleBadgeOne from '../ui/badge-one';
+import { Logger } from '@/utils/console.util';
 
 interface ReferenceLogosProps {
     tag: string; // Optional tag to filter references, if needed
@@ -25,7 +26,7 @@ export default function ReferenceLogos({ tag, imgHeight = 'h-16' }: ReferenceLog
     }
 
     useEffect(() => {
-        console.log('references', references);
+        Logger.log('references', references);
 
         if (tag && references.length > 0) {
             const filtered = references.filter((ref) => ref.tag?.split(';')?.includes(tag));
@@ -34,7 +35,7 @@ export default function ReferenceLogos({ tag, imgHeight = 'h-16' }: ReferenceLog
             setFilteredReferences(references);
         }
 
-        console.log('filteredReferences', filteredReferences);
+        Logger.log('filteredReferences', filteredReferences);
     }, [tag, references]);
 
     const getImgLink = (ref: IPartner): string => {

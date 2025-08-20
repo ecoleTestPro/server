@@ -7,6 +7,7 @@ import { CLASS_NAME } from '@/data/styles/style.constant';
 import DefaultLayout from '@/layouts/public/front.layout';
 import { type SharedData } from '@/types';
 import { IBlog, IBlogCategory } from '@/types/blogs';
+import { Logger } from '@/utils/console.util';
 import { ROUTE_MAP } from '@/utils/route.util';
 import { router, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
@@ -47,7 +48,7 @@ export default function Blogs() {
 
     useEffect(() => {
         if (data.blogs && data.blogs.list) {
-            console.log('Fetched blogs:', data.blogs.list);
+            Logger.log('Fetched blogs:', data.blogs.list);
             setBlogs(data.blogs.list);
         }
     }, [data.blogs]);

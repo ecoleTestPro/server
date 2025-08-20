@@ -10,6 +10,7 @@ import toast from 'react-hot-toast';
 import 'react-quill/dist/quill.snow.css';
 import RichTextQuill from '../ui/form/RichTextQuill';
 import SelectCustom, { ISelectItem } from '../ui/select-custom';
+import { Logger } from '@/utils/console.util';
 
 interface Props {
     closeDrawer?: () => void;
@@ -79,7 +80,7 @@ export default function JobOfferForm({ closeDrawer, initialData }: Props) {
                 closeDrawer?.();
             })
             .catch((error) => {
-                console.log('Error submitting job offer:', error);
+                Logger.log('Error submitting job offer:', error);
 
                 if (error.response?.data?.errors) {
                     Object.keys(error.response.data.errors).forEach((key) => {
