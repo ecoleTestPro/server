@@ -6,7 +6,9 @@ import { InputFile } from '@/components/ui/inputFile';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/text-area';
 import { ITestimonial } from '@/types/testimonial';
+import { Logger } from '@/utils/console.util';
 import { router, useForm } from '@inertiajs/react';
+import axios from 'axios';
 import { FormEventHandler, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -27,33 +29,60 @@ const defaultValues: ITestimonial = {
 export default function TestimonialForm({ closeDrawer, initialData }: TestimonialFormProps) {
     const { t } = useTranslation();
     const [file, setFile] = useState<File | null>(null);
-    const { data, setData, processing, errors, reset } = useForm<ITestimonial>(initialData || defaultValues);
+    const { data, setData, processing, errors, reset } = useForm(initialData || defaultValues);
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
 
         const routeUrl = initialData?.id ? route('dashboard.testimonial.update', initialData.id) : route('dashboard.testimonial.store');
 
-        router.visit(routeUrl, {
-            method: initialData?.id ? 'put' : 'post',
-            data: {
-                name: data.name,
-                designation: data.designation,
-                description: data.description,
-                rating: data.rating,
-                is_active: data.is_active ? '1' : '0',
-                ...(file && { picture: file }),
-            },
-            forceFormData: true,
-            preserveScroll: true,
-            onSuccess: () => {
+        // Préparer les données avec FormData pour gérer les fichiers
+        const formData = new FormData();
+        formData.append('name', data.name);
+        formData.append('designation', data.designation);
+        formData.append('description', data.description);
+        formData.append('rating', data.rating.toString());
+        formData.append('is_active', data.is_active ? '1' : '0');
+        
+        if (file) {
+            formData.append('picture', file);
+        }
+
+        // Configuration Axios avec headers appropriés
+        const config = {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'X-HTTP-Method-Override': initialData?.id ? 'PUT' : 'POST'
+            }
+        };
+
+        const axiosMethod = initialData?.id ? axios.post : axios.post; // Utiliser POST avec method override pour les fichiers
+        
+        axiosMethod(routeUrl, formData, config)
+            .then(() => {
                 toast.success(
                     initialData?.id ? t('testimonials.updated', 'Témoignage mis à jour !') : t('testimonials.created', 'Témoignage créé !'),
                 );
                 reset();
+                setFile(null); // Reset le fichier
                 closeDrawer?.();
-            },
-        });
+                router.reload();
+            })
+            .catch((error) => {
+                Logger.error('Erreur lors de la soumission:', error);
+                
+                if (error.response?.data?.errors) {
+                    // Gestion des erreurs de validation Laravel
+                    Object.keys(error.response.data.errors).forEach((key) => {
+                        const errorMessage = error.response.data.errors[key][0];
+                        toast.error(`${key}: ${errorMessage}`);
+                    });
+                } else if (error.response?.data?.message) {
+                    toast.error(error.response.data.message);
+                } else {
+                    toast.error(t('testimonials.error', 'Une erreur est survenue lors de la création du témoignage.'));
+                }
+            });
     };
 
     return (

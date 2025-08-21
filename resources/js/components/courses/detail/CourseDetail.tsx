@@ -10,6 +10,7 @@ import CoursePartners from './CoursePartners';
 import CouseDetailMedia from './CouseDetailMedia';
 import CourseDetailChooseSection from './partial/CourseDetailChooseSection';
 import CourseDetailOverview from './partial/CourseDetailOverview';
+import { Logger } from '@/utils/console.util';
 
 const email: string = 'info@ecoletestpro.com';
 
@@ -26,7 +27,7 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ course }) => {
     // Composant helper pour rendre le HTML avec les styles appropriés
     const RichContent = ({ html }: { html: string }) => {
         const cleanedHTML = sanitizeHTML(html);
-        console.log("[CourseDetail] Cleaned HTML:", cleanedHTML);
+        Logger.log("[CourseDetail] Cleaned HTML:", cleanedHTML);
         
         return (
             <div className={proseClasses} dangerouslySetInnerHTML={{ __html: cleanedHTML }} />

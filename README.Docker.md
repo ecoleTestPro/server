@@ -266,3 +266,100 @@ En cas de problème, vérifiez :
 ---
 
 *Happy coding! 🚀*
+
+
+
+
+## 🐳 Exécution avec Docker
+
+Pour un environnement plus proche de la production, Docker est recommandé.
+
+### ✅ Avantages
+
+* Isolation complète des services
+* Reproductibilité de l’environnement
+* Sécurité renforcée (exécution en utilisateur non-root)
+* Build automatique du backend et du frontend
+
+---
+
+## 📦 Stack technique
+
+| Service  | Version | Rôle                                     |
+| -------- | ------- | ---------------------------------------- |
+| PHP      | 8.2 FPM | Environnement principal Laravel          |
+| Node.js  | 20      | Compilation et build des assets frontend |
+| Composer | 2.7     | Gestionnaire de dépendances PHP          |
+| OS Base  | Alpine  | Système léger et sécurisé                |
+
+---
+
+## 🔧 Extensions PHP requises
+
+* `pdo`, `pdo_mysql`, `pdo_sqlite`
+* `intl`, `zip`, `bcmath`, `opcache`
+* `gd` (avec support `freetype` et `jpeg`)
+* `curl`, `mbstring`, `tokenizer`
+
+---
+
+## 🗂️ Variables d’environnement
+
+Renommer et configurer le fichier `.env.example` :
+
+```bash
+cp .env.example .env
+```
+
+> Avec Docker, vous pouvez décommenter dans `docker-compose.yml` :
+
+```yaml
+# env_file: ./.env
+```
+
+---
+
+## ▶️ Lancer avec Docker
+
+```bash
+docker compose up --build
+```
+
+### 📡 Ports exposés
+
+* `9000` : PHP-FPM (à utiliser derrière Nginx ou Apache)
+
+> 💡 Ce setup ne contient pas de serveur web intégré. Ajoutez-en un si nécessaire.
+
+---
+
+## 📁 Répertoires à permission d’écriture
+
+* `storage/`
+* `bootstrap/cache/`
+
+---
+
+## 🎨 Build des assets frontend
+
+Le build est géré automatiquement via **Vite** dans le processus Docker.
+Aucune exécution manuelle de `npm run build` n’est nécessaire.
+
+---
+
+## 👤 Sécurité
+
+L’application s’exécute avec l’utilisateur **`appuser`** (non-root) pour renforcer la sécurité.
+
+---
+
+## 🧪 Services additionnels (optionnels)
+
+* MySQL / MariaDB
+* PostgreSQL
+* Redis
+* Mailhog (test d’envoi d’e-mails)
+
+Ajoutez-les dans `docker-compose.yml` et mettez à jour `.env` si besoin.
+
+---

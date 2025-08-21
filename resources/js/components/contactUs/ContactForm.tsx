@@ -58,7 +58,6 @@ export default function ContactForm({ handleSubmit, errors, setErrors }: Contact
 
             // event.preventDefault();
             if (!executeRecaptcha) {
-                console.log('executeRecaptcha not yet available');
                 return;
             }
 
@@ -67,7 +66,6 @@ export default function ContactForm({ handleSubmit, errors, setErrors }: Contact
                 setData('recaptchaToken', token);
                 handleSubmit({ ...data, recaptchaToken: token }, event);
             } catch (error) {
-                console.error('Erreur lors de la récupération du token reCAPTCHA:', error);
             }
         },
         [executeRecaptcha, data, setData, handleSubmit],

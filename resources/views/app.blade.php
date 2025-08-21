@@ -48,6 +48,9 @@
     {{-- custom css --}}
     <link rel="stylesheet" href="{{ mix('css/custom.css') }}">
 
+    {{-- On prod --}}
+    {{-- <link rel="stylesheet" href="{{ asset('css/custom.css') }}"> --}}
+
     {{-- AOS --}}
     <script src="bower_components/aos/dist/aos.js"></script>
     <link rel="stylesheet" href="bower_components/aos/dist/aos.css" />

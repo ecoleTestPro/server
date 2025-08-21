@@ -36,7 +36,7 @@ export function UserMenuContent({ user }: UserMenuContentProps) {
                 <DropdownMenuItem asChild>
                     <Link className="block w-full" href={route('profile.edit')} as="button" prefetch onClick={cleanup}>
                         <Settings className="mr-2" />
-                        Settings
+                        Mon compte
                     </Link>
                 </DropdownMenuItem>
             </DropdownMenuGroup>
@@ -44,7 +44,7 @@ export function UserMenuContent({ user }: UserMenuContentProps) {
                 <DropdownMenuItem asChild>
                     <Link className="block w-full" href={route('home')} as="button" prefetch onClick={cleanup}>
                         <Settings className="mr-2" />
-                        Home
+                        Accueil
                     </Link>
                 </DropdownMenuItem>
             </DropdownMenuGroup>
@@ -52,7 +52,7 @@ export function UserMenuContent({ user }: UserMenuContentProps) {
             <DropdownMenuItem asChild>
                 <Link className="block w-full" method="post" href={route('logout')} as="button" onClick={handleLogout}>
                     <LogOut className="mr-2" />
-                    Log out
+                    Se déconnecter
                 </Link>
             </DropdownMenuItem>
         </>

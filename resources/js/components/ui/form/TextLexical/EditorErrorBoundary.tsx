@@ -1,3 +1,4 @@
+import { Logger } from '@/utils/console.util';
 import React, { Component, ReactNode } from 'react';
 
 interface Props {
@@ -21,7 +22,7 @@ class EditorErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('Lexical Editor Error:', error, errorInfo);
+    Logger.error('Lexical Editor Error:', error, errorInfo);
     this.props.onError?.(error, errorInfo);
   }
 

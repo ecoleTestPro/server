@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import CourseDurationBlock from '../CourseDurationBlock';
 import CourseInscriptionDialog from '../detail/partial/CourseInscriptionDialog';
+import { Calendar, Clock, Euro, ChevronRight } from 'lucide-react';
 
 interface ICourseTableProps {
     courses: ICourse[];
@@ -58,62 +59,172 @@ export default function CourseTable({ courses }: ICourseTableProps) {
     };
 
     if (!courses || courses.length === 0) {
-        return <div className="text-center text-2xl font-medium text-gray-600">Aucun cours disponible</div>;
+        return (
+            <div className="text-center py-12">
+                <div className="w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Calendar className="w-12 h-12 text-gray-400" />
+                </div>
+                <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">Aucun cours disponible</h3>
+                <p className="text-gray-500 dark:text-gray-400">Consultez notre catalogue plus tard pour de nouvelles formations</p>
+            </div>
+        );
     }
 
     return (
         <>
-            <div className="mb-6 overflow-hidden rounded-md bg-white shadow-md dark:bg-[#1a1f33]">
+            {/* Vue mobile - Cards */}
+            <div className="block lg:hidden space-y-4 mb-6">
+                {courses.map((item, index) => (
+                    <div
+                        key={index}
+                        className="group bg-white dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-200 dark:border-gray-700 transform hover:-translate-y-1"
+                    >
+                        <div className="p-4 sm:p-6">
+                            {/* Header de la card */}
+                            <div className="mb-4">
+                                <Link
+                                    href={ROUTE_MAP.public.courses.detail(item.category?.slug ?? '', item.slug).link}
+                                    className="block"
+                                >
+                                    <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors duration-200 leading-tight">
+                                        {item.title}
+                                    </h3>
+                                </Link>
+                                
+                                {item.category && (
+                                    <div className="mt-2">
+                                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300">
+                                            {item.category.title}
+                                        </span>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Informations du cours */}
+                            <div className="space-y-3 mb-4">
+                                {/* Prochaine session */}
+                                <div className="flex items-center gap-3 p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                                    <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                        <Calendar className="w-4 h-4 text-white" />
+                                    </div>
+                                    <div className="min-w-0 flex-1">
+                                        <p className="text-xs text-blue-600 dark:text-blue-400 font-medium">Prochaine session</p>
+                                        <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">
+                                            {getNextSession(item)}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {/* Durée et Prix */}
+                                <div className="grid grid-cols-2 gap-3">
+                                    <div className="flex items-center gap-3 p-2 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
+                                        <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                            <Clock className="w-4 h-4 text-white" />
+                                        </div>
+                                        <div className="min-w-0">
+                                            <p className="text-xs text-orange-600 dark:text-orange-400 font-medium">Durée</p>
+                                            <div className="text-sm font-semibold text-gray-900 dark:text-white">
+                                                <CourseDurationBlock duration={getPeriodicity(item.periodicity_unit, item.periodicity_value)} />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-center gap-3 p-2 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                                        <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                            <Euro className="w-4 h-4 text-white" />
+                                        </div>
+                                        <div className="min-w-0">
+                                            <p className="text-xs text-green-600 dark:text-green-400 font-medium">Prix</p>
+                                            <div className="text-sm font-semibold text-gray-900 dark:text-white" dangerouslySetInnerHTML={{ __html: getPrice(item.price) }} />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Bouton d'action */}
+                            <div className="pt-4 border-t border-gray-100 dark:border-gray-700">
+                                <button
+                                    onClick={() => handleClickRegisterCourse(item)}
+                                    className="w-full group bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-semibold py-3 px-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2"
+                                >
+                                    <span>{t('COURSE.TABLE.REGISTER', 'Voir toutes les dates')}</span>
+                                    <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            {/* Vue desktop - Tableau amélioré */}
+            <div className="hidden lg:block mb-6 overflow-hidden rounded-2xl bg-white shadow-lg dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
                 <div className="table-responsive overflow-x-auto">
-                    <table className="w-full table-fixed">
-                        <thead className="text-black dark:text-white">
+                    <table className="w-full">
+                        <thead className="text-gray-700 dark:text-gray-200 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800">
                             <tr>
-                                <th className="w-4/12 bg-gray-50 px-5 py-3 font-medium whitespace-nowrap first:rounded-tl-md ltr:text-left rtl:text-right dark:bg-[#15203c]">
-                                    {t('COURSE.TABLE.TITLE', 'Titre')}
+                                <th className="w-4/12 px-6 py-4 font-semibold text-left">
+                                    {t('COURSE.TABLE.TITLE', 'Formation')}
                                 </th>
-                                <th className=" bg-gray-50 px-5 py-3 font-medium whitespace-nowrap ltr:text-left rtl:text-right dark:bg-[#15203c]">
+                                <th className="px-6 py-4 font-semibold text-left">
                                     {t('COURSE.TABLE.NEXT_SESSION', 'Prochaine session')}
                                 </th>
-                                <th className=" bg-gray-50 px-5 py-3 font-medium whitespace-nowrap ltr:text-left rtl:text-right dark:bg-[#15203c]">
+                                <th className="px-6 py-4 font-semibold text-left">
                                     {t('COURSE.TABLE.DURATION', 'Durée')}
                                 </th>
-                                <th className="bg-gray-50 px-5 py-3 font-medium whitespace-nowrap last:rounded-tr-md ltr:text-left rtl:text-right dark:bg-[#15203c]">
+                                <th className="px-6 py-4 font-semibold text-left">
                                     {t('COURSE.TABLE.PRICE', 'Prix')}
                                 </th>
-                                <th className="bg-gray-50 px-5 py-3 font-medium whitespace-nowrap last:rounded-tr-md ltr:text-left rtl:text-right dark:bg-[#15203c]">
-                                    {t('COURSE.TABLE.REGISTER_COURSER', 'Inscrivez-vous')}
+                                <th className="px-6 py-4 font-semibold text-center">
+                                    {t('COURSE.TABLE.REGISTER_COURSER', 'Action')}
                                 </th>
                             </tr>
                         </thead>
-                        <tbody className="text-black dark:text-white">
+                        <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                             {courses.map((item, index) => (
-                                <tr key={index}>
-                                    <td className="w-4/12 border-b border-gray-100 px-5 py-4 whitespace-nowrap ltr:text-left rtl:text-right dark:border-[#172036]">
-                                        <div className="text-pretty">
+                                <tr 
+                                    key={index}
+                                    className="group hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-200"
+                                >
+                                    <td className="px-6 py-4">
+                                        <div className="flex flex-col">
                                             <Link
-                                                className="underline hover:text-primary hover:shadow-2xl transition-all duration-300"
+                                                className="font-semibold text-gray-900 dark:text-white hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors duration-200"
                                                 href={ROUTE_MAP.public.courses.detail(item.category?.slug ?? '', item.slug).link}
                                             >
                                                 {item.title}
                                             </Link>
+                                            {item.category && (
+                                                <span className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                                    {item.category.title}
+                                                </span>
+                                            )}
                                         </div>
                                     </td>
-                                    <td className=" border-b border-gray-100 px-5 py-4 whitespace-nowrap ltr:text-left rtl:text-right dark:border-[#172036]">
-                                        {/* <CourseDurationBlock location={item.location_mode} /> */}
-                                        <div className="text-pretty">{getNextSession(item)}</div>
+                                    <td className="px-6 py-4">
+                                        <div className="flex items-center gap-2">
+                                            <Calendar className="w-4 h-4 text-blue-500" />
+                                            <span className="text-gray-700 dark:text-gray-300">{getNextSession(item)}</span>
+                                        </div>
                                     </td>
-                                    <td className="border-b border-gray-100 px-5 py-4 whitespace-nowrap ltr:text-left rtl:text-right dark:border-[#172036]">
-                                        <CourseDurationBlock duration={getPeriodicity(item.periodicity_unit, item.periodicity_value)} />
+                                    <td className="px-6 py-4">
+                                        <div className="flex items-center gap-2">
+                                            {/* <Clock className="w-4 h-4 text-orange-500" /> */}
+                                            <CourseDurationBlock duration={getPeriodicity(item.periodicity_unit, item.periodicity_value)} />
+                                        </div>
                                     </td>
-                                    <td className="border-b border-gray-100 px-5 py-4 whitespace-nowrap ltr:text-left rtl:text-right dark:border-[#172036]">
-                                        <span className="block font-medium text-pretty" dangerouslySetInnerHTML={{ __html: getPrice(item.price) }} />
+                                    <td className="px-6 py-4">
+                                        <div className="flex items-center gap-2">
+                                            {/* <Euro className="w-4 h-4 text-green-500" /> */}
+                                            <span className="font-semibold text-gray-900 dark:text-white" dangerouslySetInnerHTML={{ __html: getPrice(item.price) }} />
+                                        </div>
                                     </td>
-                                    <td className="border-b border-gray-100 px-5 py-4 whitespace-nowrap ltr:text-left rtl:text-right dark:border-[#172036]">
+                                    <td className="px-6 py-4 text-center">
                                         <button
-                                            className="inline-block animate-pulse text-green-400 underline hover:text-green-500 dark:text-green-400"
+                                            className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-medium rounded-lg transition-all duration-200 hover:shadow-lg"
                                             onClick={() => handleClickRegisterCourse(item)}
                                         >
-                                            {t('COURSE.TABLE.REGISTER', 'Toute les date')}
+                                            {t('COURSE.TABLE.REGISTER', 'Voir les dates')}
+                                            <ChevronRight className="w-4 h-4" />
                                         </button>
                                     </td>
                                 </tr>

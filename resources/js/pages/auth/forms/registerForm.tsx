@@ -11,6 +11,7 @@ import TextLink from '@/components/text-link';
 import { Button } from '@/components/ui/button/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Logger } from '@/utils/console.util';
 
 type IRegisterForm = {
     name: string;
@@ -37,14 +38,14 @@ export default function RegisterForm() {
         e.preventDefault();
         post(route('auth.register'), {
             onFinish: (response) => {
-                console.log('Registration response:', response);
+                Logger.log('Registration response:', response);
             },
             onSuccess: () => {
                 toast.success(t('register.successMessage', 'Inscription réussie !'));
             },
             onError: (errors) => {
                 toast.error(t('register.errorMessage', "Erreur lors de l'inscription"));
-                console.error('Registration error:', errors);
+                Logger.error('Registration error:', errors);
             },
         });
     };

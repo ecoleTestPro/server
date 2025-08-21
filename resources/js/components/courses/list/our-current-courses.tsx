@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ListCourseByCategory } from './ListCourseByCategory';
 import SidebarFilter from './SidebarFilter';
+import { Logger } from '@/utils/console.util';
 
 interface IOurCurrentCoursesProps {
     coursesData?: ICourseCategory[];
@@ -51,7 +52,7 @@ const OurCurrentCourses = ({ coursesData, showSidebar = false, coursesDataSlice,
 
     // Gérer le chargement des cours
     useEffect(() => {
-        console.log("[OurCurrentCourses] courses: #0", {courses, loading});
+        Logger.log("[OurCurrentCourses] courses: #0", {courses, loading});
         if (coursesData && coursesData.length > 0 && !courses && !loading) {
             setLoading(true);
             setError(null);
@@ -62,7 +63,7 @@ const OurCurrentCourses = ({ coursesData, showSidebar = false, coursesDataSlice,
 
             setLoading(false);
         }
-        console.log("[OurCurrentCourses] courses:", {courses, loading});
+        Logger.log("[OurCurrentCourses] courses:", {courses, loading});
 
     }, [coursesData, data, courses, coursesDataSlice, loading]);
 

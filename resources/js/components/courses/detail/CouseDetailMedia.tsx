@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import { ICourse } from '@/types/course';
 import { getMediaUrl } from '@/utils/utils';
+import { Logger } from '@/utils/console.util';
 
 interface CouseDetailMediaProps {
     course: ICourse;
@@ -17,7 +18,7 @@ export default function CouseDetailMedia({ course }: CouseDetailMediaProps) {
         );
     }
 
-    console.log('Course Media:', course.media);
+    Logger.log('Course Media:', course.media);
 
     return (
         <div>

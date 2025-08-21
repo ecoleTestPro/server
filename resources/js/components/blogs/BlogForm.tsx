@@ -73,7 +73,6 @@ export const BlogForm = ({ blog = null, categories = [], onCancel }: BlogFormPro
         e.preventDefault();
         const routeUrl = blog ? route('dashboard.blogs.update') : route('dashboard.blogs.store');
 
-        console.log(' data.tags', data.tags);
         let payload = {
             ...(blog && { blog: blog.id }),
             title: data.title,
@@ -92,8 +91,6 @@ export const BlogForm = ({ blog = null, categories = [], onCancel }: BlogFormPro
         axios
             .post(routeUrl, payload)
             .then((response) => {
-                console.log('Blog saved successfully:', response);
-                
                 toast.success(t('Blog saved successfully', 'Blog enregistré avec succès'));
                 reset();
                 onCancel();
@@ -101,7 +98,6 @@ export const BlogForm = ({ blog = null, categories = [], onCancel }: BlogFormPro
             })
             .catch((error) => {
                 toast.error(t('Error saving blog', "Erreur lors de l'enregistrement du blog"));
-                console.error(error);
             });
     };
 

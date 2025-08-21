@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Logger } from '@/utils/console.util';
 
 type ILoginAdminForm = {
     email: string;
@@ -42,7 +43,7 @@ export default function LoginAdminForm({ status, canResetPassword, onCloseDialog
                 }
             },
             onError: (errors) => {
-                console.log('Login error:', errors);
+                Logger.log('Login error:', errors);
                 // Stocke le message d'erreur principal (ex: email ou password)
                 setLoginError(errors.email || errors.password || t('login.error', 'Echec de la connexion. Veuillez réessayer.'));
             },

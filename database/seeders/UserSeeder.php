@@ -21,30 +21,38 @@ class UserSeeder extends Seeder
                 'email' => 'admin@example.com',
             ],
             [
-                'phone' => '011' . rand(100000000, 999999999),
-                'name' => 'Administrator',
-                'is_active' => true,
-                'is_admin' => true,
+                'phone'             => '011' . rand(100000000, 999999999),
+                'name'              => 'Administrator',
+                'is_active'         => true,
+                'is_admin'          => true,
                 'email_verified_at' => now(),
-                'password' => Hash::make('secret'),
-                'remember_token' => Str::random(10),
+                'password'          => Hash::make('r@x0pXJwt]cyhK_DATkU'),
+                'remember_token'    => Str::random(10),
             ]
         );
         $localAdmin->assignRole('admin');
 
-        // // Utilisateur admin
-        // User::create([
-        //     'name' => 'Admin User',
-        //     'email' => 'admin@example.com',
-        //     'password' => Hash::make('password'),
-        //     'email_verified_at' => now(),
-        //     'is_admin' => true,
-        // ]);
+        $localAdmin = UserRepository::query()->updateOrCreate(
+            [
+                'email' => 'developper@testpro.com',
+            ],
+            [
+                'phone'             => '011' . rand(100000000, 999999999),
+                'name'              => 'Developer',
+                'is_active'         => true,
+                'is_admin'          => true,
+                'email_verified_at' => now(),
+                'password'          => Hash::make('!zz5Fe[+QX(Fy0]B_g];'),
+                'remember_token'    => Str::random(10),
+            ]
+        );
+        $localAdmin->assignRole('admin');
 
-        if (app()->isLocal()) {
-            User::factory()
-                ->count(5)
-                ->create();
-        }
+
+        // if (app()->isLocal()) {
+        //     User::factory()
+        //         ->count(5)
+        //         ->create();
+        // }
     }
 }

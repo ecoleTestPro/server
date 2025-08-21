@@ -115,7 +115,6 @@ function CategoryForm({ closeDrawer, initialData }: CategoryFormProps) {
             },
             onError: (errors) => {
                 toast.error(t('courses.category.updateError', 'Erreur lors de la mise à jour de la catégorie'));
-                console.error('Category update error:', errors);
             },
             preserveScroll: true,
         });
