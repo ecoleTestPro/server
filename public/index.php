@@ -21,10 +21,4 @@ require __DIR__ . '/../vendor/autoload.php';
 /** @var Application $app */
 $app = require_once __DIR__ . '/../bootstrap/app.php';
 
-// var_dump($app->version()); die;
-// echo "<pre>";
-// var_dump($app);
-// echo "</pre>";
-// die;
-
 $app->handleRequest(Request::capture());
