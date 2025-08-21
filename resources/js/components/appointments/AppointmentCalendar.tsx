@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import axios from 'axios';
 import { AnimatePresence, motion, useScroll, useTransform } from 'framer-motion';
-import { ArrowRight, Calendar, CalendarDays, CheckCircle, Clock, MessageSquare, Sparkles, User } from 'lucide-react';
+import { Calendar, CalendarDays, CheckCircle, Clock, MessageSquare, Sparkles, User } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 import ReactCalendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
@@ -143,10 +143,22 @@ const AppointmentCalendar: React.FC = () => {
                 })
                 .then((response) => {
                     if (response.data.slots) {
-                        const slotsWithAvailability = response.data.slots.map((slot: TimeSlot) => ({
+                        // Filtrer les créneaux de pause déjeuner (12h-14h)
+                        const filteredSlots = response.data.slots.filter((slot: TimeSlot) => {
+                            const time = slot.time;
+                            const hour = parseInt(time.split(':')[0]);
+                            const minutes = parseInt(time.split(':')[1]);
+                            const totalMinutes = hour * 60 + minutes;
+
+                            // Exclure les créneaux entre 12:00 (720 min) et 14:00 (840 min)
+                            return totalMinutes < 720 || totalMinutes >= 840;
+                        });
+
+                        const slotsWithAvailability = filteredSlots.map((slot: TimeSlot) => ({
                             ...slot,
-                            available: true
+                            available: true,
                         }));
+
                         setAvailableSlots(slotsWithAvailability);
                         setBusinessHours(response.data.businessHours);
                         setShowTimeSlots(true);
@@ -436,12 +448,12 @@ const AppointmentCalendar: React.FC = () => {
                                                     }
                                                 `}</style>
                                                 <ReactCalendar
-                                                    onChange={handleDateChange}
+                                                    onChange={handleDateChange as any}
                                                     value={selectedDate}
                                                     minDate={new Date()}
                                                     tileDisabled={isDateDisabled}
                                                     locale="fr-FR"
-                                                    formatShortWeekday={(locale, date) =>
+                                                    formatShortWeekday={(_locale, date) =>
                                                         ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'][date.getDay()]
                                                     }
                                                     showNeighboringMonth={false}
@@ -531,25 +543,41 @@ const AppointmentCalendar: React.FC = () => {
                                                     Choisissez l'heure
                                                 </CardTitle>
                                             </motion.div>
-                                            <motion.div
-                                                className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full text-primary font-medium"
-                                                animate={{ scale: [1, 1.02, 1] }}
-                                                transition={{ duration: 2, repeat: Infinity }}
-                                            >
-                                                <Calendar className="w-4 h-4" />
-                                                <span className="text-sm">
-                                                    {selectedDate.toLocaleDateString('fr-FR', {
-                                                        weekday: 'long',
-                                                        day: 'numeric',
-                                                        month: 'long',
-                                                        year: 'numeric',
-                                                    })}
-                                                </span>
-                                            </motion.div>
+                                            <div className="flex flex-col items-center gap-3">
+                                                <motion.div
+                                                    className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full text-primary font-medium"
+                                                    animate={{ scale: [1, 1.02, 1] }}
+                                                    transition={{ duration: 2, repeat: Infinity }}
+                                                >
+                                                    <Calendar className="w-4 h-4" />
+                                                    <span className="text-sm">
+                                                        <strong>Date sélectionnée :</strong>{' '}
+                                                        {selectedDate.toLocaleDateString('fr-FR', {
+                                                            weekday: 'long',
+                                                            day: 'numeric',
+                                                            month: 'long',
+                                                            year: 'numeric',
+                                                        })}
+                                                    </span>
+                                                </motion.div>
+                                                <Button
+                                                    variant="outline"
+                                                    size="sm"
+                                                    onClick={() => {
+                                                        setSelectedDate(null);
+                                                        setSelectedTime('');
+                                                        setShowTimeSlots(false);
+                                                        setAvailableSlots([]);
+                                                    }}
+                                                    className="text-xs"
+                                                >
+                                                    Modifier la date
+                                                </Button>
+                                            </div>
                                         </CardHeader>
                                         <CardContent className="pb-8">
                                             {/* Available Slots Info */}
-                                            <div className="mb-8 text-center">
+                                            <div className="mb-8 text-center space-y-3">
                                                 <motion.div
                                                     className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-100 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30 rounded-full"
                                                     animate={{ scale: [1, 1.05, 1] }}
@@ -560,6 +588,10 @@ const AppointmentCalendar: React.FC = () => {
                                                         {availableSlots.filter((s) => s.available !== false).length} créneaux disponibles
                                                     </span>
                                                 </motion.div>
+                                                <div className="inline-flex items-center gap-2 px-4 py-2 bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 rounded-lg text-xs">
+                                                    <Clock className="w-3 h-3" />
+                                                    <span>Pause déjeuner : 12h00 - 14h00 (créneaux non disponibles)</span>
+                                                </div>
                                             </div>
 
                                             {/* Time Slots Grid with Enhanced Design */}
@@ -574,8 +606,8 @@ const AppointmentCalendar: React.FC = () => {
                                                             'group relative p-4 rounded-xl border-2 transition-all duration-300 text-sm font-semibold min-h-[70px] flex flex-col items-center justify-center',
                                                             slot.available !== false
                                                                 ? selectedTime === slot.time
-                                                                    ? 'border-primary bg-gradient-to-br from-primary to-primary/80 text-white shadow-xl scale-105 ring-4 ring-primary/20'
-                                                                    : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-primary hover:bg-gradient-to-br hover:from-primary/5 hover:to-primary/10 hover:shadow-lg hover:scale-105 text-gray-900 dark:text-white'
+                                                                    ? 'border-green-500 bg-gradient-to-br from-green-500 to-green-600 text-white shadow-xl scale-105 ring-4 ring-green-500/30'
+                                                                    : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-green-400 hover:bg-gradient-to-br hover:from-green-50 hover:to-green-100 hover:shadow-lg hover:scale-105 text-gray-900 dark:text-white'
                                                                 : 'border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50 text-gray-400 dark:text-gray-500 cursor-not-allowed opacity-60',
                                                         )}
                                                         initial={{ opacity: 0, y: 20 }}
@@ -643,11 +675,12 @@ const AppointmentCalendar: React.FC = () => {
                                                     <Button
                                                         onClick={() => setStep('details')}
                                                         size="lg"
-                                                        className="px-8 py-4 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-xl hover:shadow-2xl transition-all duration-300"
+                                                        className="px-12 py-4 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 shadow-xl hover:shadow-2xl transition-all duration-300 text-white font-semibold text-lg"
                                                     >
-                                                        <span className="flex items-center gap-2">
-                                                            <span>Continuer avec {selectedTime}</span>
-                                                            <ArrowRight className="w-5 h-5" />
+                                                        <span className="flex items-center gap-3">
+                                                            <CheckCircle className="w-5 h-5" />
+                                                            <span>Confirmer la réservation</span>
+                                                            <span className="bg-green-500/30 px-2 py-1 rounded text-sm">{selectedTime}</span>
                                                         </span>
                                                     </Button>
                                                 </motion.div>
