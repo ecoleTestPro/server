@@ -181,5 +181,10 @@ const FORMATION_MAIN_MENU_PART_CHILDREN = {
 };
 
 
-export const RECAPTCHA_SITE_KEY_PUBLIC: string = "6LdOgHgrAAAAACDxYFx2jRkoJIov4VK6XqMbz6gK";
-export const RECAPTCHA_SITE_KEY_PRIVATE: string = "6LdOgHgrAAAAAN6brCXYKUTyh6ToFeOT20pla4VD";
+// for localhost -> localhost:8000
+// export const RECAPTCHA_SITE_KEY_PUBLIC: string = "6LdOgHgrAAAAACDxYFx2jRkoJIov4VK6XqMbz6gK";
+// export const RECAPTCHA_SITE_KEY_PRIVATE: string = "6LdOgHgrAAAAAN6brCXYKUTyh6ToFeOT20pla4VD";
+
+// For testpro-group.com -> domaine
+export const RECAPTCHA_SITE_KEY_PUBLIC: string = "6Lf-ma0rAAAAACD72JF7bgKWJDpspagN8ext6wO9";
+export const RECAPTCHA_SITE_KEY_PRIVATE: string = "6Lf-ma0rAAAAAM6FJ2UnmrV6sYfFcQgwZptv9Tlg";
