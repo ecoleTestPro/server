@@ -214,7 +214,7 @@ export default function BusinessHoursSettings({ businessHours, appointmentDurati
                                 <Button
                                     onClick={saveAllChanges}
                                     disabled={processing}
-                                    className="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700"
+                                    className="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700"
                                 >
                                     <Save className="w-4 h-4 mr-2" />
                                     {processing ? 'En cours...' : 'Enregistrer'}
@@ -295,7 +295,7 @@ export default function BusinessHoursSettings({ businessHours, appointmentDurati
                                     animate={{ opacity: 1, y: 0 }}
                                     className={cn(
                                         'flex items-center justify-between p-4 border rounded-lg transition-all duration-200',
-                                        'hover:border-indigo-200 hover:bg-indigo-50 dark:hover:bg-indigo-950/20',
+                                        'hover:border-teal-200 hover:bg-teal-50 dark:hover:bg-teal-950/20',
                                         !dayHours.is_open && 'opacity-60',
                                     )}
                                 >
@@ -451,10 +451,7 @@ export default function BusinessHoursSettings({ businessHours, appointmentDurati
                                 <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
                                     Annuler
                                 </Button>
-                                <Button
-                                    type="submit"
-                                    className="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700"
-                                >
+                                <Button type="submit" className="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700">
                                     Appliquer
                                 </Button>
                             </DialogFooter>
