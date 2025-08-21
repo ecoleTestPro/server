@@ -29,11 +29,11 @@ function AboutUsCardThree() {
                 viewport={{ once: true, amount: 0.2 }}
                 // variants={sectionVariants}
             >
-                <div className="py-[40px] md:py-[50px] lg:py-[60px] xl:py-[80px]">
-                    <div className="relative z-[1] container mx-auto px-[12px] 2xl:max-w-[1320px]">
+                <div className="py-8 md:py-12 lg:py-16 xl:py-20">
+                    <div className="relative z-[1] container mx-auto px-4 sm:px-6 lg:px-8 2xl:max-w-[1320px]">
                         {/* Section TestPro et Image */}
                         <motion.div
-                            className="grid grid-cols-1 items-center gap-[25px] lg:grid-cols-2"
+                            className="grid grid-cols-1 items-center gap-8 lg:gap-12 xl:gap-16 lg:grid-cols-2"
                             initial="hidden"
                             whileInView="visible"
                             viewport={{ once: true, amount: 0.2 }}
@@ -41,23 +41,23 @@ function AboutUsCardThree() {
                         >
                             <div className="relative">
                                 <motion.div
-                                    className="rounded-[7px] border border-white/[0.1] bg-white/[0.54] p-[15px] backdrop-blur-[5.4px] md:max-w-[600px] md:p-[25px] lg:max-w-[400px] xl:max-w-[510px] xl:px-[34px] xl:py-[27px] dark:border-black/[0.1] dark:bg-black/[0.54]"
+                                    className="rounded-xl border border-white/[0.1] bg-white/[0.54] p-4 md:p-6 backdrop-blur-[5.4px] shadow-lg hover:shadow-xl transition-shadow duration-300 dark:border-black/[0.1] dark:bg-black/[0.54]"
                                     // variants={imageVariants}
                                 >
                                     <img
                                         src="assets/images/Formation-en-ligne-.jpeg"
-                                        className="inline-block h-auto w-full"
-                                        alt="order-summary-image"
+                                        className="inline-block h-auto w-full rounded-lg object-cover"
+                                        alt="Formation en ligne TestPro"
                                     />
                                 </motion.div>
                                 <motion.div
-                                    className="absolute top-1/2 -mt-[15px] max-w-[120px] -translate-y-1/2 rounded-[4.294px] drop-shadow-xl md:-mt-[17px] md:max-w-[200px] lg:max-w-[219px] ltr:right-0 ltr:lg:right-[30px] rtl:left-0 rtl:lg:left-[30px]"
+                                    className="absolute top-1/2 -mt-[15px] max-w-[100px] md:max-w-[150px] lg:max-w-[180px] -translate-y-1/2 rounded-lg drop-shadow-xl ltr:right-2 ltr:lg:right-[30px] rtl:left-2 rtl:lg:left-[30px]"
                                     // variants={imageVariants}
                                 >
                                     <img
                                         src="assets/images/card-icon-1.png"
-                                        className="animate-image-flotting inline-block h-auto w-full rounded-[4.294px]"
-                                        alt="courses-sales-image"
+                                        className="animate-image-flotting inline-block h-auto w-full rounded-lg"
+                                        alt="Icône certification"
                                     />
                                 </motion.div>
                             </div>
@@ -77,12 +77,12 @@ function AboutUsCardThree() {
                                     viewport={{ once: true, amount: 0.2 }}
                                     // variants={sectionVariants}
                                 >
-                                    <h2 className="!mb-[15px]text-2xl font-bold md:text-3xl">
+                                    <h2 className="!mb-[15px] text-2xl font-bold md:text-3xl lg:text-4xl xl:text-5xl leading-tight">
                                         Bienvenue chez TestPro, votre partenaire dans le développement professionnel et la réussite éducative.
                                     </h2>
                                 </motion.div>
 
-                                <p className="!mb-[15px] leading-[1.5]">
+                                <p className="!mb-6 leading-relaxed text-gray-700 dark:text-gray-300 text-base md:text-lg">
                                     Notre vision est de devenir un leader reconnu dans le secteur des tests logiciels et de l'ingénierie des
                                     exigences, en garantissant la qualité et la fiabilité des solutions technologiques. Notre mission consiste à
                                     fournir des formations certifiantes de haute qualité, à proposer des testeurs professionnels pour accompagner les
@@ -106,18 +106,18 @@ function AboutUsCardThree() {
                 viewport={{ once: true, amount: 0.2 }}
                 // variants={sectionVariants}
             >
-                <div className="">
-                    <div className="relative z-[1] container mx-auto px-[12px] 2xl:max-w-[1320px]">
+                <div className="py-8 md:py-12 lg:py-16 xl:py-20">
+                    <div className="relative z-[1] container mx-auto px-4 sm:px-6 lg:px-8 2xl:max-w-[1320px]">
                         {/* Section Notre Mission */}
                         <motion.div
-                            className="mt-[40px]"
+                            className="text-center"
                             initial="hidden"
                             whileInView="visible"
                             viewport={{ once: true, amount: 0.2 }}
                             // variants={sectionVariants}
                         >
-                            <h2 className="!mb-[15px] text-2xl font-bold md:text-3xl">Notre Mission</h2>
-                            <p className="!mb-[15px] leading-[1.5]">
+                            <h2 className="!mb-[15px] text-2xl font-bold md:text-3xl lg:text-4xl xl:text-5xl leading-tight">Notre Mission</h2>
+                            <p className="!mb-6 leading-relaxed text-gray-700 dark:text-gray-300 text-base md:text-lg max-w-4xl mx-auto">
                                 Nous nous engageons à offrir des formations certifiantes et sur-mesure, adaptées aux besoins individuels et
                                 professionnels de nos apprenants. Que vous soyez un professionnel en quête de reconversion ou une entreprise désireuse
                                 de former vos équipes, nous proposons des solutions pédagogiques innovantes et alignées sur les dernières tendances du
@@ -133,11 +133,11 @@ function AboutUsCardThree() {
     const BlockWhatMakesUsSpecial = () => {
         return (
             <MotionSection>
-                <div className="py-[40px] md:py-[50px] lg:py-[60px] xl:py-[80px]">
-                    <div className="relative z-[1] container mx-auto px-[12px] 2xl:max-w-[1320px]">
+                <div className="py-8 md:py-12 lg:py-16 xl:py-20">
+                    <div className="relative z-[1] container mx-auto px-4 sm:px-6 lg:px-8 2xl:max-w-[1320px]">
                         {/* Section TestPro et Image */}
                         <motion.div
-                            className="grid grid-cols-1 items-center gap-[25px] lg:grid-cols-2"
+                            className="grid grid-cols-1 items-center gap-8 lg:gap-12 xl:gap-16 lg:grid-cols-2"
                             initial="hidden"
                             whileInView="visible"
                             viewport={{ once: true, amount: 0.2 }}
@@ -145,13 +145,13 @@ function AboutUsCardThree() {
                         >
                             <div className="relative">
                                 <motion.div
-                                    className="rounded-[7px] border border-gray/[0.1] bg-white/[0.54] p-[15px] backdrop-blur-[5.4px] md:max-w-[600px] md:p-[25px] lg:max-w-[400px] xl:max-w-[510px] xl:px-[34px] xl:py-[27px] dark:border-black/[0.1] dark:bg-black/[0.54] rotate-2"
+                                    className="rounded-xl border border-gray/[0.1] bg-white/[0.54] p-4 md:p-6 backdrop-blur-[5.4px] shadow-lg hover:shadow-xl transition-shadow duration-300 dark:border-black/[0.1] dark:bg-black/[0.54] rotate-2"
                                     // variants={imageVariants}
                                 >
                                     <img
                                         src="assets/images/pexels-rdne-8124210.jpg"
-                                        className="inline-block h-auto w-full"
-                                        alt="order-summary-image"
+                                        className="inline-block h-auto w-full rounded-lg object-cover"
+                                        alt="Équipe travaillant ensemble"
                                     />
                                 </motion.div>
                             </div>
@@ -171,9 +171,9 @@ function AboutUsCardThree() {
                                     viewport={{ once: true, amount: 0.2 }}
                                     // variants={sectionVariants}
                                 >
-                                    <h2 className="!mb-[15px]text-2xl font-bold md:text-3xl">Qu'est-ce qui nous rend spécial ?</h2>
+                                    <h2 className="!mb-[15px] text-2xl font-bold md:text-3xl lg:text-4xl xl:text-5xl leading-tight text-center lg:text-left">Qu'est-ce qui nous rend spécial ?</h2>
                                 </motion.div>
-                                <p className="!mb-[15px] leading-[1.5]">
+                                <p className="!mb-6 leading-relaxed text-gray-700 dark:text-gray-300 text-base md:text-lg">
                                     Chez TestPro, nous plaçons vos besoins au cœur de nos formations pour offrir des programmes innovants, pratiques
                                     et directement applicables. Grâce à une équipe d'experts qualifiés, nous proposons des solutions flexibles et
                                     sur-mesure adaptées à vos ambitions professionnelles. Nos contenus actualisés et alignés sur les tendances du
@@ -230,33 +230,35 @@ function AboutUsCardThree() {
                             viewport={{ once: true, amount: 0.2 }}
                             // variants={sectionVariants}
                         >
-                            <h2 className="!mb-[15px]text-2xl font-bold md:text-3xl">Nos Valeurs</h2>
+                            <h2 className="!mb-[15px] text-2xl font-bold md:text-3xl lg:text-4xl xl:text-5xl leading-tight">Nos Valeurs</h2>
 
-                            <div className="grid grid-cols-1 gap-[25px] sm:grid-cols-2 lg:grid-cols-3">
+                            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                                 {values.map((v, index) => (
                                     <div
                                         key={index}
-                                        className="hover:bg-primary-100 rounded-2xl bg-white/[.54] p-[15px] text-center backdrop-blur-[5.400000095367432px] md:p-[25px] lg:p-[30px] ltr:lg:text-left rtl:lg:text-right dark:bg-[#15203c]"
+                                        className="hover:bg-primary-100 rounded-2xl bg-white/[.54] p-6 text-center backdrop-blur-[5.400000095367432px] shadow-lg hover:shadow-xl transition-all duration-300 md:p-8 ltr:lg:text-left rtl:lg:text-right dark:bg-[#15203c]"
                                     >
-                                        <div className={`flex items-center justify-start`}>
-                                            <div className="w-[80px]">
+                                        <div className={`flex flex-col items-center justify-center text-center lg:flex-row lg:text-left lg:justify-start`}>
+                                            <div className="w-16 h-16 mb-4 lg:mr-4 lg:mb-0">
                                                 <img
-                                                    alt="Real-Time Updates"
+                                                    alt={v.title}
                                                     loading="lazy"
-                                                    width="250"
+                                                    width="64"
+                                                    height="64"
                                                     decoding="async"
                                                     data-nimg="1"
-                                                    className="inline-block"
+                                                    className="inline-block w-full h-full object-contain"
                                                     src={v.svg}
                                                 />
                                             </div>
 
-                                            <h3 className="!mb-[10px] !text-lg !leading-[1.2] !font-semibold md:!mb-[12px] md:!text-[20px] lg:!text-[22px] xl:!mb-[13px] xl:!text-[24px]">
-                                                {v.title}
-                                            </h3>
+                                            <div className="flex-1">
+                                                <h3 className="!mb-3 !text-xl !leading-tight !font-semibold md:!text-2xl">
+                                                    {v.title}
+                                                </h3>
+                                                <p className="leading-relaxed text-gray-600 dark:text-gray-300">{v.description}</p>
+                                            </div>
                                         </div>
-
-                                        <p className="leading-[1.6] xl:max-w-[375px]">{v.description}</p>
                                     </div>
                                 ))}
                             </div>
@@ -299,30 +301,30 @@ function AboutUsCardThree() {
                             viewport={{ once: true, amount: 0.2 }}
                             // variants={sectionVariants}
                         >
-                            <h2 className="!mb-[15px]text-2xl font-bold md:text-3xl">Ce Que Nous Offrons</h2>
+                            <h2 className="!mb-[15px] text-2xl font-bold md:text-3xl lg:text-4xl xl:text-5xl leading-tight">Ce Que Nous Offrons</h2>
 
-                            <div className="grid grid-cols-1 gap-[25px] md:grid-cols-2">
+                            <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:gap-12">
                                 <div className="col-span-2 my-auto lg:col-span-1">
-                                    <p className="mt-[15px] leading-[1.5]">
+                                    <p className="mt-4 leading-relaxed text-gray-700 dark:text-gray-300 text-base md:text-lg">
                                         Nous pensons que l'apprentissage doit être accessible, engageant et transformateur. Notre mission est de vous
                                         permettre d'atteindre votre plein potentiel, quel que soit votre point de départ. Ensemble, ouvrons de
                                         nouvelles perspectives et encourageons l'apprentissage tout au long de la vie.
                                     </p>
                                 </div>
                                 <div className="col-span-2 lg:col-span-1">
-                                    <ul className="list-disc pl-0 text-[15px] leading-[1.5] md:pl-5 md:text-[17px]">
+                                    <div className="space-y-4">
                                         {offer.map((o, index) => (
-                                            <li
+                                            <div
                                                 key={index}
-                                                className={`mb-3 list-none rounded-[4px] bg-white/[.54] p-[10px] md:p-[15px] lg:p-[20px] dark:text-white ${o.bgColor || 'bg-white dark:bg-[#15203c]'}`}
+                                                className={`rounded-xl bg-white/[.54] p-4 md:p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 dark:text-white ${o.bgColor || 'bg-white dark:bg-[#15203c]'}`}
                                             >
-                                                <a href={o.ctaLink || '#'} className="text-primary-600 font-semibold hover:underline">
+                                                <a href={o.ctaLink || '#'} className="text-primary-600 font-semibold hover:underline text-lg md:text-xl">
                                                     {o.title}
                                                 </a>
-                                                : {o.description}
-                                            </li>
+                                                <p className="mt-2 text-gray-600 dark:text-gray-300 leading-relaxed">{o.description}</p>
+                                            </div>
                                         ))}
-                                    </ul>
+                                    </div>
                                 </div>
                             </div>
                         </motion.div>
@@ -345,25 +347,26 @@ function AboutUsCardThree() {
                             viewport={{ once: true, amount: 0.2 }}
                             // variants={sectionVariants}
                         >
-                            <div className="grid grid-cols-2 md:grid-cols-5 gap-[25px]">
-                                <div className="col-span-5 md:col-span-3">
+                            <div className="grid grid-cols-1 md:grid-cols-5 gap-8 lg:gap-12">
+                                <div className="col-span-1 md:col-span-3">
                                     <div className="flex items-center h-full">
                                         <div>
-                                            <p className="leading-[1.5] text-2xl">
+                                            <blockquote className="leading-relaxed text-xl md:text-2xl lg:text-3xl font-medium">
                                                 "Nous pensons que l'apprentissage doit être accessible, engageant et transformateur. Notre mission est
                                                 de vous permettre d'atteindre votre plein potentiel."
-                                            </p>
+                                            </blockquote>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div className="col-span-5 md:col-span-2">
+                                <div className="col-span-1 md:col-span-2 text-center">
                                     <img
                                         src="assets/images/front-pages/team2.jpg"
                                         alt="Directeur général"
-                                        className="mx-auto h-[150px] w-[150px] rounded-full object-cover"
+                                        className="mx-auto h-32 w-32 md:h-40 md:w-40 rounded-full object-cover shadow-lg"
                                     />
-                                    <p className="mt-2 font-semibold">Directeur général</p>
+                                    <p className="mt-4 font-semibold text-lg">Directeur général</p>
+                                    <p className="text-gray-600 dark:text-gray-400">TestPro</p>
                                 </div>
                             </div>
                         </motion.div>
@@ -402,25 +405,25 @@ function AboutUsCardThree() {
             <MotionSection>
                 <div className={`body-font ${CLASS_NAME.bgWhite}`}>
                     <div className={`${CLASS_NAME.sectionContentPadding}`}>
-                        <div className="container mx-auto px-4 space-y-20">
-                            <h2 className="!mb-[15px] text-2xl font-bold md:text-3xl">Nos Agreements</h2>
+                        <div className="container mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+                            <h2 className="!mb-8 text-2xl font-bold md:text-3xl lg:text-4xl xl:text-5xl leading-tight text-center">Nos Agréments</h2>
                             {/* Bloc GASQ */}
-                            <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-center">
-                                <div className="col-span-1 md:col-span-1">
-                                    <img src="/assets/images/agrements/gasq.jpeg" alt="Logo GASQ" className="h-16 md:h-20" />
+                            <div className="grid grid-cols-1 md:grid-cols-6 gap-6 lg:gap-8 items-center bg-white/50 dark:bg-gray-800/50 p-6 md:p-8 rounded-2xl shadow-lg">
+                                <div className="col-span-1 md:col-span-1 text-center">
+                                    <img src="/assets/images/agrements/gasq.jpeg" alt="Logo GASQ" className="h-16 md:h-20 lg:h-24 mx-auto object-contain" />
                                 </div>
                                 <div className="space-y-4 col-span-1 md:col-span-5">
-                                    <h2 className="text-2xl md:text-3xl font-bold text-gray-900">TestPro, organisme certifié GASQ Platinium</h2>
-                                    <p className="leading-relaxed text-gray-700 text-justify">
+                                    <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">TestPro, organisme certifié GASQ Platinium</h3>
+                                    <p className="leading-relaxed text-gray-700 dark:text-gray-300 text-base md:text-lg">
                                         En tant que centre de formation accrédité GASQ Platinium, <strong>TestPro</strong> propose des parcours de
                                         formation certifiants tels que <strong>ISTQB</strong>, alignés sur les standards internationaux du test
                                         logiciel.
-                                        <br />
+                                        <br /><br />
                                         Nos formations allient expertise technique et pédagogie de qualité, encadrées par des formateurs certifiés,
                                         avec des supports officiels à jour. Les examens peuvent être passés sur site dans nos locaux à Cocody ou en
                                         ligne.
-                                        <br />
-                                        Cette reconnaissance renforce notre crédibilité en tant qu’acteur clé de la formation en assurance qualité
+                                        <br /><br />
+                                        Cette reconnaissance renforce notre crédibilité en tant qu'acteur clé de la formation en assurance qualité
                                         logicielle.
                                     </p>
                                 </div>
@@ -430,17 +433,17 @@ function AboutUsCardThree() {
                             <div className="w-full border-t border-gray-200 my-4" />
 
                             {/* Bloc FDFP */}
-                            <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-center">
-                                <div className="col-span-1 md:col-span-1">
-                                    <img src="/assets/images/agrements/logo-fdfp.jpg" alt="Logo FDFP" className="h-20 md:h-24" />
+                            <div className="grid grid-cols-1 md:grid-cols-6 gap-6 lg:gap-8 items-center bg-white/50 dark:bg-gray-800/50 p-6 md:p-8 rounded-2xl shadow-lg">
+                                <div className="col-span-1 md:col-span-1 text-center">
+                                    <img src="/assets/images/agrements/logo-fdfp.jpg" alt="Logo FDFP" className="h-20 md:h-24 lg:h-28 mx-auto object-contain" />
                                 </div>
                                 <div className="space-y-4 col-span-1 md:col-span-5">
-                                    <h2 className="text-2xl md:text-3xl font-bold text-gray-900">TestPro agréé par le FDFP</h2>
-                                    <p className="leading-relaxed text-gray-700 text-justify">
+                                    <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">TestPro agréé par le FDFP</h3>
+                                    <p className="leading-relaxed text-gray-700 dark:text-gray-300 text-base md:text-lg">
                                         <strong>TestPro</strong> est agréé par le{' '}
                                         <strong>Fonds de Développement de la Formation Professionnelle (FDFP)</strong>, ce qui permet aux entreprises
                                         ivoiriennes de mobiliser leur contribution pour financer les formations de leurs équipes.
-                                        <br />
+                                        <br /><br />
                                         Grâce à notre catalogue riche et adapté aux besoins métiers, nous accompagnons efficacement les entreprises
                                         dans la mise en œuvre de leur plan de formation, avec une prise en charge facilitée par le FDFP.
                                     </p>

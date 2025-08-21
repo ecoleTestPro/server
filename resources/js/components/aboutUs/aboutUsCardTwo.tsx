@@ -30,11 +30,11 @@ const widgetsData: Widget[] = [
 function AboutUsCardTwo() {
     return (
         <section className="body-font text-gray-600 dark:bg-[#0a0e19] dark:text-white">
-            <div className="py-[40px] md:py-[50px] lg:py-[60px] xl:py-[80px]">
-                <div className="container mx-auto px-[12px] 2xl:max-w-[1320px]">
-                    <div className="mx-auto mb-[35px] text-center md:mb-[50px] md:max-w-[650px] lg:mb-[65px] lg:max-w-[810px] xl:mb-[90px] xl:max-w-[785px]">
+            <div className="py-8 md:py-12 lg:py-16 xl:py-20">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8 2xl:max-w-[1320px]">
+                    <div className="mx-auto mb-8 text-center md:mb-12 md:max-w-[650px] lg:mb-16 lg:max-w-[810px] xl:mb-20 xl:max-w-[785px]">
                         <TitleBadgeOne title="Notre Engagement" />
-                        <h2 className="!mb-0 !text-[24px] !leading-[1.2] -tracking-[.5px] md:!text-[28px] md:-tracking-[.6px] lg:!text-[34px] lg:-tracking-[.8px] xl:!text-[36px] xl:-tracking-[1px]">
+                        <h2 className="!mb-0 !text-2xl !leading-tight -tracking-[.5px] font-bold md:!text-3xl md:-tracking-[.6px] lg:!text-4xl lg:-tracking-[.8px] xl:!text-5xl xl:-tracking-[1px]">
                             Nous associons notre Expertise, nos programmes de Certification et notre approche Pratique pour garantir une qualité
                             irréprochable de nos services
                             {false &&
@@ -42,14 +42,14 @@ function AboutUsCardTwo() {
                         </h2>
                     </div>
 
-                    <div className="grid grid-cols-1 gap-[25px] sm:grid-cols-2 lg:grid-cols-3">
+                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         {widgetsData.map((feature, index) => (
                             <div
                                 key={index}
-                                className="hover:bg-primary-100 rounded-2xl bg-white/[.54] p-[15px] text-center backdrop-blur-[5.400000095367432px] md:p-[25px] lg:p-[30px] ltr:lg:text-left rtl:lg:text-right dark:bg-[#15203c]"
+                                className="hover:bg-primary-100 rounded-2xl bg-white/[.54] p-6 text-center backdrop-blur-[5.4px] shadow-lg hover:shadow-xl transition-all duration-300 md:p-8 ltr:lg:text-left rtl:lg:text-right dark:bg-[#15203c]"
                             >
                                 <div
-                                    className={`mx-auto mb-[20px] flex h-[80px] w-[80px] items-center justify-center rounded-[10px] md:h-[85px] md:w-[85px] md:rounded-[17px] lg:mx-0 lg:mb-[22px] ${feature.bgColor}`}
+                                    className={`mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-xl md:h-20 md:w-20 lg:mx-0 lg:mb-6 ${feature.bgColor}`}
                                 >
                                     <img
                                         alt="Real-Time Updates"
@@ -63,11 +63,11 @@ function AboutUsCardTwo() {
                                     />
                                 </div>
 
-                                <h3 className="!mb-[10px] !text-lg !leading-[1.2] !font-semibold md:!mb-[12px] md:!text-[20px] lg:!text-[22px] xl:!mb-[13px] xl:!text-[24px]">
+                                <h3 className="!mb-3 !text-xl !leading-tight !font-semibold md:!text-2xl lg:!text-2xl xl:!text-2xl">
                                     {feature.title}
                                 </h3>
 
-                                <p className="leading-[1.6] xl:max-w-[375px]">{feature.description}</p>
+                                <p className="leading-relaxed text-gray-600 dark:text-gray-300 xl:max-w-[375px]">{feature.description}</p>
                             </div>
                         ))}
                     </div>
