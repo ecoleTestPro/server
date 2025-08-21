@@ -1,17 +1,21 @@
+import AppLogo from '@/components/app-logo';
+import AppearanceToggleDropdown from '@/components/appearance-dropdown';
 import { DEFULAT_MAIN_MENU, DEFULAT_MAIN_MENU_RIGHT } from '@/data/data.constant';
 import { SharedData } from '@/types';
 import { ICourseCategory } from '@/types/course';
 import { IMainMenuItem, MenuChildItem } from '@/types/header.type';
+import { Logger } from '@/utils/console.util';
 import { ROUTE_MAP } from '@/utils/route.util';
 import { Link, usePage } from '@inertiajs/react';
+import { Search } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { HeaderNavTwoSidebar } from './HeaderNavTwoMobile';
+import CalendarMenu from './CalendarMenu';
 import { HeaderNavTwo } from './header-nav-two';
 import HeaderSearch from './header-search';
+import HeaderMobile from './HeaderMobile';
 import HeaderUserAction from './headerUserAction';
-import AppLogo from '@/components/app-logo';
-import AppearanceToggleDropdown from '@/components/appearance-dropdown';
+import SearchMobile from './SearchMobile';
 
 export default function Header() {
     const { auth, data } = usePage<SharedData>().props;
@@ -25,6 +29,7 @@ export default function Header() {
     const [mainMenu, setMainMenu] = useState<IMainMenuItem[]>(DEFULAT_MAIN_MENU);
     const [mainMenuRight, setMainMenuRight] = useState<IMainMenuItem[]>(DEFULAT_MAIN_MENU_RIGHT);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
 
     const logo = { href: '/' };
 
@@ -57,13 +62,12 @@ export default function Header() {
         setMainMenuRight(mainMenuRightInit);
 
         if (data && data.categories_with_courses && data.categories_with_courses.length > 0) {
-            // console.log('[Header] categories_with_courses', data.categories_with_courses);
+            Logger.log('[Header] categories_with_courses', data.categories_with_courses);
             updateCourseMenuPart(mainMenuInit, setMainMenu, data);
         }
     }, [data, page]);
 
     const buildCourseItems = (category: ICourseCategory): MenuChildItem[] => {
-        // console.log('[buildCourseItems] category courses', category?.courses);
         if (!category.courses || category.courses.length === 0) return [];
 
         return category.courses.slice(0, 4).map((course) => ({
@@ -80,8 +84,6 @@ export default function Header() {
         const filteredCategories = categories.filter((category) => category); // .parent_id === parentId
 
         const output: MenuChildItem[] = filteredCategories.map((category) => {
-            // console.log('[buildCategoryItems] category title', category.title);
-
             const defaultDescription =
                 'Les formations vous préparent au passage de nombreuses certifications internationales. Validez vos compétences et accroissez votre employabilité ainsi que votre efficacité au sein de votre entreprise.';
 
@@ -89,7 +91,6 @@ export default function Header() {
 
             // Appeler récursivement uniquement sur les enfants directs
             if (category.children && category.children.length > 0) {
-                // console.log('[buildCategoryItems] category children', category.children);
                 childItems = buildCategoryItems(category.children, category.id || null);
             } else {
                 childItems = buildCourseItems(category);
@@ -106,15 +107,6 @@ export default function Header() {
 
             return menuChildItem;
         });
-
-        // // TODO : ajouter dynamiquement
-        // output.push({
-        //     id: 'programmes-de-reconversion',
-        //     label: PROGRAMMES_DE_RECONVERSION.label,
-        //     href: PROGRAMMES_DE_RECONVERSION.href,
-        //     description: PROGRAMMES_DE_RECONVERSION.description,
-        //     image: PROGRAMMES_DE_RECONVERSION.image,
-        // });
 
         return output;
     };
@@ -138,29 +130,28 @@ export default function Header() {
                 return item;
             }
 
-            // console.log('[CATEGORIES_WITH_COURSES]', data.categories_with_courses);
-
             return {
                 ...item,
                 children: {
                     id: 'formations-children',
                     title: 'Formations',
                     description: 'Liste des formations',
-                    items: [
-                        ...buildCategoryItems(data.categories_with_courses),
-                        PROGRAMMES_DE_RECONVERSION,
-                    ],
+                    items: [...buildCategoryItems(data.categories_with_courses), PROGRAMMES_DE_RECONVERSION],
                 },
             };
         });
-
-        console.log('[Header] Updated main menu with courses', updatedMenu);
 
         setMainMenu(updatedMenu);
     };
 
     const toggleSidebar = () => {
         setIsSidebarOpen(!isSidebarOpen);
+        setIsSearchOpen(false); // Fermer la recherche si le menu s'ouvre
+    };
+
+    const toggleSearch = () => {
+        setIsSearchOpen(!isSearchOpen);
+        setIsSidebarOpen(false); // Fermer le menu si la recherche s'ouvre
     };
 
     return (
@@ -188,7 +179,8 @@ export default function Header() {
                     <div className="flex items-center justify-between px-4 py-2 sm:px-6 lg:px-8">
                         <div className="flex flex-1">
                             <Link href={logo.href} className="flex items-center space-x-2">
-                                <AppLogo width={150} height={60} className="" />
+                                <AppLogo width={150} height={60} className="hidden sm:block" />
+                                <AppLogo width={120} height={48} className="block sm:hidden" />
                             </Link>
 
                             <div className="flex-1">
@@ -198,24 +190,53 @@ export default function Header() {
                             </div>
 
                             <div className="ml-auto flex items-center gap-3">
-                                <HeaderUserAction />
-                                <AppearanceToggleDropdown />
-                                <button
-                                    onClick={toggleSidebar}
-                                    aria-label={t('HEADER.TOGGLE_MENU', 'Ouvrir/fermer le menu')}
-                                    className="rounded-sm bg-gray-100 p-2 text-gray-600 hover:text-gray-800 md:hidden dark:bg-gray-700 dark:text-gray-300 dark:hover:text-white"
-                                >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        className="size-5"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
+                                <div className="hidden md:flex items-center gap-3">
+                                    <HeaderUserAction />
+                                    <AppearanceToggleDropdown />
+                                </div>
+
+                                {/* Mobile actions */}
+                                <div className="flex items-center gap-2 md:hidden">
+                                    {/* Timeline button - prominant sur mobile */}
+                                    <CalendarMenu />
+
+                                    {/* Search icon - ouvre le sidebar de recherche */}
+                                    <button
+                                        onClick={toggleSearch}
+                                        aria-label={t('HEADER.SEARCH', 'Rechercher')}
+                                        className="rounded-lg bg-primary-500 p-2 text-black darktext-white transition-all duration-200 hover:bg-primary-600"
                                     >
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-                                    </svg>
-                                </button>
+                                        <Search className="h-5 w-5" />
+                                    </button>
+
+                                    {/* Mode selector */}
+                                    <AppearanceToggleDropdown />
+
+                                    {/* Menu hamburger */}
+                                    <button
+                                        onClick={toggleSidebar}
+                                        aria-label={t('HEADER.TOGGLE_MENU', 'Ouvrir/fermer le menu')}
+                                        className="relative rounded-lg bg-gray-100 p-2 text-gray-600 transition-all duration-200 hover:bg-gray-200 hover:text-gray-800 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                                    >
+                                        <div className="relative h-5 w-5">
+                                            <span
+                                                className={`absolute left-0 top-0 block h-0.5 w-5 bg-current transition-all duration-300 ${
+                                                    isSidebarOpen ? 'rotate-45 translate-y-2' : 'translate-y-0'
+                                                }`}
+                                            />
+                                            <span
+                                                className={`absolute left-0 top-2 block h-0.5 w-5 bg-current transition-all duration-300 ${
+                                                    isSidebarOpen ? 'opacity-0' : 'opacity-100'
+                                                }`}
+                                            />
+                                            <span
+                                                className={`absolute left-0 top-4 block h-0.5 w-5 bg-current transition-all duration-300 ${
+                                                    isSidebarOpen ? '-rotate-45 -translate-y-2' : 'translate-y-0'
+                                                }`}
+                                            />
+                                        </div>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -226,13 +247,15 @@ export default function Header() {
                 </section>
             </header>
 
-            {/* <HeaderNavTwoSidebar
+            <HeaderMobile
                 menu={mainMenu}
                 menuRight={mainMenuRight}
                 isOpen={isSidebarOpen}
                 onClose={() => setIsSidebarOpen(false)}
                 className="md:hidden"
-            /> */}
+            />
+
+            <SearchMobile isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} className="md:hidden" />
         </>
     );
 }

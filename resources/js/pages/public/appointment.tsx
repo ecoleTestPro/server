@@ -54,7 +54,9 @@ const PublicAppointmentCreate: React.FC<PublicAppointmentCreateProps> = ({ busin
                                 </svg>
                             </div>
                             <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Conseil personnalisé</h3>
-                            <p className="text-gray-600 dark:text-gray-300">Analyse de vos besoins et recommandations sur mesure pour votre parcours de formation.</p>
+                            <p className="text-gray-600 dark:text-gray-300">
+                                Analyse de vos besoins et recommandations sur mesure pour votre parcours de formation.
+                            </p>
                         </div>
 
                         <div className="text-center">
@@ -69,7 +71,9 @@ const PublicAppointmentCreate: React.FC<PublicAppointmentCreateProps> = ({ busin
                                 </svg>
                             </div>
                             <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Processus simplifié</h3>
-                            <p className="text-gray-600 dark:text-gray-300">Information complète sur les modalités, financement et démarches d'inscription.</p>
+                            <p className="text-gray-600 dark:text-gray-300">
+                                Information complète sur les modalités, financement et démarches d'inscription.
+                            </p>
                         </div>
 
                         <div className="text-center">
@@ -96,7 +100,9 @@ const PublicAppointmentCreate: React.FC<PublicAppointmentCreateProps> = ({ busin
             <section className="py-12 bg-blue-50 dark:bg-blue-900/20">
                 <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                     <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Vous préférez nous contacter directement ?</h2>
-                    <p className="text-gray-600 dark:text-gray-300 mb-8">Notre équipe est à votre disposition pour répondre à toutes vos questions.</p>
+                    <p className="text-gray-600 dark:text-gray-300 mb-8">
+                        Notre équipe est à votre disposition pour répondre à toutes vos questions.
+                    </p>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
@@ -113,7 +119,10 @@ const PublicAppointmentCreate: React.FC<PublicAppointmentCreateProps> = ({ busin
                             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Téléphone</h3>
                             <p className="text-gray-600 dark:text-gray-300 mb-2">Du lundi au vendredi</p>
                             <p className="text-gray-600 dark:text-gray-300 mb-2">8h00 - 18h00</p>
-                            <a href="tel:+2250787654321" className="text-blue-600 dark:text-blue-400 font-medium hover:text-blue-800 dark:hover:text-blue-300">
+                            <a
+                                href="tel:+2250787654321"
+                                className="text-blue-600 dark:text-blue-400 font-medium hover:text-blue-800 dark:hover:text-blue-300"
+                            >
                                 +225 07 87 65 43 21
                             </a>
                         </div>
@@ -132,7 +141,10 @@ const PublicAppointmentCreate: React.FC<PublicAppointmentCreateProps> = ({ busin
                             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Email</h3>
                             <p className="text-gray-600 dark:text-gray-300 mb-2">Réponse sous 24h</p>
                             <p className="text-gray-600 dark:text-gray-300 mb-2">En jours ouvrés</p>
-                            <a href="mailto:info@ecoletestpro.com" className="text-blue-600 dark:text-blue-400 font-medium hover:text-blue-800 dark:hover:text-blue-300">
+                            <a
+                                href="mailto:info@ecoletestpro.com"
+                                className="text-blue-600 dark:text-blue-400 font-medium hover:text-blue-800 dark:hover:text-blue-300"
+                            >
                                 info@ecoletestpro.com
                             </a>
                         </div>

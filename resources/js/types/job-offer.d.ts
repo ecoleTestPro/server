@@ -1,4 +1,4 @@
-export interface IJobOffer {
+export interface IJobOfferBase {
     id?: number;
     title: string;
     company?: string;
@@ -10,7 +10,10 @@ export interface IJobOffer {
     is_active?: boolean;
     created_at?: string;
     updated_at?: string;
-    [key: string]: string | number | boolean | null | undefined;
+}
+
+export interface IJobOffer extends IJobOfferBase {
+    [key: string]: any;
 }
 
 export interface IJobApplication {

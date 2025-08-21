@@ -1,11 +1,12 @@
 import { IPartner } from '@/types/partner';
+import { Logger } from '@/utils/console.util';
 
 interface CoursePartnersProps {
     partners?: IPartner[];
 }
 
 export default function CoursePartners({ partners }: CoursePartnersProps) {
-    console.log('Course Partners:', partners);
+    Logger.log('Course Partners:', partners);
     
     if (!partners || partners.length === 0) {
         return null;

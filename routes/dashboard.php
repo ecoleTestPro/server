@@ -159,7 +159,7 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
         Route::post('create', [JobOfferController::class, 'store'])->name('dashboard.job-offers.store');
         Route::put('update/{jobOffer}', [JobOfferController::class, 'update'])->name('dashboard.job-offers.update');
         Route::delete('delete/{jobOffer}', [JobOfferController::class, 'destroy'])->name('dashboard.job-offers.delete');
-        Route::post('restore/{jobOffer}', [JobOfferController::class, 'restore'])->name('dashboard.job-offers.restore');
+        Route::post('restore/{id}', [JobOfferController::class, 'restore'])->name('dashboard.job-offers.restore');
         Route::post('toggle/{jobOffer}', [JobOfferController::class, 'toggle'])->name('dashboard.job-offers.toggle');
     });
 

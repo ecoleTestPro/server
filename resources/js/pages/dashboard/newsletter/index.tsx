@@ -34,6 +34,7 @@ const formatDate = (dateString: string, formatStr?: string) => {
 };
 import RichTextQuill from '@/components/ui/form/RichTextQuill';
 import 'react-quill/dist/quill.snow.css';
+import { Logger } from '@/utils/console.util';
 
 export default function NewsletterIndex() {
     const { t } = useTranslation();
@@ -70,7 +71,7 @@ export default function NewsletterIndex() {
             const response = await axios.get(route('dashboard.newsletters.analytics'));
             setAnalytics(response.data);
         } catch (error: any) {
-            console.error('Error loading analytics:', error);
+            Logger.error('Error loading analytics:', error);
             toast.error(t('Error loading analytics', 'Erreur lors du chargement des statistiques'));
         } finally {
             setLoading(false);
@@ -82,7 +83,7 @@ export default function NewsletterIndex() {
             const response = await axios.get(route('dashboard.newsletters.logs'));
             setLogs(response.data.data || []);
         } catch (error: any) {
-            console.error('Error loading logs:', error);
+            Logger.error('Error loading logs:', error);
             toast.error(t('Error loading logs', 'Erreur lors du chargement des logs'));
             setLogs([]);
         }
@@ -126,7 +127,7 @@ export default function NewsletterIndex() {
             setActiveTab('analytics');
             
         } catch (error: any) {
-            console.error('Error sending newsletter:', error);
+            Logger.error('Error sending newsletter:', error);
             
             // Gestion des erreurs détaillée
             if (error.response?.data?.message) {

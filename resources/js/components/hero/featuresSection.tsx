@@ -1,5 +1,6 @@
 import { SharedData } from '@/types';
 import { ICourse } from '@/types/course';
+import { Logger } from '@/utils/console.util';
 import { motionVariants } from '@/utils/motion.util';
 import { ROUTE_MAP } from '@/utils/route.util';
 import { Link, router, usePage } from '@inertiajs/react';
@@ -74,7 +75,7 @@ function FeaturesSection() {
         setFeatureCourses([]);
         setError(null);
 
-        console.log('[FeaturesSection] data', data);
+        Logger.log('[FeaturesSection] data', data);
 
         if (data && data.featured_courses && data.featured_courses.length > 0) {
             let features: Feature[] = data.featured_courses.map((course: ICourse) => buildFeatureItem(course));

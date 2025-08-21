@@ -5,6 +5,7 @@ import { ConfirmDialog } from '@/components/ui/confirmDialog';
 import AppLayout from '@/layouts/dashboard/app-layout';
 import { SharedData, type BreadcrumbItem } from '@/types';
 import { ICourseCategory } from '@/types/course';
+import { Logger } from '@/utils/console.util';
 import { Head, router, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -21,7 +22,7 @@ export default function DashboardCategory() {
     const { t } = useTranslation();
 
     const { data } = usePage<SharedData>().props;
-    console.log('Categories Data:', data.categories);
+    Logger.log('Categories Data:', data.categories);
 
     const [showConfirm, setShowConfirm] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
@@ -96,7 +97,7 @@ export default function DashboardCategory() {
      */
     const handleDelete = () => {
         // Call the delete function here
-        console.log('Deleting category with ID:', categorySelected?.id);
+        Logger.log('Deleting category with ID:', categorySelected?.id);
         router.delete(route('category.delete', categorySelected?.id), {
             onSuccess: () => {
                 setShowConfirm(false);

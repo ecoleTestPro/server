@@ -99,11 +99,11 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
             },
         ],
     },
-    {
-        title: 'Paramètres',
-        href: route('settings.app.index'),
-        icon: Settings2,
-    }
+    // {
+    //     title: 'Paramètres',
+    //     href: route('settings.app.index'),
+    //     icon: Settings2,
+    // }
 ];
 
 export const FOOTER_NAV_ITEMS: NavItem[] = [

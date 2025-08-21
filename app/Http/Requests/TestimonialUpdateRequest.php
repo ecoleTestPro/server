@@ -22,11 +22,11 @@ class TestimonialUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "name" => "required|string",
+            "name"        => "required|string",
             "designation" => "required|string",
-            "description" => "required|string|min:20",
-            "picture" => "nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048",
-            'rating' => 'required|numeric|min:1|max:5',
+            "description" => "nullable|string",
+            'rating'      => 'nullable|numeric|min:1|max:5',
+            "picture"     => "nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048",
         ];
     }
 }

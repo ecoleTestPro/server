@@ -1,11 +1,9 @@
-import BtnSecondary from '@/components/ui/button/btn-secondary';
 import { ICourse, ICoursePeriodicity, ICourseSession } from '@/types/course';
-import { ArrowRight } from 'lucide-react';
+import { Calendar, MapPin, ArrowRight } from 'lucide-react';
 import { RefObject, useEffect, useState } from 'react'; // Add necessary imports
 import { useTranslation } from 'react-i18next';
-import { FaMapMarker } from 'react-icons/fa';
 import CourseInscriptionDialog from './CourseInscriptionDialog';
-import CourseSessionScheduleDialog from './CourseSessionScheduleDialog';
+import { Logger } from '@/utils/console.util';
 
 interface CourseDetailChooseSectionProps {
     course: ICourse;
@@ -49,7 +47,7 @@ export default function CourseDetailChooseSection({ course, registrationRef }: C
 
     // Handle form submission (placeholder)
     const handleSubmit = (formData: { name: string; email: string; phone?: string; company?: string }) => {
-        console.log('Form submitted:', { courseId: course.id, ...formData }); // Replace with API call
+        Logger.log('Form submitted:', { courseId: course.id, ...formData }); // Replace with API call
     };
 
     return (
@@ -65,9 +63,14 @@ export default function CourseDetailChooseSection({ course, registrationRef }: C
             {/*  ${isVisible ? 'translate-y-0' : 'relative -translate-y-full'} */}
             <div className={`transition-transform duration-300 ease-in-out`}>
                 {course.course_sessions && course.course_sessions.length > 0 ? (
-                    <>
-                        <h2 className="text-lg font-bold">{t('COURSE.DETAIL.CHOOSE_SESSION', 'Choisissez une session')}</h2>
-                        <div className="container mx-auto">
+                    <div className="space-y-4">
+                        {/* Header minimaliste */}
+                        <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+                            {t('COURSE.DETAIL.CHOOSE_SESSION', 'Choisir une session')}
+                        </h2>
+
+                        {/* Liste des sessions - Design épuré */}
+                        <div className="space-y-3">
                             {course.course_sessions.map((session, index) => (
                                 <CourseSessionCard
                                     key={index}
@@ -83,12 +86,13 @@ export default function CourseDetailChooseSection({ course, registrationRef }: C
                                     regular_price={course.regular_price}
                                 />
                             ))}
-                        </div>{' '}
-                    </>
+                        </div>
+                    </div>
                 ) : (
-                    <div className="p-4">
+                    <div className="text-center py-8">
+                        <Calendar className="w-12 h-12 text-gray-300 mx-auto mb-3" />
                         <p className="text-gray-500 dark:text-gray-400">
-                            {t('COURSE.DETAIL.NO_SESSIONS', 'Aucune session disponible pour le moment.')}
+                            {t('COURSE.DETAIL.NO_SESSIONS', 'Aucune session programmée')}
                         </p>
                     </div>
                 )}
@@ -120,51 +124,86 @@ export const CourseSessionCard = ({
 }: CourseSessionCardProps) => {
     const { t } = useTranslation();
 
-    const [openSessionSchedule, setOpenSessionSchedule] = useState(false);
-
     if (!session) {
-        return null; // Return null if session is not provided
+        return null;
     }
 
+    // Formater les dates pour affichage simple
+    const formatDate = (dateString: string) => {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('fr-FR', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric'
+        });
+    };
+
+    // Vérifier si la session est disponible pour inscription
+    const isAvailable = () => {
+        return new Date(session.start_date) > new Date();
+    };
+
     return (
-        <div>
-            <div className="flex flex-col md:flex-row justify-between items-center bg-gray-50 dark:bg-[#0c1427] p-4 rounded-md mt-2">
-                <div className="mb-4 md:mb-0 border-b md:border-b-0 md:border-r border-gray-200 dark:border-gray-700 w-full md:w-3/6">
-                    {/* <h2 className="text-lg font-bold"> {courseTitle}</h2> */}
-                    <p className="flex">
-                        <FaMapMarker className="inline-block mr-2 text-gray-500 dark:text-gray-400" />
-                        <h2>{session.location}</h2>
-                    </p>
-                    {false && (
-                        <p>
-                            <a className="underline" onClick={() => setOpenSessionSchedule(true)}>
-                                Horraires
-                            </a>
-                        </p>
+        <div className={`group border rounded-lg p-4 transition-all duration-200 hover:shadow-md ${
+            isAvailable() 
+                ? 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-emerald-300 dark:hover:border-emerald-600' 
+                : 'border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50'
+        }`}>
+            
+            {/* Layout responsive simple */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                
+                {/* Informations session */}
+                <div className="flex-1 space-y-2 sm:space-y-1">
+                    {/* Dates */}
+                    <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                        <Calendar className="w-4 h-4" />
+                        <span>{formatDate(session.start_date)}</span>
+                        {session.end_date && session.end_date !== session.start_date && (
+                            <>
+                                <ArrowRight className="w-3 h-3" />
+                                <span>{formatDate(session.end_date)}</span>
+                            </>
+                        )}
+                    </div>
+                    
+                    {/* Lieu */}
+                    <div className="flex items-center gap-2 text-gray-900 dark:text-white">
+                        <MapPin className="w-4 h-4 text-gray-400" />
+                        <span className="font-medium">{session.location}</span>
+                    </div>
+                    
+                    {/* Prix */}
+                    {price && (
+                        <div className="flex items-center gap-2">
+                            <span className="text-lg font-semibold text-gray-900 dark:text-white">
+                                {price} FCFA
+                            </span>
+                            {regular_price && regular_price > price && (
+                                <span className="text-sm text-gray-500 line-through">
+                                    {regular_price} FCFA
+                                </span>
+                            )}
+                        </div>
                     )}
                 </div>
 
-                <div className="mb-4 md:mb-0 border-b md:border-b-0 md:border-r border-gray-200 dark:border-gray-700 w-full md:w-2/6">
-                    <div className="flex items-center">
-                        <div className="flex items-center justify-between space-x-4">
-                            <div className="border border-secondary bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center p-2 ">
-                                {session.start_date}
-                            </div>
-                            <ArrowRight className="text-gray-500 dark:text-gray-400" />
-                            <div className="border border-secondary bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center p-2 ">
-                                {session.end_date}
-                            </div>
+                {/* Action */}
+                <div className="flex-shrink-0">
+                    {isAvailable() ? (
+                        <button
+                            onClick={handleClickRegister}
+                            className="cursor-pointer w-full sm:w-auto px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
+                        >
+                            {t('COURSE.DETAIL.REGISTER', 'S\'inscrire')}
+                        </button>
+                    ) : (
+                        <div className="text-sm text-gray-500 dark:text-gray-400 font-medium">
+                            Session terminée
                         </div>
-                    </div>
+                    )}
                 </div>
-
-                <BtnSecondary
-                    label={t('COURSE.DETAIL.REGISTER', 'Inscription')}
-                    className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-full border-transparent hover:border-transparent transition-colors duration-300 ease-in-out"
-                    onClick={handleClickRegister}
-                />
             </div>
-            <CourseSessionScheduleDialog session={session} isOpen={openSessionSchedule} onOpenChange={setOpenSessionSchedule} />
         </div>
     );
 };

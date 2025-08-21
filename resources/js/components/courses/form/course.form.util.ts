@@ -1,4 +1,5 @@
 import { ICourseDescription } from "@/types/course";
+import { Logger } from "@/utils/console.util";
 
 export enum PeriodicityUnitEnum {
     DAY = 'DAY',
@@ -222,11 +223,11 @@ export const createPayload = (data: ICourseForm, draft: boolean): ICourseRequest
             reference_tag: data.reference_tag || '',
         };
 
-        console.log('[CREATE_PAYLOAD]', payload);
+        Logger.log('[CREATE_PAYLOAD]', payload);
 
         return payload;
     } catch (error) {
-        console.error('Error creating course payload:', error);
+        Logger.error('Error creating course payload:', error);
         throw new Error('Failed to create course payload');
     }
 };
