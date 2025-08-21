@@ -15,7 +15,7 @@ interface TimeSlot {
     time: string;
     datetime: string;
     display: string;
-    available: boolean;
+    available?: boolean;
 }
 
 interface BusinessHours {
@@ -142,8 +142,13 @@ const AppointmentCalendar: React.FC = () => {
                     },
                 })
                 .then((response) => {
-                    if (response.data.success) {
-                        setAvailableSlots(response.data.slots);
+                    if (response.data.slots) {
+                        const slotsWithAvailability = response.data.slots.map((slot: TimeSlot) => ({
+                            ...slot,
+                            available: true
+                        }));
+                        setAvailableSlots(slotsWithAvailability);
+                        setBusinessHours(response.data.businessHours);
                         setShowTimeSlots(true);
 
                         // Scroll vers les créneaux horaires
@@ -169,7 +174,7 @@ const AppointmentCalendar: React.FC = () => {
 
     // Gérer la sélection de créneau
     const handleTimeSelect = (slot: TimeSlot) => {
-        if (!slot.available) return;
+        if (slot.available === false) return;
 
         setSelectedTime(slot.time);
         setForm((prev) => ({
@@ -482,26 +487,28 @@ const AppointmentCalendar: React.FC = () => {
                                     </Card>
 
                                     {/* Quick Stats */}
-                                    <Card className="border-green-200 dark:border-green-800 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20">
-                                        <CardContent className="p-6">
-                                            <div className="flex items-center gap-3 mb-4">
-                                                <div className="p-2 bg-green-500/20 rounded-lg">
-                                                    <Sparkles className="w-5 h-5 text-green-600 dark:text-green-400" />
+                                    {false && (
+                                        <Card className="border-green-200 dark:border-green-800 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20">
+                                            <CardContent className="p-6">
+                                                <div className="flex items-center gap-3 mb-4">
+                                                    <div className="p-2 bg-green-500/20 rounded-lg">
+                                                        <Sparkles className="w-5 h-5 text-green-600 dark:text-green-400" />
+                                                    </div>
+                                                    <h3 className="font-semibold text-lg text-green-700 dark:text-green-400">Disponibilités</h3>
                                                 </div>
-                                                <h3 className="font-semibold text-lg text-green-700 dark:text-green-400">Disponibilités</h3>
-                                            </div>
-                                            <div className="grid grid-cols-2 gap-4 text-sm">
-                                                <div className="text-center">
-                                                    <div className="font-bold text-2xl text-green-600 dark:text-green-400">75%</div>
-                                                    <div className="text-muted-foreground">Cette semaine</div>
+                                                <div className="grid grid-cols-2 gap-4 text-sm">
+                                                    <div className="text-center">
+                                                        <div className="font-bold text-2xl text-green-600 dark:text-green-400">75%</div>
+                                                        <div className="text-muted-foreground">Cette semaine</div>
+                                                    </div>
+                                                    <div className="text-center">
+                                                        <div className="font-bold text-2xl text-green-600 dark:text-green-400">12</div>
+                                                        <div className="text-muted-foreground">Créneaux libres</div>
+                                                    </div>
                                                 </div>
-                                                <div className="text-center">
-                                                    <div className="font-bold text-2xl text-green-600 dark:text-green-400">12</div>
-                                                    <div className="text-muted-foreground">Créneaux libres</div>
-                                                </div>
-                                            </div>
-                                        </CardContent>
-                                    </Card>
+                                            </CardContent>
+                                        </Card>
+                                    )}
                                 </motion.div>
                             </div>
 
@@ -550,7 +557,7 @@ const AppointmentCalendar: React.FC = () => {
                                                 >
                                                     <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
                                                     <span className="text-green-700 dark:text-green-300 font-medium text-sm">
-                                                        {availableSlots.filter((s) => s.available).length} créneaux disponibles
+                                                        {availableSlots.filter((s) => s.available !== false).length} créneaux disponibles
                                                     </span>
                                                 </motion.div>
                                             </div>
@@ -561,11 +568,11 @@ const AppointmentCalendar: React.FC = () => {
                                                     <motion.button
                                                         key={slot.time}
                                                         type="button"
-                                                        disabled={!slot.available}
+                                                        disabled={slot.available === false}
                                                         onClick={() => handleTimeSelect(slot)}
                                                         className={cn(
                                                             'group relative p-4 rounded-xl border-2 transition-all duration-300 text-sm font-semibold min-h-[70px] flex flex-col items-center justify-center',
-                                                            slot.available
+                                                            slot.available !== false
                                                                 ? selectedTime === slot.time
                                                                     ? 'border-primary bg-gradient-to-br from-primary to-primary/80 text-white shadow-xl scale-105 ring-4 ring-primary/20'
                                                                     : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-primary hover:bg-gradient-to-br hover:from-primary/5 hover:to-primary/10 hover:shadow-lg hover:scale-105 text-gray-900 dark:text-white'
@@ -575,7 +582,7 @@ const AppointmentCalendar: React.FC = () => {
                                                         animate={{ opacity: 1, y: 0 }}
                                                         transition={{ delay: index * 0.05, duration: 0.3 }}
                                                         whileHover={
-                                                            slot.available
+                                                            slot.available !== false
                                                                 ? {
                                                                       y: -2,
                                                                       transition: { duration: 0.2 },
@@ -583,7 +590,7 @@ const AppointmentCalendar: React.FC = () => {
                                                                 : {}
                                                         }
                                                         whileTap={
-                                                            slot.available
+                                                            slot.available !== false
                                                                 ? {
                                                                       scale: 0.95,
                                                                       transition: { duration: 0.1 },
@@ -595,7 +602,7 @@ const AppointmentCalendar: React.FC = () => {
                                                         <div className="text-base font-bold mb-1">{slot.display}</div>
 
                                                         {/* Status Indicator */}
-                                                        {slot.available ? (
+                                                        {slot.available !== false ? (
                                                             selectedTime === slot.time ? (
                                                                 <motion.div
                                                                     className="flex items-center gap-1 text-xs opacity-90"

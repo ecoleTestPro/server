@@ -8,10 +8,12 @@ import { Switch } from '@/components/ui/switch';
 import AppLayout from '@/layouts/dashboard/app-layout';
 import { cn } from '@/lib/utils';
 import { BusinessHours } from '@/types';
-import { Head, useForm } from '@inertiajs/react';
+import { Head, useForm, router } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import { Clock, Edit, Eye, RotateCcw, Save } from 'lucide-react';
+import axios from 'axios';
 import React, { useState } from 'react';
+import toast from 'react-hot-toast';
 
 interface Props {
     businessHours: BusinessHours[];
@@ -64,7 +66,7 @@ export default function BusinessHoursSettings({ businessHours, appointmentDurati
     const [editingDay, setEditingDay] = useState<string | null>(null);
     const [hasChanges, setHasChanges] = useState(false);
 
-    const { data, setData, post, processing, errors, reset } = useForm({
+    const { data, setData, processing, errors, reset } = useForm({
         day_of_week: '',
         is_open: true,
         opening_time: DEFAULT_HOURS.opening_time,
@@ -100,11 +102,17 @@ export default function BusinessHoursSettings({ businessHours, appointmentDurati
     };
 
     const saveAllChanges = () => {
-        post(route('dashboard.appointments.settings.hours.update'), {
+        axios.post(route('dashboard.appointments.settings.hours.update'), {
             hours: hours,
-            onSuccess: () => {
-                setHasChanges(false);
-            },
+        })
+        .then(() => {
+            setHasChanges(false);
+            toast.success('Horaires mis à jour avec succès !');
+            router.reload();
+        })
+        .catch((error) => {
+            toast.error('Erreur lors de la mise à jour des horaires');
+            console.error('Erreur:', error);
         });
     };
 
@@ -374,7 +382,7 @@ export default function BusinessHoursSettings({ businessHours, appointmentDurati
                                     <Label htmlFor="is_open">Ouvert ce jour</Label>
                                     <p className="text-sm text-gray-600">Désactiver si vous ne prenez pas de rendez-vous ce jour</p>
                                 </div>
-                                <Switch id="is_open" checked={data.is_open} onCheckedChange={(checked) => setData('is_open', checked)} />
+                                <Switch id="is_open" checked={data.is_open} onCheckedChange={(checked) => setData('is_open', !!checked)} />
                             </div>
 
                             {data.is_open && (
