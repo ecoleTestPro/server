@@ -1,4 +1,13 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
+    
+    # Éviter les boucles - ne pas rediriger si on est déjà dans public/
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^(.*)$ public/$1 [L]
+    
+    # Rediriger les accès directs au dossier public
+    RewriteCond %{REQUEST_URI} ^/public/(.*)$
+    RewriteRule ^public/(.*)$ $1 [R=301,L]
 </IfModule>
