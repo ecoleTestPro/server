@@ -31,6 +31,9 @@ export default function DashboardCategory() {
 
     const [openCategory, setOpenCategory] = useState(false);
     const [categorySelected, setCategorySelected] = useState<ICategoryForm | undefined>(undefined);
+    const [isSubcategoryMode, setIsSubcategoryMode] = useState(false);
+    const [parentCategoryId, setParentCategoryId] = useState<number | undefined>(undefined);
+    const [parentCategoryName, setParentCategoryName] = useState<string | undefined>(undefined);
 
     useEffect(() => {
         if (data && data.categories) {
@@ -79,12 +82,30 @@ export default function DashboardCategory() {
     };
 
     /**
+     * Opens the category form drawer to add a subcategory for the given parent category.
+     *
+     * @param {ICourseCategory} parentCategory The parent category
+     *
+     * @return {void}
+     */
+    const handleOpenAddSubcategory = (parentCategory: ICourseCategory) => {
+        setIsSubcategoryMode(true);
+        setParentCategoryId(parentCategory.id);
+        setParentCategoryName(parentCategory.title);
+        setCategorySelected(undefined); // Nouvelle sous-catégorie
+        setOpenCategory(true);
+    };
+
+    /**
      * Closes the category form drawer.
      *
      * @return {void}
      */
     const handleCloseCategory = () => {
         setCategorySelected(undefined);
+        setIsSubcategoryMode(false);
+        setParentCategoryId(undefined);
+        setParentCategoryName(undefined);
         setOpenCategory(false);
     };
 
@@ -126,12 +147,20 @@ export default function DashboardCategory() {
                 <div className="">
                     {/* <CourseTable /> */}
                     <CategoryToolBar
-                        FormComponent={<CategoryForm closeDrawer={handleCloseCategory} initialData={categorySelected} />}
+                        FormComponent={
+                            <CategoryForm 
+                                closeDrawer={handleCloseCategory} 
+                                initialData={categorySelected} 
+                                isSubcategoryMode={isSubcategoryMode}
+                                parentCategoryId={parentCategoryId}
+                                parentCategoryName={parentCategoryName}
+                            />
+                        }
                         openCategory={openCategory}
                         setOpenCategory={(open: boolean) => {
                             setOpenCategory(open);
                             if (!open) {
-                                setCategorySelected(undefined);
+                                handleCloseCategory();
                             }
                         }}
                     />
@@ -150,9 +179,10 @@ export default function DashboardCategory() {
                     <div className="container mx-auto flex h-full items-center justify-center">
                         {data?.categories && (
                             <CategoryDataTable
-                                categories={flatCategories(data.categories)}
+                                categories={data.categories}
                                 onEditRow={handleOpenEditCategory}
                                 onDeleteRow={handleOnDeleteRow}
+                                onAddSubcategoryRow={handleOpenAddSubcategory}
                             />
                         )}
                     </div>

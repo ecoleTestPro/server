@@ -10,7 +10,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 import { InputFile } from '@/components/ui/inputFile';
-import SelectCustom from '@/components/ui/select-custom';
 import { SharedData } from '@/types';
 import { ICourseCategory } from '@/types/course';
 import { lazy } from 'react';
@@ -58,14 +57,33 @@ const defaultValues: ICategoryForm = {
 interface CategoryFormProps {
     closeDrawer?: () => void;
     initialData?: ICategoryForm;
+    isSubcategoryMode?: boolean;
+    parentCategoryId?: number;
+    parentCategoryName?: string;
 }
 
-function CategoryForm({ closeDrawer, initialData }: CategoryFormProps) {
+function CategoryForm({ closeDrawer, initialData, isSubcategoryMode = false, parentCategoryId, parentCategoryName }: CategoryFormProps) {
     const { data: catData } = usePage<SharedData>().props;
     const { t } = useTranslation();
     const [file, setFile] = React.useState<File | null>(null);
 
-    const { data, setData, post, processing, errors, reset } = useForm<ICategoryForm>(initialData || defaultValues);
+    // Initialisation des données en fonction du mode
+    const getInitialFormData = (): ICategoryForm => {
+        if (initialData) {
+            return initialData;
+        }
+        
+        const baseData = { ...defaultValues };
+        
+        // Si on est en mode sous-catégorie, pré-sélectionner la catégorie parent
+        if (isSubcategoryMode && parentCategoryId) {
+            baseData.parent_id = parentCategoryId;
+        }
+        
+        return baseData;
+    };
+
+    const { data, setData, post, processing, errors, reset } = useForm<ICategoryForm>(getInitialFormData());
 
     /**
      * Soumet le formulaire pour créer ou mettre à jour une catégorie
@@ -122,7 +140,12 @@ function CategoryForm({ closeDrawer, initialData }: CategoryFormProps) {
 
     return (
         <form className="mx-auto flex max-w-xl flex-col gap-8" onSubmit={submit}>
-            <legend className="px-2 text-base font-semibold">{t('courses.mainInfo', 'Informations principales')}</legend>
+            <legend className="px-2 text-base font-semibold">
+                {isSubcategoryMode 
+                    ? t('courses.subcategoryInfo', 'Informations de la sous-catégorie')
+                    : t('courses.mainInfo', 'Informations principales')
+                }
+            </legend>
             <div className="grid gap-4">
                 <div className="grid gap-2">
                     <Label htmlFor="title">{t('courses.title', 'Titre')}</Label>
@@ -140,25 +163,20 @@ function CategoryForm({ closeDrawer, initialData }: CategoryFormProps) {
                 </div>
             </div>
 
-            <div className="grid gap-2">
-                <Label htmlFor="parent_id">{t('courses.parentCategory', 'Catégorie parente')} <span className="text-sm text-gray-500">(optionnel)</span></Label>
-                <SelectCustom
-                    data={
-                        catData.categories_with_courses &&
-                        catData.categories_with_courses.map((category) => ({
-                            id: category.id!,
-                            title: category.title,
-                            value: category.id!.toString(),
-                        }))
-                    }
-                    selectLabel={t('courses.category', 'Catégorie')}
-                    processing={processing}
-                    onValueChange={(value) => setData('parent_id', value || undefined)}
-                    value={data.parent_id?.toString()}
-                    // required supprimé - la catégorie parent est optionnelle
-                />
-                <InputError message={errors.parent_id} />
-            </div>
+            {/* Afficher la catégorie parente si nous sommes en mode sous-catégorie */}
+            {isSubcategoryMode && parentCategoryName && (
+                <div className="grid gap-2">
+                    <Label htmlFor="parent_id">
+                        {t('courses.parentCategory', 'Catégorie parente')}
+                    </Label>
+                    <div className="flex items-center gap-2 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-md">
+                        <span className="text-blue-600 dark:text-blue-400 font-medium">
+                            {parentCategoryName}
+                        </span>
+                    </div>
+                    <InputError message={errors.parent_id} />
+                </div>
+            )}
 
             <div className="grid gap-2">
                 <Label htmlFor="image">{t('courses.image', 'Image')} <span className="text-sm text-gray-500">(optionnel)</span></Label>
@@ -194,7 +212,12 @@ function CategoryForm({ closeDrawer, initialData }: CategoryFormProps) {
 
             <Button type="submit" className="mt-2 w-full" disabled={processing}>
                 {processing && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
-                {initialData?.id ? t('courses.update', 'Mettre à jour la catégorie') : t('courses.create', 'Créer la catégorie')}
+                {initialData?.id 
+                    ? t('courses.update', 'Mettre à jour la catégorie') 
+                    : isSubcategoryMode 
+                        ? t('courses.createSubcategory', 'Créer la sous-catégorie')
+                        : t('courses.create', 'Créer la catégorie')
+                }
             </Button>
         </form>
     );

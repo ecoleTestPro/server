@@ -12,6 +12,7 @@ interface CategoryDataTableProps {
     categories: ICourseCategory[];
     onEditRow?: (row: ICourseCategory) => void;
     onDeleteRow?: (row: ICourseCategory) => void;
+    onAddSubcategoryRow?: (row: ICourseCategory) => void;
 }
 
 interface FlattenedCategory extends ICourseCategory {
@@ -22,7 +23,7 @@ interface FlattenedCategory extends ICourseCategory {
     isVisible?: boolean;
 }
 
-export default function CategoryDataTable({ categories, onEditRow, onDeleteRow }: CategoryDataTableProps) {
+export default function CategoryDataTable({ categories, onEditRow, onDeleteRow, onAddSubcategoryRow }: CategoryDataTableProps) {
     const [expandedCategories, setExpandedCategories] = useState<Set<number>>(new Set());
 
     // Fonction pour nettoyer et structurer les catégories
@@ -198,7 +199,7 @@ export default function CategoryDataTable({ categories, onEditRow, onDeleteRow }
         {
             id: 'actions',
             enableHiding: false,
-            cell: ({ row }) => <CategoryActionBtn row={row} onEdit={onEditRow} onDelete={onDeleteRow} />,
+            cell: ({ row }) => <CategoryActionBtn row={row} onEdit={onEditRow} onDelete={onDeleteRow} onAddSubcategory={onAddSubcategoryRow} />,
         },
     ];
 
