@@ -9,7 +9,7 @@ import { ITestimonial } from '@/types/testimonial';
 import { Logger } from '@/utils/console.util';
 import { router, useForm } from '@inertiajs/react';
 import axios from 'axios';
-import { FormEventHandler, useState } from 'react';
+import { FormEventHandler, useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { MessageSquareQuote, HelpCircle, User, Briefcase, FileText, Eye, Star } from 'lucide-react';
@@ -33,6 +33,16 @@ export default function TestimonialForm({ closeDrawer, initialData }: Testimonia
     const { t } = useTranslation();
     const [file, setFile] = useState<File | null>(null);
     const { data, setData, processing, errors, reset } = useForm(initialData || defaultValues);
+
+    // Effet pour réinitialiser le formulaire quand initialData change
+    useEffect(() => {
+        if (initialData) {
+            setData(initialData);
+        } else {
+            setData(defaultValues);
+        }
+        setFile(null);
+    }, [initialData]);
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();

@@ -53,6 +53,22 @@ export default function DashboardTestimonial() {
         setOpenForm(true);
     };
 
+    const handleToggle = (row: ITestimonial) => {
+        router.post(route('dashboard.testimonial.toggle', row.id), {}, { 
+            preserveScroll: true,
+            onSuccess: () => {
+                toast.success(
+                    row.is_active 
+                        ? t('testimonials.deactivated', 'Témoignage désactivé') 
+                        : t('testimonials.activated', 'Témoignage activé')
+                );
+            },
+            onError: () => {
+                toast.error(t('testimonials.toggle_error', 'Erreur lors du changement de statut'));
+            }
+        });
+    };
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
@@ -154,6 +170,7 @@ export default function DashboardTestimonial() {
                                 setSelected(row);
                                 setShowConfirm(true);
                             }}
+                            onToggleRow={handleToggle}
                         />
                     )}
                 </div>

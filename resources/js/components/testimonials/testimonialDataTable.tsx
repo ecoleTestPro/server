@@ -1,7 +1,7 @@
 import { ITestimonial } from '@/types/testimonial';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, Briefcase, Eye, MessageSquareQuote, User } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
+// import { useTranslation } from 'react-i18next'; // Non utilisé
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button/button';
 import { Checkbox } from '../ui/checkbox';
@@ -13,10 +13,12 @@ interface TestimonialDataTableProps {
     testimonials: ITestimonial[];
     onEditRow?: (row: ITestimonial) => void;
     onDeleteRow?: (row: ITestimonial) => void;
+    onToggleRow?: (row: ITestimonial) => void;
 }
 
-export default function TestimonialDataTable({ testimonials, onEditRow, onDeleteRow }: TestimonialDataTableProps) {
-    const { t } = useTranslation();
+export default function TestimonialDataTable({ testimonials, onEditRow, onDeleteRow, onToggleRow }: TestimonialDataTableProps) {
+    // Supprimer cette ligne car 't' n'est pas utilisé
+    // const { t } = useTranslation();
 
     const columns: ColumnDef<ITestimonial>[] = [
         {
@@ -151,7 +153,7 @@ export default function TestimonialDataTable({ testimonials, onEditRow, onDelete
         {
             id: 'actions',
             enableHiding: false,
-            cell: ({ row }) => <TestimonialActionBtn row={row} onEdit={onEditRow} onDelete={onDeleteRow} />,
+            cell: ({ row }) => <TestimonialActionBtn row={row} onEdit={onEditRow} onDelete={onDeleteRow} onToggle={onToggleRow} />,
         },
     ];
 

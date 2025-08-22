@@ -126,6 +126,7 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
         Route::post('create',        [TestimonialController::class, 'store'])->name('dashboard.testimonial.store');
         Route::put('update/{testimonial}', [TestimonialController::class, 'update'])->name('dashboard.testimonial.update');
         Route::delete('delete/{testimonial}', [TestimonialController::class, 'destroy'])->name('dashboard.testimonial.delete');
+        Route::post('toggle/{testimonial}', [TestimonialController::class, 'toggle'])->name('dashboard.testimonial.toggle');
         Route::post('restore/{testimonial}', [TestimonialController::class, 'restore'])->name('dashboard.testimonial.restore');
     });
 
