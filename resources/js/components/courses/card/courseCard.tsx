@@ -381,7 +381,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, setOpenSessio
                                             </Button>
                                         </TooltipTrigger>
                                         <TooltipContent>
-                                            <p>Associer des références partenaires</p>
+                                            <p>Associer des références</p>
                                         </TooltipContent>
                                     </Tooltip>
                                 </>
