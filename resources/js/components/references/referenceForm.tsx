@@ -6,20 +6,20 @@ import { Label } from '@/components/ui/label';
 import TagInput from '@/components/ui/tag-input';
 import { IPartner } from '@/types/partner';
 import { getMediaUrl } from '@/utils/utils';
-import { ImageOff, X, Loader2 } from 'lucide-react';
+import axios from 'axios';
+import { ImageOff, Loader2, X } from 'lucide-react';
 import { FormEventHandler, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import axios from 'axios';
 
 interface ReferenceFormProps {
     closeDrawer?: () => void;
     initialData?: IPartner;
+    onSuccess?: (updatedReference: IPartner) => void;
 }
 
 interface ReferenceFormData {
     name: string;
-    link?: string;
     tag?: string;
     is_active: boolean;
     is_reference: boolean;
@@ -27,8 +27,7 @@ interface ReferenceFormData {
     [key: string]: any;
 }
 
-
-export default function ReferenceForm({ closeDrawer, initialData }: ReferenceFormProps) {
+export default function ReferenceForm({ closeDrawer, initialData, onSuccess }: ReferenceFormProps) {
     const { t } = useTranslation();
     const [file, setFile] = useState<File | null>(null);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -36,7 +35,6 @@ export default function ReferenceForm({ closeDrawer, initialData }: ReferenceFor
     const [errors, setErrors] = useState<{ [key: string]: string[] }>({});
     const [data, setData] = useState<ReferenceFormData>({
         name: initialData?.name || '',
-        link: initialData?.link || '',
         tag: initialData?.tag || '',
         is_active: initialData?.is_active ?? true,
         is_reference: initialData?.is_reference ?? true,
@@ -51,7 +49,7 @@ export default function ReferenceForm({ closeDrawer, initialData }: ReferenceFor
     }, [initialData]);
 
     useEffect(() => {
-        setData(prevData => ({ ...prevData, tag: tags.join(';') }));
+        setData((prevData) => ({ ...prevData, tag: tags.join(';') }));
     }, [tags]);
 
     const submit: FormEventHandler = async (e) => {
@@ -63,7 +61,6 @@ export default function ReferenceForm({ closeDrawer, initialData }: ReferenceFor
             // Préparer FormData pour l'envoi avec fichier
             const formData = new FormData();
             formData.append('name', data.name);
-            formData.append('link', data.link || '');
             formData.append('tag', data.tag || '');
             formData.append('is_reference', '1');
             formData.append('is_active', data.is_active ? '1' : '0');
@@ -75,35 +72,57 @@ export default function ReferenceForm({ closeDrawer, initialData }: ReferenceFor
 
             // Déterminer l'URL et la méthode
             const isUpdate = initialData?.id;
-            const url = isUpdate 
-                ? route('dashboard.references.update', initialData.id)
-                : route('dashboard.references.store');
+            const url = isUpdate ? route('dashboard.references.update', initialData.id) : route('dashboard.references.store');
 
             // Effectuer la requête
-            const response = isUpdate 
+            const response = isUpdate
                 ? await axios.post(url, formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                        'X-HTTP-Method-Override': 'PUT'
-                    }
-                })
+                      headers: {
+                          'Content-Type': 'multipart/form-data',
+                          'X-HTTP-Method-Override': 'PUT',
+                      },
+                  })
                 : await axios.post(url, formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                });
+                      headers: {
+                          'Content-Type': 'multipart/form-data',
+                      },
+                  });
 
             // Succès
-            toast.success(
-                isUpdate 
-                    ? t('references.updated', 'Référence mise à jour !') 
-                    : t('references.created', 'Référence créée !')
-            );
+            toast.success(isUpdate ? t('references.updated', 'Référence mise à jour !') : t('references.created', 'Référence créée !'));
+
+            // Si on a un callback de succès, récupérer les données mises à jour
+            if (onSuccess) {
+                try {
+                    // Récupérer les données mises à jour depuis le serveur
+                    const refreshResponse = await axios.get('/dashboard/references/api');
+                    const references = refreshResponse.data.references || refreshResponse.data.data?.references || [];
+
+                    // Trouver la référence mise à jour/créée
+                    let updatedReference;
+                    if (isUpdate && initialData?.id) {
+                        updatedReference = references.find((ref: IPartner) => ref.id === initialData.id);
+                    } else {
+                        // Pour une création, prendre la dernière référence (plus récente)
+                        updatedReference = references[0]; // Assuming they're sorted by newest first
+                    }
+
+                    if (updatedReference) {
+                        onSuccess(updatedReference);
+                    } else {
+                        // Fallback: callback avec toutes les références
+                        onSuccess(response.data);
+                    }
+                } catch (refreshError) {
+                    console.warn('Erreur lors du rafraîchissement des données:', refreshError);
+                    // En cas d'erreur de rafraîchissement, utiliser les données de la réponse
+                    onSuccess(response.data);
+                }
+            }
 
             // Réinitialiser le formulaire et fermer
             setData({
                 name: '',
-                link: '',
                 tag: '',
                 is_active: true,
                 is_reference: true,
@@ -112,10 +131,6 @@ export default function ReferenceForm({ closeDrawer, initialData }: ReferenceFor
             setPreviewUrl(null);
             setTags([]);
             closeDrawer?.();
-
-            // Recharger la page pour voir les changements
-            window.location.reload();
-
         } catch (error: any) {
             console.error('Erreur lors de la sauvegarde:', error);
 
@@ -123,7 +138,7 @@ export default function ReferenceForm({ closeDrawer, initialData }: ReferenceFor
                 // Erreurs de validation
                 const validationErrors = error.response.data.errors || {};
                 setErrors(validationErrors);
-                
+
                 const firstError = Object.values(validationErrors)[0] as string[];
                 if (firstError && firstError[0]) {
                     toast.error(firstError[0]);
@@ -140,26 +155,14 @@ export default function ReferenceForm({ closeDrawer, initialData }: ReferenceFor
         <form className="mx-auto flex flex-col gap-4" onSubmit={submit}>
             <div className="grid gap-2">
                 <Label htmlFor="name">{t('Name', 'Nom')}</Label>
-                <Input 
-                    id="name" 
-                    required 
-                    value={data.name} 
-                    onChange={(e) => setData(prev => ({ ...prev, name: e.target.value }))} 
-                    disabled={processing} 
+                <Input
+                    id="name"
+                    required
+                    value={data.name}
+                    onChange={(e) => setData((prev) => ({ ...prev, name: e.target.value }))}
+                    disabled={processing}
                 />
                 <InputError message={errors.name?.[0]} />
-            </div>
-            <div className="grid gap-2">
-                <Label htmlFor="link">{t('Link', 'Lien')} <span className="text-sm text-gray-500">(optionnel)</span></Label>
-                <Input 
-                    id="link" 
-                    type="url"
-                    value={data.link || ''} 
-                    onChange={(e) => setData(prev => ({ ...prev, link: e.target.value }))} 
-                    disabled={processing}
-                    placeholder="https://example.com"
-                />
-                <InputError message={errors.link?.[0]} />
             </div>
             <div className="grid gap-2">
                 <Label htmlFor="tag">Tag</Label>
@@ -167,24 +170,18 @@ export default function ReferenceForm({ closeDrawer, initialData }: ReferenceFor
                 <InputError message={errors.tag?.[0]} />
             </div>
             <div className="grid gap-2">
-                <Label htmlFor="picture">{t('Image')} <span className="text-sm text-gray-500">(optionnel)</span></Label>
-                
+                <Label htmlFor="picture">
+                    {t('Image')} <span className="text-sm text-gray-500">(optionnel)</span>
+                </Label>
+
                 {/* Aperçu de l'image actuelle ou nouvelle */}
                 {(previewUrl || file) && (
                     <div className="relative w-32 h-32 mx-auto mb-4">
                         <div className="w-full h-full border-2 border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm">
                             {file ? (
-                                <img 
-                                    src={URL.createObjectURL(file)} 
-                                    alt="Aperçu" 
-                                    className="w-full h-full object-contain p-2"
-                                />
+                                <img src={URL.createObjectURL(file)} alt="Aperçu" className="w-full h-full object-contain p-2" />
                             ) : previewUrl ? (
-                                <img 
-                                    src={previewUrl} 
-                                    alt="Image actuelle" 
-                                    className="w-full h-full object-contain p-2"
-                                />
+                                <img src={previewUrl} alt="Image actuelle" className="w-full h-full object-contain p-2" />
                             ) : (
                                 <div className="w-full h-full flex items-center justify-center bg-gray-50">
                                     <ImageOff className="w-8 h-8 text-gray-400" />
@@ -205,9 +202,7 @@ export default function ReferenceForm({ closeDrawer, initialData }: ReferenceFor
                         </button>
                         {file && (
                             <div className="absolute -bottom-8 left-0 right-0 text-center">
-                                <span className="text-xs text-green-600 bg-green-50 px-2 py-1 rounded">
-                                    Nouvelle image sélectionnée
-                                </span>
+                                <span className="text-xs text-green-600 bg-green-50 px-2 py-1 rounded">Nouvelle image sélectionnée</span>
                             </div>
                         )}
                     </div>
@@ -218,19 +213,20 @@ export default function ReferenceForm({ closeDrawer, initialData }: ReferenceFor
                     onFilesChange={(files) => {
                         if (files && files.length > 0) {
                             const selectedFile = files[0];
-                            
+
                             // Validation locale
                             const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/svg+xml'];
                             if (!validTypes.includes(selectedFile.type)) {
                                 toast.error('Le fichier doit être une image (JPEG, PNG, JPG, GIF, SVG)');
                                 return;
                             }
-                            
-                            if (selectedFile.size > 2048 * 1024) { // 2MB
-                                toast.error('L\'image ne doit pas dépasser 2 Mo');
+
+                            if (selectedFile.size > 2048 * 1024) {
+                                // 2MB
+                                toast.error("L'image ne doit pas dépasser 2 Mo");
                                 return;
                             }
-                            
+
                             setFile(selectedFile);
                         } else {
                             setFile(null);
@@ -241,18 +237,11 @@ export default function ReferenceForm({ closeDrawer, initialData }: ReferenceFor
                     disabled={processing}
                 />
                 <InputError message={errors.picture?.[0]} />
-                <p className="text-xs text-gray-500">
-                    Formats supportés: JPEG, PNG, JPG, GIF, SVG. Taille maximale: 2 Mo.
-                </p>
+                <p className="text-xs text-gray-500">Formats supportés: JPEG, PNG, JPG, GIF, SVG. Taille maximale: 2 Mo.</p>
             </div>
             <Button type="submit" className="mt-2 w-full" disabled={processing}>
                 {processing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {processing 
-                    ? t('Saving', 'Sauvegarde...') 
-                    : initialData?.id 
-                        ? t('Update', 'Mettre à jour') 
-                        : t('Create', 'Créer')
-                }
+                {processing ? t('Saving', 'Sauvegarde...') : initialData?.id ? t('Update', 'Mettre à jour') : t('Create', 'Créer')}
             </Button>
         </form>
     );
