@@ -28,6 +28,11 @@ export default function CourseReferenceDrawer({ open, setOpen, course, partners,
         reference_tag: string;
     } | null>(null);
 
+    // Générer un tag automatique basé sur le slug
+    const generateAutoTag = (slug: string): string => {
+        return `ref-${slug}`;
+    };
+
     // Fonction pour récupérer les références associées à la formation
     const fetchCourseReferences = async () => {
         if (!open || !course.slug) return;
@@ -39,13 +44,14 @@ export default function CourseReferenceDrawer({ open, setOpen, course, partners,
 
             setCourseReferences({
                 partners: data.partners || [],
-                reference_tag: data.reference_tag || '',
+                reference_tag: data.reference_tag || generateAutoTag(course.slug),
             });
 
             // Initialiser les valeurs du formulaire
             const partnerIds = data.partners ? data.partners.map((p: IPartner) => p.id!).filter((id: number | undefined) => id !== undefined) : [];
             setSelectedPartners(partnerIds);
-            setPartnerTags(data.reference_tag || '');
+            // Utiliser le tag automatique au lieu du tag existant
+            setPartnerTags(generateAutoTag(course.slug));
 
             toast.success('Références chargées avec succès');
         } catch (error) {
@@ -53,7 +59,8 @@ export default function CourseReferenceDrawer({ open, setOpen, course, partners,
             // Fallback sur les données du course si la requête échoue
             const currentPartnerIds = course.partners ? course.partners.map((p) => p.id!).filter((id) => id !== undefined) : [];
             setSelectedPartners(currentPartnerIds);
-            setPartnerTags(course.reference_tag || '');
+            // Utiliser le tag automatique même en cas d'erreur
+            setPartnerTags(generateAutoTag(course.slug));
 
             toast.error('Erreur lors du chargement des références');
         } finally {
@@ -64,6 +71,8 @@ export default function CourseReferenceDrawer({ open, setOpen, course, partners,
     // Initialiser les valeurs quand le drawer s'ouvre
     useEffect(() => {
         if (open) {
+            // Initialiser avec le tag automatique
+            setPartnerTags(generateAutoTag(course.slug));
             fetchCourseReferences();
         } else {
             // Réinitialiser quand le drawer se ferme
@@ -79,15 +88,15 @@ export default function CourseReferenceDrawer({ open, setOpen, course, partners,
             if (!selectedPartners || selectedPartners.length === 0) {
                 toast.error('Veuillez sélectionner au moins une référence.');
                 return;
-            } else if (!partnerTags) {
-                toast.error('Veuillez entrer un tag de référence.');
-                return;
             }
+            
+            // Générer automatiquement le tag si nécessaire
+            const autoTag = partnerTags || generateAutoTag(course.slug);
 
             setLoading(true);
             const response = await axios.post(route('dashboard.course.partners.sync', course.slug), {
                 partner_ids: selectedPartners,
-                reference_tag: partnerTags,
+                reference_tag: autoTag,
             });
             
             toast.success('Références associées avec succès');
@@ -97,7 +106,7 @@ export default function CourseReferenceDrawer({ open, setOpen, course, partners,
             const updatedCourse: ICourse = {
                 ...course,
                 partners: response.data.partners,
-                reference_tag: partnerTags
+                reference_tag: autoTag
             };
             
             if (onSuccess) {
@@ -261,22 +270,8 @@ export default function CourseReferenceDrawer({ open, setOpen, course, partners,
                         </div>
                     </div>
 
-                    {/* Champ de tag amélioré */}
-                    <div className="space-y-2">
-                        <label className="block text-sm font-medium text-gray-700">
-                            <Tag className="inline w-4 h-4 mr-1" />
-                            Tag de référence
-                        </label>
-                        <Input
-                            required
-                            type="text"
-                            value={partnerTags}
-                            onChange={(e) => setPartnerTags(e.target.value)}
-                            placeholder="Ex: Partenaire officiel, Référence certifiée..."
-                            className="w-full"
-                        />
-                        <p className="text-xs text-gray-500">Ce tag apparaîtra sur la page de formation pour qualifier les références</p>
-                    </div>
+                    {/* Champ de tag caché - généré automatiquement */}
+                    <input type="hidden" value={partnerTags} />
 
                     {/* Résumé et actions */}
                     <div className="bg-gray-50 rounded-lg p-4 space-y-3">
@@ -286,11 +281,9 @@ export default function CourseReferenceDrawer({ open, setOpen, course, partners,
                                     ? 'Aucune référence sélectionnée'
                                     : `${selectedPartners.length} référence(s) sélectionnée(s)`}
                             </span>
-                            {partnerTags && (
-                                <span className="text-sm text-gray-600">
-                                    Tag: <strong>{partnerTags}</strong>
-                                </span>
-                            )}
+                            <span className="text-xs text-gray-500">
+                                Tag auto: <code className="bg-gray-100 px-1 rounded">{partnerTags}</code>
+                            </span>
                         </div>
                         <div className="flex gap-2">
                             <Button
@@ -305,7 +298,7 @@ export default function CourseReferenceDrawer({ open, setOpen, course, partners,
                             </Button>
                             <Button
                                 onClick={handleUpdatePartners}
-                                disabled={loading || selectedPartners.length === 0 || !partnerTags}
+                                disabled={loading || selectedPartners.length === 0}
                                 className="flex-1 bg-blue-600 hover:bg-blue-700"
                             >
                                 <CheckCircle2 className="w-4 h-4 mr-2" />
