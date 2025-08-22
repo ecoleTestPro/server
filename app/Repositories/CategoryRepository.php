@@ -211,9 +211,9 @@ class CategoryRepository extends Repository
             'title'       => $request->title,
             'slug'        => Str::slug($request->title),
             'media_id'    => $media ? $media->id : null,
-            'parent_id'   => $request->parent_id,
+            'parent_id'   => $request->parent_id ?? null,
             'is_featured' => $isFeatured,
-            'color'       => $request->color,
+            'color'       => $request->color ?? null,
         ]);
     }
 
@@ -250,7 +250,7 @@ class CategoryRepository extends Repository
         return self::update($category, [
             'title'       => $request->title ?? $category->title,
             'slug'        => $request->title ? Str::slug($request->title) : $category->slug,
-            'media_id'    => $media ? $media->id : null,
+            'media_id'    => $media ? $media->id : $category->media_id,
             'parent_id'   => $request->parent_id ?? $category->parent_id,
             'is_featured' => $isFeatured,
             'color'       => $request->color ?? $category->color,

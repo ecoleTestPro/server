@@ -75,16 +75,16 @@ function CategoryForm({ closeDrawer, initialData }: CategoryFormProps) {
      * @remarks
      * Si {@link initialData} est défini, la route `category.update` sera utilisée.
      * Sinon, la route `category.store` sera utilisée.
-     *
-     * @throws {Error} Si l'image n'est pas définie et que {@link initialData} n'a pas de champ `media`
+     * L'image et la catégorie parent sont optionnelles.
      */
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
 
-        if (!file && !initialData?.media) {
-            toast.error(t('courses.category.mediaRequired', 'Veuillez sélectionner une image.'));
-            return;
-        }
+        // L'image n'est plus obligatoire
+        // if (!file && !initialData?.media) {
+        //     toast.error(t('courses.category.mediaRequired', 'Veuillez sélectionner une image.'));
+        //     return;
+        // }
 
         const routeName = initialData?.id ? 'category.update' : 'category.store';
         const routeUrl = initialData?.id ? 'categories/update' : 'categories/store';
@@ -141,7 +141,7 @@ function CategoryForm({ closeDrawer, initialData }: CategoryFormProps) {
             </div>
 
             <div className="grid gap-2">
-                <Label htmlFor="parent_id">{t('courses.parentCategory', 'Catégorie parente')}</Label>
+                <Label htmlFor="parent_id">{t('courses.parentCategory', 'Catégorie parente')} <span className="text-sm text-gray-500">(optionnel)</span></Label>
                 <SelectCustom
                     data={
                         catData.categories_with_courses &&
@@ -153,15 +153,15 @@ function CategoryForm({ closeDrawer, initialData }: CategoryFormProps) {
                     }
                     selectLabel={t('courses.category', 'Catégorie')}
                     processing={processing}
-                    onValueChange={(value) => setData('parent_id', value)}
+                    onValueChange={(value) => setData('parent_id', value || undefined)}
                     value={data.parent_id?.toString()}
-                    required
+                    // required supprimé - la catégorie parent est optionnelle
                 />
                 <InputError message={errors.parent_id} />
             </div>
 
             <div className="grid gap-2">
-                <Label htmlFor="image">{t('courses.image', 'Image')}</Label>
+                <Label htmlFor="image">{t('courses.image', 'Image')} <span className="text-sm text-gray-500">(optionnel)</span></Label>
                 <InputFile
                     id="image"
                     onFilesChange={(files) => {

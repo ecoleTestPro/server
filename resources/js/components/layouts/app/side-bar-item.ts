@@ -19,16 +19,16 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
                 icon: List,
             },
             {
+                title: 'Inscriptions',
+                href: route('dashboard.enrollment.index'),
+                icon: ListChecks,
+            },
+            {
                 title: 'Catégories',
                 href: route('dashboard.category.index'),
                 icon: ListTodo,
             },
         ],
-    },
-    {
-        title: 'Inscriptions',
-        href: route('dashboard.enrollment.index'),
-        icon: ListChecks,
     },
     // {
     //     title: 'Partenaires',
