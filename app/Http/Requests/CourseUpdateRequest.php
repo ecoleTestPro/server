@@ -38,6 +38,7 @@ class CourseUpdateRequest extends FormRequest
             'instructor_id'         => 'exists:instructors,id',
             'is_active'             => 'nullable',
             'reference_tag'         => 'nullable|string',
+            'location_mode'         => 'nullable|string|in:En présentiel,À distance,En présentiel ou à distance,Hybride',
             'price' => [
                 'nullable',
                 'numeric',

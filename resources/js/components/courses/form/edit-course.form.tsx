@@ -18,10 +18,10 @@ import CourseAdditionnalForm from './course-additionnal.form';
 import CourseBasicInfoForm from './course-basic-info.form';
 
 import RichTextCKEditor from '@/components/ui/form/RichTextCKEditor';
+import { Logger } from '@/utils/console.util';
 import { ROUTE_MAP } from '@/utils/route.util';
 import axios from 'axios';
 import { COURSE_DEFAULT_VALUES, createPayload, ICourseForm, PeriodicityUnitEnum } from './course.form.util';
-import { Logger } from '@/utils/console.util';
 
 export type ICourseFormErrors = { [key in keyof ICourseForm]?: string[] };
 
@@ -439,15 +439,17 @@ function CourseForm({ course }: ICourseFormProps) {
                                             {t('courses.partners', 'Associer des partenaires')}
                                         </Button>
                                     )}
-                                    <Button
-                                        type="button"
-                                        onClick={() => submit(data, true)}
-                                        className="mt-2  bg-gray-400 hover:bg-gray-500 "
-                                        disabled={processing}
-                                    >
-                                        {processing && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
-                                        {t('courses.create', 'Sauvegarder comme brouillon')}
-                                    </Button>
+                                    {false && (
+                                        <Button
+                                            type="button"
+                                            onClick={() => submit(data, true)}
+                                            className="mt-2  bg-gray-400 hover:bg-gray-500 "
+                                            disabled={processing}
+                                        >
+                                            {processing && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
+                                            {t('courses.create', 'Sauvegarder comme brouillon')}
+                                        </Button>
+                                    )}
 
                                     <div className="mt-[30vh] w-full">
                                         <Button
