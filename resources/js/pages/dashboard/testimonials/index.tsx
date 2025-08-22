@@ -8,6 +8,7 @@ import TestimonialForm from '@/components/testimonials/testimonialForm';
 import { MessageSquareQuote, HelpCircle, Info, CirclePlus } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import Drawer from '@/components/ui/drawer';
+import axios from 'axios';
 import TestimonialDataTable from '@/components/testimonials/testimonialDataTable';
 import { ITestimonial } from '@/types/testimonial';
 import { ConfirmDialog } from '@/components/ui/confirmDialog';
@@ -53,20 +54,26 @@ export default function DashboardTestimonial() {
         setOpenForm(true);
     };
 
-    const handleToggle = (row: ITestimonial) => {
-        router.post(route('dashboard.testimonial.toggle', row.id), {}, { 
-            preserveScroll: true,
-            onSuccess: () => {
-                toast.success(
-                    row.is_active 
-                        ? t('testimonials.deactivated', 'Témoignage désactivé') 
-                        : t('testimonials.activated', 'Témoignage activé')
+    const handleToggle = async (row: ITestimonial) => {
+        try {
+            const response = await axios.post(route('dashboard.testimonial.toggle', row.id));
+            
+            if (response.data.success) {
+                toast.success(response.data.message);
+                
+                // Mettre à jour l'état local du témoignage
+                setTestimonials(prevTestimonials => 
+                    prevTestimonials.map(testimonial => 
+                        testimonial.id === row.id 
+                            ? { ...testimonial, is_active: response.data.is_active }
+                            : testimonial
+                    )
                 );
-            },
-            onError: () => {
-                toast.error(t('testimonials.toggle_error', 'Erreur lors du changement de statut'));
             }
-        });
+        } catch (error) {
+            console.error('Erreur lors du toggle:', error);
+            toast.error(t('testimonials.toggle_error', 'Erreur lors du changement de statut'));
+        }
     };
 
     return (
