@@ -402,57 +402,21 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, setOpenSessio
                                 </TooltipContent>
                             </Tooltip>
 
-                            {showConfirmDelete ? (
-                                <div className="flex items-center gap-1">
-                                    <Tooltip>
-                                        <TooltipTrigger asChild>
-                                            <Button
-                                                variant="ghost"
-                                                size="sm"
-                                                onClick={() => setShowConfirmDelete(false)}
-                                                className="text-gray-600 hover:bg-gray-50"
-                                            >
-                                                Annuler
-                                            </Button>
-                                        </TooltipTrigger>
-                                        <TooltipContent>
-                                            <p>Annuler la suppression</p>
-                                        </TooltipContent>
-                                    </Tooltip>
-
-                                    <Tooltip>
-                                        <TooltipTrigger asChild>
-                                            <Button
-                                                variant="ghost"
-                                                size="sm"
-                                                onClick={handleConfirmDelete}
-                                                className="text-red-600 hover:text-red-800 hover:bg-red-50"
-                                            >
-                                                Confirmer
-                                            </Button>
-                                        </TooltipTrigger>
-                                        <TooltipContent>
-                                            <p>Confirmer la suppression définitive</p>
-                                        </TooltipContent>
-                                    </Tooltip>
-                                </div>
-                            ) : (
-                                <Tooltip>
-                                    <TooltipTrigger asChild>
-                                        <Button
-                                            variant="ghost"
-                                            size="sm"
-                                            onClick={() => setShowConfirmDelete(true)}
-                                            className="text-red-600 hover:text-red-800 hover:bg-red-50"
-                                        >
-                                            <Trash2Icon className="w-4 h-4" />
-                                        </Button>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                        <p>Supprimer la formation</p>
-                                    </TooltipContent>
-                                </Tooltip>
-                            )}
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={() => handleConfirmDelete()}
+                                        className="text-red-600 hover:text-red-800 hover:bg-red-50"
+                                    >
+                                        <Trash2Icon className="w-4 h-4" />
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>Supprimer la formation</p>
+                                </TooltipContent>
+                            </Tooltip>
                         </div>
                     </div>
                 </div>

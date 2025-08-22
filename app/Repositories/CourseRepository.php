@@ -253,6 +253,11 @@ class CourseRepository extends Repository
             'video_id'      => $video ? $video->id : null,
             'reference_tag' => $request->reference_tag,
             'location_mode' => $request->location_mode ?? 'En présentiel ou à distance',
+            'periodicity_unit' => $request->periodicity_unit,
+            'periodicity_value' => $request->periodicity_value,
+            'duration' => $request->duration,
+            'attachment' => $request->attachment,
+            'lectures' => $request->lectures,
             'description'   => $request->description ?? "", // json_encode($request->description)
             'regular_price' => $request->regular_price,
             'price'         => $request->price,
@@ -387,6 +392,11 @@ class CourseRepository extends Repository
                 'video_id'      => $video ? $video->id : null,
                 'reference_tag' => $request->reference_tag ?? $course->reference_tag,
                 'location_mode' => $request->location_mode ?? $course->location_mode ?? 'En présentiel ou à distance',
+                'periodicity_unit' => $request->periodicity_unit ?? $course->periodicity_unit,
+                'periodicity_value' => $request->periodicity_value ?? $course->periodicity_value,
+                'duration' => $request->duration ?? $course->duration,
+                'attachment' => $request->attachment ?? $course->attachment,
+                'lectures' => $request->lectures ?? $course->lectures,
                 // description is already sent as a JSON string from the form
                 // so we store it directly without re-encoding it to avoid
                 // nested JSON strings

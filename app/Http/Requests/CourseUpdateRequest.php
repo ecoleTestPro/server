@@ -39,6 +39,11 @@ class CourseUpdateRequest extends FormRequest
             'is_active'             => 'nullable',
             'reference_tag'         => 'nullable|string',
             'location_mode'         => 'nullable|string|in:En présentiel,À distance,En présentiel ou à distance,Hybride',
+            'periodicity_unit'      => 'nullable|string',
+            'periodicity_value'     => 'nullable|numeric',
+            'duration'              => 'nullable|string',
+            'attachment'            => 'nullable|string',
+            'lectures'              => 'nullable|numeric',
             'price' => [
                 'nullable',
                 'numeric',

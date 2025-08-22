@@ -80,7 +80,7 @@ abstract class AbstractCourseCategorySeeder
             'level'              => $data['level'] ?? '',
             'is_featured'        => $data['is_featured'] ?? false,
             'is_published'       => $data['is_published'] ?? true,
-            'location_mode'      => "En présentiel à Abidjan ou classe à distance",
+            'location_mode'      => "En présentiel ou à distance",
             'attachment'         => 'Livre de référence',
             'periodicity_unit'   => $data['periodicity_unit'] ?? 'DAY',
             'periodicity_value'  => $data['periodicity_value'] ?? 5,
