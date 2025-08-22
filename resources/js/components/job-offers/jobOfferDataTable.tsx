@@ -229,7 +229,7 @@ export default function JobOfferDataTable({ offers, onEditRow, onDeleteRow, onTo
     }
     
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 shadow-sm">
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 shadow-sm w-full">
             <DataTable columns={columns} data={offers} filterColumn="title" />
         </div>
     );
