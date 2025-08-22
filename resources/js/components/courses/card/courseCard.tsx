@@ -20,7 +20,6 @@ import {
     Eye,
     EyeOff,
     MapPin,
-    MoreHorizontal,
     Trash2Icon,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -384,35 +383,6 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, setOpenSessio
                                         <TooltipContent>
                                             <p>Associer des références partenaires</p>
                                         </TooltipContent>
-                                    </Tooltip>
-
-                                    <Tooltip>
-                                        <TooltipTrigger asChild>
-                                            <Button
-                                                variant="ghost"
-                                                size="sm"
-                                                onClick={handleTogglePublish}
-                                                disabled={isPublishing}
-                                                className={`${
-                                                    course.is_published
-                                                        ? 'text-orange-600 hover:text-orange-800 hover:bg-orange-50'
-                                                        : 'text-green-600 hover:text-green-800 hover:bg-green-50'
-                                                }`}
-                                            >
-                                                {isPublishing ? (
-                                                    <MoreHorizontal className="w-4 h-4 animate-spin" />
-                                                ) : course.is_published ? (
-                                                    <EyeOff className="w-4 h-4" />
-                                                ) : (
-                                                    <Eye className="w-4 h-4" />
-                                                )}
-                                            </Button>
-                                        </TooltipTrigger>
-                                        {false && (
-                                            <TooltipContent>
-                                                <p>{course.is_published ? 'Dépublier la formation' : 'Publier la formation'}</p>
-                                            </TooltipContent>
-                                        )}
                                     </Tooltip>
                                 </>
                             )}

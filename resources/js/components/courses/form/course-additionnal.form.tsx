@@ -27,7 +27,15 @@ interface CourseAdditionnalFormProps {
     partnerTags?: string[];
 }
 
-export default function CourseAdditionnalForm({ fieldsetClasses, data, courseSelected, setData, processing, errors, partnerTags = [] }: CourseAdditionnalFormProps) {
+export default function CourseAdditionnalForm({
+    fieldsetClasses,
+    data,
+    courseSelected,
+    setData,
+    processing,
+    errors,
+    partnerTags = [],
+}: CourseAdditionnalFormProps) {
     const [displayPrice, setDisplayPrice] = useState<string>(() => (data.price ? Number(data.price).toLocaleString('fr-FR') : ''));
 
     useEffect(() => {
@@ -41,12 +49,12 @@ export default function CourseAdditionnalForm({ fieldsetClasses, data, courseSel
             if (courseSelected.price && (!data.price || data.price === '')) {
                 setData('price', courseSelected.price.toString());
             }
-            
+
             // Initialisation de la périodicité si vide ou non définie
             if (courseSelected.periodicity_unit && (!data.periodicity_unit || data.periodicity_unit === '')) {
                 setData('periodicity_unit', courseSelected.periodicity_unit);
             }
-            
+
             // Initialisation de la valeur de périodicité si vide ou non définie
             if (courseSelected.periodicity_value && (!data.periodicity_value || data.periodicity_value === '' || data.periodicity_value === 0)) {
                 setData('periodicity_value', courseSelected.periodicity_value);
@@ -189,24 +197,26 @@ export default function CourseAdditionnalForm({ fieldsetClasses, data, courseSel
                         <InputError message={errors.lectures} />
                     </div>
                 )}
-                <div className="grid gap-2">
-                    <Label htmlFor="reference_tag">Tag de référence</Label>
-                    <Input
-                        list="partner-tags"
-                        id="reference_tag"
-                        type="text"
-                        value={data.reference_tag ?? ''}
-                        onChange={(e) => setData('reference_tag', e.target.value)}
-                        disabled={processing}
-                        placeholder="Tag de référence (ex: audit-conseil)"
-                    />
-                    <datalist id="partner-tags">
-                        {partnerTags.map((tag) => (
-                            <option key={tag} value={tag} />
-                        ))}
-                    </datalist>
-                    <InputError message={errors.reference_tag} />
-                </div>
+                {false && (
+                    <div className="grid gap-2">
+                        <Label htmlFor="reference_tag">Tag de référence</Label>
+                        <Input
+                            list="partner-tags"
+                            id="reference_tag"
+                            type="text"
+                            value={data.reference_tag ?? ''}
+                            onChange={(e) => setData('reference_tag', e.target.value)}
+                            disabled={processing}
+                            placeholder="Tag de référence (ex: audit-conseil)"
+                        />
+                        <datalist id="partner-tags">
+                            {partnerTags.map((tag) => (
+                                <option key={tag} value={tag} />
+                            ))}
+                        </datalist>
+                        <InputError message={errors.reference_tag} />
+                    </div>
+                )}
             </div>
         </fieldset>
     );
