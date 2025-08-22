@@ -1,6 +1,7 @@
 import { ITestimonial } from '@/types/testimonial';
 import { SquarePen, Trash2 } from 'lucide-react';
 import { Button } from '../ui/button/button';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 
 interface ITestimonialActionBtnProps {
     row: {
@@ -12,16 +13,30 @@ interface ITestimonialActionBtnProps {
 
 export default function TestimonialActionBtn({ row, onEdit, onDelete }: ITestimonialActionBtnProps) {
     return (
-        <div className="flex space-x-2">
-            <Button variant={'ghost'} size="icon" onClick={() => onEdit?.(row.original)}>
-                <SquarePen className="h-4 w-4" />
-                <span className="sr-only">Modifier</span>
-            </Button>
+        <div className="flex space-x-1">
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <Button variant="ghost" size="icon" onClick={() => onEdit?.(row.original)} className="h-8 w-8">
+                        <SquarePen className="h-4 w-4" />
+                        <span className="sr-only">Modifier</span>
+                    </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                    <p>Modifier ce témoignage</p>
+                </TooltipContent>
+            </Tooltip>
 
-            <Button variant={'ghost'} size="icon" onClick={() => onDelete?.(row.original)}>
-                <Trash2 className="text-red h-4 w-4" style={{ color: 'red' }} />
-                <span className="sr-only">Supprimer</span>
-            </Button>
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <Button variant="ghost" size="icon" onClick={() => onDelete?.(row.original)} className="h-8 w-8 text-red-600 hover:text-red-700">
+                        <Trash2 className="h-4 w-4" />
+                        <span className="sr-only">Supprimer</span>
+                    </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                    <p>Supprimer définitivement ce témoignage</p>
+                </TooltipContent>
+            </Tooltip>
         </div>
     );
 }
