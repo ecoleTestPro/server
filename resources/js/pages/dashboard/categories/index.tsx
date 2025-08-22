@@ -117,13 +117,24 @@ export default function DashboardCategory() {
      * @return {void}
      */
     const handleDelete = () => {
-        // Call the delete function here
-        Logger.log('Deleting category with ID:', categorySelected?.id);
-        router.delete(route('category.delete', categorySelected?.id), {
+        if (!categorySelected?.id) {
+            toast.error('ID de catégorie manquant');
+            return;
+        }
+        
+        setIsDeleting(true);
+        Logger.log('Deleting category with ID:', categorySelected.id);
+        
+        router.delete(route('dashboard.category.delete', categorySelected.id), {
             onSuccess: () => {
                 setShowConfirm(false);
                 setIsDeleting(false);
                 toast.success(t('courses.category.deleteSuccess', 'Catégorie supprimée avec succès !'));
+            },
+            onError: (errors) => {
+                setIsDeleting(false);
+                console.error('Erreur lors de la suppression:', errors);
+                toast.error('Erreur lors de la suppression de la catégorie');
             },
         });
     };

@@ -69,7 +69,7 @@ class CategoryController extends Controller
     {
         CategoryRepository::query()->onlyTrashed()->find($id)->restore();
 
-        return redirect()->route('category.index')->withSuccess('Category restored');
+        return redirect()->route('dashboard.category.index')->withSuccess('Category restored');
     }
 
     public function sort(Request $request)

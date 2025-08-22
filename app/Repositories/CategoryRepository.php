@@ -69,7 +69,7 @@ class CategoryRepository extends Repository
         return $categories;
     }
 
-    public static function findChildrenByParentId($parentId, $limit = 10)
+    public static function findChildrenByParentId($parentId)
     {
         return static::getRecursiveTree(true, $parentId);
     }
