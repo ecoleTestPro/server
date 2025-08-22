@@ -1,7 +1,9 @@
 import { JSX } from 'react';
-import { CirclePlus } from 'lucide-react';
+import { CirclePlus, Briefcase } from 'lucide-react';
 import { Button } from '../ui/button/button';
 import Drawer from '../ui/drawer';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
     open?: boolean;
@@ -10,21 +12,49 @@ interface Props {
 }
 
 export default function JobOfferToolBar({ FormComponent, open, setOpen }: Props) {
+    const { t } = useTranslation();
+    
     return (
         <div>
-            <header className="mb-4 rounded-lg p-4">
+            <header className="mb-4 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 p-6">
                 <div className="flex items-center justify-between">
-                    <h1 className="text-xl font-bold">Offres d'emploi</h1>
-                    <div className="mt-2 flex justify-end space-x-2">
-                        <Button className="cursor-pointer rounded bg-gray-600 p-2" onClick={() => setOpen && setOpen(true)} aria-label="Ajouter">
-                            <CirclePlus className="h-5 w-5" />
-                        </Button>
+                    <div>
+                        <div className="flex items-center gap-2 mb-1">
+                            <Briefcase className="h-5 w-5 text-teal-600" />
+                            <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+                                {t('Job Offers', "Offres d'emploi")}
+                            </h1>
+                        </div>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                            Publiez des opportunités de carrière et gérez vos recrutements
+                        </p>
+                    </div>
+                    <div className="flex justify-end space-x-2">
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button 
+                                    className="cursor-pointer rounded bg-teal-600 hover:bg-teal-700 text-white p-3 transition-colors" 
+                                    onClick={() => setOpen && setOpen(true)} 
+                                    aria-label={t('Add offer', "Ajouter une offre d'emploi")}
+                                >
+                                    <CirclePlus className="h-5 w-5" />
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <p>Créer une nouvelle offre d'emploi avec description du poste, salaire et critères</p>
+                            </TooltipContent>
+                        </Tooltip>
                     </div>
                 </div>
             </header>
 
             {open && FormComponent && (
-                <Drawer title={'Ajouter une offre'} open={open} setOpen={setOpen && setOpen} component={FormComponent} />
+                <Drawer 
+                    title={t('Job Offer', "Offre d'emploi")} 
+                    open={open} 
+                    setOpen={setOpen && setOpen} 
+                    component={FormComponent} 
+                />
             )}
         </div>
     );
