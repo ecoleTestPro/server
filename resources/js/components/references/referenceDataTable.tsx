@@ -1,7 +1,7 @@
 import { IPartner } from '@/types/partner';
 import { getMediaUrl } from '@/utils/utils';
 import { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown, Building2, ImageOff, Tag, TrendingUp, Users, CheckCircle, Hash } from 'lucide-react';
+import { ArrowUpDown, Building2, ImageOff, Tag } from 'lucide-react';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button/button';
 import { DataTable } from '../ui/dataTable';
@@ -38,7 +38,6 @@ export default function ReferenceDataTable({ references, onEditRow, onDeleteRow,
                 const reference = row.original;
                 const name = reference.name || 'Sans nom';
                 const imageUrl = getMediaUrl(reference.media?.src) || null;
-                const linkUrl = reference.link || '';
 
                 return (
                     <div className="flex items-center gap-3 py-2">
@@ -70,25 +69,6 @@ export default function ReferenceDataTable({ references, onEditRow, onDeleteRow,
                             {reference.tag && (
                                 <div className="text-xs text-gray-500 dark:text-gray-400 truncate mt-1">
                                     Tags: {reference.tag.split(';').slice(0, 2).join(', ')}
-                                </div>
-                            )}
-                            {linkUrl && (
-                                <div className="text-xs text-blue-600 hover:text-blue-800 mt-1">
-                                    <Tooltip>
-                                        <TooltipTrigger asChild>
-                                            <a
-                                                href={linkUrl.startsWith('http') ? linkUrl : `https://${linkUrl}`}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="hover:underline flex items-center gap-1"
-                                            >
-                                                🌐 Site web
-                                            </a>
-                                        </TooltipTrigger>
-                                        <TooltipContent>
-                                            <p>Visiter le site web: {linkUrl}</p>
-                                        </TooltipContent>
-                                    </Tooltip>
                                 </div>
                             )}
                         </div>
@@ -131,7 +111,7 @@ export default function ReferenceDataTable({ references, onEditRow, onDeleteRow,
 
                 return (
                     <div className="flex flex-wrap gap-1 py-1">
-                        {tagList.slice(0, 3).map((tag, index) => (
+                        {tagList.slice(0, 3).map((tag) => (
                             <Badge
                                 key={tag}
                                 variant="secondary"
@@ -154,17 +134,10 @@ export default function ReferenceDataTable({ references, onEditRow, onDeleteRow,
             header: () => <span className="sr-only">Actions</span>,
             enableHiding: false,
             cell: ({ row }) => <ReferenceActionBtn row={row} onEdit={onEditRow} onDelete={onDeleteRow} />,
-            size: 100,
+            size: 10,
         },
     ];
 
-    // Calcul des statistiques
-    const stats = {
-        total: references.length,
-        active: references.filter((ref) => ref.is_active !== false).length,
-        reference: references.filter((ref) => ref.is_reference === true).length,
-        withTags: references.filter((ref) => ref.tag && ref.tag.trim().length > 0).length,
-    };
 
     if (loading) {
         return (
@@ -186,79 +159,6 @@ export default function ReferenceDataTable({ references, onEditRow, onDeleteRow,
 
     return (
         <div className="space-y-6 w-full">
-            {/* Statistiques avec tooltips */}
-            {references.length > 0 && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 hover:shadow-md transition-shadow cursor-help">
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <p className="text-sm text-gray-600 dark:text-gray-400">Total</p>
-                                        <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{stats.total}</p>
-                                    </div>
-                                    <Users className="h-8 w-8 text-blue-500" />
-                                </div>
-                            </div>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                            <p>Nombre total de partenaires et références dans votre base de données</p>
-                        </TooltipContent>
-                    </Tooltip>
-
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 hover:shadow-md transition-shadow cursor-help">
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <p className="text-sm text-gray-600 dark:text-gray-400">Actifs</p>
-                                        <p className="text-2xl font-bold text-green-600">{stats.active}</p>
-                                    </div>
-                                    <CheckCircle className="h-8 w-8 text-green-500" />
-                                </div>
-                            </div>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                            <p>Partenaires actuellement actifs et visibles sur votre site web</p>
-                        </TooltipContent>
-                    </Tooltip>
-
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 hover:shadow-md transition-shadow cursor-help">
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <p className="text-sm text-gray-600 dark:text-gray-400">Références</p>
-                                        <p className="text-2xl font-bold text-teal-600">{stats.reference}</p>
-                                    </div>
-                                    <TrendingUp className="h-8 w-8 text-teal-500" />
-                                </div>
-                            </div>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                            <p>Partenaires marqués comme références clients ou témoignages</p>
-                        </TooltipContent>
-                    </Tooltip>
-
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 hover:shadow-md transition-shadow cursor-help">
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <p className="text-sm text-gray-600 dark:text-gray-400">Avec tags</p>
-                                        <p className="text-2xl font-bold text-purple-600">{stats.withTags}</p>
-                                    </div>
-                                    <Hash className="h-8 w-8 text-purple-500" />
-                                </div>
-                            </div>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                            <p>Partenaires organisés avec des tags pour faciliter la recherche et le tri</p>
-                        </TooltipContent>
-                    </Tooltip>
-                </div>
-            )}
-
             {/* Tableau des données ou état vide */}
             {references.length === 0 ? (
                 <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 shadow-sm p-12 text-center">

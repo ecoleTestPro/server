@@ -1,16 +1,16 @@
+import ReferenceDataTable from '@/components/references/referenceDataTable';
+import ReferenceForm from '@/components/references/referenceForm';
+import ReferenceToolBar from '@/components/references/referenceToolBar';
+import { ConfirmDialog } from '@/components/ui/confirmDialog';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import AppLayout from '@/layouts/dashboard/app-layout';
 import { SharedData, type BreadcrumbItem } from '@/types';
+import { IPartner } from '@/types/partner';
 import { Head, router, usePage } from '@inertiajs/react';
+import { HelpCircle, Info } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import ReferenceForm from '@/components/references/referenceForm';
-import ReferenceToolBar from '@/components/references/referenceToolBar';
-import ReferenceDataTable from '@/components/references/referenceDataTable';
-import { IPartner } from '@/types/partner';
-import { ConfirmDialog } from '@/components/ui/confirmDialog';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { Info, HelpCircle } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -75,21 +75,17 @@ export default function DashboardReferences() {
                                     </TooltipTrigger>
                                     <TooltipContent>
                                         <p className="max-w-xs">
-                                            Gérez vos partenaires et références clients. Ajoutez des logos, liens web et organisez par tags pour faciliter la navigation.
+                                            Gérez vos partenaires et références clients. Ajoutez des logos, liens web et organisez par tags pour
+                                            faciliter la navigation.
                                         </p>
                                     </TooltipContent>
                                 </Tooltip>
                             </div>
                             <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed max-w-2xl">
-                                Cette section vous permet de gérer votre portfolio de références et partenaires. 
-                                Vous pouvez ajouter des logos, liens vers leurs sites web, et organiser vos références 
-                                par catégories grâce aux tags. Ces informations seront affichées sur votre site web 
-                                pour renforcer votre crédibilité.
+                                Cette section vous permet de gérer votre portfolio de références et partenaires. Vous pouvez ajouter des logos, Ces
+                                informations seront affichées sur votre site web pour renforcer votre crédibilité. Les tags vous aident d'associer une
+                                page ou une formation a une ou plusieurs références afin qu'elles s'affiche sur la page dédiée.
                             </p>
-                        </div>
-                        <div className="flex items-center gap-2 text-sm text-gray-500">
-                            <Info className="h-4 w-4" />
-                            <span>{references.length} référence{references.length > 1 ? 's' : ''}</span>
                         </div>
                     </div>
                 </div>

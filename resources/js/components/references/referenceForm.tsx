@@ -8,7 +8,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { IPartner } from '@/types/partner';
 import { getMediaUrl } from '@/utils/utils';
 import axios from 'axios';
-import { ImageOff, Loader2, X, HelpCircle, Building2, Tag, Image as ImageIcon, Link2 } from 'lucide-react';
+import { ImageOff, Loader2, X, HelpCircle, Building2, Tag, Image as ImageIcon } from 'lucide-react';
 import { FormEventHandler, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -231,40 +231,6 @@ export default function ReferenceForm({ closeDrawer, initialData, onSuccess }: R
                     </p>
                 </div>
                 
-                <div className="grid gap-3">
-                    <div className="flex items-center gap-2">
-                        <Label htmlFor="link" className="flex items-center gap-2">
-                            <Link2 className="h-4 w-4 text-gray-500" />
-                            Site web
-                            <span className="text-sm text-gray-500">(optionnel)</span>
-                        </Label>
-                        <Tooltip>
-                            <TooltipTrigger asChild>
-                                <button type="button" className="text-gray-400 hover:text-gray-600 transition-colors">
-                                    <HelpCircle className="h-4 w-4" />
-                                </button>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                                <p>URL du site web de votre partenaire. Sera affiché comme lien cliquable dans la liste.</p>
-                            </TooltipContent>
-                        </Tooltip>
-                    </div>
-                    <Input
-                        id="link"
-                        type="url"
-                        value={data.link || ''}
-                        onChange={(e) => setData((prev) => ({ ...prev, link: e.target.value }))}
-                        disabled={processing}
-                        placeholder="https://exemple.com"
-                        className="transition-all focus:ring-2 focus:ring-teal-500"
-                    />
-                    <InputError message={errors.link?.[0]} />
-                    <p className="text-xs text-gray-500 flex items-center gap-2">
-                        <Link2 className="h-3 w-3" />
-                        Le lien sera cliquable dans la liste des partenaires
-                    </p>
-                </div>
-
                 <div className="grid gap-3">
                     <div className="flex items-center gap-2">
                         <Label htmlFor="picture" className="flex items-center gap-2">
