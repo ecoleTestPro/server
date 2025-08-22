@@ -104,35 +104,50 @@ function CategoryForm({ closeDrawer, initialData, isSubcategoryMode = false, par
         //     return;
         // }
 
-        const routeName = initialData?.id ? 'category.update' : 'category.store';
         const routeUrl = initialData?.id ? 'categories/update' : 'categories/store';
 
-        const formData = new FormData();
-        formData.append('title', data.title);
-        formData.append('is_featured', data.is_featured ? '1' : '0');
-        if (data.parent_id) {
-            formData.append('parent_id', data.parent_id.toString());
+        // Préparer les données à envoyer
+        const requestData: { [key: string]: any } = {
+            title: data.title,
+            is_featured: data.is_featured ? '1' : '0',
+        };
+
+        // Ajouter l'ID pour la mise à jour
+        if (initialData?.id) {
+            requestData.id = initialData.id;
         }
+
+        // Ajouter parent_id s'il existe (soit depuis le formulaire, soit depuis le mode sous-catégorie)
+        const effectiveParentId = data.parent_id || (isSubcategoryMode ? parentCategoryId : null);
+        if (effectiveParentId) {
+            requestData.parent_id = effectiveParentId.toString();
+        }
+
+        // Ajouter le fichier s'il existe
         if (file) {
-            formData.append('media', file);
+            requestData.media = file;
         }
 
         router.visit(routeUrl, {
             method: 'post',
-            data: {
-                title: data.title,
-                is_featured: data.is_featured ? '1' : '0',
-                parent_id: data.parent_id,
-                ...(file && { media: file }),
-            },
+            data: requestData,
             forceFormData: true, // Important pour envoyer des fichiers
             onSuccess: () => {
-                toast.success(t('courses.category.updateSuccess', 'Catégorie mise à jour avec succès !'));
+                toast.success(
+                    initialData?.id 
+                        ? t('courses.category.updateSuccess', 'Catégorie mise à jour avec succès !') 
+                        : t('courses.category.createSuccess', 'Catégorie créée avec succès !')
+                );
                 reset();
                 closeDrawer?.();
             },
             onError: (errors) => {
-                toast.error(t('courses.category.updateError', 'Erreur lors de la mise à jour de la catégorie'));
+                console.error('Erreurs de validation:', errors);
+                toast.error(
+                    initialData?.id 
+                        ? t('courses.category.updateError', 'Erreur lors de la mise à jour de la catégorie') 
+                        : t('courses.category.createError', 'Erreur lors de la création de la catégorie')
+                );
             },
             preserveScroll: true,
         });
@@ -208,6 +223,21 @@ function CategoryForm({ closeDrawer, initialData, isSubcategoryMode = false, par
                     disabled={processing}
                 />
                 <InputError message={errors.media} />
+            </div>
+
+            <div className="grid gap-2">
+                <div className="flex items-center space-x-2">
+                    <input
+                        type="checkbox"
+                        id="is_featured"
+                        checked={data.is_featured}
+                        onChange={(e) => setData('is_featured', e.target.checked)}
+                        disabled={processing}
+                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    />
+                    <Label htmlFor="is_featured">{t('courses.featured', 'Catégorie mise en avant')}</Label>
+                </div>
+                <InputError message={errors.is_featured} />
             </div>
 
             <Button type="submit" className="mt-2 w-full" disabled={processing}>

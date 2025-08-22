@@ -198,7 +198,7 @@ class CategoryRepository extends Repository
         $isFeatured = false;
 
         if (isset($request->is_featured)) {
-            $isFeatured = $request->is_featured == 'on' ? true : false;
+            $isFeatured = $request->is_featured == '1' || $request->is_featured == 'on' || $request->is_featured === true;
         }
 
         $media = $request->hasFile('media') ? MediaRepository::storeByRequest(
@@ -229,7 +229,7 @@ class CategoryRepository extends Repository
         $isFeatured = false;
 
         if (isset($request->is_featured)) {
-            $isFeatured = $request->is_featured == 'on' ? true : false;
+            $isFeatured = $request->is_featured == '1' || $request->is_featured == 'on' || $request->is_featured === true;
         }
 
         if ($category->image) {
