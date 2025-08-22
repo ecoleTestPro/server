@@ -78,9 +78,9 @@ class PartnerRepository extends Repository
             'name'         => $request->name,
             'link'         => $request->link,
             'tag'          => $request->tag,
-            'is_reference' => $request->has('is_reference') ? true : false,
+            'is_reference' => $request->is_reference === '1' || $request->is_reference === true,
             'media_id'     => $picture?->id,
-            'is_active'    => $request->has('is_active') ? true : false,
+            'is_active'    => $request->is_active === '1' || $request->is_active === true,
         ]);
     }
 
@@ -120,9 +120,9 @@ class PartnerRepository extends Repository
             'name'         => $request->name ?? $partner->name,
             'link'         => $request->link ?? $partner->link,
             'tag'          => $request->tag ?? $partner->tag,
-            'is_reference' => $request->has('is_reference') ? true : $partner->is_reference,
+            'is_reference' => $request->is_reference === '1' || $request->is_reference === true,
             'media_id'     => $picture?->id ?? $partner->media_id,
-            'is_active'    => $request->has('is_active') ? true : $partner->is_active,
+            'is_active'    => $request->is_active === '1' || $request->is_active === true,
         ]);
     }
 }
