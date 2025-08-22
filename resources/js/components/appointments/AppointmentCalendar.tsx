@@ -7,9 +7,13 @@ import axios from 'axios';
 import { AnimatePresence, motion, useScroll, useTransform } from 'framer-motion';
 import { Calendar, CalendarDays, CheckCircle, Clock, MessageSquare, Sparkles, User } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
-import ReactCalendar from 'react-calendar';
-import 'react-calendar/dist/Calendar.css';
+import DatePicker, { registerLocale } from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { fr } from 'date-fns/locale';
 import toast from 'react-hot-toast';
+
+// Enregistrer la locale française
+registerLocale('fr', fr);
 
 interface TimeSlot {
     time: string;
@@ -128,9 +132,9 @@ const AppointmentCalendar: React.FC = () => {
     // Cette fonction est remplacée par l'API
 
     // Gérer la sélection de date
-    const handleDateChange = (value: CalendarValue, event: React.MouseEvent<HTMLButtonElement>) => {
-        if (value instanceof Date) {
-            setSelectedDate(value);
+    const handleDateChange = (date: Date | null) => {
+        if (date instanceof Date) {
+            setSelectedDate(date);
             setSelectedTime('');
             setLoading(true);
 
@@ -138,7 +142,7 @@ const AppointmentCalendar: React.FC = () => {
             axios
                 .get(route('appointments.available-slots'), {
                     params: {
-                        date: value.toISOString().split('T')[0],
+                        date: date.toISOString().split('T')[0],
                     },
                 })
                 .then((response) => {
@@ -257,17 +261,17 @@ const AppointmentCalendar: React.FC = () => {
         });
     };
 
-    // Désactiver les week-ends et jours passés
-    const isDateDisabled = ({ date }: { date: Date }) => {
+    // Fonction pour filtrer les dates disponibles (react-datepicker)
+    const filterDate = (date: Date) => {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
-        // Désactiver les dates passées
-        if (date < today) return true;
+        // Exclure les dates passées
+        if (date < today) return false;
 
-        // Désactiver les week-ends
+        // Exclure les week-ends (0 = dimanche, 6 = samedi)
         const day = date.getDay();
-        return day === 0 || day === 6;
+        return day !== 0 && day !== 6;
     };
 
     return (
@@ -364,101 +368,17 @@ const AppointmentCalendar: React.FC = () => {
                                             <p className="text-muted-foreground text-sm">Sélectionnez un jour disponible pour votre rendez-vous</p>
                                         </CardHeader>
                                         <CardContent className="flex justify-center pb-6">
-                                            <div className="calendar-container w-full max-w-md">
-                                                <style>{`
-                                                    .calendar-container .react-calendar {
-                                                        border: none;
-                                                        border-radius: 16px;
-                                                        padding: 24px;
-                                                        font-family: inherit;
-                                                        width: 100%;
-                                                        background: transparent;
-                                                    }
-                                                    .calendar-container .react-calendar__tile {
-                                                        border: none;
-                                                        border-radius: 12px;
-                                                        margin: 3px;
-                                                        padding: 16px 12px;
-                                                        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                                                        position: relative;
-                                                        font-weight: 500;
-                                                        color: hsl(var(--foreground));
-                                                    }
-                                                    .calendar-container .react-calendar__tile:hover:not(:disabled) {
-                                                        background: hsl(var(--primary) / 0.1) !important;
-                                                        transform: scale(1.05) translateY(-2px);
-                                                        box-shadow: 0 4px 12px hsl(var(--primary) / 0.2);
-                                                    }
-                                                    .calendar-container .react-calendar__tile--active {
-                                                        background: hsl(var(--primary)) !important;
-                                                        color: hsl(var(--primary-foreground)) !important;
-                                                        transform: scale(1.1);
-                                                        box-shadow: 0 8px 20px hsl(var(--primary) / 0.3);
-                                                    }
-                                                    .calendar-container .react-calendar__tile--now {
-                                                        background: hsl(var(--primary) / 0.15) !important;
-                                                        color: hsl(var(--primary)) !important;
-                                                        font-weight: 700;
-                                                        border: 2px solid hsl(var(--primary) / 0.3);
-                                                    }
-                                                    .calendar-container .react-calendar__navigation {
-                                                        margin-bottom: 16px;
-                                                    }
-                                                    .calendar-container .react-calendar__navigation button {
-                                                        font-weight: 600;
-                                                        font-size: 16px;
-                                                        background: hsl(var(--primary) / 0.1) !important;
-                                                        border: none;
-                                                        border-radius: 12px;
-                                                        color: hsl(var(--primary));
-                                                        padding: 12px 16px;
-                                                        margin: 0 4px;
-                                                        transition: all 0.2s;
-                                                    }
-                                                    .calendar-container .react-calendar__navigation button:hover {
-                                                        background: hsl(var(--primary) / 0.2) !important;
-                                                        transform: scale(1.05);
-                                                    }
-                                                    .calendar-container .react-calendar__navigation button:disabled {
-                                                        background: hsl(var(--muted)) !important;
-                                                        color: hsl(var(--muted-foreground)) !important;
-                                                        opacity: 0.5;
-                                                    }
-                                                    .calendar-container .react-calendar__tile:disabled {
-                                                        background: hsl(var(--muted) / 0.5) !important;
-                                                        color: hsl(var(--muted-foreground)) !important;
-                                                        cursor: not-allowed;
-                                                        opacity: 0.4;
-                                                    }
-                                                    .calendar-container .react-calendar__tile:disabled:hover {
-                                                        transform: none !important;
-                                                        box-shadow: none !important;
-                                                    }
-                                                    .calendar-container .react-calendar__month-view__weekdays {
-                                                        text-transform: capitalize;
-                                                        font-weight: 600;
-                                                        color: hsl(var(--muted-foreground));
-                                                        font-size: 14px;
-                                                    }
-                                                    .calendar-container .react-calendar__month-view__weekdays__weekday {
-                                                        padding: 12px;
-                                                    }
-                                                    .calendar-container .react-calendar__viewContainer {
-                                                        margin-top: 8px;
-                                                    }
-                                                `}</style>
-                                                <ReactCalendar
-                                                    onChange={handleDateChange as any}
-                                                    value={selectedDate}
+                                            <div className="datepicker-container w-full max-w-md">
+                                         
+                                                <DatePicker
+                                                    selected={selectedDate}
+                                                    onChange={handleDateChange}
                                                     minDate={new Date()}
-                                                    tileDisabled={isDateDisabled}
-                                                    locale="fr-FR"
-                                                    formatShortWeekday={(_locale, date) =>
-                                                        ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'][date.getDay()]
-                                                    }
-                                                    showNeighboringMonth={false}
-                                                    prev2Label={null}
-                                                    next2Label={null}
+                                                    filterDate={filterDate}
+                                                    locale="fr"
+                                                    inline
+                                                    showDisabledMonthNavigation
+                                                    calendarStartDay={1}
                                                 />
                                             </div>
                                         </CardContent>
