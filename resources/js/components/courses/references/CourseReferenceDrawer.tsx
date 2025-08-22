@@ -15,7 +15,7 @@ interface CourseReferenceDrawerProps {
     setOpen: (open: boolean) => void;
     course: ICourse;
     partners: IPartner[];
-    onSuccess?: () => void;
+    onSuccess?: (updatedCourse: ICourse) => void;
 }
 
 export default function CourseReferenceDrawer({ open, setOpen, course, partners, onSuccess }: CourseReferenceDrawerProps) {
@@ -84,25 +84,30 @@ export default function CourseReferenceDrawer({ open, setOpen, course, partners,
                 return;
             }
 
-            await axios
-                .post(route('dashboard.course.partners.sync', course.slug), {
-                    partner_ids: selectedPartners,
-                    reference_tag: partnerTags,
-                })
-                .then(() => {
-                    toast.success('Références associées avec succès');
-                    setOpen(false);
-                    if (onSuccess) {
-                        onSuccess();
-                    } else {
-                        window.location.reload();
-                    }
-                })
-                .catch(() => {
-                    toast.error('Erreur lors de la mise à jour des références');
-                });
+            setLoading(true);
+            const response = await axios.post(route('dashboard.course.partners.sync', course.slug), {
+                partner_ids: selectedPartners,
+                reference_tag: partnerTags,
+            });
+            
+            toast.success('Références associées avec succès');
+            setOpen(false);
+            
+            // Créer un objet cours mis à jour avec les nouvelles références
+            const updatedCourse: ICourse = {
+                ...course,
+                partners: response.data.partners,
+                reference_tag: partnerTags
+            };
+            
+            if (onSuccess) {
+                onSuccess(updatedCourse);
+            }
         } catch (error) {
-            toast.error('Erreur lors de la mise à jour');
+            console.error('Erreur lors de la mise à jour des références:', error);
+            toast.error('Erreur lors de la mise à jour des références');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -148,16 +153,16 @@ export default function CourseReferenceDrawer({ open, setOpen, course, partners,
                     )}
 
                     {/* Aperçu des références actuelles */}
-                    {false && !loading && courseReferences && courseReferences.partners.length > 0 && (
+                    {false && !loading && courseReferences && courseReferences.partners && courseReferences.partners.length > 0 && (
                         <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                             <div className="flex items-center gap-2 mb-3">
                                 <CheckCircle2 className="w-5 h-5 text-green-600" />
                                 <h3 className="font-semibold text-green-900">
-                                    Références actuellement associées ({courseReferences.partners.length})
+                                    Références actuellement associées ({courseReferences?.partners?.length || 0})
                                 </h3>
                             </div>
                             <div className="flex flex-wrap gap-2">
-                                {courseReferences.partners.map((partner) => (
+                                {courseReferences?.partners?.map((partner) => (
                                     <div
                                         key={partner.id}
                                         className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full border border-green-300"
@@ -167,9 +172,9 @@ export default function CourseReferenceDrawer({ open, setOpen, course, partners,
                                         )}
                                         <span className="text-sm font-medium">{partner.name}</span>
                                     </div>
-                                ))}
+                                )) || []}
                             </div>
-                            {courseReferences.reference_tag && (
+                            {courseReferences?.reference_tag && (
                                 <div className="mt-2 flex items-center gap-2">
                                     <Tag className="w-4 h-4 text-gray-500" />
                                     <span className="text-sm text-gray-600">
