@@ -1,11 +1,12 @@
 import { IPartner } from '@/types/partner';
 import { getMediaUrl } from '@/utils/utils';
 import { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown, Building2, ImageOff, Tag } from 'lucide-react';
+import { ArrowUpDown, Building2, ImageOff, Tag, TrendingUp, Users, CheckCircle, Hash } from 'lucide-react';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button/button';
 import { DataTable } from '../ui/dataTable';
 import { Skeleton } from '../ui/skeleton';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 import ReferenceActionBtn from './referenceActionBtn';
 
 interface ReferenceDataTableProps {
@@ -20,11 +21,18 @@ export default function ReferenceDataTable({ references, onEditRow, onDeleteRow,
         {
             accessorKey: 'name',
             header: ({ column }) => (
-                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} className="h-8 px-2 lg:px-3">
-                    <Building2 className="mr-2 h-4 w-4 text-blue-600" />
-                    Partenaire
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} className="h-8 px-2 lg:px-3">
+                            <Building2 className="mr-2 h-4 w-4 text-blue-600" />
+                            Partenaire
+                            <ArrowUpDown className="ml-2 h-4 w-4" />
+                        </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                        <p>Cliquez pour trier par nom de partenaire (A-Z ou Z-A)</p>
+                    </TooltipContent>
+                </Tooltip>
             ),
             cell: ({ row }) => {
                 const reference = row.original;
@@ -66,14 +74,21 @@ export default function ReferenceDataTable({ references, onEditRow, onDeleteRow,
                             )}
                             {linkUrl && (
                                 <div className="text-xs text-blue-600 hover:text-blue-800 mt-1">
-                                    <a
-                                        href={linkUrl.startsWith('http') ? linkUrl : `https://${linkUrl}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="hover:underline"
-                                    >
-                                        🌐 Site web
-                                    </a>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <a
+                                                href={linkUrl.startsWith('http') ? linkUrl : `https://${linkUrl}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="hover:underline flex items-center gap-1"
+                                            >
+                                                🌐 Site web
+                                            </a>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            <p>Visiter le site web: {linkUrl}</p>
+                                        </TooltipContent>
+                                    </Tooltip>
                                 </div>
                             )}
                         </div>
@@ -84,11 +99,18 @@ export default function ReferenceDataTable({ references, onEditRow, onDeleteRow,
         {
             accessorKey: 'tag',
             header: ({ column }) => (
-                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} className="h-8 px-2 lg:px-3">
-                    <Tag className="mr-2 h-4 w-4 text-teal-600" />
-                    Tags
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} className="h-8 px-2 lg:px-3">
+                            <Tag className="mr-2 h-4 w-4 text-teal-600" />
+                            Tags
+                            <ArrowUpDown className="ml-2 h-4 w-4" />
+                        </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                        <p>Cliquez pour trier par tags. Les tags permettent de catégoriser vos partenaires (ex: client, fournisseur, etc.)</p>
+                    </TooltipContent>
+                </Tooltip>
             ),
             cell: ({ row }) => {
                 const reference = row.original;
@@ -164,6 +186,79 @@ export default function ReferenceDataTable({ references, onEditRow, onDeleteRow,
 
     return (
         <div className="space-y-6 w-full">
+            {/* Statistiques avec tooltips */}
+            {references.length > 0 && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 hover:shadow-md transition-shadow cursor-help">
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <p className="text-sm text-gray-600 dark:text-gray-400">Total</p>
+                                        <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{stats.total}</p>
+                                    </div>
+                                    <Users className="h-8 w-8 text-blue-500" />
+                                </div>
+                            </div>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>Nombre total de partenaires et références dans votre base de données</p>
+                        </TooltipContent>
+                    </Tooltip>
+
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 hover:shadow-md transition-shadow cursor-help">
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <p className="text-sm text-gray-600 dark:text-gray-400">Actifs</p>
+                                        <p className="text-2xl font-bold text-green-600">{stats.active}</p>
+                                    </div>
+                                    <CheckCircle className="h-8 w-8 text-green-500" />
+                                </div>
+                            </div>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>Partenaires actuellement actifs et visibles sur votre site web</p>
+                        </TooltipContent>
+                    </Tooltip>
+
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 hover:shadow-md transition-shadow cursor-help">
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <p className="text-sm text-gray-600 dark:text-gray-400">Références</p>
+                                        <p className="text-2xl font-bold text-teal-600">{stats.reference}</p>
+                                    </div>
+                                    <TrendingUp className="h-8 w-8 text-teal-500" />
+                                </div>
+                            </div>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>Partenaires marqués comme références clients ou témoignages</p>
+                        </TooltipContent>
+                    </Tooltip>
+
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 hover:shadow-md transition-shadow cursor-help">
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <p className="text-sm text-gray-600 dark:text-gray-400">Avec tags</p>
+                                        <p className="text-2xl font-bold text-purple-600">{stats.withTags}</p>
+                                    </div>
+                                    <Hash className="h-8 w-8 text-purple-500" />
+                                </div>
+                            </div>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>Partenaires organisés avec des tags pour faciliter la recherche et le tri</p>
+                        </TooltipContent>
+                    </Tooltip>
+                </div>
+            )}
+
             {/* Tableau des données ou état vide */}
             {references.length === 0 ? (
                 <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 shadow-sm p-12 text-center">
