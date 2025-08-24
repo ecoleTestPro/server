@@ -44,7 +44,7 @@ export default function CourseCategoryPage() {
     }, [data]);
 
     return (
-        <DefaultLayout title="Welcome" description="Welcome">
+        <DefaultLayout title="Formations" description="Formations">
             <div className="bg-gray-100 dark:bg-[#0a0e19]">
                 {course && (
                     <>

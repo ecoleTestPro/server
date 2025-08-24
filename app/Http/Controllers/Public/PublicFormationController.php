@@ -77,11 +77,12 @@ class PublicFormationController extends PublicAbstractController
     public function courses()
     {
         $data = $this->default_data;
-        $data['category'] = CategoryRepository::findAll();
+        
+        // Récupérer toutes les catégories avec leurs cours
+        $data['categories_with_courses'] = CategoryRepository::getRecursiveTree(true);
+        
+        // Récupérer toutes les formations
         $data['courses']['list'] = CourseRepository::findAll();
-        // dd($data['courses']);
-
-        // dd($featuredCourses);
 
         return Inertia::render('public/courses/courses.page', [
             'data' => $data,
