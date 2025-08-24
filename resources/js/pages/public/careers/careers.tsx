@@ -76,7 +76,7 @@ export default function Careers() {
                     title={t('PAGES.CAREERS', 'Carrières')}
                     description={t('PAGES.CAREERS_DESCRIPTION', 'Découvrez nos opportunités de carrière et rejoignez notre équipe.')}
                     breadcrumbItems={breadcrumbItems}
-                    gradient="style-3"
+                    gradient="style-2"
                 />
 
                 <MotionSection>

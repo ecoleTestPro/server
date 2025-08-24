@@ -56,7 +56,7 @@ export default function Footer() {
                         {/*  */}
                         <div className="col-span-1 lg:col-span-2">
                             <div className="ltr:xl:-mr-[35px] rtl:xl:-ml-[35px]">
-                                <div  className='mb-4'>
+                                <div className="mb-4">
                                     <AppLogo width={180} />
                                 </div>
                                 <div>
@@ -155,7 +155,10 @@ export default function Footer() {
                     <div className="flex items-center justify-between gap-[15px] text-gray-500 dark:text-gray-400">
                         <div className="text-center ltr:lg:text-left rtl:lg:text-right">
                             <p>
-                                © <span className="text-gray-500">Ecole test pro </span>
+                                ©
+                                <Link className="hover:underline" href={ROUTE_MAP.auth.adminLogin.link}>
+                                    <span className="text-gray-500">Test pro </span>
+                                </Link>
                                 {new Date().getFullYear()} - {t('FOOTER.COPYRIGHT', 'Tous droits réservés.')}
                             </p>
                         </div>
@@ -176,11 +179,6 @@ export default function Footer() {
                             </Link>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div className="bg-black flex justify-end items-center text-white ">
-                <div className="container mx-auto">
-                    <Link href={ROUTE_MAP.auth.adminLogin.link}>{t('FOOTER.LOGIN', 'Connexion')}</Link>
                 </div>
             </div>
         </>
