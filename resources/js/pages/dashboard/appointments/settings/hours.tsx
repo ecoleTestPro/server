@@ -12,7 +12,7 @@ import { BusinessHours } from '@/types';
 import { Head, router, useForm } from '@inertiajs/react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-import { Calendar, Clock, Copy, Edit, Eye, HelpCircle, Info, RotateCcw, Save, Settings, Timer } from 'lucide-react';
+import { Calendar, Clock, Copy, Edit, HelpCircle, Info, RotateCcw, Save, Settings, Timer } from 'lucide-react';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 
@@ -96,15 +96,17 @@ export default function BusinessHoursSettings({ businessHours, appointmentDurati
         e.preventDefault();
 
         console.log('Updating day:', editingDay, 'with data:', data);
-        
-        setHours((prev) => prev.map((hour) => {
-            if (hour.day_of_week === editingDay) {
-                const updatedHour = { ...hour, ...data };
-                console.log('Updated hour:', updatedHour);
-                return updatedHour;
-            }
-            return hour;
-        }));
+
+        setHours((prev) =>
+            prev.map((hour) => {
+                if (hour.day_of_week === editingDay) {
+                    const updatedHour = { ...hour, ...data };
+                    console.log('Updated hour:', updatedHour);
+                    return updatedHour;
+                }
+                return hour;
+            }),
+        );
         setHasChanges(true);
         setIsDialogOpen(false);
     };
@@ -112,7 +114,7 @@ export default function BusinessHoursSettings({ businessHours, appointmentDurati
     const saveAllChanges = () => {
         // Log the data being sent for debugging
         console.log('Sending hours data:', hours);
-        
+
         axios
             .post(route('dashboard.appointments.settings.hours.update'), {
                 hours: hours,
@@ -127,7 +129,7 @@ export default function BusinessHoursSettings({ businessHours, appointmentDurati
                 toast.error('Erreur lors de la mise à jour des horaires');
                 console.error('Erreur:', error);
                 if (error.response && error.response.data) {
-                    console.error('Détails de l\'erreur:', error.response.data);
+                    console.error("Détails de l'erreur:", error.response.data);
                 }
             });
     };
@@ -231,10 +233,18 @@ export default function BusinessHoursSettings({ businessHours, appointmentDurati
                         <div>
                             <h3 className="text-sm font-medium text-teal-900 dark:text-teal-100 mb-2">Comment configurer vos horaires ?</h3>
                             <div className="text-sm text-teal-700 dark:text-teal-300 space-y-1">
-                                <p>• <strong>Activez/désactivez</strong> chaque jour avec l'interrupteur</p>
-                                <p>• <strong>Cliquez sur "Modifier"</strong> pour configurer les heures détaillées</p>
-                                <p>• <strong>Utilisez "Copier"</strong> pour appliquer les mêmes horaires à tous les jours</p>
-                                <p>• <strong>N'oubliez pas</strong> de sauvegarder vos modifications avec le bouton "Enregistrer"</p>
+                                <p>
+                                    • <strong>Activez/désactivez</strong> chaque jour avec l'interrupteur
+                                </p>
+                                <p>
+                                    • <strong>Cliquez sur "Modifier"</strong> pour configurer les heures détaillées
+                                </p>
+                                <p>
+                                    • <strong>Utilisez "Copier"</strong> pour appliquer les mêmes horaires à tous les jours
+                                </p>
+                                <p>
+                                    • <strong>N'oubliez pas</strong> de sauvegarder vos modifications avec le bouton "Enregistrer"
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -249,7 +259,9 @@ export default function BusinessHoursSettings({ businessHours, appointmentDurati
                             </div>
                             <div>
                                 <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">Horaires d'ouverture</h1>
-                                <p className="text-sm text-gray-600 dark:text-gray-400">Configurez vos heures de disponibilité pour les rendez-vous</p>
+                                <p className="text-sm text-gray-600 dark:text-gray-400">
+                                    Configurez vos heures de disponibilité pour les rendez-vous
+                                </p>
                             </div>
                         </div>
                         <Tooltip>
@@ -258,7 +270,9 @@ export default function BusinessHoursSettings({ businessHours, appointmentDurati
                             </TooltipTrigger>
                             <TooltipContent className="max-w-xs">
                                 <p>
-                                    Définissez vos horaires d'ouverture pour chaque jour de la semaine. Les clients pourront uniquement prendre rendez-vous pendant ces créneaux. Vous pouvez configurer des pauses déjeuner et ajuster la durée minimum entre les rendez-vous.
+                                    Définissez vos horaires d'ouverture pour chaque jour de la semaine. Les clients pourront uniquement prendre
+                                    rendez-vous pendant ces créneaux. Vous pouvez configurer des pauses déjeuner et ajuster la durée minimum entre les
+                                    rendez-vous.
                                 </p>
                             </TooltipContent>
                         </Tooltip>
@@ -390,7 +404,8 @@ export default function BusinessHoursSettings({ businessHours, appointmentDurati
                                 </TooltipTrigger>
                                 <TooltipContent className="max-w-sm">
                                     <p>
-                                        Activez/désactivez chaque jour avec l'interrupteur. Cliquez sur "Modifier" pour configurer les heures détaillées. Utilisez "Copier" pour appliquer les mêmes horaires à tous les jours.
+                                        Activez/désactivez chaque jour avec l'interrupteur. Cliquez sur "Modifier" pour configurer les heures
+                                        détaillées. Utilisez "Copier" pour appliquer les mêmes horaires à tous les jours.
                                     </p>
                                 </TooltipContent>
                             </Tooltip>
@@ -446,12 +461,14 @@ export default function BusinessHoursSettings({ businessHours, appointmentDurati
                                                     <TooltipTrigger asChild>
                                                         <div className="cursor-help">
                                                             <span className="text-gray-500 dark:text-gray-400">Pause déjeuner: </span>
-                                                            <span className={cn(
-                                                                "font-medium",
-                                                                dayHours.lunch_break_start && dayHours.lunch_break_end 
-                                                                    ? "text-orange-600 dark:text-orange-400" 
-                                                                    : "text-gray-400"
-                                                            )}>
+                                                            <span
+                                                                className={cn(
+                                                                    'font-medium',
+                                                                    dayHours.lunch_break_start && dayHours.lunch_break_end
+                                                                        ? 'text-orange-600 dark:text-orange-400'
+                                                                        : 'text-gray-400',
+                                                                )}
+                                                            >
                                                                 {formatLunchBreak(dayHours.lunch_break_start, dayHours.lunch_break_end)}
                                                             </span>
                                                         </div>
@@ -478,7 +495,10 @@ export default function BusinessHoursSettings({ businessHours, appointmentDurati
                                             <div className="flex-1">
                                                 <Tooltip>
                                                     <TooltipTrigger asChild>
-                                                        <Badge variant="secondary" className="cursor-help bg-red-100 text-red-700 dark:bg-red-900/20 dark:text-red-400">
+                                                        <Badge
+                                                            variant="secondary"
+                                                            className="cursor-help bg-red-100 text-red-700 dark:bg-red-900/20 dark:text-red-400"
+                                                        >
                                                             <div className="flex items-center space-x-1">
                                                                 <div className="w-2 h-2 bg-red-500 rounded-full"></div>
                                                                 <span>Fermé</span>
@@ -568,7 +588,9 @@ export default function BusinessHoursSettings({ businessHours, appointmentDurati
                                             </TooltipContent>
                                         </Tooltip>
                                     </div>
-                                    <p className="text-sm text-gray-600 dark:text-gray-400">Désactiver si vous ne prenez pas de rendez-vous ce jour</p>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                                        Désactiver si vous ne prenez pas de rendez-vous ce jour
+                                    </p>
                                 </div>
                                 <Switch id="is_open" checked={data.is_open} onCheckedChange={(checked) => setData('is_open', checked as boolean)} />
                             </div>
@@ -629,10 +651,15 @@ export default function BusinessHoursSettings({ businessHours, appointmentDurati
                                                     <HelpCircle className="w-4 h-4 text-gray-400" />
                                                 </TooltipTrigger>
                                                 <TooltipContent className="max-w-xs">
-                                                    <p>Période pendant laquelle aucun rendez-vous ne peut être pris. Laissez vide si vous ne souhaitez pas de pause déjeuner.</p>
+                                                    <p>
+                                                        Période pendant laquelle aucun rendez-vous ne peut être pris. Laissez vide si vous ne
+                                                        souhaitez pas de pause déjeuner.
+                                                    </p>
                                                 </TooltipContent>
                                             </Tooltip>
-                                            <Badge variant="outline" className="text-xs">Optionnel</Badge>
+                                            <Badge variant="outline" className="text-xs">
+                                                Optionnel
+                                            </Badge>
                                         </div>
                                         <div className="grid grid-cols-2 gap-4">
                                             <div className="space-y-2">
@@ -663,33 +690,38 @@ export default function BusinessHoursSettings({ businessHours, appointmentDurati
                                         </div>
                                     </div>
 
-                                    <div className="space-y-2">
-                                        <div className="flex items-center space-x-2">
-                                            <Label htmlFor="slot_duration">Durée des créneaux (minutes)</Label>
-                                            <Tooltip>
-                                                <TooltipTrigger>
-                                                    <HelpCircle className="w-4 h-4 text-gray-400" />
-                                                </TooltipTrigger>
-                                                <TooltipContent className="max-w-xs">
-                                                    <p>Intervalle minimum entre chaque rendez-vous. Par exemple, avec 30 minutes, les créneaux seront : 9h00, 9h30, 10h00, etc.</p>
-                                                </TooltipContent>
-                                            </Tooltip>
+                                    {false && (
+                                        <div className="space-y-2">
+                                            <div className="flex items-center space-x-2">
+                                                <Label htmlFor="slot_duration">Durée des créneaux (minutes)</Label>
+                                                <Tooltip>
+                                                    <TooltipTrigger>
+                                                        <HelpCircle className="w-4 h-4 text-gray-400" />
+                                                    </TooltipTrigger>
+                                                    <TooltipContent className="max-w-xs">
+                                                        <p>
+                                                            Intervalle minimum entre chaque rendez-vous. Par exemple, avec 30 minutes, les créneaux
+                                                            seront : 9h00, 9h30, 10h00, etc.
+                                                        </p>
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                            </div>
+                                            <Input
+                                                id="slot_duration"
+                                                type="number"
+                                                min={15}
+                                                max={120}
+                                                step={15}
+                                                value={data.slot_duration}
+                                                onChange={(e) => setData('slot_duration', parseInt(e.target.value) || 30)}
+                                                className="w-32"
+                                            />
+                                            <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
+                                                <Timer className="w-4 h-4" />
+                                                <span>Durée minimum entre chaque rendez-vous possible (15-120 min par pas de 15)</span>
+                                            </div>
                                         </div>
-                                        <Input
-                                            id="slot_duration"
-                                            type="number"
-                                            min={15}
-                                            max={120}
-                                            step={15}
-                                            value={data.slot_duration}
-                                            onChange={(e) => setData('slot_duration', parseInt(e.target.value) || 30)}
-                                            className="w-32"
-                                        />
-                                        <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
-                                            <Timer className="w-4 h-4" />
-                                            <span>Durée minimum entre chaque rendez-vous possible (15-120 min par pas de 15)</span>
-                                        </div>
-                                    </div>
+                                    )}
                                 </>
                             )}
 

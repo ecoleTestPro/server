@@ -315,7 +315,7 @@ export default function NewsletterIndex() {
                                     
                                     <div className="flex items-center justify-between">
                                         <div className="text-sm text-muted-foreground">
-                                            {analytics && (
+                                            {false && analytics && (
                                                 <span>
                                                     {t('Will be sent to {{count}} subscribers', {
                                                         count: analytics.stats.total_subscribers

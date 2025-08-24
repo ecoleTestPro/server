@@ -49,23 +49,12 @@ class PrivateAppointmentController extends Controller
             });
         }
 
-        $appointments = $query->paginate(99999);
+        $appointments = $query->paginate(99999); 
 
-        // Statistiques
-        $stats = [
-            'total' => Appointment::count(),
-            'today' => Appointment::today()->count(),
-            'pending' => Appointment::pending()->count(),
-            'confirmed' => Appointment::confirmed()->count(),
-            'upcoming' => Appointment::upcoming()->count(),
-        ];
 
         return Inertia::render('dashboard/appointments/index', [
             'appointments' => $appointments,
-            'filters' => $request->only(['status', 'type', 'date_from', 'date_to', 'search']),
-            'stats' => $stats,
-            'statusOptions' => $this->getStatusOptions(),
-            'typeOptions' => $this->getTypeOptions(),
+            'filters' => $request->only(['status', 'type', 'date_from', 'date_to', 'search']), 
             'appointmentTypes' => AppointmentType::active()->orderBy('sort_order')->get(['id', 'name', 'slug', 'color']),
         ]);
     }
