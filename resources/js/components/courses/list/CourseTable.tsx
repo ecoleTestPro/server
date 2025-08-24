@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import CourseDurationBlock from '../CourseDurationBlock';
 import CourseInscriptionDialog from '../detail/partial/CourseInscriptionDialog';
 import { Calendar, Clock, Euro, ChevronRight } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface ICourseTableProps {
     courses: ICourse[];
@@ -19,8 +20,8 @@ export default function CourseTable({ courses }: ICourseTableProps) {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     const handleClickRegisterCourse = (course: ICourse) => {
-        router.visit(ROUTE_MAP.public.courses.detail(course.category?.slug ?? '', course.slug).link, {
-            preserveScroll: true,
+        router.visit(ROUTE_MAP.public.courses.detail(course.category?.slug ?? '', course.slug).link + '#course-dates', {
+            preserveScroll: false,
             preserveState: true,
         });
         // setCourseSelected(course);
@@ -219,13 +220,29 @@ export default function CourseTable({ courses }: ICourseTableProps) {
                                         </div>
                                     </td>
                                     <td className="px-6 py-4 text-center">
+                                        {/* Bouton complet pour écrans >= 1278px */}
                                         <button
-                                            className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-medium rounded-lg transition-all duration-200 hover:shadow-lg"
+                                            className="cursor-pointer hidden xl-custom:inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-medium rounded-lg transition-all duration-200 hover:shadow-lg"
                                             onClick={() => handleClickRegisterCourse(item)}
                                         >
                                             {t('COURSE.TABLE.REGISTER', 'Voir les dates')}
                                             <ChevronRight className="w-4 h-4" />
                                         </button>
+                                        
+                                        {/* Icône avec tooltip pour écrans < 1278px */}
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <button
+                                                    className="cursor-pointer xl-custom:hidden inline-flex items-center justify-center w-10 h-10 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-lg transition-all duration-200 hover:shadow-lg"
+                                                    onClick={() => handleClickRegisterCourse(item)}
+                                                >
+                                                    <Calendar className="w-5 h-5" />
+                                                </button>
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                                <p>{t('COURSE.TABLE.REGISTER', 'Voir les dates')}</p>
+                                            </TooltipContent>
+                                        </Tooltip>
                                     </td>
                                 </tr>
                             ))}

@@ -225,7 +225,7 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ course }) => {
                     <div className="col-span-1 md:col-span-3">
                         {/* Informations supplémentaires et bouton d'inscription */}
                         {/* Registration Section with ref */}
-                        <div className="">
+                        <div id="course-dates" className="">
                             {/* ref={registrationRef} */}
                             <div>
                                 {/* registrationRef={registrationRef} */}
