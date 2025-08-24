@@ -7,7 +7,7 @@ import AppLayout from '@/layouts/dashboard/app-layout';
 import { SharedData, type BreadcrumbItem } from '@/types';
 import { IFaq } from '@/types/faq';
 import { Head, router, usePage } from '@inertiajs/react';
-import { CirclePlus, HelpCircle, Info, HelpCircle as QuestionMarkCircle } from 'lucide-react';
+import { CirclePlus, HelpCircle, HelpCircle as QuestionMarkCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -101,16 +101,10 @@ export default function DashboardFaqs() {
                             </div>
                         </div>
                         <div className="flex flex-col items-end gap-3 flex-shrink-0">
-                            <div className="flex items-center gap-2 text-sm text-gray-500">
-                                <Info className="h-4 w-4" />
-                                <span>
-                                    {faqs.length} question{faqs.length > 1 ? 's' : ''}
-                                </span>
-                            </div>
                             <Tooltip>
                                 <TooltipTrigger asChild>
                                     <button
-                                        className="bg-primary hover:bg-primary/90 text-primary-foreground p-3 rounded-lg transition-colors flex items-center gap-2"
+                                        className=" bg-primary hover:bg-primary/90 text-primary-foreground p-3 rounded-lg transition-colors flex items-center gap-2"
                                         onClick={() => setOpenForm(true)}
                                         aria-label={t('Add FAQ', 'Ajouter une FAQ')}
                                     >
@@ -146,7 +140,7 @@ export default function DashboardFaqs() {
                     onCancel={() => setShowConfirm(false)}
                 />
 
-                <div className="container mx-auto flex h-full items-center justify-center">
+                <div className="container mx-auto flex justify-center">
                     {faqs && (
                         <FaqDataTable
                             faqs={faqs}

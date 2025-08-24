@@ -29,6 +29,11 @@
         html.dark {
             background-color: oklch(0.145 0 0);
         }
+
+        a,
+        button {
+            cursor: pointer;
+        }
     </style>
 
     <title inertia>{{ config('app.name', 'École TestPro') }}</title>
