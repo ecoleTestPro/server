@@ -8,10 +8,10 @@ import { Switch } from '@/components/ui/switch';
 import AppLayout from '@/layouts/dashboard/app-layout';
 import { cn } from '@/lib/utils';
 import { BusinessHours } from '@/types';
-import { Head, useForm, router } from '@inertiajs/react';
+import { Head, router, useForm } from '@inertiajs/react';
+import axios from 'axios';
 import { motion } from 'framer-motion';
 import { Clock, Edit, Eye, RotateCcw, Save } from 'lucide-react';
-import axios from 'axios';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 
@@ -102,18 +102,19 @@ export default function BusinessHoursSettings({ businessHours, appointmentDurati
     };
 
     const saveAllChanges = () => {
-        axios.post(route('dashboard.appointments.settings.hours.update'), {
-            hours: hours,
-        })
-        .then(() => {
-            setHasChanges(false);
-            toast.success('Horaires mis à jour avec succès !');
-            router.reload();
-        })
-        .catch((error) => {
-            toast.error('Erreur lors de la mise à jour des horaires');
-            console.error('Erreur:', error);
-        });
+        axios
+            .post(route('dashboard.appointments.settings.hours.update'), {
+                hours: hours,
+            })
+            .then(() => {
+                setHasChanges(false);
+                toast.success('Horaires mis à jour avec succès !');
+                router.reload();
+            })
+            .catch((error) => {
+                toast.error('Erreur lors de la mise à jour des horaires');
+                console.error('Erreur:', error);
+            });
     };
 
     const resetChanges = () => {
