@@ -1,16 +1,13 @@
-import { Badge } from '@/components/ui/badge';
+import AppointmentDataTable from '@/components/appointments/AppointmentDataTable';
 import { Button } from '@/components/ui/button/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import AppLayout from '@/layouts/dashboard/app-layout';
-import { cn } from '@/lib/utils';
 import { Appointment } from '@/types';
 import { Logger } from '@/utils/console.util';
-import { Head } from '@inertiajs/react';
-import { AlertCircle, Calendar, CheckCircle, Clock, Download, Edit, Eye, Mail, MoreHorizontal, Phone, Search, Trash2, XCircle } from 'lucide-react';
+import { Head, router } from '@inertiajs/react';
+import { AlertCircle, Calendar, CheckCircle, Clock, HelpCircle, Mail, MessageSquare, Phone, User, Users, XCircle } from 'lucide-react';
 import { useState } from 'react';
 
 interface Props {
@@ -34,12 +31,6 @@ interface Props {
         cancelled: number;
         today: number;
     };
-    appointmentTypes: Array<{
-        id: number;
-        name: string;
-        slug: string;
-        color: string;
-    }>;
 }
 
 const statusConfig = {
@@ -49,10 +40,17 @@ const statusConfig = {
     cancelled: { label: 'Annulé', color: 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400', icon: XCircle },
 };
 
-export default function AppointmentsIndex({ appointments, filters, stats, appointmentTypes }: Props) {
-    const [searchTerm, setSearchTerm] = useState(filters.search || '');
-    const [selectedStatus, setSelectedStatus] = useState(filters.status || 'all');
-    const [selectedType, setSelectedType] = useState(filters.type || 'all');
+const typeLabels = {
+    consultation: 'Consultation',
+    information: "Demande d'information",
+    support: 'Support technique',
+    enrollment: 'Inscription formation',
+    other: 'Autre',
+};
+
+export default function AppointmentsIndex({ appointments, filters }: Props) {
+    const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const formatDate = (date: string) => {
         return new Date(date).toLocaleDateString('fr-FR', {
@@ -79,8 +77,42 @@ export default function AppointmentsIndex({ appointments, filters, stats, appoin
     };
 
     const handleStatusChange = (appointmentId: number, newStatus: string) => {
-        // TODO: Implement status change via API
-        Logger.log('Changing status', appointmentId, newStatus);
+        router.put(
+            `/admin/appointments/${appointmentId}/status`,
+            {
+                status: newStatus,
+            },
+            {
+                onSuccess: () => {
+                    Logger.log('Status changed successfully');
+                },
+                onError: (errors) => {
+                    Logger.error('Error changing status:', errors);
+                },
+            },
+        );
+    };
+
+    const handleViewDetails = (appointment: Appointment) => {
+        setSelectedAppointment(appointment);
+        setIsModalOpen(true);
+    };
+
+    const handleDelete = (appointmentId: number) => {
+        if (confirm('Êtes-vous sûr de vouloir supprimer ce rendez-vous ?')) {
+            router.delete(`/admin/appointments/${appointmentId}`, {
+                onSuccess: () => {
+                    Logger.log('Appointment deleted successfully');
+                },
+                onError: (errors) => {
+                    Logger.error('Error deleting appointment:', errors);
+                },
+            });
+        }
+    };
+
+    const handleExport = () => {
+        window.location.href = `/admin/appointments/export`;
     };
 
     return (
@@ -90,173 +122,241 @@ export default function AppointmentsIndex({ appointments, filters, stats, appoin
             <div className="space-y-6 p-4">
                 {/* Header */}
                 <div className="flex items-center justify-between">
-                    <div>
-                        <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">Rendez-vous</h1>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">Gérez tous les rendez-vous et leurs paramètres</p>
+                    <div className="flex items-center space-x-4">
+                        <div className="flex items-center space-x-3">
+                            <div className="p-2 bg-teal-100 dark:bg-teal-900/20 rounded-lg">
+                                <Users className="w-6 h-6 text-teal-600" />
+                            </div>
+                            <div>
+                                <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">Rendez-vous</h1>
+                                <p className="text-sm text-gray-600 dark:text-gray-400">Gérez tous les rendez-vous et leurs paramètres</p>
+                            </div>
+                        </div>
+                        <Tooltip>
+                            <TooltipTrigger>
+                                <HelpCircle className="w-5 h-5 text-gray-400 hover:text-gray-600" />
+                            </TooltipTrigger>
+                            <TooltipContent className="max-w-xs">
+                                <p>
+                                    Cette page vous permet de visualiser, gérer et exporter tous les rendez-vous pris par vos clients. Utilisez les
+                                    filtres pour affiner votre recherche et les actions pour modifier le statut ou voir les détails.
+                                </p>
+                            </TooltipContent>
+                        </Tooltip>
                     </div>
-                    <Button className="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700">
-                        <Download className="w-4 h-4 mr-2" />
-                        Exporter
-                    </Button>
                 </div>
 
-                {/* Filters */}
-                <Card className="bg-transparent border-none shadow-none">
-                    <CardContent className="p-2 bg-white dark:bg-gray-900">
-                        <div className="flex flex-col sm:flex-row gap-4">
-                            <div className="flex-1">
-                                <div className="relative">
-                                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                                    <Input
-                                        placeholder="Rechercher par nom, email..."
-                                        value={searchTerm}
-                                        onChange={(e) => setSearchTerm(e.target.value)}
-                                        className="pl-10"
-                                    />
+                {/* Appointments DataTable */}
+                <AppointmentDataTable
+                    appointments={appointments.data}
+                    onViewDetails={handleViewDetails}
+                    onStatusChange={handleStatusChange}
+                    onDelete={handleDelete}
+                />
+
+                {/* Modal de détails */}
+                <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+                    <DialogContent className="w-[50vw] h-[90vh] max-h-[90vh] overflow-hidden flex flex-col p-0">
+                        <DialogHeader className="p-6 pb-4 border-b">
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                <div>
+                                    <DialogTitle className="text-lg sm:text-xl">Détails du rendez-vous</DialogTitle>
+                                </div>
+                                <div className="flex flex-wrap items-center gap-2">
+                                    {selectedAppointment?.status === 'pending' && (
+                                        <Button
+                                            size="sm"
+                                            onClick={() => {
+                                                handleStatusChange(selectedAppointment.id, 'confirmed');
+                                                setIsModalOpen(false);
+                                            }}
+                                            className="bg-green-600 hover:bg-green-700 text-xs sm:text-sm"
+                                        >
+                                            <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                                            <span className="hidden sm:inline">Confirmer</span>
+                                            <span className="sm:hidden">✓</span>
+                                        </Button>
+                                    )}
+                                    {selectedAppointment?.status === 'confirmed' && (
+                                        <Button
+                                            size="sm"
+                                            onClick={() => {
+                                                handleStatusChange(selectedAppointment.id, 'completed');
+                                                setIsModalOpen(false);
+                                            }}
+                                            className="bg-blue-600 hover:bg-blue-700 text-xs sm:text-sm"
+                                        >
+                                            <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                                            <span className="hidden sm:inline">Terminé</span>
+                                            <span className="sm:hidden">✓</span>
+                                        </Button>
+                                    )}
+                                    {(selectedAppointment?.status === 'pending' || selectedAppointment?.status === 'confirmed') && (
+                                        <Button
+                                            size="sm"
+                                            onClick={() => {
+                                                handleStatusChange(selectedAppointment.id, 'cancelled');
+                                                setIsModalOpen(false);
+                                            }}
+                                            variant="destructive"
+                                            className="text-xs sm:text-sm"
+                                        >
+                                            <XCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                                            <span className="hidden sm:inline">Annuler</span>
+                                            <span className="sm:hidden">✕</span>
+                                        </Button>
+                                    )}
                                 </div>
                             </div>
-                            <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-                                <SelectTrigger className="w-[180px]">
-                                    <SelectValue placeholder="Statut" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="all">Tous les statuts</SelectItem>
-                                    <SelectItem value="pending">En attente</SelectItem>
-                                    <SelectItem value="confirmed">Confirmé</SelectItem>
-                                    <SelectItem value="completed">Terminé</SelectItem>
-                                    <SelectItem value="cancelled">Annulé</SelectItem>
-                                </SelectContent>
-                            </Select>
-                            <Select value={selectedType} onValueChange={setSelectedType}>
-                                <SelectTrigger className="w-[180px]">
-                                    <SelectValue placeholder="Type" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="all">Tous les types</SelectItem>
-                                    {appointmentTypes.map((type) => (
-                                        <SelectItem key={type.id} value={type.slug}>
-                                            {type.name}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                        </div>
-                    </CardContent>
-                </Card>
+                        </DialogHeader>
 
-                {/* Appointments Table */}
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Liste des rendez-vous</CardTitle>
-                        <CardDescription>{appointments?.meta?.total ?? 0} rendez-vous trouvé(s)</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="overflow-x-auto">
-                            <Table>
-                                <TableHeader>
-                                    <TableRow>
-                                        <TableHead>Client</TableHead>
-                                        <TableHead>Date & Heure</TableHead>
-                                        <TableHead>Durée</TableHead>
-                                        <TableHead>Statut</TableHead>
-                                        <TableHead>Actions</TableHead>
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    {appointments.data.map((appointment) => (
-                                        <TableRow key={appointment.id}>
-                                            <TableCell>
-                                                <div className="space-y-1">
-                                                    {appointment.client_email && (
-                                                        <div className="flex items-center space-x-1 text-sm text-gray-600 dark:text-gray-400">
-                                                            <Mail className="w-3 h-3" />
-                                                            <span className="truncate max-w-32">{appointment.client_email}</span>
+                        <div className="overflow-y-auto max-h-[70vh] px-2">
+                            {selectedAppointment && (
+                                <div className="grid grid-cols-1 gap-6">
+                                    {/* Main Info */}
+                                    <div className="">
+                                        {/* General Information */}
+                                        <Card className="shadow-sm">
+                                            <CardHeader className="pb-3">
+                                                <CardTitle className="flex items-center space-x-2 text-base lg:text-lg">
+                                                    <Calendar className="w-4 h-4 lg:w-5 lg:h-5" />
+                                                    <span>Informations générales</span>
+                                                </CardTitle>
+                                            </CardHeader>
+                                            <CardContent className="space-y-4">
+                                                <div>
+                                                    <label className="text-xs lg:text-sm font-medium text-gray-500 dark:text-gray-400">Titre</label>
+                                                    <p className="text-sm lg:text-lg font-medium text-gray-900 dark:text-white mt-1">
+                                                        {selectedAppointment.title}
+                                                    </p>
+                                                </div>
+
+                                                {selectedAppointment.description && (
+                                                    <div>
+                                                        <label className="text-xs lg:text-sm font-medium text-gray-500 dark:text-gray-400">
+                                                            Description
+                                                        </label>
+                                                        <p className="text-xs lg:text-sm text-gray-700 dark:text-gray-300 mt-1 leading-relaxed">
+                                                            {selectedAppointment.description}
+                                                        </p>
+                                                    </div>
+                                                )}
+
+                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 lg:gap-4">
+                                                    <div>
+                                                        <label className="text-xs lg:text-sm font-medium text-gray-500 dark:text-gray-400">
+                                                            Date et heure
+                                                        </label>
+                                                        <div className="flex items-center space-x-2 mt-1">
+                                                            <Calendar className="w-3 h-3 lg:w-4 lg:h-4 text-gray-400 flex-shrink-0" />
+                                                            <span className="text-xs lg:text-sm text-gray-900 dark:text-white">
+                                                                {new Date(selectedAppointment.appointment_date).toLocaleDateString('fr-FR', {
+                                                                    weekday: 'long',
+                                                                    day: '2-digit',
+                                                                    month: 'long',
+                                                                    year: 'numeric',
+                                                                    hour: '2-digit',
+                                                                    minute: '2-digit',
+                                                                })}
+                                                            </span>
                                                         </div>
-                                                    )}
-                                                    {appointment.client_phone && (
-                                                        <div className="flex items-center space-x-1 text-sm text-gray-600 dark:text-gray-400">
-                                                            <Phone className="w-3 h-3" />
-                                                            <span>{appointment.client_phone}</span>
+                                                    </div>
+
+                                                    <div>
+                                                        <label className="text-xs lg:text-sm font-medium text-gray-500 dark:text-gray-400">
+                                                            Durée
+                                                        </label>
+                                                        <div className="flex items-center space-x-2 mt-1">
+                                                            <Clock className="w-3 h-3 lg:w-4 lg:h-4 text-gray-400" />
+                                                            <span className="text-xs lg:text-sm text-gray-900 dark:text-white">
+                                                                {formatDuration(selectedAppointment.duration)}
+                                                            </span>
                                                         </div>
-                                                    )}
+                                                    </div>
                                                 </div>
-                                            </TableCell>
-                                            <TableCell>
-                                                <div className="flex items-center space-x-2">
-                                                    <Calendar className="w-4 h-4 text-gray-400" />
-                                                    <span className="text-sm">{formatDate(appointment.appointment_date)}</span>
-                                                </div>
-                                            </TableCell>
-                                            <TableCell>
-                                                <div className="flex items-center space-x-1">
-                                                    <Clock className="w-4 h-4 text-gray-400" />
-                                                    <span className="text-sm">{formatDuration(appointment.duration)}</span>
-                                                </div>
-                                            </TableCell>
-                                            <TableCell>
-                                                <Badge
-                                                    className={cn('text-xs', statusConfig[appointment.status as keyof typeof statusConfig]?.color)}
-                                                >
-                                                    <span className="flex items-center space-x-1">
-                                                        {getStatusIcon(appointment.status)}
-                                                        <span>
-                                                            {statusConfig[appointment.status as keyof typeof statusConfig]?.label ||
-                                                                appointment.status}
-                                                        </span>
-                                                    </span>
-                                                </Badge>
-                                            </TableCell>
-                                            <TableCell>
-                                                <DropdownMenu>
-                                                    <DropdownMenuTrigger asChild>
-                                                        <Button variant="ghost" size="sm" className="w-8 h-8 p-0">
-                                                            <MoreHorizontal className="w-4 h-4" />
-                                                        </Button>
-                                                    </DropdownMenuTrigger>
-                                                    <DropdownMenuContent align="end">
-                                                        <DropdownMenuItem>
-                                                            <Eye className="w-4 h-4 mr-2" />
-                                                            Voir détails
-                                                        </DropdownMenuItem>
-                                                        <DropdownMenuItem>
-                                                            <Edit className="w-4 h-4 mr-2" />
-                                                            Modifier
-                                                        </DropdownMenuItem>
-                                                        <DropdownMenuSeparator />
-                                                        {appointment.status === 'pending' && (
-                                                            <DropdownMenuItem onClick={() => handleStatusChange(appointment.id, 'confirmed')}>
-                                                                <CheckCircle className="w-4 h-4 mr-2" />
-                                                                Confirmer
-                                                            </DropdownMenuItem>
-                                                        )}
-                                                        {appointment.status === 'confirmed' && (
-                                                            <DropdownMenuItem onClick={() => handleStatusChange(appointment.id, 'completed')}>
-                                                                <CheckCircle className="w-4 h-4 mr-2" />
-                                                                Marquer terminé
-                                                            </DropdownMenuItem>
-                                                        )}
-                                                        <DropdownMenuItem
-                                                            onClick={() => handleStatusChange(appointment.id, 'cancelled')}
-                                                            className="text-red-600"
-                                                        >
-                                                            <XCircle className="w-4 h-4 mr-2" />
-                                                            Annuler
-                                                        </DropdownMenuItem>
-                                                        <DropdownMenuSeparator />
-                                                        <DropdownMenuItem className="text-red-600">
-                                                            <Trash2 className="w-4 h-4 mr-2" />
-                                                            Supprimer
-                                                        </DropdownMenuItem>
-                                                    </DropdownMenuContent>
-                                                </DropdownMenu>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
+                                            </CardContent>
+                                        </Card>
+                                    </div>
+
+                                    {/* Sidebar */}
+                                    <div className="">
+                                        {/* Client Information */}
+                                        <Card className="shadow-sm">
+                                            <CardHeader className="pb-3">
+                                                <CardTitle className="flex items-center space-x-2 text-base lg:text-lg">
+                                                    <User className="w-4 h-4 lg:w-5 lg:h-5" />
+                                                    <span>Informations client</span>
+                                                </CardTitle>
+                                                <CardDescription className="text-xs lg:text-sm">
+                                                    Coordonnées et informations de contact
+                                                </CardDescription>
+                                            </CardHeader>
+                                            <CardContent className="space-y-3 lg:space-y-4">
+                                                {selectedAppointment.user ? (
+                                                    <div>
+                                                        <label className="text-xs lg:text-sm font-medium text-gray-500 dark:text-gray-400">
+                                                            Utilisateur enregistré 
+                                                        </label>
+                                                        <div className="flex items-center space-x-2 mt-1">
+                                                            <User className="w-3 h-3 lg:w-4 lg:h-4 text-green-600" />
+                                                            <span className="text-xs lg:text-sm text-gray-900 dark:text-white font-medium">
+                                                                {selectedAppointment.user.name}
+                                                            </span>
+                                                        </div>
+                                                        <p className="text-xs text-gray-500 mt-1">{selectedAppointment.user.email}</p>
+                                                    </div>
+                                                ) : (
+                                                    <div>
+                                                        <label className="text-xs lg:text-sm font-medium text-gray-500 dark:text-gray-400">
+                                                            Client invité
+                                                        </label>
+                                                        <p className="text-xs text-orange-600 dark:text-orange-400 mt-1">
+                                                            Non enregistré sur la plateforme
+                                                        </p>
+                                                    </div>
+                                                )}
+
+                                                {selectedAppointment.client_email && (
+                                                    <div>
+                                                        <label className="text-xs lg:text-sm font-medium text-gray-500 dark:text-gray-400">
+                                                            Email
+                                                        </label>
+                                                        <div className="flex items-center space-x-2 mt-1">
+                                                            <Mail className="w-3 h-3 lg:w-4 lg:h-4 text-gray-400" />
+                                                            <a
+                                                                href={`mailto:${selectedAppointment.client_email}`}
+                                                                className="text-xs lg:text-sm text-teal-600 hover:text-teal-700 dark:text-teal-400 break-all"
+                                                            >
+                                                                {selectedAppointment.client_email}
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                )}
+
+                                                {selectedAppointment.client_phone && (
+                                                    <div>
+                                                        <label className="text-xs lg:text-sm font-medium text-gray-500 dark:text-gray-400">
+                                                            Téléphone
+                                                        </label>
+                                                        <div className="flex items-center space-x-2 mt-1">
+                                                            <Phone className="w-3 h-3 lg:w-4 lg:h-4 text-gray-400" />
+                                                            <a
+                                                                href={`tel:${selectedAppointment.client_phone}`}
+                                                                className="text-xs lg:text-sm text-teal-600 hover:text-teal-700 dark:text-teal-400"
+                                                            >
+                                                                {selectedAppointment.client_phone}
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </CardContent>
+                                        </Card>
+                                    </div>
+                                </div>
+                            )}
                         </div>
-                    </CardContent>
-                </Card>
+                    </DialogContent>
+                </Dialog>
             </div>
         </AppLayout>
     );

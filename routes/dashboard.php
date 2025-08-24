@@ -244,14 +244,24 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
 });
 
 /**
- * Routes admin pour les horaires d'ouverture
+ * Routes admin pour les horaires d'ouverture et rendez-vous
  */
 Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
+    // Business Hours
     Route::prefix('business-hours')->group(function () {
         Route::get('/', [BusinessHoursController::class, 'index'])->name('admin.business-hours.index');
         Route::patch('/', [BusinessHoursController::class, 'update'])->name('admin.business-hours.update');
         Route::post('/copy', [BusinessHoursController::class, 'copyToOtherDays'])->name('admin.business-hours.copy');
         Route::get('/preview-slots', [BusinessHoursController::class, 'previewSlots'])->name('admin.business-hours.preview-slots');
         Route::post('/reset', [BusinessHoursController::class, 'resetToDefaults'])->name('admin.business-hours.reset');
+    });
+    
+    // Admin Appointments Management
+    Route::prefix('appointments')->group(function () {
+        Route::get('/', [App\Http\Controllers\Admin\AppointmentController::class, 'index'])->name('admin.appointments.index');
+        Route::get('/{appointment}', [App\Http\Controllers\Admin\AppointmentController::class, 'show'])->name('admin.appointments.show');
+        Route::put('/{appointment}/status', [App\Http\Controllers\Admin\AppointmentController::class, 'updateStatus'])->name('admin.appointments.update-status');
+        Route::delete('/{appointment}', [App\Http\Controllers\Admin\AppointmentController::class, 'destroy'])->name('admin.appointments.destroy');
+        Route::get('/export', [App\Http\Controllers\Admin\AppointmentController::class, 'export'])->name('admin.appointments.export');
     });
 });
