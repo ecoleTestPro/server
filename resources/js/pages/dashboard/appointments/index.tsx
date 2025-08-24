@@ -1,4 +1,3 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -101,86 +100,9 @@ export default function AppointmentsIndex({ appointments, filters, stats, appoin
                     </Button>
                 </div>
 
-                {/* Stats Cards */}
-                {false && (
-                    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                        <Card>
-                            <CardContent className="p-4">
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total</p>
-                                        <p className="text-2xl font-bold text-gray-900 dark:text-white">{stats.total}</p>
-                                    </div>
-                                    <Calendar className="w-5 h-5 text-gray-400" />
-                                </div>
-                            </CardContent>
-                        </Card>
-
-                        <Card>
-                            <CardContent className="p-4">
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <p className="text-sm font-medium text-gray-600 dark:text-gray-400">En attente</p>
-                                        <p className="text-2xl font-bold text-yellow-600">{stats.pending}</p>
-                                    </div>
-                                    <AlertCircle className="w-5 h-5 text-yellow-400" />
-                                </div>
-                            </CardContent>
-                        </Card>
-
-                        <Card>
-                            <CardContent className="p-4">
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Confirmés</p>
-                                        <p className="text-2xl font-bold text-blue-600">{stats.confirmed}</p>
-                                    </div>
-                                    <CheckCircle className="w-5 h-5 text-blue-400" />
-                                </div>
-                            </CardContent>
-                        </Card>
-
-                        <Card>
-                            <CardContent className="p-4">
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Terminés</p>
-                                        <p className="text-2xl font-bold text-green-600">{stats.completed}</p>
-                                    </div>
-                                    <CheckCircle className="w-5 h-5 text-green-400" />
-                                </div>
-                            </CardContent>
-                        </Card>
-
-                        <Card>
-                            <CardContent className="p-4">
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Annulés</p>
-                                        <p className="text-2xl font-bold text-red-600">{stats.cancelled}</p>
-                                    </div>
-                                    <XCircle className="w-5 h-5 text-red-400" />
-                                </div>
-                            </CardContent>
-                        </Card>
-
-                        <Card>
-                            <CardContent className="p-4">
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Aujourd'hui</p>
-                                        <p className="text-2xl font-bold text-teal-600">{stats.today}</p>
-                                    </div>
-                                    <Clock className="w-5 h-5 text-teal-400" />
-                                </div>
-                            </CardContent>
-                        </Card>
-                    </div>
-                )}
-
                 {/* Filters */}
-                <Card>
-                    <CardContent className="p-4">
+                <Card className="bg-transparent border-none shadow-none">
+                    <CardContent className="p-2 bg-white dark:bg-gray-900">
                         <div className="flex flex-col sm:flex-row gap-4">
                             <div className="flex-1">
                                 <div className="relative">
@@ -235,10 +157,8 @@ export default function AppointmentsIndex({ appointments, filters, stats, appoin
                                     <TableRow>
                                         <TableHead>Client</TableHead>
                                         <TableHead>Date & Heure</TableHead>
-                                        <TableHead>Type</TableHead>
                                         <TableHead>Durée</TableHead>
                                         <TableHead>Statut</TableHead>
-                                        <TableHead>Contact</TableHead>
                                         <TableHead>Actions</TableHead>
                                     </TableRow>
                                 </TableHeader>
@@ -246,19 +166,19 @@ export default function AppointmentsIndex({ appointments, filters, stats, appoin
                                     {appointments.data.map((appointment) => (
                                         <TableRow key={appointment.id}>
                                             <TableCell>
-                                                <div className="flex items-center space-x-3">
-                                                    <Avatar className="w-8 h-8">
-                                                        <AvatarImage src={appointment.user?.avatar} />
-                                                        <AvatarFallback className="bg-gradient-to-r from-teal-500 to-teal-600 text-white text-xs">
-                                                            {appointment.client_email?.charAt(0).toUpperCase() || 'A'}
-                                                        </AvatarFallback>
-                                                    </Avatar>
-                                                    <div>
-                                                        <p className="font-medium text-gray-900 dark:text-white">
-                                                            {appointment.user?.name || appointment.client_email}
-                                                        </p>
-                                                        <p className="text-sm text-gray-500 dark:text-gray-400">{appointment.title}</p>
-                                                    </div>
+                                                <div className="space-y-1">
+                                                    {appointment.client_email && (
+                                                        <div className="flex items-center space-x-1 text-sm text-gray-600 dark:text-gray-400">
+                                                            <Mail className="w-3 h-3" />
+                                                            <span className="truncate max-w-32">{appointment.client_email}</span>
+                                                        </div>
+                                                    )}
+                                                    {appointment.client_phone && (
+                                                        <div className="flex items-center space-x-1 text-sm text-gray-600 dark:text-gray-400">
+                                                            <Phone className="w-3 h-3" />
+                                                            <span>{appointment.client_phone}</span>
+                                                        </div>
+                                                    )}
                                                 </div>
                                             </TableCell>
                                             <TableCell>
@@ -266,11 +186,6 @@ export default function AppointmentsIndex({ appointments, filters, stats, appoin
                                                     <Calendar className="w-4 h-4 text-gray-400" />
                                                     <span className="text-sm">{formatDate(appointment.appointment_date)}</span>
                                                 </div>
-                                            </TableCell>
-                                            <TableCell>
-                                                <Badge variant="outline" style={{ color: appointment.appointmentType?.color }}>
-                                                    {appointment.appointmentType?.name || appointment.type}
-                                                </Badge>
                                             </TableCell>
                                             <TableCell>
                                                 <div className="flex items-center space-x-1">
@@ -290,22 +205,6 @@ export default function AppointmentsIndex({ appointments, filters, stats, appoin
                                                         </span>
                                                     </span>
                                                 </Badge>
-                                            </TableCell>
-                                            <TableCell>
-                                                <div className="space-y-1">
-                                                    {appointment.client_email && (
-                                                        <div className="flex items-center space-x-1 text-sm text-gray-600 dark:text-gray-400">
-                                                            <Mail className="w-3 h-3" />
-                                                            <span className="truncate max-w-32">{appointment.client_email}</span>
-                                                        </div>
-                                                    )}
-                                                    {appointment.client_phone && (
-                                                        <div className="flex items-center space-x-1 text-sm text-gray-600 dark:text-gray-400">
-                                                            <Phone className="w-3 h-3" />
-                                                            <span>{appointment.client_phone}</span>
-                                                        </div>
-                                                    )}
-                                                </div>
                                             </TableCell>
                                             <TableCell>
                                                 <DropdownMenu>
