@@ -89,6 +89,9 @@ Route::group(["prefix" => "/"], function () {
     Route::get('formations-calendar', [PublicFormationController::class, 'calendar'])->name('courses.calendar');
     Route::get('formations-calendar/sessions', [PublicFormationSessionController::class, 'listSessions'])->name('courses.calendar.sessions');
     Route::get('timeline-sessions', [SessionsTimelineController::class, 'index'])->name('sessions.timeline');
+    
+    // API endpoint pour les formations featured
+    Route::get('api/courses/featured', [PublicFormationController::class, 'getFeaturedCourses'])->name('api.courses.featured');
 
     /** 
      * formation routes
