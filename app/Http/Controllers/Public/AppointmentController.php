@@ -21,8 +21,7 @@ class AppointmentController extends PublicAbstractController
         $data = $this->getDefaultData();
         $businessHours = BusinessHours::active()->get()->keyBy('day_of_week');
         $data['businessHours'] = $businessHours;
-        $data['appointmentTypes'] = $this->getAppointmentTypes();
-        
+
         // Sinon, utiliser le layout public
         return Inertia::render('public/appointment', [
             'data' => $data
@@ -40,9 +39,9 @@ class AppointmentController extends PublicAbstractController
 
         $date = Carbon::parse($request->date);
         $dayOfWeek = strtolower($date->format('l'));
-        
+
         $businessHours = BusinessHours::getForDay($dayOfWeek);
-        
+
         if (!$businessHours) {
             return response()->json([
                 'slots' => [],
@@ -51,10 +50,9 @@ class AppointmentController extends PublicAbstractController
         }
 
         $availableSlots = $businessHours->getAvailableSlots($date);
-        
+
         // Filtrer les créneaux déjà réservés
         $bookedSlots = Appointment::whereDate('appointment_date', $date)
-            ->whereIn('status', [Appointment::STATUS_PENDING, Appointment::STATUS_CONFIRMED])
             ->pluck('appointment_date')
             ->map(fn($datetime) => Carbon::parse($datetime)->format('H:i'))
             ->toArray();
@@ -102,7 +100,7 @@ class AppointmentController extends PublicAbstractController
         $validated = $request->validate($rules);
 
         $appointmentDate = Carbon::parse($validated['appointment_date']);
-        
+
         // Vérifier que le créneau est disponible
         if (!$this->isSlotAvailable($appointmentDate, $validated['duration'])) {
             return response()->json([
@@ -121,7 +119,6 @@ class AppointmentController extends PublicAbstractController
             'client_email' => $validated['client_email'] ?? (auth()->user()?->email ?? null),
             'client_phone' => $validated['client_phone'],
             'metadata' => $validated['metadata'] ?? [],
-            'status' => Appointment::STATUS_PENDING
         ]);
 
         // Notifier les admins
@@ -166,26 +163,12 @@ class AppointmentController extends PublicAbstractController
     {
         $dayOfWeek = strtolower($dateTime->format('l'));
         $businessHours = BusinessHours::getForDay($dayOfWeek);
-        
+
         if (!$businessHours || !$businessHours->isSlotAvailable($dateTime)) {
             return false;
         }
 
         // Vérifier les conflits avec d'autres rendez-vous
         return !Appointment::hasConflict($dateTime, $duration);
-    }
-
-    /**
-     * Obtient les types de rendez-vous disponibles
-     */
-    private function getAppointmentTypes(): array
-    {
-        return [
-            Appointment::TYPE_CONSULTATION => 'Consultation',
-            Appointment::TYPE_INFORMATION => 'Demande d\'information',
-            Appointment::TYPE_SUPPORT => 'Support technique',
-            Appointment::TYPE_ENROLLMENT => 'Inscription formation',
-            Appointment::TYPE_OTHER => 'Autre'
-        ];
     }
 }

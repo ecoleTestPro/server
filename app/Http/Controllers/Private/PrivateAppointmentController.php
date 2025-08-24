@@ -22,7 +22,7 @@ class PrivateAppointmentController extends Controller
      */
     public function index(Request $request): Response
     {
-        $query = Appointment::orderBy('appointment_date', 'desc'); 
+        $query = Appointment::orderBy('appointment_date', 'desc');
 
         // Filtres
         if ($request->filled('status')) {
@@ -42,10 +42,10 @@ class PrivateAppointmentController extends Controller
         }
 
         if ($request->filled('search')) {
-            $query->where(function($q) use ($request) {
+            $query->where(function ($q) use ($request) {
                 $q->where('title', 'LIKE', '%' . $request->search . '%')
-                  ->orWhere('client_email', 'LIKE', '%' . $request->search . '%')
-                  ->orWhere('description', 'LIKE', '%' . $request->search . '%');
+                    ->orWhere('client_email', 'LIKE', '%' . $request->search . '%')
+                    ->orWhere('description', 'LIKE', '%' . $request->search . '%');
             });
         }
 
@@ -76,7 +76,7 @@ class PrivateAppointmentController extends Controller
     public function show(Appointment $appointment): Response
     {
         $appointment->load(['user', 'adminUser']);
-        
+
         return Inertia::render('dashboard/appointments/show', [
             'appointment' => $appointment,
         ]);
@@ -89,7 +89,7 @@ class PrivateAppointmentController extends Controller
     {
         try {
             $appointment->confirm(auth()->id());
-            
+
             return response()->json([
                 'success' => true,
                 'message' => 'Rendez-vous confirmé avec succès'
@@ -120,7 +120,7 @@ class PrivateAppointmentController extends Controller
 
         try {
             $appointment->cancel($request->reason);
-            
+
             return response()->json([
                 'success' => true,
                 'message' => 'Rendez-vous annulé avec succès'
@@ -151,7 +151,7 @@ class PrivateAppointmentController extends Controller
 
         try {
             $appointment->complete($request->notes);
-            
+
             return response()->json([
                 'success' => true,
                 'message' => 'Rendez-vous marqué comme terminé'
@@ -171,7 +171,7 @@ class PrivateAppointmentController extends Controller
     {
         $appointmentTypes = AppointmentType::ordered()->get();
         $appointmentDurations = AppointmentDuration::active()->orderBy('sort_order')->get(['id', 'duration', 'label']);
-        
+
         return Inertia::render('dashboard/appointments/settings/types', [
             'appointmentTypes' => $appointmentTypes,
             'appointmentDurations' => $appointmentDurations,
@@ -202,7 +202,7 @@ class PrivateAppointmentController extends Controller
 
         try {
             $type = AppointmentType::create($validator->validated());
-            
+
             return response()->json([
                 'success' => true,
                 'message' => 'Type de rendez-vous créé avec succès',
@@ -240,7 +240,7 @@ class PrivateAppointmentController extends Controller
 
         try {
             $type->update($validator->validated());
-            
+
             return response()->json([
                 'success' => true,
                 'message' => 'Type de rendez-vous mis à jour avec succès',
@@ -262,16 +262,16 @@ class PrivateAppointmentController extends Controller
         try {
             // Vérifier si le type est utilisé
             $appointmentsCount = Appointment::where('type', $type->slug)->count();
-            
+
             if ($appointmentsCount > 0) {
                 return response()->json([
                     'success' => false,
                     'message' => "Ce type est utilisé par {$appointmentsCount} rendez-vous et ne peut pas être supprimé"
                 ], 409);
             }
-            
+
             $type->delete();
-            
+
             return response()->json([
                 'success' => true,
                 'message' => 'Type de rendez-vous supprimé avec succès'
@@ -290,7 +290,7 @@ class PrivateAppointmentController extends Controller
     public function settingsDurations(): Response
     {
         $durations = AppointmentDuration::ordered()->get();
-        
+
         return Inertia::render('dashboard/appointments/settings/durations', [
             'durations' => $durations
         ]);
@@ -318,7 +318,7 @@ class PrivateAppointmentController extends Controller
 
         try {
             $duration = AppointmentDuration::create($validator->validated());
-            
+
             return response()->json([
                 'success' => true,
                 'message' => 'Durée créée avec succès',
@@ -338,8 +338,16 @@ class PrivateAppointmentController extends Controller
     public function settingsHours(): Response
     {
         $businessHours = BusinessHours::orderByRaw("FIELD(day_of_week, 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday')")->get();
+
+        // Map is_active to is_open for frontend compatibility
+        $businessHours = $businessHours->map(function ($hour) {
+            $hour->is_open = $hour->is_active;
+            unset($hour->is_active);
+            return $hour;
+        });
+
         $appointmentDurations = AppointmentDuration::active()->orderBy('sort_order')->get(['id', 'duration', 'label']);
-        
+
         return Inertia::render('dashboard/appointments/settings/hours', [
             'businessHours' => $businessHours,
             'appointmentDurations' => $appointmentDurations,
@@ -354,7 +362,7 @@ class PrivateAppointmentController extends Controller
         $validator = Validator::make($request->all(), [
             'hours' => 'required|array',
             'hours.*.day_of_week' => 'required|in:monday,tuesday,wednesday,thursday,friday,saturday,sunday',
-            'hours.*.is_active' => 'boolean',
+            'hours.*.is_open' => 'boolean',
             'hours.*.opening_time' => 'nullable|date_format:H:i',
             'hours.*.closing_time' => 'nullable|date_format:H:i',
             'hours.*.lunch_break_start' => 'nullable|date_format:H:i',
@@ -370,23 +378,32 @@ class PrivateAppointmentController extends Controller
         }
 
         try {
-            DB::transaction(function() use ($request) {
+            DB::transaction(function () use ($request) {
                 foreach ($request->hours as $hourData) {
+                    // Map is_open to is_active for the database
+                    $data = $hourData;
+                    $data['is_active'] = $hourData['is_open'] ?? false;
+                    unset($data['is_open']);
+
+                    // Log for debugging
+                    \Log::info('Updating business hours:', $data);
+
                     BusinessHours::updateOrCreate(
-                        ['day_of_week' => $hourData['day_of_week']],
-                        $hourData
+                        ['day_of_week' => $data['day_of_week']],
+                        $data
                     );
                 }
             });
-            
+
             return response()->json([
                 'success' => true,
-                'message' => 'Horaires mis à jour avec succès'
+                'message' => 'Horaires mis à jour avec succès (créneaux inclus)'
             ]);
         } catch (\Exception $e) {
+            \Log::error('Erreur lors de la mise à jour des horaires: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
-                'message' => 'Erreur: ' . $e->getMessage()
+                'message' => 'Erreur lors de la sauvegarde des horaires: ' . $e->getMessage()
             ], 500);
         }
     }
@@ -410,9 +427,9 @@ class PrivateAppointmentController extends Controller
         try {
             $date = Carbon::parse($request->date);
             $dayOfWeek = strtolower($date->format('l'));
-            
+
             $businessHour = BusinessHours::getForDay($dayOfWeek);
-            
+
             if (!$businessHour) {
                 return response()->json([
                     'success' => true,
@@ -421,13 +438,13 @@ class PrivateAppointmentController extends Controller
             }
 
             $slots = $businessHour->getAvailableSlots($date);
-            
+
             // Vérifier la disponibilité de chaque créneau
             foreach ($slots as &$slot) {
                 $slotDateTime = Carbon::parse($slot['datetime']);
                 $slot['available'] = !Appointment::hasConflict($slotDateTime, 30);
             }
-            
+
             return response()->json([
                 'success' => true,
                 'slots' => $slots
@@ -447,7 +464,7 @@ class PrivateAppointmentController extends Controller
     {
         try {
             $types = AppointmentType::active()->ordered()->get();
-            
+
             return response()->json([
                 'success' => true,
                 'types' => $types
@@ -467,7 +484,7 @@ class PrivateAppointmentController extends Controller
     {
         try {
             $durations = AppointmentDuration::active()->ordered()->get();
-            
+
             return response()->json([
                 'success' => true,
                 'durations' => $durations
@@ -478,42 +495,5 @@ class PrivateAppointmentController extends Controller
                 'message' => 'Erreur: ' . $e->getMessage()
             ], 500);
         }
-    }
-
-    /**
-     * Méthodes helper privées
-     */
-    private function getStatusOptions(): array
-    {
-        return [
-            ['value' => Appointment::STATUS_PENDING, 'label' => 'En attente'],
-            ['value' => Appointment::STATUS_CONFIRMED, 'label' => 'Confirmé'],
-            ['value' => Appointment::STATUS_COMPLETED, 'label' => 'Terminé'],
-            ['value' => Appointment::STATUS_CANCELLED, 'label' => 'Annulé'],
-            ['value' => Appointment::STATUS_NO_SHOW, 'label' => 'Absent'],
-        ];
-    }
-
-    private function getTypeOptions(): array
-    {
-        return [
-            ['value' => Appointment::TYPE_CONSULTATION, 'label' => 'Consultation'],
-            ['value' => Appointment::TYPE_INFORMATION, 'label' => 'Information'],
-            ['value' => Appointment::TYPE_SUPPORT, 'label' => 'Support'],
-            ['value' => Appointment::TYPE_ENROLLMENT, 'label' => 'Inscription'],
-            ['value' => Appointment::TYPE_OTHER, 'label' => 'Autre'],
-        ];
-    }
-
-    private function getStatusColor(string $status): string
-    {
-        return match($status) {
-            Appointment::STATUS_PENDING => '#f59e0b',
-            Appointment::STATUS_CONFIRMED => '#10b981',
-            Appointment::STATUS_COMPLETED => '#6366f1',
-            Appointment::STATUS_CANCELLED => '#ef4444',
-            Appointment::STATUS_NO_SHOW => '#6b7280',
-            default => '#9ca3af'
-        };
     }
 }
