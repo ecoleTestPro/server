@@ -37,11 +37,11 @@ export default function Header() {
         const handleScroll = () => {
             const currentScrollY = window.scrollY;
 
-            if (currentScrollY > lastScrollY && currentScrollY > 50) {
-                // Scrolling vers le bas et au-delà de 50px
+            if (currentScrollY > lastScrollY && currentScrollY > 200) {
+                // Scrolling vers le bas et au-delà de 200px
                 setIsVisible(false);
-            } else if (currentScrollY < lastScrollY) {
-                // Scrolling vers le haut
+            } else if (currentScrollY < lastScrollY || currentScrollY <= 200) {
+                // Scrolling vers le haut ou retour en haut de page
                 setIsVisible(true);
             }
 

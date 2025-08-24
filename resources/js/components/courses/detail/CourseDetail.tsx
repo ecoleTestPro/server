@@ -2,7 +2,7 @@ import { CLASS_NAME } from '@/data/styles/style.constant';
 import { ICourse } from '@/types/course';
 import { getMediaUrl } from '@/utils/utils';
 import { sanitizeHTML } from '@/utils/quill-html-parser';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import 'react-quill/dist/quill.snow.css';
 import CourseDetailAccordion from './CourseDetailAccordion';
@@ -33,7 +33,6 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ course }) => {
             <div className={proseClasses} dangerouslySetInnerHTML={{ __html: cleanedHTML }} />
         );
     };
-    const registrationRef = useRef<HTMLDivElement>(null);
 
     const [isOpen, setIsOpen] = useState<Record<string, boolean>>({
         objectives: true,
