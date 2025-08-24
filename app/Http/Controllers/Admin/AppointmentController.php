@@ -15,8 +15,7 @@ class AppointmentController
      */
     public function index(Request $request): Response
     {
-        $query = Appointment::with(['user'])
-            ->orderBy('appointment_date', 'desc');
+        $query = Appointment::orderBy('appointment_date', 'desc');
 
         // Filtres de recherche
         if ($request->filled('search')) {
@@ -24,19 +23,9 @@ class AppointmentController
             $query->where(function ($q) use ($search) {
                 $q->where('client_email', 'like', "%{$search}%")
                     ->orWhere('client_phone', 'like', "%{$search}%")
-                    ->orWhere('title', 'like', "%{$search}%")
-                    ->orWhereHas('user', function ($userQuery) use ($search) {
-                        $userQuery->where('name', 'like', "%{$search}%")
-                            ->orWhere('email', 'like', "%{$search}%");
-                    });
+                    ->orWhere('title', 'like', "%{$search}%");
             });
         }
-
-        // Filtre par statut
-        if ($request->filled('status') && $request->status !== 'all') {
-            $query->where('status', $request->status);
-        }
-
 
         // Filtre par date
         if ($request->filled('date_from')) {
@@ -49,10 +38,9 @@ class AppointmentController
 
         $appointments = $query->paginate(15)->withQueryString();
 
-
         return Inertia::render('dashboard/appointments/index', [
             'appointments' => $appointments,
-            'filters' => $request->only(['search', 'status', 'date_from', 'date_to']),
+            'filters' => $request->only(['search', 'date_from', 'date_to']),
         ]);
     }
 
@@ -61,48 +49,8 @@ class AppointmentController
      */
     public function show(Appointment $appointment): Response
     {
-        $appointment->load(['user']);
-
         return Inertia::render('dashboard/appointments/show', [
             'appointment' => $appointment,
-        ]);
-    }
-
-    /**
-     * Met à jour le statut d'un rendez-vous
-     */
-    public function updateStatus(Request $request, Appointment $appointment): JsonResponse
-    {
-        $request->validate([
-            'status' => 'required|in:' . implode(',', [
-                Appointment::STATUS_PENDING,
-                Appointment::STATUS_CONFIRMED,
-                Appointment::STATUS_COMPLETED,
-                Appointment::STATUS_CANCELLED
-            ]),
-            'notes' => 'nullable|string|max:500'
-        ]);
-
-        $appointment->update([
-            'status' => $request->status,
-            'admin_notes' => $request->notes,
-            'admin_user_id' => auth()->id()
-        ]);
-
-        // Log de l'activité
-        activity()
-            ->performedOn($appointment)
-            ->causedBy(auth()->user())
-            ->withProperties([
-                'old_status' => $appointment->getOriginal('status'),
-                'new_status' => $request->status,
-                'notes' => $request->notes
-            ])
-            ->log('Statut du rendez-vous mis à jour');
-
-        return response()->json([
-            'message' => 'Statut mis à jour avec succès',
-            'appointment' => $appointment->fresh(['user'])
         ]);
     }
 
@@ -111,13 +59,6 @@ class AppointmentController
      */
     public function destroy(Appointment $appointment): JsonResponse
     {
-        // Log de l'activité avant suppression
-        activity()
-            ->performedOn($appointment)
-            ->causedBy(auth()->user())
-            ->withProperties($appointment->toArray())
-            ->log('Rendez-vous supprimé');
-
         $appointment->delete();
 
         return response()->json([
@@ -128,9 +69,9 @@ class AppointmentController
     /**
      * Exporte la liste des rendez-vous
      */
-    public function export(Request $request): \Symfony\Component\HttpFoundation\BinaryFileResponse
+    public function export(Request $request): \Symfony\Component\HttpFoundation\StreamedResponse
     {
-        $query = Appointment::with(['user'])->orderBy('appointment_date', 'desc');
+        $query = Appointment::orderBy('appointment_date', 'desc');
 
         // Appliquer les mêmes filtres que l'index
         if ($request->filled('search')) {
@@ -142,11 +83,6 @@ class AppointmentController
             });
         }
 
-        if ($request->filled('status') && $request->status !== 'all') {
-            $query->where('status', $request->status);
-        }
-
-
         $appointments = $query->get();
 
         $csvData = [];
@@ -157,8 +93,6 @@ class AppointmentController
             'Client Téléphone',
             'Date et Heure',
             'Durée (min)',
-            'Type',
-            'Statut',
             'Description',
             'Créé le'
         ];
@@ -171,8 +105,6 @@ class AppointmentController
                 $appointment->client_phone,
                 $appointment->appointment_date->format('Y-m-d H:i'),
                 $appointment->duration,
-                $this->getTypeLabel($appointment->type),
-                $this->getStatusLabel($appointment->status),
                 $appointment->description,
                 $appointment->created_at->format('Y-m-d H:i')
             ];
@@ -195,28 +127,5 @@ class AppointmentController
             'Content-Type' => 'text/csv',
             'Content-Disposition' => 'attachment; filename="' . $filename . '"',
         ]);
-    }
-
-    private function getTypeLabel(string $type): string
-    {
-        return match ($type) {
-            Appointment::TYPE_CONSULTATION => 'Consultation',
-            Appointment::TYPE_INFORMATION => 'Demande d\'information',
-            Appointment::TYPE_SUPPORT => 'Support technique',
-            Appointment::TYPE_ENROLLMENT => 'Inscription formation',
-            Appointment::TYPE_OTHER => 'Autre',
-            default => $type,
-        };
-    }
-
-    private function getStatusLabel(string $status): string
-    {
-        return match ($status) {
-            Appointment::STATUS_PENDING => 'En attente',
-            Appointment::STATUS_CONFIRMED => 'Confirmé',
-            Appointment::STATUS_COMPLETED => 'Terminé',
-            Appointment::STATUS_CANCELLED => 'Annulé',
-            default => $status,
-        };
     }
 }

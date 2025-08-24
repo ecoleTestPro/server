@@ -2,23 +2,15 @@ import { DataTable } from '@/components/ui/dataTable';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Appointment } from '@/types';
 import { ColumnDef } from '@tanstack/react-table';
-import { AlertCircle, Calendar, CheckCircle, Clock, Eye, HelpCircle, Mail, Phone, Users, XCircle } from 'lucide-react';
+import { Calendar, Clock, Eye, HelpCircle, Mail, Phone, Users } from 'lucide-react';
 
 interface AppointmentDataTableProps {
     appointments: Appointment[];
     onViewDetails: (appointment: Appointment) => void;
-    onStatusChange: (appointmentId: number, newStatus: string) => void;
     onDelete: (appointmentId: number) => void;
 }
 
-const statusConfig = {
-    pending: { label: 'En attente', color: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400', icon: AlertCircle },
-    confirmed: { label: 'Confirmé', color: 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400', icon: CheckCircle },
-    completed: { label: 'Terminé', color: 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400', icon: CheckCircle },
-    cancelled: { label: 'Annulé', color: 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400', icon: XCircle },
-};
-
-export default function AppointmentDataTable({ appointments, onViewDetails, onStatusChange, onDelete }: AppointmentDataTableProps) {
+export default function AppointmentDataTable({ appointments, onViewDetails, onDelete }: AppointmentDataTableProps) {
     const formatDate = (date: string) => {
         return new Date(date).toLocaleDateString('fr-FR', {
             day: '2-digit',
@@ -34,13 +26,6 @@ export default function AppointmentDataTable({ appointments, onViewDetails, onSt
         const hours = Math.floor(minutes / 60);
         const remainingMinutes = minutes % 60;
         return remainingMinutes > 0 ? `${hours}h${remainingMinutes}` : `${hours}h`;
-    };
-
-    const getStatusIcon = (status: string) => {
-        const config = statusConfig[status as keyof typeof statusConfig];
-        if (!config) return null;
-        const Icon = config.icon;
-        return <Icon className="w-4 h-4" />;
     };
 
     const columns: ColumnDef<Appointment>[] = [
@@ -64,12 +49,6 @@ export default function AppointmentDataTable({ appointments, onViewDetails, onSt
                 const appointment = row.original;
                 return (
                     <div className="space-y-1">
-                        {appointment.user && (
-                            <div className="flex items-center space-x-1 text-sm font-medium text-gray-900 dark:text-gray-100">
-                                <Users className="w-3 h-3 text-green-600" />
-                                <span className="truncate max-w-32">{appointment.user.name}</span>
-                            </div>
-                        )}
                         {appointment.client_email && (
                             <div className="flex items-center space-x-1 text-sm text-gray-600 dark:text-gray-400">
                                 <Mail className="w-3 h-3" />
@@ -174,7 +153,7 @@ export default function AppointmentDataTable({ appointments, onViewDetails, onSt
 
     return (
         <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 shadow-sm">
-            <DataTable columns={columns} data={appointments} filterColumn="title" searchPlaceholder="Rechercher par titre, email..." />
+            <DataTable columns={columns} data={appointments} filterColumn="title" />
         </div>
     );
 }

@@ -3,9 +3,9 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\AppointmentType;
-use App\Models\AppointmentDuration;
-use App\Models\BusinessHours;
+use App\Models\Appointment;
+use Carbon\Carbon;
+use Faker\Factory as Faker;
 
 class AppointmentSeeder extends Seeder
 {
@@ -14,123 +14,89 @@ class AppointmentSeeder extends Seeder
      */
     public function run(): void
     {
-        // Types de rendez-vous par défaut
-        $appointmentTypes = [
-            [
-                'name' => 'Consultation',
-                'slug' => 'consultation',
-                'icon' => '💡',
-                'color' => '#3b82f6',
-                'description' => 'Conseil personnalisé pour vos projets de formation',
-                'default_duration' => 30,
-                'is_active' => true,
-                'sort_order' => 1
-            ],
-            [
-                'name' => 'Information',
-                'slug' => 'information',
-                'icon' => '📋',
-                'color' => '#10b981',
-                'description' => 'Demande d\'information sur nos formations',
-                'default_duration' => 15,
-                'is_active' => true,
-                'sort_order' => 2
-            ],
-            [
-                'name' => 'Support technique',
-                'slug' => 'support-technique',
-                'icon' => '🛠️',
-                'color' => '#f59e0b',
-                'description' => 'Assistance technique pour nos étudiants',
-                'default_duration' => 45,
-                'is_active' => true,
-                'sort_order' => 3
-            ],
-            [
-                'name' => 'Inscription',
-                'slug' => 'inscription',
-                'icon' => '📚',
-                'color' => '#8b5cf6',
-                'description' => 'Inscription à une formation',
-                'default_duration' => 60,
-                'is_active' => true,
-                'sort_order' => 4
-            ],
-            [
-                'name' => 'Autre',
-                'slug' => 'autre',
-                'icon' => '❓',
-                'color' => '#6b7280',
-                'description' => 'Autre motif',
-                'default_duration' => 30,
-                'is_active' => true,
-                'sort_order' => 5
-            ]
+        $faker = Faker::create('fr_FR');
+        
+        // Supprimer les anciens rendez-vous s'ils existent
+        Appointment::truncate();
+
+        // Titres de rendez-vous réalistes pour un centre de formation
+        $appointmentTitles = [
+            'Consultation orientation professionnelle',
+            'Information formation développement web',
+            'Entretien inscription formation marketing',
+            'Conseil formation cybersécurité',
+            'Rendez-vous information formation comptabilité',
+            'Consultation projet reconversion',
+            'Information formations certifiantes',
+            'Entretien admission formation',
+            'Support technique plateforme',
+            'Consultation financement formation',
+            'Information formations en ligne',
+            'Rendez-vous suivi pédagogique',
+            'Consultation VAE',
+            'Information formation langues',
+            'Entretien personnalisé projet professionnel',
+            'Conseil formations management',
+            'Information bourses et aides',
+            'Consultation formation continue',
+            'Rendez-vous orientation carrière',
+            'Information formation design graphique',
         ];
 
-        foreach ($appointmentTypes as $type) {
-            AppointmentType::updateOrCreate(
-                ['slug' => $type['slug']],
-                $type
-            );
-        }
-
-        // Durées disponibles
-        $durations = [
-            [
-                'duration' => 15,
-                'label' => '15 min',
-                'description' => 'Question rapide',
-                'is_active' => true,
-                'sort_order' => 1
-            ],
-            [
-                'duration' => 30,
-                'label' => '30 min',
-                'description' => 'Consultation standard',
-                'is_active' => true,
-                'sort_order' => 2
-            ],
-            [
-                'duration' => 45,
-                'label' => '45 min',
-                'description' => 'Entretien approfondi',
-                'is_active' => true,
-                'sort_order' => 3
-            ],
-            [
-                'duration' => 60,
-                'label' => '1h',
-                'description' => 'Rendez-vous détaillé',
-                'is_active' => true,
-                'sort_order' => 4
-            ],
-            [
-                'duration' => 90,
-                'label' => '1h30',
-                'description' => 'Session complète',
-                'is_active' => true,
-                'sort_order' => 5
-            ],
-            [
-                'duration' => 120,
-                'label' => '2h',
-                'description' => 'Accompagnement personnalisé',
-                'is_active' => true,
-                'sort_order' => 6
-            ]
+        $descriptions = [
+            'Échange pour définir un parcours de formation adapté aux objectifs professionnels',
+            'Présentation détaillée des programmes et modalités de formation',
+            'Discussion sur les prérequis et les débouchés professionnels',
+            'Analyse des besoins de formation et conseil personnalisé',
+            'Information sur les certifications et leur reconnaissance',
+            'Accompagnement dans le choix de formation',
+            'Présentation des méthodes pédagogiques et des outils',
+            'Évaluation du niveau et recommandations',
+            'Support pour utilisation de la plateforme e-learning',
+            'Information sur les dispositifs de financement disponibles',
+            'Démonstration des formations à distance',
+            'Point sur l\'avancement du parcours de formation',
+            'Conseil pour validation des acquis de l\'expérience',
+            'Information sur les formations linguistiques professionnelles',
+            'Bilan de compétences et projet professionnel',
+            'Présentation des formations en management et leadership',
+            'Information sur les aides financières et bourses',
+            'Conseil pour plan de formation entreprise',
+            'Accompagnement dans l\'évolution de carrière',
+            'Présentation des formations créatives et digitales',
         ];
 
-        foreach ($durations as $duration) {
-            AppointmentDuration::updateOrCreate(
-                ['duration' => $duration['duration']],
-                $duration
+        // Durées courantes pour les rendez-vous
+        $durations = [15, 30, 45, 60, 90, 120];
+
+        for ($i = 0; $i < 100; $i++) {
+            // Date aléatoire entre il y a 30 jours et dans 60 jours
+            $appointmentDate = $faker->dateTimeBetween('-30 days', '+60 days');
+            $appointmentDate = Carbon::parse($appointmentDate);
+            
+            // Ajuster pour avoir des heures de bureau (9h-18h)
+            $appointmentDate = $appointmentDate->setTime(
+                $faker->numberBetween(9, 17),
+                $faker->randomElement([0, 15, 30, 45])
             );
+
+            Appointment::create([
+                'title' => $faker->randomElement($appointmentTitles),
+                'description' => $faker->randomElement($descriptions),
+                'appointment_date' => $appointmentDate,
+                'duration' => $faker->randomElement($durations),
+                'client_email' => $faker->email,
+                'client_phone' => $faker->phoneNumber,
+                'metadata' => json_encode([
+                    'source' => $faker->randomElement(['website', 'phone', 'email', 'referral']),
+                    'priority' => $faker->randomElement(['low', 'medium', 'high']),
+                ]),
+                'admin_notes' => $faker->boolean(30) ? $faker->sentence(10) : null,
+                'created_at' => $faker->dateTimeBetween('-60 days', 'now'),
+                'updated_at' => $faker->dateTimeBetween('-60 days', 'now'),
+            ]);
         }
 
-        // Initialiser les horaires d'ouverture par défaut si pas déjà existants
-        if (BusinessHours::count() === 0) {
-            BusinessHours::initializeDefaultHours();
-        }
+        $this->command->info('100 rendez-vous créés avec succès !');
     }
 }

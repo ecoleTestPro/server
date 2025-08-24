@@ -1,5 +1,4 @@
 import AppointmentDataTable from '@/components/appointments/AppointmentDataTable';
-import { Button } from '@/components/ui/button/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -7,7 +6,7 @@ import AppLayout from '@/layouts/dashboard/app-layout';
 import { Appointment } from '@/types';
 import { Logger } from '@/utils/console.util';
 import { Head, router } from '@inertiajs/react';
-import { AlertCircle, Calendar, CheckCircle, Clock, HelpCircle, Mail, MessageSquare, Phone, User, Users, XCircle } from 'lucide-react';
+import { Calendar, Clock, HelpCircle, Mail, Phone, User, Users } from 'lucide-react';
 import { useState } from 'react';
 
 interface Props {
@@ -18,49 +17,16 @@ interface Props {
     };
     filters: {
         search?: string;
-        status?: string;
-        type?: string;
         date_from?: string;
         date_to?: string;
     };
-    stats: {
-        total: number;
-        pending: number;
-        confirmed: number;
-        completed: number;
-        cancelled: number;
-        today: number;
-    };
 }
 
-const statusConfig = {
-    pending: { label: 'En attente', color: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400', icon: AlertCircle },
-    confirmed: { label: 'Confirmé', color: 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400', icon: CheckCircle },
-    completed: { label: 'Terminé', color: 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400', icon: CheckCircle },
-    cancelled: { label: 'Annulé', color: 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400', icon: XCircle },
-};
-
-const typeLabels = {
-    consultation: 'Consultation',
-    information: "Demande d'information",
-    support: 'Support technique',
-    enrollment: 'Inscription formation',
-    other: 'Autre',
-};
 
 export default function AppointmentsIndex({ appointments, filters }: Props) {
     const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const formatDate = (date: string) => {
-        return new Date(date).toLocaleDateString('fr-FR', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-        });
-    };
 
     const formatDuration = (minutes: number) => {
         if (minutes < 60) return `${minutes}min`;
@@ -69,29 +35,6 @@ export default function AppointmentsIndex({ appointments, filters }: Props) {
         return remainingMinutes > 0 ? `${hours}h${remainingMinutes}` : `${hours}h`;
     };
 
-    const getStatusIcon = (status: string) => {
-        const config = statusConfig[status as keyof typeof statusConfig];
-        if (!config) return null;
-        const Icon = config.icon;
-        return <Icon className="w-4 h-4" />;
-    };
-
-    const handleStatusChange = (appointmentId: number, newStatus: string) => {
-        router.put(
-            `/admin/appointments/${appointmentId}/status`,
-            {
-                status: newStatus,
-            },
-            {
-                onSuccess: () => {
-                    Logger.log('Status changed successfully');
-                },
-                onError: (errors) => {
-                    Logger.error('Error changing status:', errors);
-                },
-            },
-        );
-    };
 
     const handleViewDetails = (appointment: Appointment) => {
         setSelectedAppointment(appointment);
@@ -111,9 +54,6 @@ export default function AppointmentsIndex({ appointments, filters }: Props) {
         }
     };
 
-    const handleExport = () => {
-        window.location.href = `/admin/appointments/export`;
-    };
 
     return (
         <AppLayout>
@@ -150,7 +90,6 @@ export default function AppointmentsIndex({ appointments, filters }: Props) {
                 <AppointmentDataTable
                     appointments={appointments.data}
                     onViewDetails={handleViewDetails}
-                    onStatusChange={handleStatusChange}
                     onDelete={handleDelete}
                 />
 
@@ -161,51 +100,6 @@ export default function AppointmentsIndex({ appointments, filters }: Props) {
                             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                                 <div>
                                     <DialogTitle className="text-lg sm:text-xl">Détails du rendez-vous</DialogTitle>
-                                </div>
-                                <div className="flex flex-wrap items-center gap-2">
-                                    {selectedAppointment?.status === 'pending' && (
-                                        <Button
-                                            size="sm"
-                                            onClick={() => {
-                                                handleStatusChange(selectedAppointment.id, 'confirmed');
-                                                setIsModalOpen(false);
-                                            }}
-                                            className="bg-green-600 hover:bg-green-700 text-xs sm:text-sm"
-                                        >
-                                            <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
-                                            <span className="hidden sm:inline">Confirmer</span>
-                                            <span className="sm:hidden">✓</span>
-                                        </Button>
-                                    )}
-                                    {selectedAppointment?.status === 'confirmed' && (
-                                        <Button
-                                            size="sm"
-                                            onClick={() => {
-                                                handleStatusChange(selectedAppointment.id, 'completed');
-                                                setIsModalOpen(false);
-                                            }}
-                                            className="bg-blue-600 hover:bg-blue-700 text-xs sm:text-sm"
-                                        >
-                                            <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
-                                            <span className="hidden sm:inline">Terminé</span>
-                                            <span className="sm:hidden">✓</span>
-                                        </Button>
-                                    )}
-                                    {(selectedAppointment?.status === 'pending' || selectedAppointment?.status === 'confirmed') && (
-                                        <Button
-                                            size="sm"
-                                            onClick={() => {
-                                                handleStatusChange(selectedAppointment.id, 'cancelled');
-                                                setIsModalOpen(false);
-                                            }}
-                                            variant="destructive"
-                                            className="text-xs sm:text-sm"
-                                        >
-                                            <XCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
-                                            <span className="hidden sm:inline">Annuler</span>
-                                            <span className="sm:hidden">✕</span>
-                                        </Button>
-                                    )}
                                 </div>
                             </div>
                         </DialogHeader>
@@ -292,29 +186,6 @@ export default function AppointmentsIndex({ appointments, filters }: Props) {
                                                 </CardDescription>
                                             </CardHeader>
                                             <CardContent className="space-y-3 lg:space-y-4">
-                                                {selectedAppointment.user ? (
-                                                    <div>
-                                                        <label className="text-xs lg:text-sm font-medium text-gray-500 dark:text-gray-400">
-                                                            Utilisateur enregistré 
-                                                        </label>
-                                                        <div className="flex items-center space-x-2 mt-1">
-                                                            <User className="w-3 h-3 lg:w-4 lg:h-4 text-green-600" />
-                                                            <span className="text-xs lg:text-sm text-gray-900 dark:text-white font-medium">
-                                                                {selectedAppointment.user.name}
-                                                            </span>
-                                                        </div>
-                                                        <p className="text-xs text-gray-500 mt-1">{selectedAppointment.user.email}</p>
-                                                    </div>
-                                                ) : (
-                                                    <div>
-                                                        <label className="text-xs lg:text-sm font-medium text-gray-500 dark:text-gray-400">
-                                                            Client invité
-                                                        </label>
-                                                        <p className="text-xs text-orange-600 dark:text-orange-400 mt-1">
-                                                            Non enregistré sur la plateforme
-                                                        </p>
-                                                    </div>
-                                                )}
 
                                                 {selectedAppointment.client_email && (
                                                     <div>

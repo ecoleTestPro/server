@@ -22,8 +22,7 @@ class PrivateAppointmentController extends Controller
      */
     public function index(Request $request): Response
     {
-        $query = Appointment::with(['user', 'adminUser'])
-            ->orderBy('appointment_date', 'desc');
+        $query = Appointment::orderBy('appointment_date', 'desc'); 
 
         // Filtres
         if ($request->filled('status')) {
@@ -50,7 +49,7 @@ class PrivateAppointmentController extends Controller
             });
         }
 
-        $appointments = $query->paginate(20);
+        $appointments = $query->paginate(99999);
 
         // Statistiques
         $stats = [
