@@ -37,6 +37,12 @@ class CourseStoreRequest extends FormRequest
             'partner_ids.*'         => 'exists:partners,id',
             'regular_price'         => 'numeric|min:' . ((float) config('app.minimum_amount')),
             'reference_tag'         => 'nullable|string',
+            'location_mode'         => 'nullable|string|in:En présentiel,À distance,En présentiel ou à distance,Hybride',
+            'periodicity_unit'      => 'nullable|string',
+            'periodicity_value'     => 'nullable|numeric',
+            'duration'              => 'nullable|string',
+            'attachment'            => 'nullable|string',
+            'lectures'              => 'nullable|numeric',
             'price' => [
                 'nullable',
                 'numeric',

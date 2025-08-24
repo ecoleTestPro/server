@@ -20,7 +20,6 @@ import {
     Eye,
     EyeOff,
     MapPin,
-    MoreHorizontal,
     Trash2Icon,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -32,11 +31,12 @@ import './CourseCard.css'; // Link to CSS file
 interface CourseCardProps {
     course: ICourse;
     onDelete?: (course: ICourse) => void;
+    onCourseUpdate?: (updatedCourse: ICourse) => void;
     setOpenSessionDrawer?: (open: boolean) => void;
     setSelectedCourseSessionSession?: (course: ICourse | null) => void;
 }
 
-const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, setOpenSessionDrawer, setSelectedCourseSessionSession }) => {
+const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, onCourseUpdate, setOpenSessionDrawer, setSelectedCourseSessionSession }) => {
     const { auth, data } = usePage<SharedData>().props;
     const { t } = useTranslation();
 
@@ -45,14 +45,15 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, setOpenSessio
     const [showFullDescription, setShowFullDescription] = useState(false);
     const [showConfirmDelete, setShowConfirmDelete] = useState(false);
     const [isPublishing, setIsPublishing] = useState(false);
+    const [currentCourse, setCurrentCourse] = useState<ICourse>(course);
 
     const getNextSession = (): string => {
-        if (!course.course_sessions || course.course_sessions.length === 0) {
+        if (!currentCourse.course_sessions || currentCourse.course_sessions.length === 0) {
             return t('COURSE.TABLE.NO_UPCOMING_SESSION', 'N/A');
         }
 
         const now = new Date();
-        const upcomingSessions = course.course_sessions
+        const upcomingSessions = currentCourse.course_sessions
             .filter((session) => new Date(session.start_date) > now)
             .sort((a, b) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime());
 
@@ -74,12 +75,25 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, setOpenSessio
         }
     }, [data]);
 
+    // Mettre à jour le cours local quand le prop course change
+    useEffect(() => {
+        setCurrentCourse(course);
+    }, [course]);
+
+    // Fonction pour gérer la mise à jour du cours
+    const handleCourseUpdate = (updatedCourse: ICourse) => {
+        setCurrentCourse(updatedCourse);
+        if (onCourseUpdate) {
+            onCourseUpdate(updatedCourse);
+        }
+    };
+
     const handleTogglePublish = async () => {
         setIsPublishing(true);
         try {
             // Simuler l'appel API pour publier/dépublier
             await new Promise((resolve) => setTimeout(resolve, 1000));
-            toast.success(course.is_published ? 'Formation dépubliée' : 'Formation publiée');
+            toast.success(currentCourse.is_published ? 'Formation dépubliée' : 'Formation publiée');
             window.location.reload(); // À remplacer par une mise à jour locale
         } catch (error) {
             toast.error('Erreur lors de la mise à jour');
@@ -90,13 +104,13 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, setOpenSessio
 
     const handleConfirmDelete = () => {
         if (onDelete) {
-            onDelete(course);
+            onDelete(currentCourse);
             setShowConfirmDelete(false);
         }
     };
 
     const getStatusColor = () => {
-        if (course.is_published) return 'bg-green-100 text-green-800 border-green-200';
+        if (currentCourse.is_published) return 'bg-green-100 text-green-800 border-green-200';
         return 'bg-gray-100 text-gray-800 border-gray-200';
     };
 
@@ -382,37 +396,8 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, setOpenSessio
                                             </Button>
                                         </TooltipTrigger>
                                         <TooltipContent>
-                                            <p>Associer des références partenaires</p>
+                                            <p>Associer des références</p>
                                         </TooltipContent>
-                                    </Tooltip>
-
-                                    <Tooltip>
-                                        <TooltipTrigger asChild>
-                                            <Button
-                                                variant="ghost"
-                                                size="sm"
-                                                onClick={handleTogglePublish}
-                                                disabled={isPublishing}
-                                                className={`${
-                                                    course.is_published
-                                                        ? 'text-orange-600 hover:text-orange-800 hover:bg-orange-50'
-                                                        : 'text-green-600 hover:text-green-800 hover:bg-green-50'
-                                                }`}
-                                            >
-                                                {isPublishing ? (
-                                                    <MoreHorizontal className="w-4 h-4 animate-spin" />
-                                                ) : course.is_published ? (
-                                                    <EyeOff className="w-4 h-4" />
-                                                ) : (
-                                                    <Eye className="w-4 h-4" />
-                                                )}
-                                            </Button>
-                                        </TooltipTrigger>
-                                        {false && (
-                                            <TooltipContent>
-                                                <p>{course.is_published ? 'Dépublier la formation' : 'Publier la formation'}</p>
-                                            </TooltipContent>
-                                        )}
                                     </Tooltip>
                                 </>
                             )}
@@ -432,62 +417,32 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, setOpenSessio
                                 </TooltipContent>
                             </Tooltip>
 
-                            {showConfirmDelete ? (
-                                <div className="flex items-center gap-1">
-                                    <Tooltip>
-                                        <TooltipTrigger asChild>
-                                            <Button
-                                                variant="ghost"
-                                                size="sm"
-                                                onClick={() => setShowConfirmDelete(false)}
-                                                className="text-gray-600 hover:bg-gray-50"
-                                            >
-                                                Annuler
-                                            </Button>
-                                        </TooltipTrigger>
-                                        <TooltipContent>
-                                            <p>Annuler la suppression</p>
-                                        </TooltipContent>
-                                    </Tooltip>
-
-                                    <Tooltip>
-                                        <TooltipTrigger asChild>
-                                            <Button
-                                                variant="ghost"
-                                                size="sm"
-                                                onClick={handleConfirmDelete}
-                                                className="text-red-600 hover:text-red-800 hover:bg-red-50"
-                                            >
-                                                Confirmer
-                                            </Button>
-                                        </TooltipTrigger>
-                                        <TooltipContent>
-                                            <p>Confirmer la suppression définitive</p>
-                                        </TooltipContent>
-                                    </Tooltip>
-                                </div>
-                            ) : (
-                                <Tooltip>
-                                    <TooltipTrigger asChild>
-                                        <Button
-                                            variant="ghost"
-                                            size="sm"
-                                            onClick={() => setShowConfirmDelete(true)}
-                                            className="text-red-600 hover:text-red-800 hover:bg-red-50"
-                                        >
-                                            <Trash2Icon className="w-4 h-4" />
-                                        </Button>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                        <p>Supprimer la formation</p>
-                                    </TooltipContent>
-                                </Tooltip>
-                            )}
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={() => handleConfirmDelete()}
+                                        className="text-red-600 hover:text-red-800 hover:bg-red-50"
+                                    >
+                                        <Trash2Icon className="w-4 h-4" />
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>Supprimer la formation</p>
+                                </TooltipContent>
+                            </Tooltip>
                         </div>
                     </div>
                 </div>
             </div>
-            <CourseReferenceDrawer open={openPartnerDrawer} setOpen={setOpenPartnerDrawer} course={course} partners={partners} />
+            <CourseReferenceDrawer 
+                open={openPartnerDrawer} 
+                setOpen={setOpenPartnerDrawer} 
+                course={currentCourse} 
+                partners={partners} 
+                onSuccess={handleCourseUpdate}
+            />
         </TooltipProvider>
     );
 };

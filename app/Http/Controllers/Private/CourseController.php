@@ -197,6 +197,34 @@ class CourseController extends Controller
         }
     }
 
+    public function getCoursePartners(string $slug)
+    {
+        try {
+            $course = CourseRepository::findBySlug($slug);
+            if (!$course) {
+                return response()->json([
+                    'message' => 'Course not found',
+                    'status'  => 404,
+                ], 404);
+            }
+
+            // Charger les partenaires associés avec leurs médias
+            $course->load(['partners.media']);
+
+            return response()->json([
+                'partners' => $course->partners,
+                'reference_tag' => $course->reference_tag,
+                'course_id' => $course->id,
+                'course_title' => $course->title
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error fetching course partners: ' . $e->getMessage(),
+                'status'  => 500,
+            ], 500);
+        }
+    }
+
     public function syncPartners(CoursePartnerSyncRequest $request, string $slug)
     {
         try {

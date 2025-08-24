@@ -6,10 +6,9 @@ import React from 'react';
 
 interface PublicAppointmentCreateProps {
     businessHours?: any;
-    appointmentTypes?: any;
 }
 
-const PublicAppointmentCreate: React.FC<PublicAppointmentCreateProps> = ({ businessHours, appointmentTypes }) => {
+const PublicAppointmentCreate: React.FC<PublicAppointmentCreateProps> = ({ businessHours }) => {
     return (
         <DefaultLayout>
             <Head title="Prendre un rendez-vous - EcoleTestPro" />

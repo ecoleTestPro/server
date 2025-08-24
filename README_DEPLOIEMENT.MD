@@ -1,3 +1,7 @@
+Parfait 👍 je vais enrichir ton fichier Markdown avec la partie **build front-end Inertia React** et la manipulation du `manifest.json`. Voici la version révisée :
+
+---
+
 # 🚀 Déploiement manuel (hébergement mutualisé, sans Docker)
 
 ## 1. Configuration du `.htaccess`
@@ -74,7 +78,25 @@ php artisan view:clear
 
 ---
 
-## 5. Fichiers spécifiques à ajuster
+## 5. Build du front-end (Inertia React)
+
+1. Compiler les assets :
+
+   ```bash
+   npm run build
+   ```
+2. Copier le fichier généré `manifest.json` vers `www/public/`.
+3. Renommer ce fichier en :
+
+   ```bash
+   mix-manifest.json
+   ```
+
+   👉 Cela permet à Laravel de retrouver correctement les chemins des assets.
+
+---
+
+## 6. Fichiers spécifiques à ajuster
 
 ### 🔑 ReCaptcha (`resources/js/data/data.constant.ts`)
 
@@ -108,4 +130,4 @@ par :
 
 ---
 
-👉 Veux-tu que je t’ajoute aussi une **checklist finale** (genre ✅ connexion DB, ✅ storage accessible, ✅ cache vidé, etc.) pour ton déploiement afin de ne rien oublier ?
+👉 Veux-tu que je rajoute aussi une **section “Checklist finale de validation”** (ex : `✅ Base de données OK, ✅ Cache vidé, ✅ Mix manifest copié, ✅ ReCaptcha mis à jour`) pour ton déploiement afin d’avoir une vue rapide ?

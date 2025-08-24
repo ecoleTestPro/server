@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils';
 import { AppointmentType } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
 import { Reorder } from 'framer-motion';
-import { Edit, Eye, EyeOff, GripVertical, Plus, Trash2, Type } from 'lucide-react';
+import { Edit, GripVertical, Plus, Trash2, Type } from 'lucide-react';
 import React, { useState } from 'react';
 
 interface Props {
@@ -35,10 +35,9 @@ const PREDEFINED_COLORS = [
     '#6b7280', // gray
 ];
 
-export default function AppointmentTypesSettings({ appointmentTypes, appointmentDurations }: Props) {
+export default function AppointmentTypesSettings({ appointmentDurations }: Props) {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [editingType, setEditingType] = useState<AppointmentType | null>(null);
-    const [types, setTypes] = useState(appointmentTypes);
 
     const {
         data,
@@ -112,13 +111,6 @@ export default function AppointmentTypesSettings({ appointmentTypes, appointment
         }
     };
 
-    const handleReorder = (newOrder: AppointmentType[]) => {
-        setTypes(newOrder);
-        post(route('dashboard.appointments.settings.types.reorder'), {
-            types: newOrder.map((type, index) => ({ id: type.id, sort_order: index + 1 })),
-        });
-    };
-
     const getDurationLabel = (duration: number) => {
         const found = appointmentDurations.find((d) => d.duration === duration);
         return found?.label || `${duration}min`;
@@ -139,121 +131,7 @@ export default function AppointmentTypesSettings({ appointmentTypes, appointment
                         <Plus className="w-4 h-4 mr-2" />
                         Nouveau type
                     </Button>
-                </div>
-
-                {/* Statistics */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <Card>
-                        <CardContent className="p-4">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total</p>
-                                    <p className="text-2xl font-bold text-gray-900 dark:text-white">{types.length}</p>
-                                </div>
-                                <Type className="w-5 h-5 text-gray-400" />
-                            </div>
-                        </CardContent>
-                    </Card>
-
-                    <Card>
-                        <CardContent className="p-4">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Actifs</p>
-                                    <p className="text-2xl font-bold text-green-600">{types.filter((t) => t.is_active).length}</p>
-                                </div>
-                                <Eye className="w-5 h-5 text-green-400" />
-                            </div>
-                        </CardContent>
-                    </Card>
-
-                    <Card>
-                        <CardContent className="p-4">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Inactifs</p>
-                                    <p className="text-2xl font-bold text-red-600">{types.filter((t) => !t.is_active).length}</p>
-                                </div>
-                                <EyeOff className="w-5 h-5 text-red-400" />
-                            </div>
-                        </CardContent>
-                    </Card>
-                </div>
-
-                {/* Types List */}
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Liste des types</CardTitle>
-                        <CardDescription>Glissez-déposez pour réorganiser l'ordre d'affichage</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="overflow-x-auto">
-                            <Reorder.Group values={types} onReorder={handleReorder} as="div" className="space-y-2">
-                                {types.map((type) => (
-                                    <Reorder.Item
-                                        key={type.id}
-                                        value={type}
-                                        as="div"
-                                        className={cn(
-                                            'flex items-center justify-between p-4 border rounded-lg transition-all duration-200',
-                                            'hover:border-teal-200 hover:bg-teal-50 dark:hover:bg-teal-950/20',
-                                            'cursor-grab active:cursor-grabbing',
-                                        )}
-                                    >
-                                        <div className="flex items-center space-x-4 flex-1">
-                                            <div className="flex items-center space-x-2">
-                                                <GripVertical className="w-4 h-4 text-gray-400" />
-                                                <div className="flex items-center space-x-2">
-                                                    {type.icon && <span className="text-lg">{type.icon}</span>}
-                                                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: type.color }} />
-                                                </div>
-                                            </div>
-
-                                            <div className="flex-1">
-                                                <div className="flex items-center space-x-2">
-                                                    <h3 className="font-medium text-gray-900 dark:text-white">{type.name}</h3>
-                                                    <Badge variant={type.is_active ? 'default' : 'secondary'}>
-                                                        {type.is_active ? 'Actif' : 'Inactif'}
-                                                    </Badge>
-                                                </div>
-                                                {type.description && (
-                                                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{type.description}</p>
-                                                )}
-                                                <div className="flex items-center space-x-4 mt-2 text-xs text-gray-500">
-                                                    <span>Durée par défaut: {getDurationLabel(type.default_duration)}</span>
-                                                    <span>Position: {type.sort_order}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div className="flex items-center space-x-2">
-                                            <Switch checked={type.is_active} onCheckedChange={() => handleToggleStatus(type.id)} />
-                                            <Button variant="outline" size="sm" onClick={() => openDialog(type)}>
-                                                <Edit className="w-4 h-4" />
-                                            </Button>
-                                            <Button
-                                                variant="outline"
-                                                size="sm"
-                                                onClick={() => handleDelete(type.id)}
-                                                className="text-red-600 hover:text-red-700"
-                                            >
-                                                <Trash2 className="w-4 h-4" />
-                                            </Button>
-                                        </div>
-                                    </Reorder.Item>
-                                ))}
-                            </Reorder.Group>
-
-                            {types.length === 0 && (
-                                <div className="text-center py-12 text-gray-500 dark:text-gray-400">
-                                    <Type className="w-12 h-12 mx-auto mb-4 opacity-20" />
-                                    <p>Aucun type de rendez-vous configuré</p>
-                                    <p className="text-sm">Commencez par créer votre premier type</p>
-                                </div>
-                            )}
-                        </div>
-                    </CardContent>
-                </Card>
+                </div> 
 
                 {/* Create/Edit Dialog */}
                 <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

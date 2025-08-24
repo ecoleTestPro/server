@@ -40,7 +40,11 @@ export default function Drawer({  title, open, setOpen, component, maxWidth=" w-
         <div className="p-6">
           <h2 className="mb-4 text-lg font-bold">{title}</h2>
           {/* Render the passed component */}
-          {component}
+          <section className='w-full h-[100vh] overflow-y-auto'>
+            <section className='w-full h-[calc(100vh-100px)] overflow-y-auto'>
+              {component}
+            </section>
+          </section>
         </div>
       </div>
     </div>

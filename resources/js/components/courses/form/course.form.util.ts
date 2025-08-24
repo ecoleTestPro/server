@@ -40,6 +40,7 @@ export type ICourseRequest = {
 
     partner_ids?: number[];
     reference_tag?: string;
+    location_mode?: string;
 
     is_published?: boolean; // Indicate if the course is published or a draft
 };
@@ -71,6 +72,7 @@ export type ICourseForm = {
 
     partner_ids?: number[];
     reference_tag?: string;
+    location_mode: string;
 
     media?: File | null; // For thumbnail
     logo: File | null; // For course logo
@@ -167,6 +169,7 @@ export const COURSE_DEFAULT_VALUES: ICourseForm = {
 
     partner_ids: [],
     reference_tag: '',
+    location_mode: 'En présentiel ou à distance',
 
     logo: null,
     organization_logo: null,
@@ -221,6 +224,7 @@ export const createPayload = (data: ICourseForm, draft: boolean): ICourseRequest
             is_published: !draft,
             partner_ids: data.partner_ids && data.partner_ids.length > 0 ? data.partner_ids : [],
             reference_tag: data.reference_tag || '',
+            location_mode: data.location_mode || 'En présentiel ou à distance',
         };
 
         Logger.log('[CREATE_PAYLOAD]', payload);

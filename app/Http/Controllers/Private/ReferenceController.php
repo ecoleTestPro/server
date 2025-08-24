@@ -32,10 +32,17 @@ class ReferenceController extends Controller
 
     public function store(PartnerStoreRequest $request)
     {
-
         $request->merge(['is_reference' => true]);
 
-        PartnerRepository::storeByRequest($request);
+        $reference = PartnerRepository::storeByRequest($request);
+        $reference->load('media'); // Charger la relation media
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'message' => 'Reference created successfully.',
+                'reference' => $reference
+            ], 201);
+        }
 
         return to_route('dashboard.references.index')->withSuccess('Reference created successfully.');
     }
@@ -44,7 +51,16 @@ class ReferenceController extends Controller
     {
         $request->merge(['is_reference' => true]);
 
-        PartnerRepository::updateByRequest($request, $reference);
+        $updatedReference = PartnerRepository::updateByRequest($request, $reference);
+        $updatedReference->load('media');
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'message' => 'Reference updated successfully.',
+                'reference' => $updatedReference
+            ], 200);
+        }
+
         return to_route('dashboard.references.index')->withSuccess('Reference updated successfully.');
     }
 

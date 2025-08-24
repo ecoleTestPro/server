@@ -1,13 +1,13 @@
 import BlogsDataTable from '@/components/blogs/BlogsDataTable';
 import { ConfirmDialog } from '@/components/ui/confirmDialog';
-import { CLASS_NAME } from '@/data/styles/style.constant';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import AppLayout from '@/layouts/dashboard/app-layout';
 import { SharedData, type BreadcrumbItem } from '@/types';
 import { IBlog, IBlogCategory } from '@/types/blogs';
 import { Logger } from '@/utils/console.util';
 import { ROUTE_MAP } from '@/utils/route.util';
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { PlusSquare } from 'lucide-react';
+import { BookOpen, CirclePlus, HelpCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -28,10 +28,7 @@ export default function BlogDashboard() {
     const { data } = usePage<SharedData>().props;
     const [blogs, setBlogs] = useState<IBlog[]>([]);
     const [categories, setCategories] = useState<IBlogCategory[]>([]);
-    const [selectedBlog, setSelectedBlog] = useState<IBlog | null>(null);
-    // const [showForm, setShowForm] = useState(false);
-
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
     const [selected, setSelected] = useState<IBlog | null>(null);
 
@@ -53,7 +50,6 @@ export default function BlogDashboard() {
     }, [data.blogs]);
 
     const handleEdit = (blog: IBlog) => {
-        setSelectedBlog(blog);
         router.visit(route('dashboard.blogs.edit', blog.slug), {
             preserveState: true,
             preserveScroll: true,
@@ -85,18 +81,73 @@ export default function BlogDashboard() {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={t('Blogs')} />
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
-                <div className="flex justify-between items-center">
-                    <h1>{t('Blogs')}</h1>
-
-                    <Link className={`${CLASS_NAME.btn.primary}`} href={route('dashboard.blogs.create')}>
-                        <span className="flex items-center">
-                            <PlusSquare className="h-5 w-5" />
-                            <span className="ml-2">{t('course.create', 'Créer un blog')}</span>
-                        </span>
-                    </Link>
+                {/* En-tête avec description, statistiques et bouton d'ajout */}
+                <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 p-6 mb-4">
+                    <div className="flex items-start justify-between gap-4">
+                        <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-3 mb-2">
+                                <BookOpen className="h-6 w-6 text-primary-600 flex-shrink-0" />
+                                <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{t('Blog Management', 'Gestion des Blogs')}</h1>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <button className="text-gray-400 hover:text-gray-600 transition-colors flex-shrink-0">
+                                            <HelpCircle className="h-5 w-5" />
+                                        </button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <p className="max-w-xs">
+                                            Créez et gérez vos articles de blog. Organisez le contenu par catégories, ajoutez des tags et publiez des
+                                            articles pour engager votre audience.
+                                        </p>
+                                    </TooltipContent>
+                                </Tooltip>
+                            </div>
+                            <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-4">
+                                Cette section vous permet de créer, modifier et organiser vos articles de blog. Vous pouvez rédiger du contenu riche
+                                avec l'éditeur intégré, organiser vos articles par catégories, ajouter des tags pour améliorer la recherche et gérer
+                                la publication. Les articles publiés apparaîtront automatiquement sur votre site web.
+                            </p>
+                            <div className="flex flex-wrap gap-4 text-xs text-gray-500">
+                                <div className="flex items-center gap-1">
+                                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                                    <span>Publiés : {blogs.filter((b) => b.status).length}</span>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                    <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                                    <span>Brouillons : {blogs.filter((b) => !b.status).length}</span>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                                    <span>Catégories : {categories.length}</span>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                    <div className="w-2 h-2 bg-gray-400 rounded-full"></div>
+                                    <span>Total : {blogs.length}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex flex-col items-end gap-3 flex-shrink-0">
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Link
+                                        className="bg-gray-200 text-black hover:text-white hover:bg-primary p-3 rounded-lg transition-colors flex items-center gap-2"
+                                        href={route('dashboard.blogs.create')}
+                                    >
+                                        <CirclePlus className="h-5 w-5" />
+                                        <span className="hidden sm:inline">Nouvel article</span>
+                                    </Link>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>Créer un nouvel article de blog avec éditeur riche, catégories et tags</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </div>
+                    </div>
                 </div>
 
-                <BlogsDataTable blogs={blogs} onEditRow={handleEdit} onDeleteRow={onDelete} />
+                <div className="container mx-auto flex h-full items-center justify-center">
+                    {blogs && <BlogsDataTable blogs={blogs} onEditRow={handleEdit} onDeleteRow={onDelete} />}
+                </div>
             </div>
 
             <ConfirmDialog

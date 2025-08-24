@@ -10,15 +10,15 @@ function AboutUsCard() {
                 backgroundPosition: 'center',
             }}
         >
-            <div className="py-[40px] md:py-[50px] lg:py-[60px] xl:py-[80px]">
-                <div className="relative z-[1] container mx-auto px-[12px] 2xl:max-w-[1320px]">
-                    <div className="grid grid-cols-1 items-center gap-[25px] lg:grid-cols-2">
+            <div className="py-8 md:py-12 lg:py-16 xl:py-20">
+                <div className="relative z-[1] container mx-auto px-4 sm:px-6 lg:px-8 2xl:max-w-[1320px]">
+                    <div className="grid grid-cols-1 items-center gap-8 lg:gap-12 xl:gap-16 lg:grid-cols-2">
                         <div className="relative">
-                            <div className="rounded-[7px] p-[15px] backdrop-blur-[5.400000095367432px] ">
+                            <div className="rounded-xl p-4 md:p-6 backdrop-blur-[5.4px] shadow-lg hover:shadow-xl transition-shadow duration-300">
                                 <img
                                     src="/assets/images/pexels-pavel-danilyuk-8152734.jpg"
-                                    className="inline-block"
-                                    alt="order-summary-image"
+                                    className="inline-block h-auto w-full rounded-lg object-cover"
+                                    alt="Formation professionnelle TestPro"
                                     width={540}
                                     height={'auto'}
                                 />
@@ -36,19 +36,19 @@ function AboutUsCard() {
 
                         <div>
                             <TitleBadgeOne title="TestPro " />
-                            <h2 className="!mb-[15px] !text-[24px] !leading-[1.2] !-tracking-[.5px] md:!text-[28px] md:!-tracking-[.6px] lg:!text-[34px] lg:!-tracking-[.8px] xl:!text-[36px] xl:!-tracking-[1px]">
+                            <h2 className="!mb-6 !text-2xl !leading-tight !-tracking-[.5px] font-bold md:!text-3xl md:!-tracking-[.6px] lg:!text-4xl lg:!-tracking-[.8px] xl:!text-5xl xl:!-tracking-[1px]">
                                 Des formations pour un succès durable !
                             </h2>
 
                             <div>
-                                <p className="!mb-[15px] !text-[15px] !leading-[1.5] md:!text-[17px]">
+                                <p className="!mb-6 !text-base !leading-relaxed text-gray-700 dark:text-gray-300 md:!text-lg">
                                     Dans un environnement numérique en pleine évolution, la qualité des logiciels et des systèmes est essentielle.
                                     Nous invitons les entreprises à certifier leurs employés dans les domaines ISTQB, IREB et IQBBA, qui portent sur
                                     le test de logiciels et l'ingénierie des exigences. Ces formations certifiantes, proposées par l'École TestPro,
                                     permettent à vos collaborateurs d'acquérir des compétences précieuses, contribuant ainsi à leur carrière tout en
                                     renforçant la performance de votre entreprise.
                                 </p>
-                                <p className="!mb-[15px] !text-[15px] !leading-[1.5] md:!text-[17px]">
+                                <p className="!mb-6 !text-base !leading-relaxed text-gray-700 dark:text-gray-300 md:!text-lg">
                                     Un système bien testé et des exigences de qualité sont des piliers pour garantir la satisfaction des clients et la
                                     réussite commerciale. En investissant dans la formation de vos équipes, vous améliorez non seulement leur
                                     expertise, mais vous assurez également un développement harmonieux de votre organisation. Ne laissez pas passer

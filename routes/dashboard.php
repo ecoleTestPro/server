@@ -48,6 +48,7 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
         Route::get('create',            [CourseController::class, 'create'])->name('dashboard.course.create');
         Route::post('create',           [CourseController::class, 'store'])->name('dashboard.course.store');
         Route::put('update/{slug}',     [CourseController::class, 'update'])->name('dashboard.course.update');
+        Route::get('partners/{slug}',   [CourseController::class, 'getCoursePartners'])->name('dashboard.course.partners.get');
         Route::post('partners/{slug}',  [CourseController::class, 'syncPartners'])->name('dashboard.course.partners.sync');
         Route::delete('delete/{id}',    [CourseController::class, 'delete'])->name('dashboard.course.delete');
         Route::post('{course}/sessions', [CourseSessionController::class, 'store'])->name('dashboard.course.session.store');
@@ -125,6 +126,7 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
         Route::post('create',        [TestimonialController::class, 'store'])->name('dashboard.testimonial.store');
         Route::put('update/{testimonial}', [TestimonialController::class, 'update'])->name('dashboard.testimonial.update');
         Route::delete('delete/{testimonial}', [TestimonialController::class, 'destroy'])->name('dashboard.testimonial.delete');
+        Route::post('toggle/{testimonial}', [TestimonialController::class, 'toggle'])->name('dashboard.testimonial.toggle');
         Route::post('restore/{testimonial}', [TestimonialController::class, 'restore'])->name('dashboard.testimonial.restore');
     });
 
@@ -242,14 +244,24 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
 });
 
 /**
- * Routes admin pour les horaires d'ouverture
+ * Routes admin pour les horaires d'ouverture et rendez-vous
  */
 Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
+    // Business Hours
     Route::prefix('business-hours')->group(function () {
         Route::get('/', [BusinessHoursController::class, 'index'])->name('admin.business-hours.index');
         Route::patch('/', [BusinessHoursController::class, 'update'])->name('admin.business-hours.update');
         Route::post('/copy', [BusinessHoursController::class, 'copyToOtherDays'])->name('admin.business-hours.copy');
         Route::get('/preview-slots', [BusinessHoursController::class, 'previewSlots'])->name('admin.business-hours.preview-slots');
         Route::post('/reset', [BusinessHoursController::class, 'resetToDefaults'])->name('admin.business-hours.reset');
+    });
+    
+    // Admin Appointments Management
+    Route::prefix('appointments')->group(function () {
+        Route::get('/', [App\Http\Controllers\Admin\AppointmentController::class, 'index'])->name('admin.appointments.index');
+        Route::get('/{appointment}', [App\Http\Controllers\Admin\AppointmentController::class, 'show'])->name('admin.appointments.show');
+        Route::put('/{appointment}/status', [App\Http\Controllers\Admin\AppointmentController::class, 'updateStatus'])->name('admin.appointments.update-status');
+        Route::delete('/{appointment}', [App\Http\Controllers\Admin\AppointmentController::class, 'destroy'])->name('admin.appointments.destroy');
+        Route::get('/export', [App\Http\Controllers\Admin\AppointmentController::class, 'export'])->name('admin.appointments.export');
     });
 });

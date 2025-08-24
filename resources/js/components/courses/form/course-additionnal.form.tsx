@@ -23,11 +23,19 @@ interface CourseAdditionnalFormProps {
     courseSelected: ICourse | null;
     setData: (data: string, value: string | number) => void;
     processing: boolean;
-    errors: ICourseFormErrors;
+    errors: ICourseFormErrors & { location_mode?: string };
     partnerTags?: string[];
 }
 
-export default function CourseAdditionnalForm({ fieldsetClasses, data, courseSelected, setData, processing, errors, partnerTags = [] }: CourseAdditionnalFormProps) {
+export default function CourseAdditionnalForm({
+    fieldsetClasses,
+    data,
+    courseSelected,
+    setData,
+    processing,
+    errors,
+    partnerTags = [],
+}: CourseAdditionnalFormProps) {
     const [displayPrice, setDisplayPrice] = useState<string>(() => (data.price ? Number(data.price).toLocaleString('fr-FR') : ''));
 
     useEffect(() => {
@@ -41,15 +49,24 @@ export default function CourseAdditionnalForm({ fieldsetClasses, data, courseSel
             if (courseSelected.price && (!data.price || data.price === '')) {
                 setData('price', courseSelected.price.toString());
             }
-            
+
             // Initialisation de la périodicité si vide ou non définie
             if (courseSelected.periodicity_unit && (!data.periodicity_unit || data.periodicity_unit === '')) {
                 setData('periodicity_unit', courseSelected.periodicity_unit);
+            }else {
+                setData('periodicity_unit', PERIODICITY_UNIT[0].value); 
             }
-            
+
             // Initialisation de la valeur de périodicité si vide ou non définie
             if (courseSelected.periodicity_value && (!data.periodicity_value || data.periodicity_value === '' || data.periodicity_value === 0)) {
                 setData('periodicity_value', courseSelected.periodicity_value);
+            }else  {
+                setData('periodicity_value', 3);
+            }
+
+            // Initialisation du mode de formation si vide ou non défini
+            if ((courseSelected as any).location_mode && (!data.location_mode || data.location_mode === '')) {
+                setData('location_mode', (courseSelected as any).location_mode);
             }
         }
     }, [courseSelected, data.periodicity_unit, data.periodicity_value]);
@@ -141,7 +158,7 @@ export default function CourseAdditionnalForm({ fieldsetClasses, data, courseSel
                         onValueChange={(value) => setData('periodicity_unit', value)}
                     >
                         <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Sélectionner une catégorie" />
+                            <SelectValue placeholder="Sélectionner ..." />
                         </SelectTrigger>
 
                         <SelectContent>
@@ -161,6 +178,30 @@ export default function CourseAdditionnalForm({ fieldsetClasses, data, courseSel
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">
+                <div className="grid gap-2">
+                    <Label htmlFor="location_mode">{t('courses.location_mode', 'Mode de formation')}</Label>
+                    <Select
+                        disabled={processing}
+                        value={data.location_mode}
+                        defaultValue={data.location_mode}
+                        onValueChange={(value) => setData('location_mode', value)}
+                    >
+                        <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Sélectionner le mode de formation" />
+                        </SelectTrigger>
+
+                        <SelectContent>
+                            <SelectGroup>
+                                <SelectLabel>{t('courses.location_mode', 'Mode de formation')}</SelectLabel>
+                                <SelectItem value="En présentiel">En présentiel</SelectItem>
+                                <SelectItem value="À distance">À distance</SelectItem>
+                                <SelectItem value="En présentiel ou à distance">En présentiel ou à distance</SelectItem>
+                                <SelectItem value="Hybride">Hybride</SelectItem>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+                    <InputError message={errors.location_mode} />
+                </div>
                 <div className="grid gap-2">
                     {/* ATTACHMENT */}
                     <Label htmlFor="attachment">{t('courses.attachment', 'Documents')}</Label>
@@ -189,24 +230,28 @@ export default function CourseAdditionnalForm({ fieldsetClasses, data, courseSel
                         <InputError message={errors.lectures} />
                     </div>
                 )}
-                <div className="grid gap-2">
-                    <Label htmlFor="reference_tag">Tag de référence</Label>
-                    <Input
-                        list="partner-tags"
-                        id="reference_tag"
-                        type="text"
-                        value={data.reference_tag ?? ''}
-                        onChange={(e) => setData('reference_tag', e.target.value)}
-                        disabled={processing}
-                        placeholder="Tag de référence (ex: audit-conseil)"
-                    />
-                    <datalist id="partner-tags">
-                        {partnerTags.map((tag) => (
-                            <option key={tag} value={tag} />
-                        ))}
-                    </datalist>
-                    <InputError message={errors.reference_tag} />
-                </div>
+
+                {/* ! not used */}
+                {false && (
+                    <div className="grid gap-2">
+                        <Label htmlFor="reference_tag">Tag de référence</Label>
+                        <Input
+                            list="partner-tags"
+                            id="reference_tag"
+                            type="text"
+                            value={data.reference_tag ?? ''}
+                            onChange={(e) => setData('reference_tag', e.target.value)}
+                            disabled={processing}
+                            placeholder="Tag de référence (ex: audit-conseil)"
+                        />
+                        <datalist id="partner-tags">
+                            {partnerTags.map((tag) => (
+                                <option key={tag} value={tag} />
+                            ))}
+                        </datalist>
+                        <InputError message={errors.reference_tag} />
+                    </div>
+                )}
             </div>
         </fieldset>
     );

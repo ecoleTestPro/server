@@ -15,77 +15,122 @@ interface CourseReferenceDrawerProps {
     setOpen: (open: boolean) => void;
     course: ICourse;
     partners: IPartner[];
-    onSuccess?: () => void;
+    onSuccess?: (updatedCourse: ICourse) => void;
 }
 
-export default function CourseReferenceDrawer({ 
-    open, 
-    setOpen, 
-    course, 
-    partners,
-    onSuccess 
-}: CourseReferenceDrawerProps) {
+export default function CourseReferenceDrawer({ open, setOpen, course, partners, onSuccess }: CourseReferenceDrawerProps) {
     const [partnerTags, setPartnerTags] = useState<string>('');
     const [selectedPartners, setSelectedPartners] = useState<number[]>([]);
     const [partnerFilter, setPartnerFilter] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [courseReferences, setCourseReferences] = useState<{
+        partners: IPartner[];
+        reference_tag: string;
+    } | null>(null);
+
+    // Générer un tag automatique basé sur le slug
+    const generateAutoTag = (slug: string): string => {
+        return `ref-${slug}`;
+    };
+
+    // Fonction pour récupérer les références associées à la formation
+    const fetchCourseReferences = async () => {
+        if (!open || !course.slug) return;
+
+        setLoading(true);
+        try {
+            const response = await axios.get(route('dashboard.course.partners.get', course.slug));
+            const data = response.data;
+
+            setCourseReferences({
+                partners: data.partners || [],
+                reference_tag: data.reference_tag || generateAutoTag(course.slug),
+            });
+
+            // Initialiser les valeurs du formulaire
+            const partnerIds = data.partners ? data.partners.map((p: IPartner) => p.id!).filter((id: number | undefined) => id !== undefined) : [];
+            setSelectedPartners(partnerIds);
+            // Utiliser le tag automatique au lieu du tag existant
+            setPartnerTags(generateAutoTag(course.slug));
+
+            toast.success('Références chargées avec succès');
+        } catch (error) {
+            console.error('Erreur lors de la récupération des références:', error);
+            // Fallback sur les données du course si la requête échoue
+            const currentPartnerIds = course.partners ? course.partners.map((p) => p.id!).filter((id) => id !== undefined) : [];
+            setSelectedPartners(currentPartnerIds);
+            // Utiliser le tag automatique même en cas d'erreur
+            setPartnerTags(generateAutoTag(course.slug));
+
+            toast.error('Erreur lors du chargement des références');
+        } finally {
+            setLoading(false);
+        }
+    };
 
     // Initialiser les valeurs quand le drawer s'ouvre
     useEffect(() => {
         if (open) {
-            // Récupérer les IDs des partenaires déjà associés
-            const currentPartnerIds = course.partners ? course.partners.map(p => p.id!).filter(id => id !== undefined) : [];
-            setSelectedPartners(currentPartnerIds);
-            
-            // Récupérer le tag existant
-            setPartnerTags(course.reference_tag || '');
+            // Initialiser avec le tag automatique
+            setPartnerTags(generateAutoTag(course.slug));
+            fetchCourseReferences();
+        } else {
+            // Réinitialiser quand le drawer se ferme
+            setCourseReferences(null);
+            setSelectedPartners([]);
+            setPartnerTags('');
+            setPartnerFilter('');
         }
-    }, [open, course]);
+    }, [open, course.slug]);
 
     const handleUpdatePartners = async () => {
         try {
             if (!selectedPartners || selectedPartners.length === 0) {
                 toast.error('Veuillez sélectionner au moins une référence.');
                 return;
-            } else if (!partnerTags) {
-                toast.error('Veuillez entrer un tag de référence.');
-                return;
             }
+            
+            // Générer automatiquement le tag si nécessaire
+            const autoTag = partnerTags || generateAutoTag(course.slug);
 
-            await axios
-                .post(route('dashboard.course.partners.sync', course.slug), {
-                    partner_ids: selectedPartners,
-                    reference_tag: partnerTags,
-                })
-                .then(() => {
-                    toast.success('Références associées avec succès');
-                    setOpen(false);
-                    if (onSuccess) {
-                        onSuccess();
-                    } else {
-                        window.location.reload();
-                    }
-                })
-                .catch(() => {
-                    toast.error('Erreur lors de la mise à jour des références');
-                });
+            setLoading(true);
+            const response = await axios.post(route('dashboard.course.partners.sync', course.slug), {
+                partner_ids: selectedPartners,
+                reference_tag: autoTag,
+            });
+            
+            toast.success('Références associées avec succès');
+            setOpen(false);
+            
+            // Créer un objet cours mis à jour avec les nouvelles références
+            const updatedCourse: ICourse = {
+                ...course,
+                partners: response.data.partners,
+                reference_tag: autoTag
+            };
+            
+            if (onSuccess) {
+                onSuccess(updatedCourse);
+            }
         } catch (error) {
-            toast.error('Erreur lors de la mise à jour');
+            console.error('Erreur lors de la mise à jour des références:', error);
+            toast.error('Erreur lors de la mise à jour des références');
+        } finally {
+            setLoading(false);
         }
     };
 
     const togglePartner = (partnerId: number) => {
-        setSelectedPartners(prev => {
+        setSelectedPartners((prev) => {
             if (prev.includes(partnerId)) {
-                return prev.filter(id => id !== partnerId);
+                return prev.filter((id) => id !== partnerId);
             } else {
                 return [...prev, partnerId];
             }
         });
     };
 
-    const filteredPartners = partners.filter(p => 
-        p.name.toLowerCase().includes(partnerFilter.toLowerCase())
-    );
+    const filteredPartners = partners.filter((p) => p.name.toLowerCase().includes(partnerFilter.toLowerCase()));
 
     return (
         <Drawer
@@ -101,40 +146,49 @@ export default function CourseReferenceDrawer({
                             <div className="flex-1">
                                 <h3 className="font-semibold text-blue-900 mb-1">À propos des références</h3>
                                 <p className="text-sm text-blue-700">
-                                    Les références permettent d'associer des partenaires à cette formation. 
-                                    Ils apparaîtront sur la page de la formation comme références de confiance.
+                                    Les références permettent d'associer des partenaires à cette formation. Ils apparaîtront sur la page de la
+                                    formation comme références de confiance.
                                 </p>
                             </div>
                         </div>
                     </div>
 
+                    {/* Indicateur de chargement */}
+                    {loading && (
+                        <div className="flex items-center justify-center p-8">
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                            <span className="ml-3 text-gray-600">Chargement des références...</span>
+                        </div>
+                    )}
+
                     {/* Aperçu des références actuelles */}
-                    {course.partners && course.partners.length > 0 && (
+                    {false && !loading && courseReferences && courseReferences.partners && courseReferences.partners.length > 0 && (
                         <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                             <div className="flex items-center gap-2 mb-3">
                                 <CheckCircle2 className="w-5 h-5 text-green-600" />
                                 <h3 className="font-semibold text-green-900">
-                                    Références actuellement associées ({course.partners.length})
+                                    Références actuellement associées ({courseReferences?.partners?.length || 0})
                                 </h3>
                             </div>
                             <div className="flex flex-wrap gap-2">
-                                {course.partners.map((partner) => (
-                                    <div key={partner.id} className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full border border-green-300">
+                                {courseReferences?.partners?.map((partner) => (
+                                    <div
+                                        key={partner.id}
+                                        className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full border border-green-300"
+                                    >
                                         {partner.media && (
-                                            <img 
-                                                src={getMediaUrl(partner.media)} 
-                                                alt={partner.name} 
-                                                className="w-5 h-5 rounded-full object-cover" 
-                                            />
+                                            <img src={getMediaUrl(partner.media)} alt={partner.name} className="w-5 h-5 rounded-full object-cover" />
                                         )}
                                         <span className="text-sm font-medium">{partner.name}</span>
                                     </div>
-                                ))}
+                                )) || []}
                             </div>
-                            {course.reference_tag && (
+                            {courseReferences?.reference_tag && (
                                 <div className="mt-2 flex items-center gap-2">
                                     <Tag className="w-4 h-4 text-gray-500" />
-                                    <span className="text-sm text-gray-600">Tag actuel: <strong>{course.reference_tag}</strong></span>
+                                    <span className="text-sm text-gray-600">
+                                        Tag actuel: <strong>{courseReferences.reference_tag}</strong>
+                                    </span>
                                 </div>
                             )}
                         </div>
@@ -162,15 +216,11 @@ export default function CourseReferenceDrawer({
                             <Button
                                 variant="ghost"
                                 size="sm"
-                                onClick={() => setSelectedPartners(partners.map(p => p.id).filter((id): id is number => id !== undefined))}
+                                onClick={() => setSelectedPartners(partners.map((p) => p.id).filter((id): id is number => id !== undefined))}
                             >
                                 Tout sélectionner
                             </Button>
-                            <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => setSelectedPartners([])}
-                            >
+                            <Button variant="ghost" size="sm" onClick={() => setSelectedPartners([])}>
                                 Tout désélectionner
                             </Button>
                         </div>
@@ -180,8 +230,8 @@ export default function CourseReferenceDrawer({
                     <div className="border rounded-lg overflow-hidden">
                         <div className="max-h-[40vh] overflow-y-auto">
                             {filteredPartners.map((partner, index) => (
-                                <div 
-                                    key={partner.id} 
+                                <div
+                                    key={partner.id}
                                     className={`flex items-center justify-between p-3 hover:bg-gray-50 transition-colors ${
                                         index !== 0 ? 'border-t' : ''
                                     } ${selectedPartners.includes(partner.id!) ? 'bg-blue-50' : ''}`}
@@ -189,10 +239,10 @@ export default function CourseReferenceDrawer({
                                     <div className="flex items-center gap-3 flex-1">
                                         <div className="relative">
                                             {partner.media ? (
-                                                <img 
-                                                    src={getMediaUrl(partner.media)} 
-                                                    alt={partner.name} 
-                                                    className="h-12 w-12 rounded-lg object-cover border" 
+                                                <img
+                                                    src={getMediaUrl(partner.media)}
+                                                    alt={partner.name}
+                                                    className="h-12 w-12 rounded-lg object-cover border"
                                                 />
                                             ) : (
                                                 <div className="h-12 w-12 rounded-lg bg-gray-200 flex items-center justify-center">
@@ -220,55 +270,35 @@ export default function CourseReferenceDrawer({
                         </div>
                     </div>
 
-                    {/* Champ de tag amélioré */}
-                    <div className="space-y-2">
-                        <label className="block text-sm font-medium text-gray-700">
-                            <Tag className="inline w-4 h-4 mr-1" />
-                            Tag de référence
-                        </label>
-                        <Input
-                            required
-                            type="text"
-                            value={partnerTags}
-                            onChange={(e) => setPartnerTags(e.target.value)}
-                            placeholder="Ex: Partenaire officiel, Référence certifiée..."
-                            className="w-full"
-                        />
-                        <p className="text-xs text-gray-500">
-                            Ce tag apparaîtra sur la page de formation pour qualifier les références
-                        </p>
-                    </div>
+                    {/* Champ de tag caché - généré automatiquement */}
+                    <input type="hidden" value={partnerTags} />
 
                     {/* Résumé et actions */}
                     <div className="bg-gray-50 rounded-lg p-4 space-y-3">
                         <div className="flex items-center justify-between">
                             <span className="text-sm text-gray-600">
-                                {selectedPartners.length === 0 
-                                    ? "Aucune référence sélectionnée" 
-                                    : `${selectedPartners.length} référence(s) sélectionnée(s)`
-                                }
+                                {selectedPartners.length === 0
+                                    ? 'Aucune référence sélectionnée'
+                                    : `${selectedPartners.length} référence(s) sélectionnée(s)`}
                             </span>
-                            {partnerTags && (
-                                <span className="text-sm text-gray-600">
-                                    Tag: <strong>{partnerTags}</strong>
-                                </span>
-                            )}
+                            <span className="text-xs text-gray-500">
+                                Tag auto: <code className="bg-gray-100 px-1 rounded">{partnerTags}</code>
+                            </span>
                         </div>
                         <div className="flex gap-2">
-                            <Button 
-                                variant="outline" 
+                            <Button
+                                variant="outline"
                                 onClick={() => {
                                     setOpen(false);
-                                    setSelectedPartners(course.partners ? course.partners.map(p => p.id!) : []);
-                                    setPartnerTags(course.reference_tag || '');
                                 }}
                                 className="flex-1"
+                                disabled={loading}
                             >
                                 Annuler
                             </Button>
-                            <Button 
+                            <Button
                                 onClick={handleUpdatePartners}
-                                disabled={selectedPartners.length === 0 || !partnerTags}
+                                disabled={loading || selectedPartners.length === 0}
                                 className="flex-1 bg-blue-600 hover:bg-blue-700"
                             >
                                 <CheckCircle2 className="w-4 h-4 mr-2" />

@@ -19,16 +19,16 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
                 icon: List,
             },
             {
+                title: 'Inscriptions',
+                href: route('dashboard.enrollment.index'),
+                icon: ListChecks,
+            },
+            {
                 title: 'Catégories',
                 href: route('dashboard.category.index'),
                 icon: ListTodo,
             },
         ],
-    },
-    {
-        title: 'Inscriptions',
-        href: route('dashboard.enrollment.index'),
-        icon: ListChecks,
     },
     // {
     //     title: 'Partenaires',
@@ -69,12 +69,7 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
                 title: 'Liste des RDV',
                 href: route('dashboard.appointments.index'),
                 icon: List,
-            },
-            {
-                title: 'Types de RDV',
-                href: route('dashboard.appointments.settings.types'),
-                icon: Settings2,
-            },
+            }, 
             {
                 title: 'Horaires',
                 href: route('dashboard.appointments.settings.hours'),
