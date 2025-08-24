@@ -1,12 +1,13 @@
 import { Button } from '@/components/ui/button/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import axios from 'axios';
 import { AnimatePresence, motion, useScroll, useTransform } from 'framer-motion';
-import { ArrowRight, Calendar, CalendarDays, CheckCircle, Clock, MessageSquare, Sparkles, User } from 'lucide-react';
-import React, { useEffect, useRef, useState } from 'react';
+import { ArrowRight, Calendar, CalendarDays, CheckCircle, Clock, HelpCircle, Info, Mail, MessageSquare, Phone, User } from 'lucide-react';
+import React, { useRef, useState } from 'react';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { fr } from 'date-fns/locale';
@@ -36,7 +37,6 @@ interface AppointmentForm {
     description: string;
     appointment_date: string;
     duration: number;
-    type: string;
     client_email: string;
     client_phone: string;
     client_name: string;
@@ -67,69 +67,19 @@ const AppointmentCalendar: React.FC = () => {
         description: '',
         appointment_date: '',
         duration: 30,
-        type: 'consultation',
         client_email: '',
         client_phone: '',
         client_name: '',
     });
 
-    const [appointmentTypes, setAppointmentTypes] = useState([
-        { value: 'consultation', label: 'Consultation', icon: '💡', description: 'Conseil personnalisé', color: 'bg-blue-500' },
-        { value: 'information', label: 'Information', icon: '📋', description: "Demande d'information", color: 'bg-green-500' },
-        { value: 'support', label: 'Support', icon: '🛠️', description: 'Assistance technique', color: 'bg-orange-500' },
-        { value: 'enrollment', label: 'Inscription', icon: '📚', description: 'Inscription formation', color: 'bg-purple-500' },
-        { value: 'other', label: 'Autre', icon: '❓', description: 'Autre motif', color: 'bg-gray-500' },
-    ]);
-
-    const [durations, setDurations] = useState([
-        { value: 15, label: '15 min', description: 'Question rapide' },
-        { value: 30, label: '30 min', description: 'Consultation standard' },
-        { value: 45, label: '45 min', description: 'Entretien approfondi' },
-        { value: 60, label: '1h', description: 'Rendez-vous détaillé' },
-        { value: 90, label: '1h30', description: 'Session complète' },
-        { value: 120, label: '2h', description: 'Accompagnement personnalisé' },
-    ]);
-
-    // Charger les types et durées depuis l'API
-    useEffect(() => {
-        // Charger les types
-        axios
-            .get(route('appointments.types'))
-            .then((response) => {
-                if (response.data.success && response.data.types) {
-                    const formattedTypes = response.data.types.map((type: any) => ({
-                        value: type.slug,
-                        label: type.name,
-                        icon: type.icon || '📅',
-                        description: type.description,
-                        color: type.color || 'bg-blue-500',
-                    }));
-                    setAppointmentTypes(formattedTypes);
-                }
-            })
-            .catch((error) => {
-                console.error('Erreur lors du chargement des types:', error);
-            });
-
-        // Charger les durées
-        axios
-            .get(route('appointments.durations'))
-            .then((response) => {
-                if (response.data.success && response.data.durations) {
-                    const formattedDurations = response.data.durations.map((duration: any) => ({
-                        value: duration.duration,
-                        label: duration.label,
-                        description: duration.description,
-                    }));
-                    setDurations(formattedDurations);
-                }
-            })
-            .catch((error) => {
-                console.error('Erreur lors du chargement des durées:', error);
-            });
-    }, []);
-
-    // Cette fonction est remplacée par l'API
+    const durations = [
+        { value: 15, label: '15 min', description: 'Question rapide', color: 'bg-blue-100 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400' },
+        { value: 30, label: '30 min', description: 'Consultation standard', color: 'bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-400' },
+        { value: 45, label: '45 min', description: 'Entretien approfondi', color: 'bg-purple-100 text-purple-700 dark:bg-purple-900/20 dark:text-purple-400' },
+        { value: 60, label: '1h', description: 'Rendez-vous détaillé', color: 'bg-orange-100 text-orange-700 dark:bg-orange-900/20 dark:text-orange-400' },
+        { value: 90, label: '1h30', description: 'Session complète', color: 'bg-pink-100 text-pink-700 dark:bg-pink-900/20 dark:text-pink-400' },
+        { value: 120, label: '2h', description: 'Accompagnement personnalisé', color: 'bg-red-100 text-red-700 dark:bg-red-900/20 dark:text-red-400' },
+    ];
 
     // Gérer la sélection de date
     const handleDateChange = (date: Date | null) => {
@@ -147,20 +97,9 @@ const AppointmentCalendar: React.FC = () => {
                 })
                 .then((response) => {
                     if (response.data.slots) {
-                        // Filtrer les créneaux de pause déjeuner (12h-14h)
-                        const filteredSlots = response.data.slots.filter((slot: TimeSlot) => {
-                            const time = slot.time;
-                            const hour = parseInt(time.split(':')[0]);
-                            const minutes = parseInt(time.split(':')[1]);
-                            const totalMinutes = hour * 60 + minutes;
-
-                            // Exclure les créneaux entre 12:00 (720 min) et 14:00 (840 min)
-                            return totalMinutes < 720 || totalMinutes >= 840;
-                        });
-
-                        const slotsWithAvailability = filteredSlots.map((slot: TimeSlot) => ({
+                        const slotsWithAvailability = response.data.slots.map((slot: TimeSlot) => ({
                             ...slot,
-                            available: true,
+                            available: slot.available !== false,
                         }));
 
                         setAvailableSlots(slotsWithAvailability);
@@ -175,7 +114,7 @@ const AppointmentCalendar: React.FC = () => {
                             }
                         }, 100);
                     } else {
-                        toast.error('Erreur lors de la récupération des créneaux');
+                        toast.error('Aucun créneau disponible pour cette date');
                     }
                 })
                 .catch((error) => {
@@ -214,20 +153,17 @@ const AppointmentCalendar: React.FC = () => {
 
         setSubmitting(true);
         try {
-            // Soumettre via le formulaire existant ou créer une nouvelle route
-            const formData = new FormData();
-            formData.append('title', form.title);
-            formData.append('description', form.description);
-            formData.append('appointment_date', form.appointment_date);
-            formData.append('duration', form.duration.toString());
-            formData.append('type', form.type);
-            formData.append('client_email', form.client_email);
-            formData.append('client_phone', form.client_phone);
-            formData.append('client_name', form.client_name);
-
-            await axios.post(route('appointments.store'), formData, {
+            await axios.post(route('appointments.store'), {
+                title: form.title || `Rendez-vous de ${form.client_name}`,
+                description: form.description,
+                appointment_date: form.appointment_date,
+                duration: form.duration,
+                client_email: form.client_email,
+                client_phone: form.client_phone,
+                client_name: form.client_name,
+            }, {
                 headers: {
-                    'Content-Type': 'multipart/form-data',
+                    'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
                 },
             });
@@ -237,6 +173,7 @@ const AppointmentCalendar: React.FC = () => {
         } catch (error: any) {
             const message = error.response?.data?.message || 'Erreur lors de la création du rendez-vous';
             toast.error(message);
+            console.error('Erreur:', error);
         } finally {
             setSubmitting(false);
         }
@@ -254,7 +191,6 @@ const AppointmentCalendar: React.FC = () => {
             description: '',
             appointment_date: '',
             duration: 30,
-            type: 'consultation',
             client_email: '',
             client_phone: '',
             client_name: '',
@@ -280,10 +216,25 @@ const AppointmentCalendar: React.FC = () => {
             <div className="sticky top-0 z-40 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md border-b border-gray-200 dark:border-gray-800">
                 <div className="max-w-6xl mx-auto px-4 py-4">
                     <div className="flex items-center justify-between mb-2">
-                        <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-                            {step === 'select' && '1. Choisissez votre créneau'}
-                            {step === 'details' && '2. Vos informations'}
-                            {step === 'confirmation' && 'Rendez-vous confirmé'}
+                        <h2 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                            {step === 'select' && (
+                                <>
+                                    <CalendarDays className="w-5 h-5 text-teal-600" />
+                                    1. Choisissez votre créneau
+                                </>
+                            )}
+                            {step === 'details' && (
+                                <>
+                                    <User className="w-5 h-5 text-teal-600" />
+                                    2. Vos informations
+                                </>
+                            )}
+                            {step === 'confirmation' && (
+                                <>
+                                    <CheckCircle className="w-5 h-5 text-green-600" />
+                                    Rendez-vous confirmé
+                                </>
+                            )}
                         </h2>
                         <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
                             <span className="font-medium">
@@ -293,11 +244,19 @@ const AppointmentCalendar: React.FC = () => {
                             </span>
                             <span>/</span>
                             <span>2 étapes</span>
+                            <Tooltip>
+                                <TooltipTrigger>
+                                    <HelpCircle className="w-4 h-4 text-gray-400" />
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>Sélectionnez d'abord une date et un créneau, puis remplissez vos informations</p>
+                                </TooltipContent>
+                            </Tooltip>
                         </div>
                     </div>
                     <div className="relative h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
                         <motion.div
-                            className="absolute inset-y-0 left-0 bg-gradient-to-r from-primary to-primary/80 rounded-full"
+                            className="absolute inset-y-0 left-0 bg-gradient-to-r from-teal-500 to-teal-600 rounded-full"
                             animate={{
                                 width: step === 'select' ? '33%' : step === 'details' ? '66%' : '100%',
                             }}
@@ -313,7 +272,7 @@ const AppointmentCalendar: React.FC = () => {
                             animate={{ opacity: 1, y: 0 }}
                         >
                             {selectedDate && (
-                                <div className="flex items-center gap-1 px-3 py-1 bg-primary/10 text-primary rounded-full">
+                                <div className="flex items-center gap-1 px-3 py-1 bg-teal-100 dark:bg-teal-900/30 text-teal-700 dark:text-teal-400 rounded-full">
                                     <Calendar className="w-3 h-3" />
                                     <span className="font-medium">
                                         {selectedDate.toLocaleDateString('fr-FR', {
@@ -347,6 +306,21 @@ const AppointmentCalendar: React.FC = () => {
                             transition={{ duration: 0.4 }}
                             className="space-y-8"
                         >
+                            {/* Info Box */}
+                            <div className="bg-gradient-to-r from-teal-50 to-blue-50 dark:from-teal-900/20 dark:to-blue-900/20 border border-teal-200 dark:border-teal-800 rounded-lg p-4">
+                                <div className="flex items-start space-x-3">
+                                    <Info className="w-5 h-5 text-teal-600 dark:text-teal-400 mt-0.5 flex-shrink-0" />
+                                    <div>
+                                        <h3 className="text-sm font-medium text-teal-900 dark:text-teal-100 mb-1">Comment prendre rendez-vous ?</h3>
+                                        <div className="text-sm text-teal-700 dark:text-teal-300 space-y-1">
+                                            <p>1. Sélectionnez une date disponible dans le calendrier (jours ouvrables uniquement)</p>
+                                            <p>2. Choisissez un créneau horaire parmi ceux proposés</p>
+                                            <p>3. Remplissez vos informations de contact</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             {/* Calendar and Time Slots Side by Side */}
                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
                                 {/* Calendar Section */}
@@ -358,18 +332,25 @@ const AppointmentCalendar: React.FC = () => {
                                     <Card className="shadow-2xl border-0 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800">
                                         <CardHeader className="text-center pb-4">
                                             <motion.div className="flex items-center justify-center gap-3 mb-2" whileHover={{ scale: 1.02 }}>
-                                                <div className="p-2 bg-primary/10 rounded-lg">
-                                                    <CalendarDays className="w-6 h-6 text-primary" />
+                                                <div className="p-2 bg-teal-100 dark:bg-teal-900/20 rounded-lg">
+                                                    <CalendarDays className="w-6 h-6 text-teal-600" />
                                                 </div>
-                                                <CardTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+                                                <CardTitle className="text-2xl font-bold bg-gradient-to-r from-teal-600 to-teal-700 bg-clip-text text-transparent">
                                                     Choisissez votre date
                                                 </CardTitle>
+                                                <Tooltip>
+                                                    <TooltipTrigger>
+                                                        <HelpCircle className="w-5 h-5 text-gray-400" />
+                                                    </TooltipTrigger>
+                                                    <TooltipContent>
+                                                        <p>Les week-ends et jours fériés ne sont pas disponibles</p>
+                                                    </TooltipContent>
+                                                </Tooltip>
                                             </motion.div>
                                             <p className="text-muted-foreground text-sm">Sélectionnez un jour disponible pour votre rendez-vous</p>
                                         </CardHeader>
                                         <CardContent className="flex justify-center pb-6">
                                             <div className="datepicker-container w-full max-w-md">
-                                         
                                                 <DatePicker
                                                     selected={selectedDate}
                                                     onChange={handleDateChange}
@@ -387,128 +368,150 @@ const AppointmentCalendar: React.FC = () => {
 
                                 {/* Time Slots Section - Only show when date is selected */}
                                 {selectedDate && (
-                                <motion.div
-                                    id="time-slots"
-                                    initial={{ opacity: 0, x: 30 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{ delay: 0.2, duration: 0.4 }}
-                                    className=""
-                                >
-                                    <Card className="shadow-2xl border-0 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 h-full">
-                                        <CardHeader className="text-center pb-4">
-                                            {showTimeSlots ? (
-                                                <>
-                                                    <motion.div className="flex items-center justify-center gap-3 mb-2" whileHover={{ scale: 1.02 }}>
-                                                        <div className="p-2 bg-primary/10 rounded-lg">
-                                                            <Clock className="w-6 h-6 text-primary" />
-                                                        </div>
-                                                        <CardTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-                                                            Choisissez l'heure
-                                                        </CardTitle>
-                                                    </motion.div>
-                                                    <p className="text-muted-foreground text-sm">
-                                                        {selectedDate.toLocaleDateString('fr-FR', {
-                                                            weekday: 'long',
-                                                            day: 'numeric',
-                                                            month: 'long'
-                                                        })}
-                                                    </p>
-                                                </>
-                                            ) : (
-                                                <div className="py-8 text-center">
-                                                    <Clock className="w-12 h-12 text-muted-foreground/30 mx-auto mb-3" />
-                                                    <p className="text-muted-foreground">
-                                                        Sélectionnez une date pour voir les créneaux disponibles
-                                                    </p>
-                                                </div>
-                                            )}
-                                        </CardHeader>
-                                        <CardContent className="pb-6">
-                                            {showTimeSlots && (
-                                                <>
-                                                    {/* Available Slots Info */}
-                                                    <div className="mb-6 flex flex-wrap justify-center gap-2">
-                                                        <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-green-100 dark:bg-green-900/30 rounded-lg">
-                                                            <div className="w-2 h-2 bg-green-500 rounded-full" />
-                                                            <span className="text-green-700 dark:text-green-300 text-xs font-medium">
-                                                                {availableSlots.filter((s) => s.available !== false).length} disponibles
-                                                            </span>
-                                                        </div>
-                                                        <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-orange-100 dark:bg-orange-900/30 rounded-lg">
-                                                            <Clock className="w-3 h-3 text-orange-600" />
-                                                            <span className="text-orange-700 dark:text-orange-300 text-xs">
-                                                                Pause: 12h-14h
-                                                            </span>
-                                                        </div>
-                                                    </div>
-
-                                                    {/* Time Slots Grid */}
-                                                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                                                        {availableSlots.map((slot, index) => (
-                                                            <motion.button
-                                                                key={slot.time}
-                                                                type="button"
-                                                                disabled={slot.available === false}
-                                                                onClick={() => handleTimeSelect(slot)}
-                                                                className={cn(
-                                                                    'relative p-3 rounded-lg border transition-all duration-200 text-sm font-medium',
-                                                                    slot.available !== false
-                                                                        ? selectedTime === slot.time
-                                                                            ? 'border-primary bg-primary text-white shadow-lg ring-2 ring-primary/20'
-                                                                            : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-primary hover:bg-primary/5 hover:shadow-md text-gray-900 dark:text-white'
-                                                                        : 'border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50 text-gray-400 dark:text-gray-500 cursor-not-allowed opacity-50',
-                                                                )}
-                                                                initial={{ opacity: 0, scale: 0.9 }}
-                                                                animate={{ opacity: 1, scale: 1 }}
-                                                                transition={{ delay: index * 0.02 }}
-                                                                whileHover={
-                                                                    slot.available !== false ? { scale: 1.05 } : {}
-                                                                }
-                                                                whileTap={
-                                                                    slot.available !== false ? { scale: 0.95 } : {}
-                                                                }
-                                                            >
-                                                                {/* Time Display */}
-                                                                <div className="font-semibold">{slot.display}</div>
-                                                                
-                                                                {/* Selected indicator */}
-                                                                {selectedTime === slot.time && (
-                                                                    <motion.div
-                                                                        className="absolute -top-1 -right-1"
-                                                                        initial={{ scale: 0 }}
-                                                                        animate={{ scale: 1 }}
-                                                                    >
-                                                                        <CheckCircle className="w-4 h-4 text-white bg-primary rounded-full" />
-                                                                    </motion.div>
-                                                                )}
-                                                            </motion.button>
-                                                        ))}
-                                                    </div>
-
-                                                    {selectedTime && (
+                                    <motion.div
+                                        id="time-slots"
+                                        initial={{ opacity: 0, x: 30 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        transition={{ delay: 0.2, duration: 0.4 }}
+                                        className=""
+                                    >
+                                        <Card className="shadow-2xl border-0 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 h-full">
+                                            <CardHeader className="text-center pb-4">
+                                                {loading ? (
+                                                    <div className="py-8">
                                                         <motion.div
-                                                            className="mt-6 flex justify-center"
-                                                            initial={{ opacity: 0, y: 20 }}
-                                                            animate={{ opacity: 1, y: 0 }}
-                                                        >
-                                                            <Button
-                                                                onClick={() => setStep('details')}
-                                                                size="lg"
-                                                                className="px-8 py-3 bg-gradient-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800 shadow-lg hover:shadow-xl transition-all duration-300 text-white font-medium"
-                                                            >
-                                                                <span className="flex items-center gap-2">
-                                                                    <span>Continuer</span>
-                                                                    <ArrowRight className="w-4 h-4" />
-                                                                </span>
-                                                            </Button>
+                                                            animate={{ rotate: 360 }}
+                                                            transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                                                            className="w-12 h-12 border-4 border-teal-200 border-t-teal-600 rounded-full mx-auto"
+                                                        />
+                                                        <p className="text-muted-foreground mt-4">Chargement des créneaux...</p>
+                                                    </div>
+                                                ) : showTimeSlots ? (
+                                                    <>
+                                                        <motion.div className="flex items-center justify-center gap-3 mb-2" whileHover={{ scale: 1.02 }}>
+                                                            <div className="p-2 bg-teal-100 dark:bg-teal-900/20 rounded-lg">
+                                                                <Clock className="w-6 h-6 text-teal-600" />
+                                                            </div>
+                                                            <CardTitle className="text-2xl font-bold bg-gradient-to-r from-teal-600 to-teal-700 bg-clip-text text-transparent">
+                                                                Choisissez l'heure
+                                                            </CardTitle>
+                                                            <Tooltip>
+                                                                <TooltipTrigger>
+                                                                    <HelpCircle className="w-5 h-5 text-gray-400" />
+                                                                </TooltipTrigger>
+                                                                <TooltipContent>
+                                                                    <p>Les créneaux grisés ne sont pas disponibles</p>
+                                                                </TooltipContent>
+                                                            </Tooltip>
                                                         </motion.div>
-                                                    )}
-                                                </>
-                                            )}
-                                        </CardContent>
-                                    </Card>
-                                </motion.div>
-                            )}
+                                                        <p className="text-muted-foreground text-sm">
+                                                            {selectedDate.toLocaleDateString('fr-FR', {
+                                                                weekday: 'long',
+                                                                day: 'numeric',
+                                                                month: 'long',
+                                                            })}
+                                                        </p>
+                                                    </>
+                                                ) : (
+                                                    <div className="py-8 text-center">
+                                                        <Clock className="w-12 h-12 text-muted-foreground/30 mx-auto mb-3" />
+                                                        <p className="text-muted-foreground">
+                                                            Sélectionnez une date pour voir les créneaux disponibles
+                                                        </p>
+                                                    </div>
+                                                )}
+                                            </CardHeader>
+                                            <CardContent className="pb-6">
+                                                {showTimeSlots && !loading && (
+                                                    <>
+                                                        {/* Available Slots Info */}
+                                                        <div className="mb-6 flex flex-wrap justify-center gap-2">
+                                                            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-green-100 dark:bg-green-900/30 rounded-lg">
+                                                                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                                                                <span className="text-green-700 dark:text-green-300 text-xs font-medium">
+                                                                    {availableSlots.filter((s) => s.available !== false).length} créneaux disponibles
+                                                                </span>
+                                                            </div>
+                                                            {businessHours?.lunchBreak && (
+                                                                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-orange-100 dark:bg-orange-900/30 rounded-lg">
+                                                                    <Clock className="w-3 h-3 text-orange-600" />
+                                                                    <span className="text-orange-700 dark:text-orange-300 text-xs">
+                                                                        Pause: {businessHours.lunchBreak.start}-{businessHours.lunchBreak.end}
+                                                                    </span>
+                                                                </div>
+                                                            )}
+                                                        </div>
+
+                                                        {/* Time Slots Grid */}
+                                                        {availableSlots.length > 0 ? (
+                                                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                                                                {availableSlots.map((slot, index) => (
+                                                                    <motion.button
+                                                                        key={slot.time}
+                                                                        type="button"
+                                                                        disabled={slot.available === false}
+                                                                        onClick={() => handleTimeSelect(slot)}
+                                                                        className={cn(
+                                                                            'relative p-3 rounded-lg border transition-all duration-200 text-sm font-medium',
+                                                                            slot.available !== false
+                                                                                ? selectedTime === slot.time
+                                                                                    ? 'border-teal-500 bg-teal-500 text-white shadow-lg ring-2 ring-teal-500/20'
+                                                                                    : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-teal-300 hover:bg-teal-50 dark:hover:bg-teal-950/20 hover:shadow-md text-gray-900 dark:text-white'
+                                                                                : 'border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50 text-gray-400 dark:text-gray-500 cursor-not-allowed opacity-50',
+                                                                        )}
+                                                                        initial={{ opacity: 0, scale: 0.9 }}
+                                                                        animate={{ opacity: 1, scale: 1 }}
+                                                                        transition={{ delay: index * 0.02 }}
+                                                                        whileHover={slot.available !== false ? { scale: 1.05 } : {}}
+                                                                        whileTap={slot.available !== false ? { scale: 0.95 } : {}}
+                                                                    >
+                                                                        {/* Time Display */}
+                                                                        <div className="font-semibold">{slot.display}</div>
+
+                                                                        {/* Selected indicator */}
+                                                                        {selectedTime === slot.time && (
+                                                                            <motion.div
+                                                                                className="absolute -top-1 -right-1"
+                                                                                initial={{ scale: 0 }}
+                                                                                animate={{ scale: 1 }}
+                                                                            >
+                                                                                <CheckCircle className="w-4 h-4 text-white bg-teal-500 rounded-full" />
+                                                                            </motion.div>
+                                                                        )}
+                                                                    </motion.button>
+                                                                ))}
+                                                            </div>
+                                                        ) : (
+                                                            <div className="text-center py-8">
+                                                                <p className="text-gray-500">Aucun créneau disponible pour cette date</p>
+                                                                <p className="text-sm text-gray-400 mt-2">Veuillez sélectionner une autre date</p>
+                                                            </div>
+                                                        )}
+
+                                                        {selectedTime && (
+                                                            <motion.div
+                                                                className="mt-6 flex justify-center"
+                                                                initial={{ opacity: 0, y: 20 }}
+                                                                animate={{ opacity: 1, y: 0 }}
+                                                            >
+                                                                <Button
+                                                                    onClick={() => setStep('details')}
+                                                                    size="lg"
+                                                                    className="px-8 py-3 bg-gradient-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800 shadow-lg hover:shadow-xl transition-all duration-300 text-white font-medium"
+                                                                >
+                                                                    <span className="flex items-center gap-2">
+                                                                        <span>Continuer</span>
+                                                                        <ArrowRight className="w-4 h-4" />
+                                                                    </span>
+                                                                </Button>
+                                                            </motion.div>
+                                                        )}
+                                                    </>
+                                                )}
+                                            </CardContent>
+                                        </Card>
+                                    </motion.div>
+                                )}
                             </div>
                         </motion.div>
                     )}
@@ -525,85 +528,81 @@ const AppointmentCalendar: React.FC = () => {
                             <Card className="mx-auto max-w-4xl shadow-2xl border-0 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800">
                                 <CardHeader className="text-center">
                                     <CardTitle className="flex items-center justify-center gap-2">
-                                        <MessageSquare className="w-6 h-6 text-primary" />
+                                        <MessageSquare className="w-6 h-6 text-teal-600" />
                                         Détails du rendez-vous
                                     </CardTitle>
+                                    <CardDescription>
+                                        Remplissez vos informations pour confirmer votre rendez-vous
+                                    </CardDescription>
                                 </CardHeader>
                                 <CardContent>
                                     <form onSubmit={handleSubmit} className="space-y-8">
-                                        {/* Type et durée - Layout simplifié */}
-                                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                                            <div className="space-y-4">
-                                                <Label className="text-base font-semibold">Type de rendez-vous</Label>
-                                                <div className="grid grid-cols-1 gap-3">
-                                                    {appointmentTypes.map((type) => (
-                                                        <motion.div
-                                                            key={type.value}
-                                                            className={cn(
-                                                                'p-4 border-2 rounded-xl cursor-pointer transition-all duration-300',
-                                                                form.type === type.value
-                                                                    ? 'border-primary bg-primary/10 ring-4 ring-primary/20'
-                                                                    : 'border-gray-200 dark:border-gray-700 hover:border-primary/50 bg-white dark:bg-gray-800',
-                                                            )}
-                                                            onClick={() => setForm((prev) => ({ ...prev, type: type.value }))}
-                                                            whileHover={{ scale: 1.02 }}
-                                                            whileTap={{ scale: 0.98 }}
-                                                        >
-                                                            <div className="flex items-center justify-between">
-                                                                <div className="flex items-center gap-3">
-                                                                    <div className="text-lg">{type.icon}</div>
-                                                                    <div>
-                                                                        <div className="font-semibold text-sm">{type.label}</div>
-                                                                        <div className="text-xs text-muted-foreground">{type.description}</div>
-                                                                    </div>
-                                                                </div>
-                                                                {form.type === type.value && <CheckCircle className="w-5 h-5 text-primary" />}
-                                                            </div>
-                                                        </motion.div>
-                                                    ))}
-                                                </div>
+                                        {/* Durée */}
+                                        <div className="space-y-4">
+                                            <div className="flex items-center space-x-2">
+                                                <Label className="text-base font-semibold">Durée souhaitée du rendez-vous</Label>
+                                                <Tooltip>
+                                                    <TooltipTrigger>
+                                                        <HelpCircle className="w-4 h-4 text-gray-400" />
+                                                    </TooltipTrigger>
+                                                    <TooltipContent>
+                                                        <p>Choisissez la durée qui correspond le mieux à vos besoins</p>
+                                                    </TooltipContent>
+                                                </Tooltip>
                                             </div>
-
-                                            <div className="space-y-4">
-                                                <Label className="text-base font-semibold">Durée souhaitée</Label>
-                                                <div className="grid grid-cols-2 gap-3">
-                                                    {durations.map((duration) => (
-                                                        <motion.div
-                                                            key={duration.value}
-                                                            className={cn(
-                                                                'p-3 border-2 rounded-lg cursor-pointer transition-all duration-300',
-                                                                form.duration === duration.value
-                                                                    ? 'border-primary bg-primary/10'
-                                                                    : 'border-gray-200 dark:border-gray-700 hover:border-primary/50 bg-white dark:bg-gray-800',
-                                                            )}
-                                                            onClick={() => setForm((prev) => ({ ...prev, duration: duration.value }))}
-                                                            whileHover={{ scale: 1.02 }}
-                                                            whileTap={{ scale: 0.98 }}
-                                                        >
-                                                            <div className="text-center">
-                                                                <div className="font-semibold text-sm">{duration.label}</div>
-                                                                <div className="text-xs text-muted-foreground">{duration.description}</div>
+                                            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                                                {durations.map((duration) => (
+                                                    <motion.div
+                                                        key={duration.value}
+                                                        className={cn(
+                                                            'p-4 border-2 rounded-xl cursor-pointer transition-all duration-300',
+                                                            form.duration === duration.value
+                                                                ? 'border-teal-500 bg-teal-50 dark:bg-teal-950/20 ring-2 ring-teal-500/20'
+                                                                : 'border-gray-200 dark:border-gray-700 hover:border-teal-300 bg-white dark:bg-gray-800',
+                                                        )}
+                                                        onClick={() => setForm((prev) => ({ ...prev, duration: duration.value }))}
+                                                        whileHover={{ scale: 1.02 }}
+                                                        whileTap={{ scale: 0.98 }}
+                                                    >
+                                                        <div className="text-center">
+                                                            <div className={cn('inline-block px-2 py-1 rounded-md mb-2', duration.color)}>
+                                                                <Clock className="w-4 h-4 inline mr-1" />
+                                                                <span className="font-semibold text-sm">{duration.label}</span>
                                                             </div>
-                                                        </motion.div>
-                                                    ))}
-                                                </div>
+                                                            <div className="text-xs text-muted-foreground">{duration.description}</div>
+                                                        </div>
+                                                        {form.duration === duration.value && (
+                                                            <CheckCircle className="w-4 h-4 text-teal-500 mx-auto mt-2" />
+                                                        )}
+                                                    </motion.div>
+                                                ))}
                                             </div>
                                         </div>
 
-                                        {/* Contact Info - Layout optimisé */}
+                                        {/* Contact Info */}
                                         <div className="space-y-6 border-t border-gray-200 dark:border-gray-700 pt-8">
                                             <h3 className="font-semibold flex items-center gap-2 text-lg">
-                                                <User className="w-5 h-5" />
-                                                Vos informations
+                                                <User className="w-5 h-5 text-teal-600" />
+                                                Vos informations de contact
                                             </h3>
 
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                                 <div className="space-y-2">
-                                                    <Label htmlFor="client_name">Nom complet *</Label>
+                                                    <div className="flex items-center space-x-2">
+                                                        <Label htmlFor="client_name">Nom complet *</Label>
+                                                        <Tooltip>
+                                                            <TooltipTrigger>
+                                                                <HelpCircle className="w-3 h-3 text-gray-400" />
+                                                            </TooltipTrigger>
+                                                            <TooltipContent>
+                                                                <p>Votre nom et prénom complets</p>
+                                                            </TooltipContent>
+                                                        </Tooltip>
+                                                    </div>
                                                     <Input
                                                         id="client_name"
                                                         type="text"
-                                                        placeholder="Votre nom et prénom"
+                                                        placeholder="Jean Dupont"
                                                         value={form.client_name}
                                                         onChange={(e) => setForm((prev) => ({ ...prev, client_name: e.target.value }))}
                                                         required
@@ -612,34 +611,70 @@ const AppointmentCalendar: React.FC = () => {
                                                 </div>
 
                                                 <div className="space-y-2">
-                                                    <Label htmlFor="client_email">Email *</Label>
-                                                    <Input
-                                                        id="client_email"
-                                                        type="email"
-                                                        placeholder="votre.email@exemple.com"
-                                                        value={form.client_email}
-                                                        onChange={(e) => setForm((prev) => ({ ...prev, client_email: e.target.value }))}
-                                                        required
-                                                        className="h-12"
-                                                    />
+                                                    <div className="flex items-center space-x-2">
+                                                        <Label htmlFor="client_email">Email *</Label>
+                                                        <Tooltip>
+                                                            <TooltipTrigger>
+                                                                <HelpCircle className="w-3 h-3 text-gray-400" />
+                                                            </TooltipTrigger>
+                                                            <TooltipContent>
+                                                                <p>Nous vous enverrons la confirmation à cette adresse</p>
+                                                            </TooltipContent>
+                                                        </Tooltip>
+                                                    </div>
+                                                    <div className="relative">
+                                                        <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                                                        <Input
+                                                            id="client_email"
+                                                            type="email"
+                                                            placeholder="jean.dupont@exemple.com"
+                                                            value={form.client_email}
+                                                            onChange={(e) => setForm((prev) => ({ ...prev, client_email: e.target.value }))}
+                                                            required
+                                                            className="h-12 pl-10"
+                                                        />
+                                                    </div>
                                                 </div>
                                             </div>
 
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                                 <div className="space-y-2">
-                                                    <Label htmlFor="client_phone">Téléphone</Label>
-                                                    <Input
-                                                        id="client_phone"
-                                                        type="tel"
-                                                        placeholder="+225 XX XX XX XX"
-                                                        value={form.client_phone}
-                                                        onChange={(e) => setForm((prev) => ({ ...prev, client_phone: e.target.value }))}
-                                                        className="h-12"
-                                                    />
+                                                    <div className="flex items-center space-x-2">
+                                                        <Label htmlFor="client_phone">Téléphone</Label>
+                                                        <Tooltip>
+                                                            <TooltipTrigger>
+                                                                <HelpCircle className="w-3 h-3 text-gray-400" />
+                                                            </TooltipTrigger>
+                                                            <TooltipContent>
+                                                                <p>Pour vous contacter si nécessaire</p>
+                                                            </TooltipContent>
+                                                        </Tooltip>
+                                                    </div>
+                                                    <div className="relative">
+                                                        <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                                                        <Input
+                                                            id="client_phone"
+                                                            type="tel"
+                                                            placeholder="+225 XX XX XX XX"
+                                                            value={form.client_phone}
+                                                            onChange={(e) => setForm((prev) => ({ ...prev, client_phone: e.target.value }))}
+                                                            className="h-12 pl-10"
+                                                        />
+                                                    </div>
                                                 </div>
 
                                                 <div className="space-y-2">
-                                                    <Label htmlFor="title">Sujet du rendez-vous</Label>
+                                                    <div className="flex items-center space-x-2">
+                                                        <Label htmlFor="title">Sujet du rendez-vous</Label>
+                                                        <Tooltip>
+                                                            <TooltipTrigger>
+                                                                <HelpCircle className="w-3 h-3 text-gray-400" />
+                                                            </TooltipTrigger>
+                                                            <TooltipContent>
+                                                                <p>Décrivez brièvement l'objet de votre rendez-vous</p>
+                                                            </TooltipContent>
+                                                        </Tooltip>
+                                                    </div>
                                                     <Input
                                                         id="title"
                                                         type="text"
@@ -652,7 +687,17 @@ const AppointmentCalendar: React.FC = () => {
                                             </div>
 
                                             <div className="space-y-2">
-                                                <Label htmlFor="description">Message (optionnel)</Label>
+                                                <div className="flex items-center space-x-2">
+                                                    <Label htmlFor="description">Message (optionnel)</Label>
+                                                    <Tooltip>
+                                                        <TooltipTrigger>
+                                                            <HelpCircle className="w-3 h-3 text-gray-400" />
+                                                        </TooltipTrigger>
+                                                        <TooltipContent className="max-w-xs">
+                                                            <p>Ajoutez toute information utile pour préparer votre rendez-vous</p>
+                                                        </TooltipContent>
+                                                    </Tooltip>
+                                                </div>
                                                 <textarea
                                                     id="description"
                                                     className="flex min-h-[120px] w-full rounded-md border border-input bg-background dark:bg-gray-800 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
@@ -664,18 +709,18 @@ const AppointmentCalendar: React.FC = () => {
                                             </div>
                                         </div>
 
-                                        {/* Summary - Design amélioré */}
-                                        <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border border-green-200 dark:border-green-800 p-6 rounded-xl">
-                                            <h4 className="font-semibold text-green-800 dark:text-green-300 mb-4 flex items-center gap-2">
+                                        {/* Summary */}
+                                        <div className="bg-gradient-to-r from-teal-50 to-green-50 dark:from-teal-900/20 dark:to-green-900/20 border border-teal-200 dark:border-teal-800 p-6 rounded-xl">
+                                            <h4 className="font-semibold text-teal-800 dark:text-teal-300 mb-4 flex items-center gap-2">
                                                 <CheckCircle className="w-5 h-5" />
                                                 Récapitulatif de votre rendez-vous
                                             </h4>
                                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                                                 <div className="flex items-center gap-3 p-3 bg-white/50 dark:bg-gray-800/50 rounded-lg">
-                                                    <Calendar className="w-4 h-4 text-green-600 dark:text-green-400" />
+                                                    <Calendar className="w-4 h-4 text-teal-600 dark:text-teal-400" />
                                                     <div>
-                                                        <div className="font-medium text-green-700 dark:text-green-300">Date</div>
-                                                        <div className="text-green-600 dark:text-green-400">
+                                                        <div className="font-medium text-teal-700 dark:text-teal-300">Date</div>
+                                                        <div className="text-teal-600 dark:text-teal-400">
                                                             {selectedDate.toLocaleDateString('fr-FR', {
                                                                 weekday: 'short',
                                                                 day: 'numeric',
@@ -686,20 +731,20 @@ const AppointmentCalendar: React.FC = () => {
                                                     </div>
                                                 </div>
                                                 <div className="flex items-center gap-3 p-3 bg-white/50 dark:bg-gray-800/50 rounded-lg">
-                                                    <Clock className="w-4 h-4 text-green-600 dark:text-green-400" />
+                                                    <Clock className="w-4 h-4 text-teal-600 dark:text-teal-400" />
                                                     <div>
-                                                        <div className="font-medium text-green-700 dark:text-green-300">Heure</div>
-                                                        <div className="text-green-600 dark:text-green-400">
+                                                        <div className="font-medium text-teal-700 dark:text-teal-300">Heure</div>
+                                                        <div className="text-teal-600 dark:text-teal-400">
                                                             {selectedTime} ({form.duration} min)
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div className="flex items-center gap-3 p-3 bg-white/50 dark:bg-gray-800/50 rounded-lg">
-                                                    <MessageSquare className="w-4 h-4 text-green-600 dark:text-green-400" />
+                                                    <User className="w-4 h-4 text-teal-600 dark:text-teal-400" />
                                                     <div>
-                                                        <div className="font-medium text-green-700 dark:text-green-300">Type</div>
-                                                        <div className="text-green-600 dark:text-green-400">
-                                                            {appointmentTypes.find((t) => t.value === form.type)?.label}
+                                                        <div className="font-medium text-teal-700 dark:text-teal-300">Contact</div>
+                                                        <div className="text-teal-600 dark:text-teal-400 text-xs">
+                                                            {form.client_name || 'À remplir'}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -714,7 +759,7 @@ const AppointmentCalendar: React.FC = () => {
                                             <Button
                                                 type="submit"
                                                 disabled={submitting || !form.client_name.trim() || !form.client_email.trim()}
-                                                className="px-8 w-full sm:w-auto bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70"
+                                                className="px-8 w-full sm:w-auto bg-gradient-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800"
                                                 size="lg"
                                             >
                                                 {submitting ? (
@@ -757,13 +802,13 @@ const AppointmentCalendar: React.FC = () => {
                                         <CheckCircle className="w-12 h-12 text-green-600 dark:text-green-400" />
                                     </motion.div>
 
-                                    <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">🎉 Rendez-vous confirmé !</h2>
+                                    <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Rendez-vous confirmé !</h2>
 
                                     <div className="bg-gradient-to-br from-gray-50 to-white dark:from-gray-800 dark:to-gray-700 p-8 rounded-2xl mb-6 text-left shadow-inner">
                                         <h3 className="font-semibold mb-4 text-lg">Détails de votre rendez-vous :</h3>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                                             <div className="flex items-center gap-3">
-                                                <Calendar className="w-4 h-4 text-primary" />
+                                                <Calendar className="w-4 h-4 text-teal-600" />
                                                 <div>
                                                     <span className="font-medium">Date : </span>
                                                     {selectedDate?.toLocaleDateString('fr-FR', {
@@ -775,22 +820,15 @@ const AppointmentCalendar: React.FC = () => {
                                                 </div>
                                             </div>
                                             <div className="flex items-center gap-3">
-                                                <Clock className="w-4 h-4 text-primary" />
+                                                <Clock className="w-4 h-4 text-teal-600" />
                                                 <div>
                                                     <span className="font-medium">Heure : </span>
                                                     {selectedTime} ({form.duration} minutes)
                                                 </div>
                                             </div>
-                                            <div className="flex items-center gap-3">
-                                                <MessageSquare className="w-4 h-4 text-primary" />
-                                                <div>
-                                                    <span className="font-medium">Type : </span>
-                                                    {appointmentTypes.find((t) => t.value === form.type)?.label}
-                                                </div>
-                                            </div>
                                             {form.title && (
-                                                <div className="flex items-center gap-3">
-                                                    <User className="w-4 h-4 text-primary" />
+                                                <div className="flex items-center gap-3 md:col-span-2">
+                                                    <MessageSquare className="w-4 h-4 text-teal-600" />
                                                     <div>
                                                         <span className="font-medium">Sujet : </span>
                                                         {form.title}
@@ -800,17 +838,25 @@ const AppointmentCalendar: React.FC = () => {
                                         </div>
                                     </div>
 
-                                    <p className="text-gray-600 dark:text-gray-300 mb-8">
-                                        Un email de confirmation a été envoyé à <strong>{form.client_email}</strong>
-                                        avec tous les détails de votre rendez-vous et les instructions de connexion.
-                                    </p>
+                                    <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-8">
+                                        <div className="flex items-start space-x-3">
+                                            <Mail className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5" />
+                                            <div className="text-left">
+                                                <p className="text-blue-900 dark:text-blue-100 font-medium">Email de confirmation envoyé</p>
+                                                <p className="text-blue-700 dark:text-blue-300 text-sm mt-1">
+                                                    Un email a été envoyé à <strong>{form.client_email}</strong> avec tous les détails de votre rendez-vous.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
 
                                     <div className="space-y-4">
                                         <Button
                                             onClick={resetForm}
-                                            className="w-full sm:w-auto bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70"
+                                            className="w-full sm:w-auto bg-gradient-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800"
                                             size="lg"
                                         >
+                                            <Calendar className="w-4 h-4 mr-2" />
                                             Prendre un autre rendez-vous
                                         </Button>
                                     </div>
