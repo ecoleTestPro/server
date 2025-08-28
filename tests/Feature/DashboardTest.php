@@ -9,6 +9,7 @@ test('guests are redirected to the login page', function () {
 // TODO : Uncomment this test
 // test('authenticated users can visit the dashboard', function () {
 //     $this->actingAs($user = User::factory()->create());
-
+//
 //     $this->get('/dashboard')->assertOk();
 // });
+
