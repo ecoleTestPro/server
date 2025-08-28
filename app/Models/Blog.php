@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Storage;
 class Blog extends Model
 {
     protected $fillable = [
+        'user_id',
         'title',
         'slug',
         'excerpt',
