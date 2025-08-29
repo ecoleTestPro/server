@@ -54,7 +54,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, onCourseUpdat
 
         const now = new Date();
         const upcomingSessions = currentCourse.course_sessions
-            .filter((session) => new Date(session.start_date) > now)
+            //.filter((session) => new Date(session.start_date) > now)
             .sort((a, b) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime());
 
         const next = upcomingSessions[0];
