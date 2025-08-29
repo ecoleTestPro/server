@@ -44,7 +44,7 @@ export default function CourseAdditionnalForm({
 
     // Effet séparé pour l'initialisation des champs depuis le cours sélectionné
     useEffect(() => {
-        if (courseSelected) {
+        if (courseSelected && !data.id) {
             // Initialisation du prix si vide
             if (courseSelected.price && (!data.price || data.price === '')) {
                 setData('price', courseSelected.price.toString());
@@ -53,15 +53,15 @@ export default function CourseAdditionnalForm({
             // Initialisation de la périodicité si vide ou non définie
             if (courseSelected.periodicity_unit && (!data.periodicity_unit || data.periodicity_unit === '')) {
                 setData('periodicity_unit', courseSelected.periodicity_unit);
-            }else {
+            } else if (!data.periodicity_unit) {
                 setData('periodicity_unit', PERIODICITY_UNIT[0].value); 
             }
 
             // Initialisation de la valeur de périodicité si vide ou non définie
             if (courseSelected.periodicity_value && (!data.periodicity_value || data.periodicity_value === '' || data.periodicity_value === 0)) {
                 setData('periodicity_value', courseSelected.periodicity_value);
-            }else  {
-                setData('periodicity_value', 3);
+            } else if (!data.periodicity_value) {
+                setData('periodicity_value', 1);
             }
 
             // Initialisation du mode de formation si vide ou non défini
@@ -69,7 +69,7 @@ export default function CourseAdditionnalForm({
                 setData('location_mode', (courseSelected as any).location_mode);
             }
         }
-    }, [courseSelected, data.periodicity_unit, data.periodicity_value]);
+    }, [courseSelected]);
     const { t } = useTranslation();
 
     return (

@@ -149,7 +149,7 @@ function CourseForm({ course }: ICourseFormProps) {
         setData('attachment', course.attachment || '');
         setData('lectures', course.lectures || 0);
         setData('periodicity_unit', course.periodicity_unit || PeriodicityUnitEnum.DAY);
-        setData('periodicity_value', course.periodicity_value || 1);
+        setData('periodicity_value', course.periodicity_value || 1); // <->duration
         setData('price', course.price ? course.price : '');
         setData('regular_price', course.regular_price ? Number(course.regular_price).toLocaleString('fr-FR') : '');
         setData('author', course.author || '');

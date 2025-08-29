@@ -53,7 +53,7 @@ export default function CourseReferenceDrawer({ open, setOpen, course, partners,
             // Utiliser le tag automatique au lieu du tag existant
             setPartnerTags(generateAutoTag(course.slug));
 
-            toast.success('Références chargées avec succès');
+            // toast.success('Références chargées avec succès');
         } catch (error) {
             console.error('Erreur lors de la récupération des références:', error);
             // Fallback sur les données du course si la requête échoue
