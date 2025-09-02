@@ -4,8 +4,9 @@ import Drawer from '@/components/ui/drawer';
 import { Input } from '@/components/ui/input';
 import { ICourseSession } from '@/types/course';
 import { Logger } from '@/utils/console.util';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@radix-ui/react-tooltip';
 import axios from 'axios';
-import { CalendarPlus, Copy, Edit2, Plus, Save, Trash2, X } from 'lucide-react';
+import { CalendarPlus, Copy, Edit2, FilterIcon, Plus, Save, Trash2, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -14,6 +15,7 @@ interface CourseSessionCreateDrawerProps {
     open: boolean;
     setOpen: (open: boolean) => void;
     courseId?: number;
+    courseTitle?: string;
 }
 
 interface SessionForm {
@@ -24,7 +26,7 @@ interface SessionForm {
 
 const emptySession: SessionForm = { start_date: '', end_date: '', location: '' };
 
-export default function CourseSessionCreateDrawer({ open, setOpen, courseId }: CourseSessionCreateDrawerProps) {
+export default function CourseSessionCreateDrawer({ open, setOpen, courseId, courseTitle }: CourseSessionCreateDrawerProps) {
     const { t } = useTranslation();
     const [sessions, setSessions] = useState<SessionForm[]>([{ ...emptySession }]);
     const [loading, setLoading] = useState(false);
@@ -275,7 +277,11 @@ export default function CourseSessionCreateDrawer({ open, setOpen, courseId }: C
     return (
         <>
             <Drawer
-                title={editingSessionId ? t('course.session.edit_title', 'Modifier la session') : t('course.session.create', 'Créer des sessions')}
+                title={
+                    editingSessionId
+                        ? t('course.session.edit_title', 'Modifier la session')
+                        : t('course.session.create', 'Créer des sessions pour la formation "' + courseTitle + '"')
+                }
                 open={open}
                 setOpen={(isOpen) => {
                     setOpen(isOpen);
@@ -292,27 +298,16 @@ export default function CourseSessionCreateDrawer({ open, setOpen, courseId }: C
                                 <div className="flex justify-between items-center">
                                     <div className="flex items-center gap-3">
                                         <h3 className="text-sm font-semibold">{t('course.session.existing', 'Sessions enregistrées')}</h3>
-                                        {selectedSessions.length > 0 && (
-                                            <Button
-                                                variant="destructive"
-                                                size="sm"
-                                                onClick={handleDeleteMultiple}
-                                                disabled={isDeleting}
-                                                className="h-7"
-                                            >
-                                                {isDeleting ? <span className="animate-spin mr-1">⏳</span> : <Trash2 className="w-3 h-3 mr-1" />}
-                                                {t('course.session.delete_selected', `Supprimer (${selectedSessions.length})`)}
-                                            </Button>
-                                        )}
                                     </div>
                                     <div className="flex items-center gap-2">
-                                        {sortedSessions.length > 0 && (
-                                            <Button variant="outline" size="sm" onClick={selectAllSessions} className="text-xs h-7">
-                                                {selectedSessions.length === sortedSessions.length
-                                                    ? t('course.session.deselect_all', 'Tout désélectionner')
-                                                    : t('course.session.select_all', 'Tout sélectionner')}
-                                            </Button>
-                                        )}
+                                        <Tooltip>
+                                            <TooltipTrigger>
+                                                <FilterIcon className="w-4 h-4 text-gray-500" />
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                                <p>Filtrer les sessions par date</p>
+                                            </TooltipContent>
+                                        </Tooltip>
                                         <Input
                                             type="date"
                                             value={searchDate}
@@ -321,6 +316,22 @@ export default function CourseSessionCreateDrawer({ open, setOpen, courseId }: C
                                             className="w-48"
                                         />
                                     </div>
+                                </div>
+                                <div className="flex justify-between items-center">
+                                    {selectedSessions.length > 0 && (
+                                        <Button variant="destructive" size="sm" onClick={handleDeleteMultiple} disabled={isDeleting} className="h-7">
+                                            {isDeleting ? <span className="animate-spin mr-1">⏳</span> : <Trash2 className="w-3 h-3 mr-1" />}
+                                            {t('course.session.delete_selected', `Supprimer (${selectedSessions.length})`)}
+                                        </Button>
+                                    )}
+
+                                    {sortedSessions.length > 0 && (
+                                        <Button variant="outline" size="sm" onClick={selectAllSessions} className="text-xs h-7">
+                                            {selectedSessions.length === sortedSessions.length
+                                                ? t('course.session.deselect_all', 'Tout désélectionner')
+                                                : t('course.session.select_all', 'Tout sélectionner')}
+                                        </Button>
+                                    )}
                                 </div>
                                 <ul className="space-y-1 max-h-60 overflow-y-auto border rounded-md p-2">
                                     {sortedSessions.length === 0 ? (

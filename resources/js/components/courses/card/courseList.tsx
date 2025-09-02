@@ -37,7 +37,7 @@ const CourseList: React.FC<CourseListProps> = ({ courses, onDelete }) => {
                     </div>
 
                     <div>
-                        <CourseSessionCreateDrawer open={openSessionDrawer} setOpen={setOpenSessionDrawer} courseId={selectedCourseSession?.id} />
+                        <CourseSessionCreateDrawer open={openSessionDrawer} setOpen={setOpenSessionDrawer} courseId={selectedCourseSession?.id}  courseTitle={selectedCourseSession?.title} />
                     </div>
                 </>
             )}
