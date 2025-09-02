@@ -31,6 +31,7 @@ function CourseCardWrapper({ searchTerm, viewMode, loading, setLoading, courses,
     const [showConfirm, setShowConfirm] = useState(false);
     const [courseToDelete, setCourseToDelete] = useState<ICourse | null>(null);
     const [isDeleting, setIsDeleting] = useState(false);
+    const [enrollmentWarning, setEnrollmentWarning] = useState<string | null>(null);
 
     const [currentPage, setCurrentPage] = useState(1);
     const coursesPerPage = 9;
@@ -101,9 +102,10 @@ function CourseCardWrapper({ searchTerm, viewMode, loading, setLoading, courses,
         }
         // Call the delete function here
         Logger.log('Deleting course with ID:', courseToDelete?.id);
+        setIsDeleting(true);
         axios
             .delete(route('dashboard.course.delete', courseToDelete?.id))
-            .then(() => {
+            .then((response) => {
                 setShowConfirm(false);
                 setIsDeleting(false);
                 setCourseToDelete(null);
@@ -111,24 +113,48 @@ function CourseCardWrapper({ searchTerm, viewMode, loading, setLoading, courses,
                 handleGetAllCourses?.();
             })
             .catch((error) => {
+                setIsDeleting(false);
                 Logger.error('Error deleting course:', error);
-                toast.error(t('courses.delete_error', 'Erreur lors de la suppression de la formation.'));
+                
+                // Check if the error is due to existing enrollments
+                if (error.response?.data?.hasEnrollments) {
+                    const enrollmentCount = error.response.data.enrollmentCount;
+                    const message = error.response.data.message || 
+                        `Cette formation ne peut pas être supprimée car ${enrollmentCount} utilisateur(s) y sont inscrits. Veuillez d'abord gérer les inscriptions existantes.`;
+                    
+                    // Show a custom alert for enrollment conflict
+                    toast.error(message, {
+                        duration: 6000, // Show for 6 seconds
+                        style: {
+                            maxWidth: '500px',
+                        },
+                    });
+                    setShowConfirm(false);
+                    setCourseToDelete(null);
+                } else {
+                    toast.error(t('courses.delete_error', 'Erreur lors de la suppression de la formation.'));
+                }
             });
-
-        // router.delete(route('dashboard.course.delete', courseToDelete?.id), {
-        //     onSuccess: () => {
-        //         setShowConfirm(false);
-        //         setIsDeleting(false);
-        //         setCourseToDelete(null);
-        //         toast.success(t('courses.delete', 'Formation supprimée avec succès !'));
-        //     },
-        // });
     };
 
     const handleOpenConfirmDialog = (course: ICourse) => {
         setCourseToDelete(course);
+        setEnrollmentWarning(null);
         setShowConfirm(true);
         setIsDeleting(false);
+        
+        // Optional: Check for enrollments beforehand to show warning in dialog
+        axios.get(route('dashboard.course.enrollments.count', course.id))
+            .then((response) => {
+                const count = response.data.count;
+                if (count > 0) {
+                    setEnrollmentWarning(`⚠️ Attention : ${count} utilisateur(s) sont inscrits à cette formation.`);
+                }
+            })
+            .catch((error) => {
+                // Silent fail - will check on actual delete
+                Logger.log('Could not fetch enrollment count:', error);
+            });
     };
 
     if (loading) {
@@ -162,11 +188,23 @@ function CourseCardWrapper({ searchTerm, viewMode, loading, setLoading, courses,
             <ConfirmDialog
                 open={showConfirm}
                 title="Supprimer la formation"
-                description="Voulez-vous vraiment supprimer cette formation ? Cette action est irréversible."
+                description={
+                    <>
+                        Voulez-vous vraiment supprimer cette formation ? Cette action est irréversible.
+                        {enrollmentWarning && (
+                            <div className="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded-md text-yellow-800 text-sm">
+                                {enrollmentWarning}
+                            </div>
+                        )}
+                    </>
+                }
                 confirmLabel="Supprimer"
                 cancelLabel="Annuler"
                 onConfirm={handleDelete}
-                onCancel={() => setShowConfirm(false)}
+                onCancel={() => {
+                    setShowConfirm(false);
+                    setEnrollmentWarning(null);
+                }}
                 loading={isDeleting}
             />
         </div>

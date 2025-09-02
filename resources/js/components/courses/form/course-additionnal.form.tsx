@@ -3,6 +3,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 // import { PeriodicityUnitEnum } from '@/types/course';
+import SelectCustom from '@/components/ui/select-custom';
 import { Switch } from '@/components/ui/switch';
 import TooltipCustom from '@/components/ui/TooltipCustom';
 import { ICourse } from '@/types/course';
@@ -54,7 +55,7 @@ export default function CourseAdditionnalForm({
             if (courseSelected.periodicity_unit && (!data.periodicity_unit || data.periodicity_unit === '')) {
                 setData('periodicity_unit', courseSelected.periodicity_unit);
             } else if (!data.periodicity_unit) {
-                setData('periodicity_unit', PERIODICITY_UNIT[0].value); 
+                setData('periodicity_unit', PERIODICITY_UNIT[0].value);
             }
 
             // Initialisation de la valeur de périodicité si vide ou non définie
@@ -133,7 +134,7 @@ export default function CourseAdditionnalForm({
                 <div className="grid gap-2">
                     <Label htmlFor="duration">
                         {t('courses.duration', 'Durée')}
-                        {/*  <span className="text-red-500">*</span> */}
+                        <span className="text-red-500">*</span>
                     </Label>
                     <Input
                         id="duration"
@@ -142,6 +143,7 @@ export default function CourseAdditionnalForm({
                         onChange={(e) => setData('duration', e.target.value)}
                         disabled={processing}
                         placeholder={t('courses.duration', 'Durée (ex: 10h)')}
+                        required
                     />
                     <InputError message={errors.duration} />
                 </div>
@@ -151,28 +153,14 @@ export default function CourseAdditionnalForm({
                         {t('courses.periodicity_unit', 'Periodicité')}
                         {/* <span className="text-red-500">*</span> */}
                     </Label>
-                    <Select
-                        disabled={processing}
-                        value={data.periodicity_unit}
-                        defaultValue={data.periodicity_unit}
-                        onValueChange={(value) => setData('periodicity_unit', value)}
-                    >
-                        <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Sélectionner ..." />
-                        </SelectTrigger>
-
-                        <SelectContent>
-                            <SelectGroup>
-                                <SelectLabel>{t('courses.periodicity_unit', 'Periodicité')}</SelectLabel>
-
-                                {PERIODICITY_UNIT.map((unit) => (
-                                    <SelectItem key={unit.value} value={unit.value}>
-                                        {unit.label}
-                                    </SelectItem>
-                                ))}
-                            </SelectGroup>
-                        </SelectContent>
-                    </Select>
+                    <SelectCustom
+                        data={PERIODICITY_UNIT.map((unit) => ({ id: unit.value, title: unit.label, value: unit.value }))}
+                        selectLabel={t('courses.periodicity', 'Choisir une periodicité')}
+                        processing={processing}
+                        onValueChange={(value) => setData('periodicity_unit', parseInt(value) ?? 0)}
+                        defaultValue={data.periodicity_unit ? String(data.periodicity_unit) : PERIODICITY_UNIT[0].value}
+                        required
+                    />
                     <InputError message={errors.periodicity_unit} />
                 </div>
             </div>

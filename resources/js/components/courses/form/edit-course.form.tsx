@@ -145,11 +145,13 @@ function CourseForm({ course }: ICourseFormProps) {
         setData('id', course.id);
         setData('excerpt', course.excerpt || '');
         setData('category_id', course?.category?.id?.toString() || '');
-        setData('duration', course.duration || '');
         setData('attachment', course.attachment || '');
         setData('lectures', course.lectures || 0);
+
+        setData('duration', course.duration || '3');
         setData('periodicity_unit', course.periodicity_unit || PeriodicityUnitEnum.DAY);
-        setData('periodicity_value', course.periodicity_value || 1); // <->duration
+        setData('periodicity_value', course.periodicity_value || 3); // <->duration
+        
         setData('price', course.price ? course.price : '');
         setData('regular_price', course.regular_price ? Number(course.regular_price).toLocaleString('fr-FR') : '');
         setData('author', course.author || '');

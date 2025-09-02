@@ -102,7 +102,7 @@ export const getPrice = (price: number, regular_price?: number): string => {
  * @param {number} periodicityValue - The value of the periodicity.
  * @returns {string} A string representing the periodicity, for example '3 mois'.
  */
-export const getPeriodicity = (periodicityUnit: ICoursePeriodicity, periodicityValue: number): string => {
+export const getPeriodicity = (periodicityUnit: ICoursePeriodicity, periodicityValue: number): string|boolean => {
     const periodicityMap: Record<string, string> = {
         DAY: 'jour',
         WEEK: 'semaine',
@@ -110,8 +110,11 @@ export const getPeriodicity = (periodicityUnit: ICoursePeriodicity, periodicityV
         YEAR: 'an',
     };
 
-    const unit = periodicityMap[periodicityUnit] || 'inconnu';
-    return `${periodicityValue} ${unit}${periodicityValue > 1 ? 's' : ''}`;
+    const unit = periodicityMap[periodicityUnit] || '';
+    if(periodicityValue) {
+        return `${periodicityValue} ${unit}${periodicityValue > 1 ? 's' : ''}`;
+    }
+    return false; 
 }
 
 

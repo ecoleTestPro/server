@@ -1,6 +1,6 @@
 import { ICourse } from '@/types/course';
 import { ROUTE_MAP } from '@/utils/route.util';
-import { formatPrice, getPeriodicity, getPrice } from '@/utils/utils';
+import { getPeriodicity, getPrice } from '@/utils/utils';
 import { Link } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 
@@ -10,27 +10,27 @@ interface CourseDetailOverviewProps {
 
 export default function CourseDetailOverview({ course }: CourseDetailOverviewProps) {
     const { t } = useTranslation();
-
     const liClassName = 'flex items-center mb-2 text-gray-700 dark:text-gray-300';
+    const duration: string | boolean = getPeriodicity(course.periodicity_unit, course.periodicity_value);
 
-   
     return (
         <div>
             <ul>
-                <li className={liClassName}>
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="size-6 mr-1"
-                    >
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                    </svg>
-                    {t('COURSE.DURATION', 'Durée')} : {getPeriodicity(course.periodicity_unit, course.periodicity_value)}
-                </li>
-
+                {duration && (
+                    <li className={liClassName}>
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth={1.5}
+                            stroke="currentColor"
+                            className="size-6 mr-1"
+                        >
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                        </svg>
+                        {t('COURSE.DURATION', 'Durée')} : {duration}
+                    </li>
+                )}
                 <li className={liClassName}>
                     <svg
                         xmlns="http://www.w3.org/2000/svg"

@@ -3,26 +3,19 @@
 namespace App\Http\Controllers\Private;
 
 use App\Enum\MediaTypeEnum;
-use App\Enum\NotificationTypeEnum;
-use App\Events\NotifyEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CourseStoreRequest;
 use App\Http\Requests\CourseUpdateRequest;
 use App\Http\Requests\CoursePartnerSyncRequest;
 use App\Models\Course;
 use App\Models\Partner;
-use App\Models\User;
 use App\Repositories\CategoryRepository;
 use App\Repositories\ContentRepository;
 use App\Repositories\CourseRepository;
 use App\Repositories\InstructorRepository;
-use App\Repositories\NotificationInstanceRepository;
-use App\Repositories\NotificationRepository;
 use App\Repositories\PartnerRepository;
-use App\Repositories\UserRepository;
 use App\Services\Notification\CourseStoreNotificationService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class CourseController extends Controller
@@ -259,10 +252,46 @@ class CourseController extends Controller
      * @param \App\Models\Course $course
      * @return \Illuminate\Http\JsonResponse
      */
+    /**
+     * Get the enrollment count for a course
+     *
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getEnrollmentCount(int $id)
+    {
+        try {
+            $count = \App\Models\Enrollment::where('course_id', $id)->count();
+            return response()->json([
+                'count' => $count,
+                'status' => 200,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'count' => 0,
+                'status' => 500,
+                'message' => 'Error fetching enrollment count'
+            ]);
+        }
+    }
+
     public function delete(int $id)
     {
         try {
             $course = CourseRepository::query()->findOrFail($id);
+            
+            // Check if there are any enrollments for this course
+            $enrollmentCount = \App\Models\Enrollment::where('course_id', $id)->count();
+            
+            if ($enrollmentCount > 0) {
+                return response()->json([
+                    'message' => "Cette formation ne peut pas être supprimée car {$enrollmentCount} utilisateur(s) y sont inscrits. Veuillez d'abord gérer les inscriptions existantes.",
+                    'status' => 409, // Conflict status
+                    'hasEnrollments' => true,
+                    'enrollmentCount' => $enrollmentCount
+                ]);
+            }
+            
             $course->delete();
             return response()->json([
                 'message' => 'Course deleted successfully',
