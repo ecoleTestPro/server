@@ -71,4 +71,59 @@ class CourseSessionController extends Controller
             return response()->json(['error' => 'Failed to update course session: ' . $e->getMessage()], 500);
         }
     }
+
+    public function destroy($session): JsonResponse
+    {
+        try {
+            $sessionModel = \App\Models\CourseSession::findOrFail($session);
+            $sessionModel->delete();
+
+            return response()->json(['message' => 'Session deleted successfully'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to delete course session: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function destroyMultiple(\Illuminate\Http\Request $request): JsonResponse
+    {
+        try {
+            $sessionIds = $request->input('session_ids', []);
+            
+            if (empty($sessionIds)) {
+                return response()->json(['error' => 'No session IDs provided'], 400);
+            }
+
+            // Vérifier que les IDs sont valides
+            if (!is_array($sessionIds)) {
+                return response()->json(['error' => 'session_ids must be an array'], 400);
+            }
+
+            // Vérifier que les sessions existent avant de les supprimer
+            $existingSessions = \App\Models\CourseSession::whereIn('id', $sessionIds)->get();
+            
+            if ($existingSessions->isEmpty()) {
+                return response()->json(['error' => 'No sessions found with provided IDs'], 404);
+            }
+
+            if ($existingSessions->count() !== count($sessionIds)) {
+                return response()->json(['error' => 'Some session IDs were not found'], 404);
+            }
+
+            // Supprimer les sessions
+            $deletedCount = \App\Models\CourseSession::whereIn('id', $sessionIds)->delete();
+
+            return response()->json([
+                'message' => 'Sessions deleted successfully',
+                'deleted_count' => $deletedCount
+            ], 200);
+        } catch (\Exception $e) {
+            \Log::error('Failed to delete course sessions', [
+                'error' => $e->getMessage(),
+                'session_ids' => $request->input('session_ids', []),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return response()->json(['error' => 'Failed to delete course sessions: ' . $e->getMessage()], 500);
+        }
+    }
 }

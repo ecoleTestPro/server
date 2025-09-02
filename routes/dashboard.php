@@ -54,6 +54,8 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
         Route::delete('delete/{id}',    [CourseController::class, 'delete'])->name('dashboard.course.delete');
         Route::post('{course}/sessions', [CourseSessionController::class, 'store'])->name('dashboard.course.session.store');
         Route::put('sessions/{session}', [CourseSessionController::class, 'update'])->name('dashboard.course.session.update');
+        Route::delete('sessions/batch', [CourseSessionController::class, 'destroyMultiple'])->name('dashboard.course.session.delete.batch');
+        Route::delete('sessions/{session}', [CourseSessionController::class, 'destroy'])->name('dashboard.course.session.delete');
     });
 
     // CATEGORY COURSE MANAGEMENT
