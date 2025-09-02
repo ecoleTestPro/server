@@ -254,7 +254,7 @@ class CourseRepository extends Repository
             'reference_tag'        => $request->reference_tag,
             'location_mode'        => $request->location_mode ?? 'En présentiel ou à distance',
             'periodicity_unit'     => $request->periodicity_unit,
-            'periodicity_value'    => $request->duration, // set duration value in periodicity_value
+            'periodicity_value'    => $request->periodicity_value,
             'duration'             => $request->duration,
             'attachment'           => $request->attachment,
             'lectures'             => $request->lectures,
@@ -393,7 +393,7 @@ class CourseRepository extends Repository
                 'reference_tag'        => $request->reference_tag ?? $course->reference_tag,
                 'location_mode'        => $request->location_mode ?? $course->location_mode ?? 'En présentiel ou à distance',
                 'periodicity_unit'     => $request->periodicity_unit ?? $course->periodicity_unit,
-                'periodicity_value'    => $request->duration ?? $course->duration,
+                'periodicity_value'    => $request->periodicity_value ?? $course->periodicity_value,
                 'duration'             => $request->duration ?? $course->duration,
                 'attachment'           => $request->attachment ?? $course->attachment,
                 'lectures'             => $request->lectures ?? $course->lectures,

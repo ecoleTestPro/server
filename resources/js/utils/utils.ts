@@ -103,14 +103,14 @@ export const getPrice = (price: number, regular_price?: number): string => {
  * @returns {string} A string representing the periodicity, for example '3 mois'.
  */
 export const getPeriodicity = (periodicityUnit: ICoursePeriodicity, periodicityValue: number): string|boolean => {
-    const periodicityMap: Record<string, string> = {
+    const PERIODICITY_MAP: Record<string, string> = {
         DAY: 'jour',
         WEEK: 'semaine',
         MONTH: 'mois',
         YEAR: 'an',
-    };
+    }; 
 
-    const unit = periodicityMap[periodicityUnit] || '';
+    const unit = PERIODICITY_MAP[periodicityUnit] || '';
     if(periodicityValue) {
         return `${periodicityValue} ${unit}${periodicityValue > 1 ? 's' : ''}`;
     }

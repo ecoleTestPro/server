@@ -58,11 +58,17 @@ export default function CourseAdditionnalForm({
                 setData('periodicity_unit', PERIODICITY_UNIT[0].value);
             }
 
-            // Initialisation de la valeur de périodicité si vide ou non définie
-            if (courseSelected.periodicity_value && (!data.periodicity_value || data.periodicity_value === '' || data.periodicity_value === 0)) {
-                setData('periodicity_value', courseSelected.periodicity_value);
-            } else if (!data.periodicity_value) {
-                setData('periodicity_value', 1);
+            // Initialisation de la durée si vide ou non définie
+            if (courseSelected.duration && (!data.duration || data.duration === '')) {
+                setData('duration', courseSelected.duration.toString());
+                setData('periodicity_value', courseSelected.duration.toString());
+            } else if (courseSelected.periodicity_value && (!data.periodicity_value || data.periodicity_value === '' || Number(data.periodicity_value) === 0)) {
+                // Si pas de durée mais une periodicity_value, utiliser cette valeur pour les deux
+                setData('duration', courseSelected.periodicity_value.toString());
+                setData('periodicity_value', courseSelected.periodicity_value.toString());
+            } else if (!data.duration || data.duration === '') {
+                setData('duration', '1');
+                setData('periodicity_value', '1');
             }
 
             // Initialisation du mode de formation si vide ou non défini
@@ -140,24 +146,30 @@ export default function CourseAdditionnalForm({
                         id="duration"
                         type="number"
                         value={data.duration}
-                        onChange={(e) => setData('duration', e.target.value)}
+                        onChange={(e) => {
+                            // Synchronize both duration and periodicity_value
+                            const value = e.target.value;
+                            setData('duration', value);
+                            setData('periodicity_value', value);
+                        }}
                         disabled={processing}
-                        placeholder={t('courses.duration', 'Durée (ex: 10h)')}
+                        placeholder={t('courses.duration', 'Durée (ex: 10)')}
                         required
+                        min="1"
                     />
                     <InputError message={errors.duration} />
                 </div>
 
                 <div className="grid gap-2">
                     <Label htmlFor="periodicity_unit">
-                        {t('courses.periodicity_unit', 'Periodicité')}
+                        {t('courses.periodicity_unit', 'Unité de periodicité')}
                         {/* <span className="text-red-500">*</span> */}
                     </Label>
                     <SelectCustom
                         data={PERIODICITY_UNIT.map((unit) => ({ id: unit.value, title: unit.label, value: unit.value }))}
-                        selectLabel={t('courses.periodicity', 'Choisir une periodicité')}
+                        selectLabel={t('courses.periodicity', 'Choisir une unité')}
                         processing={processing}
-                        onValueChange={(value) => setData('periodicity_unit', parseInt(value) ?? 0)}
+                        onValueChange={(value) => setData('periodicity_unit', value)}
                         defaultValue={data.periodicity_unit ? String(data.periodicity_unit) : PERIODICITY_UNIT[0].value}
                         required
                     />

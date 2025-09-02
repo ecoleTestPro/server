@@ -27,6 +27,7 @@ import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { FaClock, FaMapMarkerAlt } from 'react-icons/fa';
 import './CourseCard.css'; // Link to CSS file
+import { getPeriodicity } from '@/utils/utils';
 
 interface CourseCardProps {
     course: ICourse;
@@ -46,6 +47,8 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, onCourseUpdat
     const [showConfirmDelete, setShowConfirmDelete] = useState(false);
     const [isPublishing, setIsPublishing] = useState(false);
     const [currentCourse, setCurrentCourse] = useState<ICourse>(course);
+
+    const durationValue: boolean | string = getPeriodicity(course.periodicity_unit, course.periodicity_value);
 
     const getNextSession = (): string => {
         if (!currentCourse.course_sessions || currentCourse.course_sessions.length === 0) {
@@ -320,7 +323,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, onCourseUpdat
                     <div className="grid grid-cols-1 gap-3 mb-4">
                         <div className="flex items-center gap-2 text-sm text-gray-600">
                             <Clock className="w-4 h-4 text-blue-500" />
-                            <span>{course.duration} jours</span>
+                            <span>{durationValue || '-'}</span>
                         </div>
                         <div className="flex items-center gap-2 text-sm text-gray-600">
                             <MapPin className="w-4 h-4 text-green-500" />
