@@ -64,7 +64,7 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ course }) => {
                                 isOpen={isOpen}
                                 toggleSection={toggleSection}
                                 section={'objectives'}
-                                sectionTitle="Objectifs"
+                                sectionTitle="Description"
                                 content={<RichContent html={course.excerpt} />}
                             />
                             {/* Public cible */}

@@ -24,7 +24,7 @@ class CourseStoreRequest extends FormRequest
         return [
             'category_id'       => 'required|exists:categories,id',
             'title'             => 'required|min:2|max:500',
-            'excerpt'           => 'required|string|min:2|max:255',
+            'excerpt'           => 'required|string',
             'media'             => 'image|mimes:jpeg,png,jpg|max:2048',
             'logo'              => 'image|mimes:jpeg,png,jpg|max:2048',
             'organization_logo' => 'image|mimes:jpeg,png,jpg|max:2048',
