@@ -46,6 +46,12 @@ const ContactCard = () => {
                             <div className="flex items-center space-x-3">
                                 <span className="text-2xl">📞</span>
                                 <a href={`tel:${CONTACT_INFO.phone2}`} className="text-lg font-semibold hover:underline">
+                                    {CONTACT_INFO.phone1}
+                                </a>
+                            </div>
+                            <div className="flex items-center space-x-3">
+                                <span className="text-2xl">📞</span>
+                                <a href={`tel:${CONTACT_INFO.phone2}`} className="text-lg font-semibold hover:underline">
                                     {CONTACT_INFO.phone2}
                                 </a>
                             </div>

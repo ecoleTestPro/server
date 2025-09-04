@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
+import { CONTACT_INFO } from '../layouts/footer/footer';
 import MotionSection from '../motion/MotionSection';
-import TitleBadgeOne from '../ui/badge-one';
 
 interface ContactInfo {
     title: string;
@@ -12,19 +12,25 @@ interface ContactInfo {
 const contacts: ContactInfo[] = [
     {
         title: 'Email',
-        contact: 'info@testpro-group.com',
-        link: 'mailto:info@testpro-group.com',
+        contact: CONTACT_INFO.email,
+        link: `mailto:${CONTACT_INFO.email}`,
         image: '/assets/images/svgs/email-part-2-svgrepo-com.svg',
     },
     {
         title: 'Téléphone',
-        contact: '+225 0706915705',
-        link: 'tel:+2250706915705',
+        contact: CONTACT_INFO.phone1,
+        link: `tel:${CONTACT_INFO.phone1}`,
+        image: '/assets/images/svgs/phone-out-svgrepo-com.svg',
+    },
+    {
+        title: 'Téléphone',
+        contact: CONTACT_INFO.phone2,
+        link: `tel:${CONTACT_INFO.phone2}`,
         image: '/assets/images/svgs/phone-out-svgrepo-com.svg',
     },
     {
         title: 'Adresse',
-        contact: "Siège social: 5ème étage de la Résidence Pacy En face de l'immeuble CGK, Cocody Angré Djibi - 9ème tranche, Abidjan Côte d'Ivoire",
+        contact: CONTACT_INFO.address,
         image: '/assets/images/svgs/support_agent.svg',
     },
 ];
