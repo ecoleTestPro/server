@@ -24,27 +24,72 @@ export default function RichTextQuill({ label, labelId, value, setData, classNam
     <div>
         <style>
         {`
+          /* Mode clair par défaut */
           #${labelId} .ql-container {
             min-height: 200px;
             height: fit-content;
             border: 1px solid #e5e7eb;
             border-radius: 0.5rem;
-            background-color: #ffffff !important;
+            background-color: #ffffff;
           }
           #${labelId} .ql-editor {
             min-height: 200px;
             height: fit-content;
             font-size: 14px;
             line-height: 1.6;
-            background-color: #ffffff !important;
-            color: #374151 !important;
+            background-color: #ffffff;
+            color: #374151;
           }
           #${labelId} .ql-toolbar {
             border: 1px solid #e5e7eb;
             border-bottom: none;
             border-radius: 0.5rem 0.5rem 0 0;
-            background: #f9fafb !important;
-            color: #374151 !important;
+            background: #f9fafb;
+            color: #374151;
+          }
+          
+          /* Mode sombre avec classe dark sur html */
+          :is(html.dark, .dark) #${labelId} .ql-container {
+            border-color: #6b7280 !important;
+            background-color: #1f2937 !important;
+          }
+          :is(html.dark, .dark) #${labelId} .ql-editor {
+            background-color: #1f2937 !important;
+            color: #f3f4f6 !important;
+          }
+          :is(html.dark, .dark) #${labelId} .ql-toolbar {
+            border-color: #6b7280 !important;
+            background: #374151 !important;
+            color: #f3f4f6 !important;
+          }
+          
+          /* Styles pour les éléments en mode sombre */
+          :is(html.dark, .dark) #${labelId} .ql-editor h1,
+          :is(html.dark, .dark) #${labelId} .ql-editor h2,
+          :is(html.dark, .dark) #${labelId} .ql-editor h3 {
+            color: #f9fafb !important;
+          }
+          :is(html.dark, .dark) #${labelId} .ql-editor ol > li::before {
+            color: #f3f4f6 !important;
+          }
+          :is(html.dark, .dark) #${labelId} .ql-editor ul > li::before {
+            color: #9ca3af !important;
+          }
+          :is(html.dark, .dark) #${labelId} .ql-editor blockquote {
+            color: #d1d5db !important;
+            border-left-color: #60a5fa !important;
+            background-color: #374151 !important;
+          }
+          :is(html.dark, .dark) #${labelId} .ql-editor code {
+            background-color: #374151 !important;
+            color: #fbbf24 !important;
+          }
+          
+          /* Fallback pour une meilleure compatibilité */
+          html.dark #${labelId} .ql-editor,
+          .dark #${labelId} .ql-editor {
+            background-color: #1f2937 !important;
+            color: #f3f4f6 !important;
           }
           #${labelId} .ql-toolbar .ql-formats {
             margin-right: 15px;

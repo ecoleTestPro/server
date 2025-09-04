@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useMemo } from 'react'
+import { lazy, Suspense, useMemo } from 'react'
 
 const ReactQuill = lazy(() => import('react-quill-new'));
 
@@ -252,41 +252,97 @@ export default function AdvancedRichTextEditor({
                         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
                     }
                     
-                    /* Mode sombre - désactivé par défaut, on force le mode clair */
+                    /* Mode clair par défaut */
                     #${labelId} .ql-container {
-                        background-color: #ffffff !important;
-                        color: #374151 !important;
+                        background-color: #ffffff;
+                        color: #374151;
                     }
                     #${labelId} .ql-editor {
-                        background-color: #ffffff !important;
-                        color: #374151 !important;
+                        background-color: #ffffff;
+                        color: #374151;
                     }
                     #${labelId} .ql-toolbar {
-                        background: linear-gradient(to bottom, #ffffff, #f9fafb) !important;
-                        border-color: #d1d5db !important;
-                        color: #374151 !important;
+                        background: linear-gradient(to bottom, #ffffff, #f9fafb);
+                        border-color: #d1d5db;
+                        color: #374151;
+                    }
+                    #${labelId} .ql-editor h1,
+                    #${labelId} .ql-editor h2,
+                    #${labelId} .ql-editor h3,
+                    #${labelId} .ql-editor h4 {
+                        color: #111827;
+                    }
+                    #${labelId} .ql-editor ol > li::before {
+                        color: #374151;
+                    }
+                    #${labelId} .ql-editor ul > li::before {
+                        color: #6b7280;
+                    }
+                    #${labelId} .ql-editor a {
+                        color: #3b82f6;
+                    }
+                    #${labelId} .ql-editor blockquote {
+                        color: #475569;
+                    }
+                    #${labelId} .ql-editor code {
+                        background-color: #f1f5f9;
+                        color: #e11d48;
                     }
                     
-                    /* Mode sombre conditionnel avec classe dark */
-                    .dark #${labelId} .ql-toolbar {
+                    /* Mode sombre avec classe dark sur html - priorité plus haute */
+                    :is(html.dark, .dark) #${labelId} .ql-toolbar {
                         background: linear-gradient(to bottom, #374151, #4b5563) !important;
                         border-color: #6b7280 !important;
                         color: #f3f4f6 !important;
                     }
-                    .dark #${labelId} .ql-container {
+                    :is(html.dark, .dark) #${labelId} .ql-container {
                         border-color: #6b7280 !important;
                         background-color: #1f2937 !important;
                         color: #f3f4f6 !important;
                     }
-                    .dark #${labelId} .ql-editor {
+                    :is(html.dark, .dark) #${labelId} .ql-editor {
                         background-color: #1f2937 !important;
                         color: #f3f4f6 !important;
                     }
-                    .dark #${labelId} .ql-editor h1,
-                    .dark #${labelId} .ql-editor h2,
-                    .dark #${labelId} .ql-editor h3,
-                    .dark #${labelId} .ql-editor h4 {
+                    :is(html.dark, .dark) #${labelId} .ql-editor h1,
+                    :is(html.dark, .dark) #${labelId} .ql-editor h2,
+                    :is(html.dark, .dark) #${labelId} .ql-editor h3,
+                    :is(html.dark, .dark) #${labelId} .ql-editor h4 {
                         color: #f9fafb !important;
+                    }
+                    :is(html.dark, .dark) #${labelId} .ql-editor ol > li::before {
+                        color: #f3f4f6 !important;
+                    }
+                    :is(html.dark, .dark) #${labelId} .ql-editor ul > li::before {
+                        color: #9ca3af !important;
+                    }
+                    :is(html.dark, .dark) #${labelId} .ql-editor a {
+                        color: #60a5fa !important;
+                    }
+                    :is(html.dark, .dark) #${labelId} .ql-editor a:hover {
+                        color: #93c5fd !important;
+                    }
+                    :is(html.dark, .dark) #${labelId} .ql-editor blockquote {
+                        color: #d1d5db !important;
+                        border-left-color: #60a5fa !important;
+                        background-color: #374151 !important;
+                    }
+                    :is(html.dark, .dark) #${labelId} .ql-editor code {
+                        background-color: #374151 !important;
+                        color: #fbbf24 !important;
+                    }
+                    :is(html.dark, .dark) #${labelId} .ql-editor .ql-code-block-container {
+                        background-color: #111827 !important;
+                    }
+                    :is(html.dark, .dark) #${labelId} .ql-editor .ql-code-block {
+                        color: #e2e8f0 !important;
+                    }
+                    
+                    /* Fallback pour une meilleure compatibilité */
+                    html.dark #${labelId} .ql-editor,
+                    .dark #${labelId} .ql-editor {
+                        background-color: #1f2937 !important;
+                        color: #f3f4f6 !important;
                     }
                 `}
             </style>
