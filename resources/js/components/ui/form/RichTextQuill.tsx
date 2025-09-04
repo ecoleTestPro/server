@@ -94,21 +94,16 @@ export default function RichTextQuill({ label, labelId, value, setData, classNam
           #${labelId} .ql-toolbar .ql-formats {
             margin-right: 15px;
           }
-          #${labelId} .ql-editor ol {
+          #${labelId} .ql-editor ol[data-list="ordered"] {
             padding-left: 1.5em;
             list-style-type: decimal;
-          }
-          #${labelId} .ql-editor ul {
-            padding-left: 1.5em;
-            list-style-type: disc;
           }
           #${labelId} .ql-editor ul[data-list="bullet"] {
+            padding-left: 1.5em;
             list-style-type: disc;
           }
-          #${labelId} .ql-editor ol[data-list="ordered"] {
-            list-style-type: decimal;
-          }
           #${labelId} .ql-editor ul[data-list="check"] {
+            padding-left: 1.5em;
             list-style-type: none;
           }
           #${labelId} .ql-editor ul[data-list="check"] > li::before {

@@ -116,48 +116,37 @@ export default function AdvancedRichTextEditor({
                     }
                     
                     /* Liste numérotée */
-                    #${labelId} .ql-editor ol {
+                    #${labelId} .ql-editor ol[data-list="ordered"] {
                         padding-left: 2em;
-                        counter-reset: list-counter;
-                        list-style: none;
+                        list-style-type: decimal;
                     }
-                    #${labelId} .ql-editor ol > li {
-                        counter-increment: list-counter;
-                        position: relative;
+                    #${labelId} .ql-editor ol[data-list="ordered"] > li {
                         margin-bottom: 0.5rem;
-                        padding-left: 0.5rem;
-                    }
-                    #${labelId} .ql-editor ol > li::before {
-                        content: counter(list-counter) ".";
-                        position: absolute;
-                        left: -2em;
-                        width: 1.5em;
-                        text-align: right;
-                        font-weight: 600;
-                        color: #374151;
                     }
                     
                     /* Liste à puces */
-                    #${labelId} .ql-editor ul {
+                    #${labelId} .ql-editor ul[data-list="bullet"] {
                         padding-left: 2em;
-                        list-style: none;
+                        list-style-type: disc;
                     }
-                    #${labelId} .ql-editor ul > li {
-                        position: relative;
+                    #${labelId} .ql-editor ul[data-list="bullet"] > li {
                         margin-bottom: 0.5rem;
-                        padding-left: 0.5rem;
-                    }
-                    #${labelId} .ql-editor ul > li::before {
-                        content: "•";
-                        position: absolute;
-                        left: -1.5em;
-                        font-weight: bold;
-                        color: #6b7280;
                     }
                     
                     /* Liste de contrôle */
+                    #${labelId} .ql-editor ul[data-list="check"] {
+                        padding-left: 2em;
+                        list-style-type: none;
+                    }
+                    #${labelId} .ql-editor ul[data-list="check"] > li {
+                        margin-bottom: 0.5rem;
+                        position: relative;
+                        padding-left: 0.5rem;
+                    }
                     #${labelId} .ql-editor ul[data-list="check"] > li::before {
                         content: "☐";
+                        position: absolute;
+                        left: -1.5em;
                         font-size: 16px;
                         color: #9ca3af;
                         cursor: pointer;
