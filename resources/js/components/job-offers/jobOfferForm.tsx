@@ -22,13 +22,13 @@ interface Props {
 
 interface JobOfferFormData {
     title: string;
-    company: string;
-    location: string;
-    type: string;
-    salary: number;
-    description: string;
-    expires_at: string;
-    is_active: boolean;
+    company?: string;
+    location?: string;
+    type?: string;
+    salary?: number;
+    description?: string;
+    expires_at?: string;
+    is_active?: boolean;
     [key: string]: any;
 }
 
@@ -114,7 +114,29 @@ export default function JobOfferForm({ closeDrawer, initialData }: Props) {
 
     const parseDate = (dateString: string): string => {
         if (!dateString) return '';
-        return dateString;
+        
+        // Si la date est déjà au format Y-m-d, la retourner directement
+        if (dateString.match(/^\d{4}-\d{2}-\d{2}$/)) {
+            return dateString;
+        }
+        
+        // Si la date est au format d/m/Y (venant du backend), la convertir
+        if (dateString.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
+            const [day, month, year] = dateString.split('/');
+            return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+        }
+        
+        // Essayer de parser la date comme objet Date
+        try {
+            const date = new Date(dateString);
+            if (!isNaN(date.getTime())) {
+                return date.toISOString().split('T')[0];
+            }
+        } catch (error) {
+            console.log('Error parsing date:', error);
+        }
+        
+        return '';
     };
 
     return (
@@ -311,7 +333,7 @@ export default function JobOfferForm({ closeDrawer, initialData }: Props) {
                         <Input
                             id="expires_at"
                             type="date"
-                            value={parseDate(data.expires_at)}
+                            value={parseDate(data.expires_at || '')}
                             onChange={(e) => setData('expires_at', e.target.value)}
                             disabled={processing}
                             min={new Date().toISOString().split('T')[0]}
