@@ -12,7 +12,7 @@ import CourseDetailChooseSection from './partial/CourseDetailChooseSection';
 import CourseDetailOverview from './partial/CourseDetailOverview';
 import { Logger } from '@/utils/console.util';
 
-const email: string = 'info@ecoletestpro.com';
+const email: string = 'info@testpro-group.com';
 
 interface CourseDetailProps {
     course: ICourse;

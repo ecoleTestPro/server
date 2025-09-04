@@ -141,10 +141,10 @@ const PublicAppointmentCreate: React.FC<PublicAppointmentCreateProps> = ({ busin
                             <p className="text-gray-600 dark:text-gray-300 mb-2">Réponse sous 24h</p>
                             <p className="text-gray-600 dark:text-gray-300 mb-2">En jours ouvrés</p>
                             <a
-                                href="mailto:info@ecoletestpro.com"
+                                href="mailto:info@testpro-group.com"
                                 className="text-blue-600 dark:text-blue-400 font-medium hover:text-blue-800 dark:hover:text-blue-300"
                             >
-                                info@ecoletestpro.com
+                                info@testpro-group.com
                             </a>
                         </div>
                     </div>

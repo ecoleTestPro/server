@@ -3,12 +3,14 @@ import NewsletterCTA from '@/components/newsletter/newletter-cta';
 import { ROUTE_MAP } from '@/utils/route.util';
 import { Link } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
+import { FaFacebook, FaLinkedin, FaWhatsapp } from 'react-icons/fa';
 
 export const CONTACT_INFO = {
     // phone1: '+41 78 225 58 07',
+    phone1: '+225 2722391867',
     phone2: '+225 0706915705',
     address: "Siège social: 5ème étage de la Résidence Pacy En face de l'immeuble CGK, Cocody Angré Djibi - 9ème tranche, Abidjan Côte d'Ivoire",
-    email: 'info@ecoletestpro.com',
+    email: 'info@testpro-group.com',
 };
 
 export default function Footer() {
@@ -69,29 +71,6 @@ export default function Footer() {
                                         nouvelles opportunités grâce à un enseignement de qualité et à des programmes de reconversion innovants.
                                     </p>
                                 </div>
-                                <div className="mt-2 md:mt-5">
-                                    <a
-                                        href="https://web.facebook.com/profile.php?id=61571070781870&is_tour_completed"
-                                        target="_blank"
-                                        className="inline-block text-[20px] leading-none text-gray-600 transition-all hover:text-gray-400 ltr:mr-[5px] ltr:last:mr-0 rtl:ml-[5px] rtl:last:ml-0"
-                                    >
-                                        <i className="ri-facebook-fill"></i>
-                                    </a>
-                                    <a
-                                        href="https://www.linkedin.com/company/105869023/admin/analytics/updates/"
-                                        target="_blank"
-                                        className="inline-block text-[20px] leading-none text-gray-600 transition-all hover:text-gray-400 ltr:mr-[5px] ltr:last:mr-0 rtl:ml-[5px] rtl:last:ml-0"
-                                    >
-                                        <i className="ri-linkedin-fill"></i>
-                                    </a>
-                                    <a
-                                        href="https://wa.me/message/H2CNYKQSQNCAL1"
-                                        target="_blank"
-                                        className="inline-block text-[20px] leading-none text-gray-600 transition-all hover:text-gray-400 ltr:mr-[5px] ltr:last:mr-0 rtl:ml-[5px] rtl:last:ml-0"
-                                    >
-                                        <i className="ri-whatsapp-fill"></i>
-                                    </a>
-                                </div>
                             </div>{' '}
                         </div>
 
@@ -127,12 +106,12 @@ export default function Footer() {
                                         {CONTACT_INFO.email}
                                     </a>
                                 </li>
-                                {/* <li className="mb-[10px] text-gray-500 last:mb-0 lg:text-[15px] xl:text-[16px] dark:text-gray-400">
+                                <li className="mb-[10px] text-gray-500 last:mb-0 lg:text-[15px] xl:text-[16px] dark:text-gray-400">
                                     Téléphone 1:
                                     <a href="tel:+41782255807" className="text-gray-500 transition-all hover:text-gray-800">
                                         {CONTACT_INFO.phone1}
                                     </a>
-                                </li> */}
+                                </li>
                                 <li className="mb-[10px] text-gray-500 last:mb-0 lg:text-[15px] xl:text-[16px] dark:text-gray-400">
                                     Téléphone:
                                     <a href={`tel:${CONTACT_INFO.phone2}`} className="text-gray-500 transition-all hover:text-gray-800">
@@ -144,6 +123,29 @@ export default function Footer() {
                                     <span className="font-semibold">{CONTACT_INFO.address}</span>
                                 </li>
                             </ul>
+                            <div className="mt-2 md:mt-5">
+                                <a
+                                    href="https://web.facebook.com/profile.php?id=61571070781870&is_tour_completed"
+                                    target="_blank"
+                                    className="inline-block text-[20px] leading-none text-gray-600 transition-all hover:text-gray-400 ltr:mr-[5px] ltr:last:mr-0 rtl:ml-[5px] rtl:last:ml-0"
+                                >
+                                    <FaFacebook className="w-12 h-12 text-[#3b5998] " />
+                                </a>
+                                <a
+                                    href="https://www.linkedin.com/company/105869023/admin/analytics/updates/"
+                                    target="_blank"
+                                    className="inline-block text-[20px] leading-none text-gray-600 transition-all hover:text-gray-400 ltr:mr-[5px] ltr:last:mr-0 rtl:ml-[5px] rtl:last:ml-0"
+                                >
+                                    <FaLinkedin className="w-12 h-12 text-[#0077B5]" />
+                                </a>
+                                <a
+                                    href="https://wa.me/message/H2CNYKQSQNCAL1"
+                                    target="_blank"
+                                    className="inline-block text-[20px] leading-none text-gray-600 transition-all hover:text-gray-400 ltr:mr-[5px] ltr:last:mr-0 rtl:ml-[5px] rtl:last:ml-0"
+                                >
+                                    <FaWhatsapp className="w-12 h-12 text-[#25D366]" />
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -12,8 +12,8 @@ interface ContactInfo {
 const contacts: ContactInfo[] = [
     {
         title: 'Email',
-        contact: 'info@ecoletestpro.com',
-        link: 'mailto:info@ecoletestpro.com',
+        contact: 'info@testpro-group.com',
+        link: 'mailto:info@testpro-group.com',
         image: '/assets/images/svgs/email-part-2-svgrepo-com.svg',
     },
     {
