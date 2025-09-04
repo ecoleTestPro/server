@@ -5,6 +5,7 @@ import { Link } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 import { FaFacebook, FaLinkedin, FaWhatsapp } from 'react-icons/fa';
 import { HiMail, HiPhone, HiLocationMarker } from 'react-icons/hi';
+import Social from './social';
 
 export const CONTACT_INFO = {
     // phone1: '+41 78 225 58 07',
@@ -96,87 +97,7 @@ export default function Footer() {
                         </div>
 
                         {/* Contact */}
-                        <div className="ltr:xl:pl-[80px] rtl:xl:pr-[80px]">
-                            <h3 className="!mb-[18px] !text-[16px] !leading-[1.2] !font-semibold !text-gray-700 md:!text-lg dark:!text-gray-100">
-                                Contactez-nous
-                            </h3>
-                            <ul className="space-y-3">
-                                <li className="flex items-start gap-3 text-gray-500 lg:text-[15px] xl:text-[16px] dark:text-gray-400 group transition-all duration-300 hover:translate-x-1">
-                                    <HiMail className="w-5 h-5 mt-0.5 flex-shrink-0 text-primary-600 dark:text-primary-400 animate-pulse" />
-                                    <div className="flex flex-col">
-                                        {/* <span className="text-sm text-gray-600 dark:text-gray-300 mb-1">Email:</span> */}
-                                        <a 
-                                            href={`mailto:${CONTACT_INFO.email}`} 
-                                            className="text-gray-500 transition-all duration-300 hover:text-primary-600 hover:underline group-hover:text-primary-600"
-                                        >
-                                            {CONTACT_INFO.email}
-                                        </a>
-                                    </div>
-                                </li>
-                                <li className="flex items-start gap-3 text-gray-500 lg:text-[15px] xl:text-[16px] dark:text-gray-400 group transition-all duration-300 hover:translate-x-1">
-                                    <HiPhone className="w-5 h-5 mt-0.5 flex-shrink-0 text-green-600 dark:text-green-400 animate-bounce" />
-                                    <div className="flex flex-col">
-                                        {/* <span className="text-sm text-gray-600 dark:text-gray-300 mb-1">Téléphone 1:</span> */}
-                                        <a 
-                                            href="tel:+41782255807" 
-                                            className="text-gray-500 transition-all duration-300 hover:text-green-600 hover:underline group-hover:text-green-600"
-                                        >
-                                            {CONTACT_INFO.phone1}
-                                        </a>
-                                    </div>
-                                </li>
-                                <li className="flex items-start gap-3 text-gray-500 lg:text-[15px] xl:text-[16px] dark:text-gray-400 group transition-all duration-300 hover:translate-x-1">
-                                    <HiPhone className="w-5 h-5 mt-0.5 flex-shrink-0 text-green-600 dark:text-green-400 animate-bounce animation-delay-200" />
-                                    <div className="flex flex-col">
-                                        {/* <span className="text-sm text-gray-600 dark:text-gray-300 mb-1">Téléphone 2:</span> */}
-                                        <a 
-                                            href={`tel:${CONTACT_INFO.phone2}`} 
-                                            className="text-gray-500 transition-all duration-300 hover:text-green-600 hover:underline group-hover:text-green-600"
-                                        >
-                                            {CONTACT_INFO.phone2}
-                                        </a>
-                                    </div>
-                                </li>
-                                <li className="flex items-start gap-3 text-gray-500 lg:text-[15px] xl:text-[16px] dark:text-gray-400 group transition-all duration-300 hover:translate-x-1">
-                                    <HiLocationMarker className="w-5 h-5 mt-0.5 flex-shrink-0 text-red-600 dark:text-red-400 animate-pulse" />
-                                    <div className="flex flex-col">
-                                        {/* <span className="text-sm text-gray-600 dark:text-gray-300 mb-1">Adresse:</span> */}
-                                        <span className="font-semibold text-gray-600 dark:text-gray-300 group-hover:text-gray-800 dark:group-hover:text-gray-100 transition-colors duration-300">
-                                            {CONTACT_INFO.address}
-                                        </span>
-                                    </div>
-                                </li>
-                            </ul>
-                            <div className="mt-6 md:mt-8 flex gap-4">
-                                <a
-                                    href="https://web.facebook.com/profile.php?id=61571070781870&is_tour_completed"
-                                    target="_blank"
-                                    className="group relative inline-block transform transition-all duration-300 hover:scale-110 hover:-translate-y-1"
-                                    aria-label="Facebook"
-                                >
-                                    <div className="absolute inset-0 bg-[#3b5998] rounded-full blur-lg opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
-                                    <FaFacebook className="w-10 h-10 text-[#3b5998] hover:text-[#2d4373] transition-colors duration-300 relative z-10" />
-                                </a>
-                                <a
-                                    href="https://www.linkedin.com/company/105869023/admin/analytics/updates/"
-                                    target="_blank"
-                                    className="group relative inline-block transform transition-all duration-300 hover:scale-110 hover:-translate-y-1"
-                                    aria-label="LinkedIn"
-                                >
-                                    <div className="absolute inset-0 bg-[#0077B5] rounded-full blur-lg opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
-                                    <FaLinkedin className="w-10 h-10 text-[#0077B5] hover:text-[#005885] transition-colors duration-300 relative z-10" />
-                                </a>
-                                <a
-                                    href="https://wa.me/message/H2CNYKQSQNCAL1"
-                                    target="_blank"
-                                    className="group relative inline-block transform transition-all duration-300 hover:scale-110 hover:-translate-y-1"
-                                    aria-label="WhatsApp"
-                                >
-                                    <div className="absolute inset-0 bg-[#25D366] rounded-full blur-lg opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
-                                    <FaWhatsapp className="w-10 h-10 text-[#25D366] hover:text-[#1ead51] transition-colors duration-300 relative z-10" />
-                                </a>
-                            </div>
-                        </div>
+                        <Social variant='one' /> 
                     </div>
                 </div>
                 <div className="from-secondary-100 to-secondary-200 absolute top-0 right-0 bottom-0 left-0 -z-[1] bg-gradient-to-br dark:hidden dark:from-gray-900 dark:to-gray-800" />
