@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button/button';
+import { ConfirmDialog } from '@/components/ui/confirmDialog';
 
 import { SharedData } from '@/types';
 import { ICourse, ICourseCategory } from '@/types/course';
@@ -38,6 +39,8 @@ function CourseForm({ course }: ICourseFormProps) {
     const { data, setData, post, processing, reset } = useForm<ICourseForm>(COURSE_DEFAULT_VALUES);
 
     const [formHasBeenInitialized, setFormHasBeenInitialized] = useState(false);
+    const [initialData, setInitialData] = useState<ICourseForm | null>(null);
+    const [showCancelDialog, setShowCancelDialog] = useState(false);
 
     const [errors, setErrors] = useState<ICourseFormErrors>({});
 
@@ -57,16 +60,16 @@ function CourseForm({ course }: ICourseFormProps) {
         { key: 'exam', label: t('COURSE.FORM.EXAM', 'Examen') },
     ];
 
-    const [displayPrice, setDisplayPrice] = useState<string>(() => (data.price ? Number(data.price).toLocaleString('fr-FR') : ''));
+    const [, setDisplayPrice] = useState<string>(() => (data.price ? Number(data.price).toLocaleString('fr-FR') : ''));
 
     const fieldsetClasses = 'bg-white dark:bg-gray-800 mb-2 rounded-lg border p-4';
 
     const [openIndex, setOpenIndex] = useState<number | null>(2);
     const [categories, setCategories] = useState<ICourseCategory[]>([]);
     const [partners, setPartners] = useState<IPartner[]>([]);
-    const [selectedPartners, setSelectedPartners] = useState<number[]>([]);
-    const [openPartnerDrawer, setOpenPartnerDrawer] = useState(false);
-    const [partnerFilter, setPartnerFilter] = useState('');
+    const [, setSelectedPartners] = useState<number[]>([]);
+    const [, setOpenPartnerDrawer] = useState(false);
+    const [, setPartnerFilter] = useState('');
     const partnerTags = Array.from(
         new Set(
             partners
@@ -135,6 +138,46 @@ function CourseForm({ course }: ICourseFormProps) {
     };
 
     /**
+     * Check if form data has been modified compared to initial data
+     */
+    const hasFormChanged = (): boolean => {
+        if (!initialData) return false;
+        
+        // Compare relevant fields
+        const fieldsToCompare: (keyof ICourseForm)[] = [
+            'title', 'category_id', 'excerpt', 'price', 'regular_price',
+            'author', 'attachment', 'lectures', 'duration', 'periodicity_unit',
+            'periodicity_value', 'reference_tag', 'content', 'target_audience',
+            'summary', 'pedagogical_objectives', 'course_strengths', 'evaluation',
+            'prerequisites', 'why_choose', 'exam'
+        ];
+        
+        for (const field of fieldsToCompare) {
+            const currentValue = data[field];
+            const initialValue = initialData[field];
+            
+            // Handle different types of comparisons
+            if (Array.isArray(currentValue) && Array.isArray(initialValue)) {
+                if (JSON.stringify(currentValue) !== JSON.stringify(initialValue)) {
+                    return true;
+                }
+            } else if (currentValue !== initialValue) {
+                // Convert to string for comparison to handle number/string differences
+                if (String(currentValue || '') !== String(initialValue || '')) {
+                    return true;
+                }
+            }
+        }
+        
+        // Check if files have been selected
+        if (thumbnail || logoFile || orgLogoFile || videoFile || galleryFiles) {
+            return true;
+        }
+        
+        return false;
+    };
+
+    /**
      * Initializes the form with a given course
      * @param course The course to initialize the form with
      */
@@ -151,7 +194,7 @@ function CourseForm({ course }: ICourseFormProps) {
         setData('duration', course.duration || '3');
         setData('periodicity_unit', course.periodicity_unit || PeriodicityUnitEnum.DAY);
         setData('periodicity_value', course.periodicity_value || 3); // <->duration
-        
+
         setData('price', course.price ? course.price : '');
         setData('regular_price', course.regular_price ? Number(course.regular_price).toLocaleString('fr-FR') : '');
         setData('author', course.author || '');
@@ -173,6 +216,41 @@ function CourseForm({ course }: ICourseFormProps) {
             course.description.why_choose && setData('why_choose', course.description.why_choose);
             course.description.exam && setData('exam', course.description.exam);
         }
+
+        // Store initial data for comparison
+        const formData = {
+            id: course.id,
+            title: course.title || '',
+            category_id: course?.category?.id?.toString() || '',
+            excerpt: course.excerpt || '',
+            price: course.price ? course.price : '',
+            regular_price: course.regular_price ? Number(course.regular_price).toLocaleString('fr-FR') : '',
+            author: course.author || '',
+            attachment: course.attachment || '',
+            lectures: course.lectures || 0,
+            duration: course.duration || '3',
+            periodicity_unit: course.periodicity_unit || PeriodicityUnitEnum.DAY,
+            periodicity_value: course.periodicity_value || 3,
+            partner_ids: course.partners ? course.partners.map((p) => p.id!) : [],
+            reference_tag: (course as any).reference_tag || '',
+            content: course.description?.content || '',
+            target_audience: course.description?.target_audience || '',
+            summary: course.description?.summary || '',
+            pedagogical_objectives: course.description?.pedagogical_objectives || '',
+            course_strengths: course.description?.course_strengths || '',
+            evaluation: course.description?.evaluation || '',
+            prerequisites: course.description?.prerequisites || '',
+            why_choose: course.description?.why_choose || '',
+            exam: course.description?.exam || '',
+            image: course.image || '',
+            logo: '',
+            organization_logo: '',
+            video: '',
+            is_featured: course.is_featured || false,
+            is_published: course.is_published || false,
+            location_mode: course.location_mode || '',
+        };
+        setInitialData(formData);
 
         Logger.log('[handleInitializeForm] course:', course);
         Logger.log('[handleInitializeForm] data:', data);
@@ -252,6 +330,8 @@ function CourseForm({ course }: ICourseFormProps) {
         } else {
             setFormHasBeenInitialized(false);
             reset();
+            // Set initial data for new courses
+            setInitialData(COURSE_DEFAULT_VALUES);
         }
         setLoading(false);
     }, [course]);
@@ -456,7 +536,14 @@ function CourseForm({ course }: ICourseFormProps) {
                                     <div className="mt-[30vh] w-full">
                                         <Button
                                             type="button"
-                                            onClick={() => router.visit(route('dashboard.course.index'))}
+                                            onClick={() => {
+                                                // Check if form has been modified
+                                                if (hasFormChanged()) {
+                                                    setShowCancelDialog(true);
+                                                } else {
+                                                    router.visit(route('dashboard.course.index'));
+                                                }
+                                            }}
                                             className="mt-2  bg-red-400 hover:bg-red-500 w-full "
                                             disabled={processing}
                                         >
@@ -472,6 +559,20 @@ function CourseForm({ course }: ICourseFormProps) {
                     Les champs marqués d'un <span className="text-red-500">*</span> sont obligatoires.
                 </p>
             </form>
+
+            {/* Confirmation Dialog */}
+            <ConfirmDialog
+                open={showCancelDialog}
+                onCancel={() => setShowCancelDialog(false)}
+                onConfirm={() => {
+                    setShowCancelDialog(false);
+                    router.visit(route('dashboard.course.index'));
+                }}
+                title={t('courses.cancelConfirmTitle', 'Annuler les modifications ?')}
+                description={t('courses.cancelConfirmMessage', 'Vous avez des modifications non sauvegardées. Êtes-vous sûr de vouloir quitter sans enregistrer ?')}
+                confirmLabel={t('courses.confirmCancel', 'Oui, annuler')}
+                cancelLabel={t('courses.continueEditing', 'Continuer l\'édition')}
+            />
         </>
     );
 }
