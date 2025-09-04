@@ -127,7 +127,7 @@ class CourseRepository extends Repository
     }
 
     /**
-     * Get all courses by category id.
+     * Get all courses by category id that have sessions.
      *
      * @param int $categoryId
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
@@ -135,9 +135,9 @@ class CourseRepository extends Repository
     public static function findAllByCategoryId($categoryId, $limit = 10)
     {
         try {
-
             return static::queryBase()
                 ->where('category_id', $categoryId)
+                ->whereHas('course_sessions') // Only courses with sessions
                 ->latest('id')
                 ->take($limit)
                 ->get();
