@@ -402,6 +402,7 @@ class CourseRepository extends Repository
                 'price'                => $request->price,
                 'instructor_id'        => $request->instructor_id ?? $course->instructor_id,
                 'is_active'            => $isActive,
+                'is_featured'          => $request->is_featured === '1' || $request->is_featured === 'on',
                 'published_at'         => $request->is_active == 'on' ? now() : null
             ]);
         } catch (\Exception $e) {

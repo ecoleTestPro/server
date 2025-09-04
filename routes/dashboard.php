@@ -51,6 +51,7 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
         Route::get('partners/{slug}',   [CourseController::class, 'getCoursePartners'])->name('dashboard.course.partners.get');
         Route::post('partners/{slug}',  [CourseController::class, 'syncPartners'])->name('dashboard.course.partners.sync');
         Route::get('{id}/enrollments/count', [CourseController::class, 'getEnrollmentCount'])->name('dashboard.course.enrollments.count');
+        Route::patch('{id}/toggle-featured', [CourseController::class, 'toggleFeatured'])->name('dashboard.course.toggle-featured');
         Route::delete('delete/{id}',    [CourseController::class, 'delete'])->name('dashboard.course.delete');
         Route::post('{course}/sessions', [CourseSessionController::class, 'store'])->name('dashboard.course.session.store');
         Route::put('sessions/{session}', [CourseSessionController::class, 'update'])->name('dashboard.course.session.update');

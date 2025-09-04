@@ -321,4 +321,23 @@ class CourseController extends Controller
 
         return to_route('course.index')->withSuccess('Course updated');
     }
+
+    public function toggleFeatured($id)
+    {
+        try {
+            $course = Course::findOrFail($id);
+            $course->is_featured = !$course->is_featured;
+            $course->save();
+
+            return response()->json([
+                'message' => $course->is_featured ? 'Formation mise en avant' : 'Formation retirée de la mise en avant',
+                'is_featured' => $course->is_featured,
+                'course' => $course
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erreur lors de la mise à jour: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
 }

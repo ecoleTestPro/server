@@ -1,6 +1,7 @@
 import CourseReferenceDrawer from '@/components/courses/references/CourseReferenceDrawer';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button/button';
+import { Switch } from '@/components/ui/switch';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { SharedData } from '@/types';
 import { ICourse } from '@/types/course';
@@ -25,6 +26,7 @@ import {
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
+import axios from 'axios';
 import { FaClock, FaMapMarkerAlt } from 'react-icons/fa';
 import './CourseCard.css'; // Link to CSS file
 import { getPeriodicity } from '@/utils/utils';
@@ -46,6 +48,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, onCourseUpdat
     const [showFullDescription, setShowFullDescription] = useState(false);
     const [showConfirmDelete, setShowConfirmDelete] = useState(false);
     const [isPublishing, setIsPublishing] = useState(false);
+    const [isTogglingFeatured, setIsTogglingFeatured] = useState(false);
     const [currentCourse, setCurrentCourse] = useState<ICourse>(course);
 
     const durationValue: boolean | string = getPeriodicity(course.periodicity_unit, course.periodicity_value);
@@ -102,6 +105,24 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, onCourseUpdat
             toast.error('Erreur lors de la mise à jour');
         } finally {
             setIsPublishing(false);
+        }
+    };
+
+    const handleToggleFeatured = async () => {
+        setIsTogglingFeatured(true);
+        try {
+            const response = await axios.patch(route('dashboard.course.toggle-featured', currentCourse.id));
+            const updatedCourse = { ...currentCourse, is_featured: response.data.is_featured };
+            setCurrentCourse(updatedCourse);
+            if (onCourseUpdate) {
+                onCourseUpdate(updatedCourse);
+            }
+            toast.success(response.data.message);
+        } catch (error) {
+            toast.error('Erreur lors de la mise à jour de la mise en avant');
+            console.error('Error toggling featured:', error);
+        } finally {
+            setIsTogglingFeatured(false);
         }
     };
 
@@ -261,7 +282,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, onCourseUpdat
                             <Badge variant="secondary" className="text-xs font-medium text-white ">
                                 Formation
                             </Badge>
-                            {course.is_featured && <Badge className="bg-yellow-500 hover:bg-yellow-600 text-xs">⭐</Badge>}
+                            {currentCourse.is_featured && <Badge className="bg-yellow-500 hover:bg-yellow-600 text-xs">⭐</Badge>}
                             {auth?.user?.is_admin && (
                                 <Badge variant="outline" className="text-xs">
                                     #{course.id}
@@ -402,6 +423,25 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, onCourseUpdat
                                             <p>Associer des références</p>
                                         </TooltipContent>
                                     </Tooltip>
+
+                                    <div className="flex items-center gap-2 ml-3 pl-3 border-l border-gray-200">
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <div className="flex items-center gap-2">
+                                                    <Switch
+                                                        checked={currentCourse.is_featured}
+                                                        onCheckedChange={handleToggleFeatured}
+                                                        disabled={isTogglingFeatured}
+                                                        className="data-[state=checked]:bg-yellow-500"
+                                                    />
+                                                    <span className="text-xs text-gray-600">★</span>
+                                                </div>
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                                <p>{currentCourse.is_featured ? 'Retirer de la mise en avant' : 'Mettre en avant cette formation'}</p>
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    </div>
                                 </>
                             )}
                         </div>
