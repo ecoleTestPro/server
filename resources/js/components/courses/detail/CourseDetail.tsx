@@ -1,7 +1,8 @@
 import { CLASS_NAME } from '@/data/styles/style.constant';
 import { ICourse } from '@/types/course';
-import { getMediaUrl } from '@/utils/utils';
+import { Logger } from '@/utils/console.util';
 import { sanitizeHTML } from '@/utils/quill-html-parser';
+import { getMediaUrl } from '@/utils/utils';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import 'react-quill/dist/quill.snow.css';
@@ -10,7 +11,6 @@ import CoursePartners from './CoursePartners';
 import CouseDetailMedia from './CouseDetailMedia';
 import CourseDetailChooseSection from './partial/CourseDetailChooseSection';
 import CourseDetailOverview from './partial/CourseDetailOverview';
-import { Logger } from '@/utils/console.util';
 
 const email: string = 'info@testpro-group.com';
 
@@ -20,18 +20,17 @@ interface CourseDetailProps {
 
 const CourseDetail: React.FC<CourseDetailProps> = ({ course }) => {
     const { t } = useTranslation();
-    
+
     // Styles pour le rendu du contenu HTML riche
-    const proseClasses = "prose prose-sm max-w-none prose-headings:text-gray-900 prose-h1:text-xl prose-h2:text-lg prose-h3:text-base prose-p:text-gray-700 prose-p:leading-relaxed prose-strong:text-gray-900 prose-strong:font-semibold prose-em:text-gray-700 prose-ul:text-gray-700 prose-ol:text-gray-700 prose-li:text-gray-700 prose-li:marker:text-blue-500 prose-a:text-blue-600 prose-a:hover:text-blue-800 prose-blockquote:text-gray-600 prose-blockquote:border-l-blue-500";
-    
+    const proseClasses =
+        'prose prose-sm max-w-none prose-headings:text-gray-900 prose-h1:text-xl prose-h2:text-lg prose-h3:text-base prose-p:text-gray-700 prose-p:leading-relaxed prose-strong:text-gray-900 prose-strong:font-semibold prose-em:text-gray-700 prose-ul:text-gray-700 prose-ol:text-gray-700 prose-li:text-gray-700 prose-li:marker:text-blue-500 prose-a:text-blue-600 prose-a:hover:text-blue-800 prose-blockquote:text-gray-600 prose-blockquote:border-l-blue-500';
+
     // Composant helper pour rendre le HTML avec les styles appropriés
     const RichContent = ({ html }: { html: string }) => {
         const cleanedHTML = sanitizeHTML(html);
-        Logger.log("[CourseDetail] Cleaned HTML:", cleanedHTML);
-        
-        return (
-            <div className={proseClasses} dangerouslySetInnerHTML={{ __html: cleanedHTML }} />
-        );
+        Logger.log('[CourseDetail] Cleaned HTML:', cleanedHTML);
+
+        return <div className={proseClasses} dangerouslySetInnerHTML={{ __html: cleanedHTML }} />;
     };
 
     const [isOpen, setIsOpen] = useState<Record<string, boolean>>({
@@ -58,10 +57,7 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ course }) => {
             <div className="container mx-auto">
                 <h1 className="text-2xl font-bold mb-4 text-black dark:text-white">{course.title}</h1>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div
-                        className="toc-accordion col-span-1 md:col-span-2"
-                        id="tablesOfContentAccordion"
-                    >
+                    <div className="toc-accordion col-span-1 md:col-span-2" id="tablesOfContentAccordion">
                         <div className="">
                             {/* Objectifs */}
                             <CourseDetailAccordion
@@ -72,7 +68,7 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ course }) => {
                                 content={<RichContent html={course.excerpt} />}
                             />
                             {/* Public cible */}
-                            {course.description?.why_choose && (
+                            {course.description?.why_choose && course.description?.why_choose != '<p><br></p>' && (
                                 <CourseDetailAccordion
                                     isOpen={isOpen}
                                     toggleSection={toggleSection}
@@ -82,7 +78,7 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ course }) => {
                                 />
                             )}
                             {/* Public cible */}
-                            {course.description?.target_audience && (
+                            {course.description?.target_audience && course.description?.target_audience != '<p><br></p>' && (
                                 <CourseDetailAccordion
                                     isOpen={isOpen}
                                     toggleSection={toggleSection}
@@ -103,7 +99,7 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ course }) => {
                                 />
                             )}
                             {/* Prérequis */}
-                            {course.description?.prerequisites && (
+                            {course.description?.prerequisites && course.description?.prerequisites != '<p><br></p>' && (
                                 <CourseDetailAccordion
                                     isOpen={isOpen}
                                     toggleSection={toggleSection}
@@ -121,7 +117,7 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ course }) => {
                                 content={<RichContent html={course.description?.content ?? ''} />}
                             />
                             {/* Évaluation */}
-                            {course.description?.evaluation && (
+                            {course.description?.evaluation && course.description?.evaluation != '<p><br></p>' && (
                                 <CourseDetailAccordion
                                     isOpen={isOpen}
                                     toggleSection={toggleSection}
@@ -131,7 +127,7 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ course }) => {
                                 />
                             )}
                             {/* Objectifs pédagogiques */}
-                            {course.description?.pedagogical_objectives && (
+                            {course.description?.pedagogical_objectives && course.description?.pedagogical_objectives != '<p><br></p>' && (
                                 <CourseDetailAccordion
                                     isOpen={isOpen}
                                     toggleSection={toggleSection}
@@ -141,7 +137,7 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ course }) => {
                                 />
                             )}
                             {/* Points forts du cours */}
-                            {course.description?.course_strengths && (
+                            {course.description?.course_strengths && course.description?.course_strengths != '<p><br></p>' && (
                                 <CourseDetailAccordion
                                     isOpen={isOpen}
                                     toggleSection={toggleSection}
@@ -150,7 +146,7 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ course }) => {
                                     content={<RichContent html={course.description?.course_strengths ?? ''} />}
                                 />
                             )}
-                            {course.description?.exam && (
+                            {course.description?.exam && course.description?.exam != '<p><br></p>' && (
                                 <CourseDetailAccordion
                                     isOpen={isOpen}
                                     toggleSection={toggleSection}

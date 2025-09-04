@@ -27,10 +27,66 @@ export default function RichTextQuill({ label, labelId, value, setData, classNam
           #${labelId} .ql-container {
             min-height: 200px;
             height: fit-content;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            background-color: #ffffff !important;
           }
           #${labelId} .ql-editor {
             min-height: 200px;
             height: fit-content;
+            font-size: 14px;
+            line-height: 1.6;
+            background-color: #ffffff !important;
+            color: #374151 !important;
+          }
+          #${labelId} .ql-toolbar {
+            border: 1px solid #e5e7eb;
+            border-bottom: none;
+            border-radius: 0.5rem 0.5rem 0 0;
+            background: #f9fafb !important;
+            color: #374151 !important;
+          }
+          #${labelId} .ql-toolbar .ql-formats {
+            margin-right: 15px;
+          }
+          #${labelId} .ql-editor ol {
+            padding-left: 1.5em;
+            list-style-type: decimal;
+          }
+          #${labelId} .ql-editor ul {
+            padding-left: 1.5em;
+            list-style-type: disc;
+          }
+          #${labelId} .ql-editor ul[data-list="bullet"] {
+            list-style-type: disc;
+          }
+          #${labelId} .ql-editor ol[data-list="ordered"] {
+            list-style-type: decimal;
+          }
+          #${labelId} .ql-editor ul[data-list="check"] {
+            list-style-type: none;
+          }
+          #${labelId} .ql-editor ul[data-list="check"] > li::before {
+            content: '☐ ';
+            color: #6b7280;
+            font-weight: bold;
+          }
+          #${labelId} .ql-editor li {
+            margin-bottom: 0.25rem;
+          }
+          #${labelId} .ql-editor h1 { font-size: 2em; font-weight: bold; }
+          #${labelId} .ql-editor h2 { font-size: 1.5em; font-weight: bold; }
+          #${labelId} .ql-editor h3 { font-size: 1.17em; font-weight: bold; }
+          #${labelId} .ql-editor blockquote {
+            border-left: 4px solid #e5e7eb;
+            margin: 1em 0;
+            padding-left: 1em;
+            color: #6b7280;
+          }
+          #${labelId} .ql-editor code {
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: 'Monaco', 'Consolas', monospace;
           }
         `}
         </style>
@@ -43,25 +99,34 @@ export default function RichTextQuill({ label, labelId, value, setData, classNam
           modules={
             {
               toolbar: [
-                ['bold', 'italic', 'underline', 'strike', ], // toggled buttons
-                ['blockquote', 'code-block'],
-                [{ 'header': 1 }, { 'header': 2 }, { 'header': 3 }, { 'header': 4 }, { 'header': 5 }, { 'header': 6 }], // custom button values
-                // [{ 'color': [] }, { 'background': [] }], // dropdown with defaults from theme
-                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                [{ 'font': [] }], // font family
+                [{ 'size': ['small', false, 'large', 'huge'] }], // custom dropdown
+                ['bold', 'italic', 'underline', 'strike'], // toggled buttons
+                [{ 'color': [] }, { 'background': [] }], // dropdown with defaults from theme
                 [{ 'script': 'sub' }, { 'script': 'super' }], // superscript/subscript
+                [{ 'header': 1 }, { 'header': 2 }, { 'header': 3 }], // custom button values
+                ['blockquote', 'code-block'],
+                [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'list': 'check' }], // lists
                 [{ 'indent': '-1' }, { 'indent': '+1' }], // outdent/indent
-                // ['table'], // table
-                // [{ 'direction': 'rtl' }], // text direction
+                [{ 'align': [] }], // text align
+                [{ 'direction': 'rtl' }], // text direction
                 ['link', 'image', 'video'], // link and image, video
                 ['clean'] // remove formatting button
-              ]
+              ],
+              clipboard: {
+                // toggle to add extra line breaks when pasting HTML:
+                matchVisual: false,
+              }
             }
           }
           formats={[
-            'bold', 'italic', 'underline', 'strike', 'blockquote',
-            'list', 'bullet', 'indent',
-            'link', 'image', 'video', 'code-block',
-            'header', 'align', 'clean'
+            'header', 'font', 'size',
+            'bold', 'italic', 'underline', 'strike', 'blockquote', 'code-block',
+            'list', 'bullet', 'check', 'indent',
+            'script', 'align', 'direction',
+            'color', 'background',
+            'link', 'image', 'video',
+            'clean'
           ]}
         />
       </Suspense>
