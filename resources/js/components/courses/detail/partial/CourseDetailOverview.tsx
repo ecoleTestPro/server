@@ -2,6 +2,7 @@ import { ICourse } from '@/types/course';
 import { ROUTE_MAP } from '@/utils/route.util';
 import { getPeriodicity, getPrice } from '@/utils/utils';
 import { Link } from '@inertiajs/react';
+import { Clock2Icon, Files } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 interface CourseDetailOverviewProps {
@@ -10,7 +11,9 @@ interface CourseDetailOverviewProps {
 
 export default function CourseDetailOverview({ course }: CourseDetailOverviewProps) {
     const { t } = useTranslation();
-    const liClassName = 'flex items-center mb-2 text-gray-700 dark:text-gray-300';
+    const liClassName = 'flex items-center mb-2 text-gray-700 dark:text-dark';
+    const linkClassName = 'text-primary hover:underline dark:text-primary dark:hover:underline transition-colors';
+    const strongClassName = 'text-gray-900 dark:text-gray-100';
     const duration: string | boolean = getPeriodicity(course.periodicity_unit, course.periodicity_value);
 
     return (
@@ -18,16 +21,7 @@ export default function CourseDetailOverview({ course }: CourseDetailOverviewPro
             <ul>
                 {duration && (
                     <li className={liClassName}>
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth={1.5}
-                            stroke="currentColor"
-                            className="size-6 mr-1"
-                        >
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                        </svg>
+                        <Clock2Icon className="size-6 mr-1" />
                         {t('COURSE.DURATION', 'Durée')} : {duration}
                     </li>
                 )}
@@ -46,7 +40,7 @@ export default function CourseDetailOverview({ course }: CourseDetailOverviewPro
                             d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z"
                         />
                     </svg>
-                    <strong>
+                    <strong className={strongClassName}>
                         {t('COURSE.PRICE', 'Prix')} : <span dangerouslySetInnerHTML={{ __html: getPrice(course.price, course.regular_price) }} />
                     </strong>
                 </li>
@@ -68,7 +62,7 @@ export default function CourseDetailOverview({ course }: CourseDetailOverviewPro
                             />
                         </svg>
                         {t('COURSE.CATEGORY', 'Catégorie formation')} :{' '}
-                        <Link className="text-primary hover:underline" href={ROUTE_MAP.public.courses.byCategory(course.category?.slug).link}>
+                        <Link className={linkClassName} href={ROUTE_MAP.public.courses.byCategory(course.category?.slug).link}>
                             {course.category?.title}
                         </Link>
                     </li>
@@ -76,24 +70,8 @@ export default function CourseDetailOverview({ course }: CourseDetailOverviewPro
 
                 {course.attachment && (
                     <li className={liClassName}>
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth={1.5}
-                            stroke="currentColor"
-                            className="size-6 mr-1"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"
-                            />
-                        </svg>
-                        {t('COURSE.ATTACHMENT', 'Documents')} :{' '}
-                        <Link href={'#'} target="_blank" rel="noopener noreferrer">
-                            {course.attachment}
-                        </Link>
+                        <Files className="size-6 mr-1" />
+                        {t('COURSE.ATTACHMENT', 'Documents')} : <p >{course.attachment}</p>
                     </li>
                 )}
             </ul>

@@ -22,7 +22,7 @@ interface CourseAdditionnalFormProps {
     fieldsetClasses?: string;
     data: ICourseForm;
     courseSelected: ICourse | null;
-    setData: (data: string, value: string | number) => void;
+    setData: (data: string, value: string | number | boolean) => void;
     processing: boolean;
     errors: ICourseFormErrors & { location_mode?: string };
     partnerTags?: string[];
@@ -88,9 +88,9 @@ export default function CourseAdditionnalForm({
                         <div className="flex items-center space-x-2">
                             <Switch
                                 id="airplane-mode"
-                                checked={data.is_featured}
+                                checked={!!data.is_featured}
                                 onCheckedChange={(checked) => {
-                                    setData('is_featured', checked ? '1' : '0');
+                                    setData('is_featured', checked);
                                 }}
                             />
                             <Label htmlFor="airplane-mode">Mise en avant</Label>
