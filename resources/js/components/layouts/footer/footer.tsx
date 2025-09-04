@@ -110,7 +110,7 @@ export default function Footer() {
                             <p>
                                 ©
                                 <Link className="hover:underline" href={ROUTE_MAP.auth.adminLogin.link}>
-                                    <span className="text-gray-500">Test pro </span>
+                                    <span className="text-gray-500">TestPro </span>
                                 </Link>
                                 {new Date().getFullYear()} - {t('FOOTER.COPYRIGHT', 'Tous droits réservés.')}
                             </p>

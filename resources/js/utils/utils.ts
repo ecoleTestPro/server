@@ -26,7 +26,7 @@ const callBackCreateCoursesFromCategory = (category: ICourseCategory): ICourse[]
                 session.start_date && 
                 session.start_date !== '' && 
                 session.start_date !== 'N/A' &&
-                session.start_date !== 'Invalid Date'
+                session.start_date !== '-'
             );
             
             return hasValidSession;

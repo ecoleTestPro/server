@@ -19,7 +19,7 @@ class InstructorSeeder extends Seeder
     {
         // instructor User
         $instructor = UserRepository::create([
-            'name'              => 'ECOLE TEST PRO',
+            'name'              => 'TestPro',
             'phone'             => '+2250706915705',
             'email'             => 'info@testpro-group.com',
             'is_active'         => true,

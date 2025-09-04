@@ -153,7 +153,7 @@ export default function DashboardJobOffers() {
                     onCancel={() => setShowConfirm(false)}
                 />
 
-                <div className="container mx-auto flex h-full items-center justify-center">
+                <div className="w-fullflex h-full items-center justify-center">
                     {offers && (
                         <JobOfferDataTable
                             offers={offers}
