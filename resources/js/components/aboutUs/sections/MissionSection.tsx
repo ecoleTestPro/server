@@ -34,7 +34,7 @@ export default function MissionSection() {
                         {/* Description de la mission */}
                         <p className="!mb-6 leading-relaxed text-gray-700 dark:text-gray-300 text-base md:text-lg max-w-4xl mx-auto">
                             Accompagner les professionnels et les entreprises dans leur montée en compétences, en proposant des formations
-                            certifiantes, sur-mesure et alignées sur les standards internationaux. garantir que chaque projet digital repose sur
+                            certifiantes, sur-mesure et alignées sur les standards internationaux. Garantir que chaque projet digital repose sur
                             des fondations solides, validées et mesurables. Grâce à une approche rigoureuse, des outils éprouvés et une pédagogie
                             adaptée aux réalités du terrain, TestPro transforme les enjeux de qualité en leviers de performance durable.
                         </p>

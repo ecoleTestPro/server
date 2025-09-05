@@ -22,8 +22,6 @@ interface OfferItem {
 interface OfferCardProps {
     /** Données de l'offre à afficher */
     offer: OfferItem;
-    /** Index pour les animations */
-    index: number;
 }
 
 /**
@@ -33,7 +31,7 @@ interface OfferCardProps {
  * @description Carte présentant une offre de service avec titre cliquable et description.
  * Design avec fond coloré personnalisable et effet glassmorphism.
  */
-function OfferCard({ offer, index }: OfferCardProps) {
+function OfferCard({ offer }: OfferCardProps) {
     return (
         <div
             className={`rounded-xl bg-white/[.54] p-4 md:p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 dark:text-white ${offer.bgColor || 'bg-white dark:bg-[#15203c]'}`}
@@ -129,7 +127,7 @@ export default function OffersSection() {
                             <div className="col-span-2 lg:col-span-1">
                                 <div className="space-y-4">
                                     {offers.map((offer, index) => (
-                                        <OfferCard key={index} offer={offer} index={index} />
+                                        <OfferCard key={index} offer={offer} />
                                     ))}
                                 </div>
                             </div>

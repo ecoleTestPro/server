@@ -99,7 +99,7 @@ export default function AccreditationsSection() {
             logoAlt: 'Logo FDFP',
             logoClasses: 'h-20 md:h-24 lg:h-28',
             description: `
-                <strong>TestPro</strong> est agréé par le{' '}
+                <strong>TestPro</strong> est agréé par le
                 <strong>Fonds de Développement de la Formation Professionnelle (FDFP)</strong>, ce qui permet aux entreprises
                 ivoiriennes de mobiliser leur contribution pour financer les formations de leurs équipes.
                 <br /><br />

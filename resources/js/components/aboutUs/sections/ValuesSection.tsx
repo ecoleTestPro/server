@@ -20,8 +20,6 @@ interface ValueItem {
 interface ValueCardProps {
     /** Données de la valeur à afficher */
     value: ValueItem;
-    /** Index pour les animations */
-    index: number;
 }
 
 /**
@@ -31,7 +29,7 @@ interface ValueCardProps {
  * @description Carte présentant une valeur de l'entreprise avec icône et description.
  * Design avec fond glassmorphism et animations au survol.
  */
-function ValueCard({ value, index }: ValueCardProps) {
+function ValueCard({ value }: ValueCardProps) {
     return (
         <div className="hover:bg-primary-100 rounded-2xl bg-white/[.54] p-2 text-center backdrop-blur-[5.400000095367432px] shadow-lg hover:shadow-xl transition-all duration-300 md:p-8 ltr:lg:text-left rtl:lg:text-right dark:bg-[#15203c]">
             {/* En-tête avec icône et titre */}
@@ -109,7 +107,7 @@ export default function ValuesSection() {
                         {/* Grille des valeurs */}
                         <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
                             {values.map((value, index) => (
-                                <ValueCard key={index} value={value} index={index} />
+                                <ValueCard key={index} value={value} />
                             ))}
                         </div>
                     </motion.div>

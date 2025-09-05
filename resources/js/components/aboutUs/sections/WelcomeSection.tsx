@@ -86,7 +86,7 @@ export default function WelcomeSection({ imageVariants }: WelcomeSectionProps) {
                             <p className="!mb-6 leading-relaxed text-gray-700 dark:text-gray-300 text-base md:text-lg">
                                 Dans un monde où la transformation digitale redéfinit les standards de performance, l'approximation n'a plus sa
                                 place. Fiabilité, sécurité et robustesse sont désormais des exigences stratégiques pour toute organisation. C'est
-                                dans cette dynamique que TestPro s'impose comme un acteur de référence Internationale. Spécialisé dans le test
+                                dans cette dynamique que TestPro s'impose comme un acteur de référence internationale. Spécialisé dans le test
                                 logiciel, la formation certifiante et l'accompagnement sur mesure, nous aidons les entreprises à atteindre
                                 l'excellence opérationnelle à chaque étape de leur évolution numérique.
                             </p>
