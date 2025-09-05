@@ -55,6 +55,8 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
         Route::delete('delete/{id}',    [CourseController::class, 'delete'])->name('dashboard.course.delete');
         Route::post('{course}/sessions', [CourseSessionController::class, 'store'])->name('dashboard.course.session.store');
         Route::put('sessions/{session}', [CourseSessionController::class, 'update'])->name('dashboard.course.session.update');
+        Route::patch('sessions/{session}/toggle-confirmed', [CourseSessionController::class, 'toggleConfirmed'])->name('dashboard.course.session.toggle-confirmed');
+        Route::patch('sessions/batch/confirm', [CourseSessionController::class, 'confirmMultiple'])->name('dashboard.course.session.confirm.batch');
         Route::delete('sessions/batch', [CourseSessionController::class, 'destroyMultiple'])->name('dashboard.course.session.delete.batch');
         Route::delete('sessions/{session}', [CourseSessionController::class, 'destroy'])->name('dashboard.course.session.delete');
     });

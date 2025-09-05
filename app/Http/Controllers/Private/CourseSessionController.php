@@ -126,4 +126,66 @@ class CourseSessionController extends Controller
             return response()->json(['error' => 'Failed to delete course sessions: ' . $e->getMessage()], 500);
         }
     }
+
+    public function toggleConfirmed($session): JsonResponse
+    {
+        try {
+            $sessionModel = \App\Models\CourseSession::findOrFail($session);
+            
+            $sessionModel->update([
+                'is_confirmed' => !$sessionModel->is_confirmed
+            ]);
+
+            return response()->json([
+                'message' => 'Session confirmation status updated successfully',
+                'session' => $sessionModel
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to update session confirmation status: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function confirmMultiple(\Illuminate\Http\Request $request): JsonResponse
+    {
+        try {
+            $sessionIds = $request->input('session_ids', []);
+            $confirmStatus = $request->input('is_confirmed', true);
+            
+            if (empty($sessionIds)) {
+                return response()->json(['error' => 'No session IDs provided'], 400);
+            }
+
+            // Vérifier que les IDs sont valides
+            if (!is_array($sessionIds)) {
+                return response()->json(['error' => 'session_ids must be an array'], 400);
+            }
+
+            // Vérifier que les sessions existent avant de les modifier
+            $existingSessions = \App\Models\CourseSession::whereIn('id', $sessionIds)->get();
+            
+            if ($existingSessions->isEmpty()) {
+                return response()->json(['error' => 'No sessions found with provided IDs'], 404);
+            }
+
+            // Mettre à jour le statut de confirmation
+            $updatedCount = \App\Models\CourseSession::whereIn('id', $sessionIds)->update([
+                'is_confirmed' => $confirmStatus
+            ]);
+
+            return response()->json([
+                'message' => $confirmStatus 
+                    ? 'Sessions confirmed successfully' 
+                    : 'Sessions unconfirmed successfully',
+                'updated_count' => $updatedCount
+            ], 200);
+        } catch (\Exception $e) {
+            \Log::error('Failed to update session confirmation status', [
+                'error' => $e->getMessage(),
+                'session_ids' => $request->input('session_ids', []),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return response()->json(['error' => 'Failed to update session confirmation status: ' . $e->getMessage()], 500);
+        }
+    }
 }

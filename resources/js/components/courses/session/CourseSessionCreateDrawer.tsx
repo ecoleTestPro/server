@@ -6,7 +6,7 @@ import { ICourseSession } from '@/types/course';
 import { Logger } from '@/utils/console.util';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@radix-ui/react-tooltip';
 import axios from 'axios';
-import { CalendarPlus, Copy, Edit2, FilterIcon, Plus, Save, Trash2, X } from 'lucide-react';
+import { CalendarPlus, CheckCircle, Copy, Edit2, FilterIcon, Plus, Save, Trash2, X, XCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -37,6 +37,8 @@ export default function CourseSessionCreateDrawer({ open, setOpen, courseId, cou
     const [isDeleting, setIsDeleting] = useState(false);
     const [showConfirmDialog, setShowConfirmDialog] = useState(false);
     const [showBatchConfirmDialog, setShowBatchConfirmDialog] = useState(false);
+    const [showBatchConfirmConfirmDialog, setShowBatchConfirmConfirmDialog] = useState(false);
+    const [batchConfirmAction, setBatchConfirmAction] = useState<'confirm' | 'unconfirm'>('confirm');
     const [sessionToDelete, setSessionToDelete] = useState<number | null>(null);
 
     useEffect(() => {
@@ -224,6 +226,42 @@ export default function CourseSessionCreateDrawer({ open, setOpen, courseId, cou
         }
     };
 
+    // Fonction pour confirmer/retirer la confirmation de plusieurs sessions
+    const handleConfirmMultiple = (action: 'confirm' | 'unconfirm') => {
+        if (selectedSessions.length === 0) {
+            toast.error(t('course.session.confirm.no_selection', 'Aucune session sélectionnée'));
+            return;
+        }
+        setBatchConfirmAction(action);
+        setShowBatchConfirmConfirmDialog(true);
+    };
+
+    // Fonction pour confirmer l'action de confirmation groupée
+    const confirmConfirmMultiple = async () => {
+        if (selectedSessions.length === 0) return;
+        
+        try {
+            const response = await axios.patch(route('dashboard.course.session.confirm.batch'), {
+                session_ids: selectedSessions,
+                is_confirmed: batchConfirmAction === 'confirm'
+            });
+            
+            toast.success(
+                batchConfirmAction === 'confirm'
+                    ? t('course.session.confirm.multiple_success', `${selectedSessions.length} session(s) confirmée(s) avec succès`)
+                    : t('course.session.unconfirm.multiple_success', `Confirmation retirée pour ${selectedSessions.length} session(s)`)
+            );
+
+            await refreshSessions();
+            setSelectedSessions([]);
+        } catch (error: any) {
+            Logger.error('confirm multiple sessions', error);
+            toast.error(t('course.session.confirm.multiple_error', 'Erreur lors de la modification du statut de confirmation'));
+        } finally {
+            setShowBatchConfirmConfirmDialog(false);
+        }
+    };
+
     // Fonction pour recharger les sessions
     const refreshSessions = async () => {
         try {
@@ -270,6 +308,23 @@ export default function CourseSessionCreateDrawer({ open, setOpen, courseId, cou
 
         // Retourner les sessions futures d'abord, puis les passées
         return [...upcomingSessions, ...pastSessions];
+    };
+
+    const handleToggleConfirmed = async (sessionId: number) => {
+        try {
+            const response = await axios.patch(route('dashboard.course.session.toggle-confirmed', { session: sessionId }));
+            if (response.data.session) {
+                toast.success(
+                    response.data.session.is_confirmed 
+                        ? t('course.session.confirmed_success', 'Session confirmée avec succès')
+                        : t('course.session.unconfirmed_success', 'Confirmation retirée avec succès')
+                );
+                refreshSessions();
+            }
+        } catch (error) {
+            toast.error(t('course.session.toggle_confirmed_error', 'Erreur lors de la modification du statut de confirmation'));
+            Logger.error('toggle confirmed', error);
+        }
     };
 
     const sortedSessions = getSortedAndFilteredSessions();
@@ -319,10 +374,30 @@ export default function CourseSessionCreateDrawer({ open, setOpen, courseId, cou
                                 </div>
                                 <div className="flex justify-between items-center">
                                     {selectedSessions.length > 0 && (
-                                        <Button variant="destructive" size="sm" onClick={handleDeleteMultiple} disabled={isDeleting} className="h-7">
-                                            {isDeleting ? <span className="animate-spin mr-1">⏳</span> : <Trash2 className="w-3 h-3 mr-1" />}
-                                            {t('course.session.delete_selected', `Supprimer (${selectedSessions.length})`)}
-                                        </Button>
+                                        <div className="flex gap-2">
+                                            <Button 
+                                                variant="outline" 
+                                                size="sm" 
+                                                onClick={() => handleConfirmMultiple('confirm')} 
+                                                className="h-7 text-green-600 hover:text-green-700"
+                                            >
+                                                <CheckCircle className="w-3 h-3 mr-1" />
+                                                {t('course.session.confirm_selected', `Confirmer (${selectedSessions.length})`)}
+                                            </Button>
+                                            <Button 
+                                                variant="outline" 
+                                                size="sm" 
+                                                onClick={() => handleConfirmMultiple('unconfirm')} 
+                                                className="h-7 text-orange-600 hover:text-orange-700"
+                                            >
+                                                <XCircle className="w-3 h-3 mr-1" />
+                                                {t('course.session.unconfirm_selected', `Retirer confirmation (${selectedSessions.length})`)}
+                                            </Button>
+                                            <Button variant="destructive" size="sm" onClick={handleDeleteMultiple} disabled={isDeleting} className="h-7">
+                                                {isDeleting ? <span className="animate-spin mr-1">⏳</span> : <Trash2 className="w-3 h-3 mr-1" />}
+                                                {t('course.session.delete_selected', `Supprimer (${selectedSessions.length})`)}
+                                            </Button>
+                                        </div>
                                     )}
 
                                     {sortedSessions.length > 0 && (
@@ -378,10 +453,41 @@ export default function CourseSessionCreateDrawer({ open, setOpen, courseId, cou
                                                                 <div className="text-gray-600">
                                                                     📍 {s.location || t('course.session.no_location', 'Lieu non défini')}
                                                                 </div>
+                                                                {(s as any).is_confirmed !== undefined && (
+                                                                    <div className="flex items-center gap-1 mt-1">
+                                                                        {(s as any).is_confirmed ? (
+                                                                            <CheckCircle className="w-4 h-4 text-green-600" />
+                                                                        ) : (
+                                                                            <XCircle className="w-4 h-4 text-gray-400" />
+                                                                        )}
+                                                                        <span className="text-xs text-gray-600">
+                                                                            {(s as any).is_confirmed
+                                                                                ? t('course.session.confirmed', 'Session confirmée')
+                                                                                : t('course.session.not_confirmed', 'En attente de confirmation')}
+                                                                        </span>
+                                                                    </div>
+                                                                )}
                                                             </div>
                                                         </div>
                                                         <div className="flex items-start gap-2">
                                                             <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                                <Button
+                                                                    variant="ghost"
+                                                                    size="sm"
+                                                                    onClick={() => handleToggleConfirmed(s.id)}
+                                                                    title={
+                                                                        (s as any).is_confirmed
+                                                                            ? t('course.session.unconfirm', 'Retirer la confirmation')
+                                                                            : t('course.session.confirm', 'Confirmer la session')
+                                                                    }
+                                                                    className="p-1 h-7 w-7"
+                                                                >
+                                                                    {(s as any).is_confirmed ? (
+                                                                        <XCircle className="w-3 h-3 text-orange-600" />
+                                                                    ) : (
+                                                                        <CheckCircle className="w-3 h-3 text-green-600" />
+                                                                    )}
+                                                                </Button>
                                                                 <Button
                                                                     variant="ghost"
                                                                     size="sm"
@@ -609,6 +715,36 @@ export default function CourseSessionCreateDrawer({ open, setOpen, courseId, cou
                 onConfirm={confirmDeleteMultiple}
                 onCancel={() => setShowBatchConfirmDialog(false)}
                 loading={isDeleting}
+            />
+
+            {/* Dialog de confirmation pour confirmation/retrait de confirmation groupée */}
+            <ConfirmDialog
+                open={showBatchConfirmConfirmDialog}
+                title={
+                    batchConfirmAction === 'confirm'
+                        ? t('course.session.confirm.confirm_multiple_title', 'Confirmer les sessions')
+                        : t('course.session.unconfirm.confirm_multiple_title', 'Retirer la confirmation des sessions')
+                }
+                description={
+                    batchConfirmAction === 'confirm'
+                        ? t(
+                              'course.session.confirm.confirm_multiple_description',
+                              `Voulez-vous confirmer ${selectedSessions.length} session(s) ?`,
+                          )
+                        : t(
+                              'course.session.unconfirm.confirm_multiple_description',
+                              `Voulez-vous retirer la confirmation de ${selectedSessions.length} session(s) ?`,
+                          )
+                }
+                confirmLabel={
+                    batchConfirmAction === 'confirm'
+                        ? t('course.session.confirm.confirm_button', 'Confirmer')
+                        : t('course.session.unconfirm.confirm_button', 'Retirer la confirmation')
+                }
+                cancelLabel={t('cancel', 'Annuler')}
+                onConfirm={confirmConfirmMultiple}
+                onCancel={() => setShowBatchConfirmConfirmDialog(false)}
+                loading={false}
             />
         </>
     );
