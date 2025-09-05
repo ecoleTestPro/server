@@ -1,8 +1,8 @@
 import { ICourse } from '@/types/course';
-import { useTranslation } from 'react-i18next';
-import CourseCard from './courseCard';
-import CourseSessionCreateDrawer from '../session/CourseSessionCreateDrawer';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import CourseSessionCreateDrawer from '../session/CourseSessionCreateDrawer';
+import CourseCard from './courseCard';
 
 interface CourseListProps {
     courses: ICourse[];
@@ -32,12 +32,23 @@ const CourseList: React.FC<CourseListProps> = ({ courses, onDelete }) => {
                 <>
                     <div className="grid grid-cols-1 md:grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4">
                         {courses.map((course) => (
-                            <CourseCard key={course.id} course={course} onDelete={onDelete} setOpenSessionDrawer={setOpenSessionDrawer} setSelectedCourseSessionSession={setSelectedCourseSessionSession} />
+                            <CourseCard
+                                key={course.id}
+                                course={course}
+                                onDelete={onDelete}
+                                setOpenSessionDrawer={setOpenSessionDrawer}
+                                setSelectedCourseSessionSession={setSelectedCourseSessionSession}
+                            />
                         ))}
                     </div>
 
                     <div>
-                        <CourseSessionCreateDrawer open={openSessionDrawer} setOpen={setOpenSessionDrawer} courseId={selectedCourseSession?.id}  courseTitle={selectedCourseSession?.title} />
+                        <CourseSessionCreateDrawer
+                            open={openSessionDrawer}
+                            setOpen={setOpenSessionDrawer}
+                            courseId={selectedCourseSession?.id}
+                            courseTitle={selectedCourseSession?.title}
+                        />
                     </div>
                 </>
             )}
