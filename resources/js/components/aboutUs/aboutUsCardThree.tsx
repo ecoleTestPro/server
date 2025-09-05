@@ -78,16 +78,16 @@ function AboutUsCardThree() {
                                     // variants={sectionVariants}
                                 >
                                     <h2 className="!mb-[15px] text-2xl font-bold md:text-3xl lg:text-4xl xl:text-5xl leading-tight">
-                                        Bienvenue chez TestPro, votre partenaire dans le développement professionnel et la réussite éducative.
+                                        Bienvenue chez TestPro, votre partenaire stratégique en transformation digitale.
                                     </h2>
                                 </motion.div>
 
                                 <p className="!mb-6 leading-relaxed text-gray-700 dark:text-gray-300 text-base md:text-lg">
-                                    Notre vision est de devenir un leader reconnu dans le secteur des tests logiciels et de l'ingénierie des
-                                    exigences, en garantissant la qualité et la fiabilité des solutions technologiques. Notre mission consiste à
-                                    fournir des formations certifiantes de haute qualité, à proposer des testeurs professionnels pour accompagner les
-                                    entreprises dans leurs projets, et à contribuer à l'externalisation efficace des services de test dans nos locaux,
-                                    tout en favorisant l'innovation et l'excellence au sein de l'industrie technologique.
+                                    Dans un monde où la transformation digitale redéfinit les standards de performance, l’approximation n’a plus sa
+                                    place. Fiabilité, sécurité et robustesse sont désormais des exigences stratégiques pour toute organisation. C’est
+                                    dans cette dynamique que TestPro s’impose comme un acteur de référence Internationale. Spécialisé dans le test
+                                    logiciel, la formation certifiante et l’accompagnement sur mesure, nous aidons les entreprises à atteindre
+                                    l’excellence opérationnelle à chaque étape de leur évolution numérique.
                                 </p>
                             </motion.div>
                         </motion.div>
@@ -118,10 +118,10 @@ function AboutUsCardThree() {
                         >
                             <h2 className="!mb-[15px] text-2xl font-bold md:text-3xl lg:text-4xl xl:text-5xl leading-tight">Notre Mission</h2>
                             <p className="!mb-6 leading-relaxed text-gray-700 dark:text-gray-300 text-base md:text-lg max-w-4xl mx-auto">
-                                Nous nous engageons à offrir des formations certifiantes et sur-mesure, adaptées aux besoins individuels et
-                                professionnels de nos apprenants. Que vous soyez un professionnel en quête de reconversion ou une entreprise désireuse
-                                de former vos équipes, nous proposons des solutions pédagogiques innovantes et alignées sur les dernières tendances du
-                                secteur.
+                                Accompagner les professionnels et les entreprises dans leur montée en compétences, en proposant des formations
+                                certifiantes, sur-mesure et alignées sur les standards internationaux. garantir que chaque projet digital repose sur
+                                des fondations solides, validées et mesurables. Grâce à une approche rigoureuse, des outils éprouvés et une pédagogie
+                                adaptée aux réalités du terrain, TestPro transforme les enjeux de qualité en leviers de performance durable.
                             </p>
                         </motion.div>
                     </div>
@@ -171,15 +171,17 @@ function AboutUsCardThree() {
                                     viewport={{ once: true, amount: 0.2 }}
                                     // variants={sectionVariants}
                                 >
-                                    <h2 className="!mb-[15px] text-2xl font-bold md:text-3xl lg:text-4xl xl:text-5xl leading-tight text-center lg:text-left">Qu'est-ce qui nous rend spécial ?</h2>
+                                    <h2 className="!mb-[15px] text-2xl font-bold md:text-3xl lg:text-4xl xl:text-5xl leading-tight text-center lg:text-left">
+                                        Qu'est-ce qui nous rend spécial ?
+                                    </h2>
                                 </motion.div>
                                 <p className="!mb-6 leading-relaxed text-gray-700 dark:text-gray-300 text-base md:text-lg">
-                                    Chez TestPro, nous plaçons vos besoins au cœur de nos formations pour offrir des programmes innovants, pratiques
-                                    et directement applicables. Grâce à une équipe d'experts qualifiés, nous proposons des solutions flexibles et
-                                    sur-mesure adaptées à vos ambitions professionnelles. Nos contenus actualisés et alignés sur les tendances du
-                                    marché vous garantissent des compétences concrètes et un impact mesurable. Nous assurons un accompagnement
-                                    personnalisé avant, pendant et après la formation pour maximiser vos résultats. Avec TestPro, transformez votre
-                                    carrière et ouvrez-vous à de nouvelles opportunités.
+                                    TestPro allie excellence pédagogique, reconnaissance officielle et impact concret. Centre d’examen certifié GASQ
+                                    et organisme habilité par le FDFP, nous proposons des formations rigoureuses, pratiques et orientées projet,
+                                    portées par des formateurs internationaux certifiés. Nos programmes sur mesure, basés sur des méthodologies
+                                    éprouvées et des outils modernes, assurent une montée en compétences rapide et un taux d’employabilité de 100%.
+                                    Grâce à notre accompagnement personnalisé et à notre travail en synergie avec vos équipes, chaque formation
+                                    devient un levier stratégique pour vos projets. Avec TestPro, la formation devient un levier stratégique.
                                 </p>
                             </motion.div>
                         </motion.div>
@@ -198,23 +200,26 @@ function AboutUsCardThree() {
             {
                 title: 'Excellence Pédagogique',
                 svg: '/assets/images/svgs/digicomp_icon_kurse.svg',
-                description: 'Nous privilégions une approche basée sur les meilleures pratiques et les standards  internationaux.',
+                description:
+                    'Nous nous engageons à offrir des formations de haut niveau, fondées sur les meilleures pratiques et alignées avec les standards internationaux. Chaque programme est conçu pour garantir rigueur, pertinence et impact durable.',
             },
             {
                 title: 'Flexibilité',
                 svg: '/assets/images/svgs/digicomp_icon_trainer.svg',
-                description: 'Nos programmes sont conçus pour s’adapter à vos contraintes et objectifs spécifiques.',
+                description:
+                    'Conscients des réalités du terrain, nous développons des parcours modulables et personnalisés, adaptés aux contraintes opérationnelles et aux ambitions spécifiques de chaque organisation.',
             },
             {
                 title: 'Engagement',
                 svg: '/assets/images/svgs/digicomp_icon_bewertung.svg',
-                description: 'Nous croyons au pouvoir de l’éducation pour transformer les carrières et les vies.',
+                description:
+                    'Nous croyons fermement au pouvoir transformateur de la formation. À travers un accompagnement de qualité, nous contribuons à l’évolution des carrières et à l’épanouissement professionnel des apprenants.',
             },
         ];
 
         return (
             <MotionSection
-                className={`body-font ${CLASS_NAME.bgGray} ${CLASS_NAME.sectionContentPadding}`}
+                className={`body-font ${CLASS_NAME.bgGray} ${CLASS_NAME.sectionContentPaddingAlt}`}
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.2 }}
@@ -230,34 +235,39 @@ function AboutUsCardThree() {
                             viewport={{ once: true, amount: 0.2 }}
                             // variants={sectionVariants}
                         >
-                            <h2 className="!mb-[15px] text-2xl font-bold md:text-3xl lg:text-4xl xl:text-5xl leading-tight">Nos Valeurs</h2>
+                            <h2 className="!mb-[15px] text-2xl font-bold md:text-3xl lg:text-4xl xl:text-5xl leading-tight text-center">
+                                Nos Valeurs
+                            </h2>
 
-                            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
                                 {values.map((v, index) => (
                                     <div
                                         key={index}
-                                        className="hover:bg-primary-100 rounded-2xl bg-white/[.54] p-6 text-center backdrop-blur-[5.400000095367432px] shadow-lg hover:shadow-xl transition-all duration-300 md:p-8 ltr:lg:text-left rtl:lg:text-right dark:bg-[#15203c]"
+                                        className="hover:bg-primary-100 rounded-2xl bg-white/[.54] p-2 text-center backdrop-blur-[5.400000095367432px] shadow-lg hover:shadow-xl transition-all duration-300 md:p-8 ltr:lg:text-left rtl:lg:text-right dark:bg-[#15203c]"
                                     >
-                                        <div className={`flex flex-col items-center justify-center text-center lg:flex-row lg:text-left lg:justify-start`}>
-                                            <div className="w-16 h-16 mb-4 lg:mr-4 lg:mb-0">
-                                                <img
-                                                    alt={v.title}
-                                                    loading="lazy"
-                                                    width="64"
-                                                    height="64"
-                                                    decoding="async"
-                                                    data-nimg="1"
-                                                    className="inline-block w-full h-full object-contain"
-                                                    src={v.svg}
-                                                />
-                                            </div>
+                                        <div
+                                            className={`flex flex-col items-center justify-center text-center lg:flex-row lg:text-left lg:justify-start`}
+                                        >
+                                            <div className="flex">
+                                                <div className="w-16 h-16 mb-4 lg:mr-4 lg:mb-0">
+                                                    <img
+                                                        alt={v.title}
+                                                        loading="lazy"
+                                                        width="64"
+                                                        height="64"
+                                                        decoding="async"
+                                                        data-nimg="1"
+                                                        className="inline-block w-full h-full object-contain"
+                                                        src={v.svg}
+                                                    />
+                                                </div>
 
-                                            <div className="flex-1">
-                                                <h3 className="!mb-3 !text-xl !leading-tight !font-semibold md:!text-2xl">
-                                                    {v.title}
-                                                </h3>
-                                                <p className="leading-relaxed text-gray-600 dark:text-gray-300">{v.description}</p>
+                                                <h3 className="!mb-3 !text-xl !leading-tight !font-semibold md:!text-2xl">{v.title}</h3>
                                             </div>
+                                        </div>
+
+                                        <div className="flex-1">
+                                            <p className="leading-relaxed text-gray-600 dark:text-gray-300 text-center ">{v.description}</p>
                                         </div>
                                     </div>
                                 ))}
@@ -270,22 +280,37 @@ function AboutUsCardThree() {
     };
 
     const BlockWhatWeOffer = () => {
-        const offer: { title: string; description: string; bgColor?: string; ctaLink?: string }[] = [
+        const OFFER: { title: string; description: string; bgColor?: string; ctaLink?: string }[] = [
             {
-                title: 'Formations Certifiantes',
-                description: 'Validez vos compétences et gagnez un avantage compétitif.',
+                title: 'Formations certifiantes sur-Mesure',
+                description: 'Validez vos compétences et gagnez en avantage compétitif.',
                 bgColor: 'bg-primary-100',
                 ctaLink: ROUTE_MAP.public.courses.list.link,
             },
             {
-                title: 'Formations Sur-Mesure',
-                description: 'Parcours adaptés aux besoins spécifiques des entreprises et individus.',
+                title: 'Reconversion professionnelle',
+                description:
+                    'Programme dédié aux particuliers souhaitant se reconvertir dans le domaine du test logiciel, avec un accompagnement complet vers les métiers de testeur manuel ou testeur en automatisation.',
                 bgColor: 'bg-primary-200',
                 ctaLink: ROUTE_MAP.public.courses.list.link,
             },
             {
-                title: 'Accompagnement des Institutions',
-                description: ' Aide aux entreprises, centres et écoles pour concevoir des formations en reconversion et développement personnel.',
+                title: 'Audit de maturité de test',
+                description:
+                    'Évaluation approfondie des processus de test au sein de l’entreprise pour identifier les axes d’amélioration et optimiser les performances',
+                bgColor: 'bg-primary-200',
+                ctaLink: ROUTE_MAP.public.courses.list.link,
+            },
+            {
+                title: 'Conseils stratégiques',
+                description: 'Accompagnement stratégique pour la mise en place et l’optimisation des processus de test au sein des organisations.',
+                bgColor: 'bg-primary-400',
+                ctaLink: ROUTE_MAP.public.courses.list.link,
+            },
+            {
+                title: 'Tierce recette applicative',
+                description:
+                    'Services d’externalisation des tests permettant aux entreprises de confier tout ou partie de leurs activités de test à des experts dédiés.',
                 bgColor: 'bg-primary-400',
                 ctaLink: ROUTE_MAP.public.courses.list.link,
             },
@@ -301,24 +326,34 @@ function AboutUsCardThree() {
                             viewport={{ once: true, amount: 0.2 }}
                             // variants={sectionVariants}
                         >
-                            <h2 className="!mb-[15px] text-2xl font-bold md:text-3xl lg:text-4xl xl:text-5xl leading-tight">Ce Que Nous Offrons</h2>
+                            <h2 className="!mb-[15px] text-2xl font-bold md:text-3xl lg:text-4xl xl:text-5xl leading-tight">Nos Offres</h2>
 
                             <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:gap-12">
-                                <div className="col-span-2 my-auto lg:col-span-1">
-                                    <p className="mt-4 leading-relaxed text-gray-700 dark:text-gray-300 text-base md:text-lg">
-                                        Nous pensons que l'apprentissage doit être accessible, engageant et transformateur. Notre mission est de vous
-                                        permettre d'atteindre votre plein potentiel, quel que soit votre point de départ. Ensemble, ouvrons de
-                                        nouvelles perspectives et encourageons l'apprentissage tout au long de la vie.
+                                <div className="col-span-2 my-auto lg:col-span-1 h-fit">
+                                    <p className="mt-4 text-justify leading-relaxed text-gray-700 dark:text-gray-300 text-base md:text-lg">
+                                        TestPro propose une offre intégrée de formations certifiantes et de services stratégiques, pensée pour
+                                        accompagner les professionnels du digital à chaque étape de leur évolution. En combinant certifications
+                                        internationales, audit, conseil opérationnel, parcours de reconversion et optimisation des processus qualité,
+                                        TestPro crée une synergie unique entre montée en compétences, structuration des équipes et performance
+                                        durable.
                                     </p>
+                                    <p className="mt-4 text-justify leading-relaxed text-gray-700 dark:text-gray-300 text-base md:text-lg">
+                                        Le bénéfice pour votre entreprise est un accompagnement sur mesure, des résultats concrets et une expertise
+                                        immédiatement applicable pour relever les défis du marché avec confiance et agilité.
+                                    </p>
+
+                                    <blockquote className="leading-relaxed font-medium py-[8vh] italic">
+                                        Nous ne formons pas seulement des professionnels : nous bâtissons la confiance numérique, un test à la fois.
+                                    </blockquote>
                                 </div>
                                 <div className="col-span-2 lg:col-span-1">
                                     <div className="space-y-4">
-                                        {offer.map((o, index) => (
+                                        {OFFER.map((o, index) => (
                                             <div
                                                 key={index}
                                                 className={`rounded-xl bg-white/[.54] p-4 md:p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 dark:text-white ${o.bgColor || 'bg-white dark:bg-[#15203c]'}`}
                                             >
-                                                <a href={o.ctaLink || '#'} className="text-primary-600 font-semibold hover:underline text-lg md:text-xl">
+                                                <a href={o.ctaLink || '#'} className="text-primary-600 font-bold hover:underline text-lg md:text-xl">
                                                     {o.title}
                                                 </a>
                                                 <p className="mt-2 text-gray-600 dark:text-gray-300 leading-relaxed">{o.description}</p>
@@ -352,8 +387,8 @@ function AboutUsCardThree() {
                                     <div className="flex items-center h-full">
                                         <div>
                                             <blockquote className="leading-relaxed text-xl md:text-2xl lg:text-3xl font-medium">
-                                                "Nous pensons que l'apprentissage doit être accessible, engageant et transformateur. Notre mission est
-                                                de vous permettre d'atteindre votre plein potentiel."
+                                                « Dans l’économie numérique, la confiance se construit par la qualité. Et la qualité commence par les
+                                                tests. »
                                             </blockquote>
                                         </div>
                                     </div>
@@ -361,11 +396,11 @@ function AboutUsCardThree() {
 
                                 <div className="col-span-1 md:col-span-2 text-center">
                                     <img
-                                        src="assets/images/front-pages/team2.jpg"
+                                        src="assets/images/teams/02.png"
                                         alt="Directeur général"
                                         className="mx-auto h-32 w-32 md:h-40 md:w-40 rounded-full object-cover shadow-lg"
                                     />
-                                    <p className="mt-4 font-semibold text-lg">Directeur général</p>
+                                    <p className="mt-4 font-semibold text-lg">CEO</p>
                                     <p className="text-gray-600 dark:text-gray-400">TestPro</p>
                                 </div>
                             </div>
@@ -410,19 +445,27 @@ function AboutUsCardThree() {
                             {/* Bloc GASQ */}
                             <div className="grid grid-cols-1 md:grid-cols-6 gap-6 lg:gap-8 items-center bg-white/50 dark:bg-gray-800/50 p-6 md:p-8 rounded-2xl shadow-lg">
                                 <div className="col-span-1 md:col-span-1 text-center">
-                                    <img src="/assets/images/agrements/gasq.jpeg" alt="Logo GASQ" className="h-16 md:h-20 lg:h-24 mx-auto object-contain" />
+                                    <img
+                                        src="/assets/images/agrements/gasq.jpeg"
+                                        alt="Logo GASQ"
+                                        className="h-16 md:h-20 lg:h-24 mx-auto object-contain"
+                                    />
                                 </div>
                                 <div className="space-y-4 col-span-1 md:col-span-5">
-                                    <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">TestPro, organisme certifié GASQ Platinium</h3>
+                                    <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">
+                                        TestPro, organisme certifié GASQ Platinium
+                                    </h3>
                                     <p className="leading-relaxed text-gray-700 dark:text-gray-300 text-base md:text-lg">
                                         En tant que centre de formation accrédité GASQ Platinium, <strong>TestPro</strong> propose des parcours de
                                         formation certifiants tels que <strong>ISTQB</strong>, alignés sur les standards internationaux du test
                                         logiciel.
-                                        <br /><br />
+                                        <br />
+                                        <br />
                                         Nos formations allient expertise technique et pédagogie de qualité, encadrées par des formateurs certifiés,
                                         avec des supports officiels à jour. Les examens peuvent être passés sur site dans nos locaux à Cocody ou en
                                         ligne.
-                                        <br /><br />
+                                        <br />
+                                        <br />
                                         Cette reconnaissance renforce notre crédibilité en tant qu'acteur clé de la formation en assurance qualité
                                         logicielle.
                                     </p>
@@ -435,15 +478,22 @@ function AboutUsCardThree() {
                             {/* Bloc FDFP */}
                             <div className="grid grid-cols-1 md:grid-cols-6 gap-6 lg:gap-8 items-center bg-white/50 dark:bg-gray-800/50 p-6 md:p-8 rounded-2xl shadow-lg">
                                 <div className="col-span-1 md:col-span-1 text-center">
-                                    <img src="/assets/images/agrements/logo-fdfp.jpg" alt="Logo FDFP" className="h-20 md:h-24 lg:h-28 mx-auto object-contain" />
+                                    <img
+                                        src="/assets/images/agrements/logo-fdfp.jpg"
+                                        alt="Logo FDFP"
+                                        className="h-20 md:h-24 lg:h-28 mx-auto object-contain"
+                                    />
                                 </div>
                                 <div className="space-y-4 col-span-1 md:col-span-5">
-                                    <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">TestPro agréé par le FDFP</h3>
+                                    <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">
+                                        TestPro agréé par le FDFP
+                                    </h3>
                                     <p className="leading-relaxed text-gray-700 dark:text-gray-300 text-base md:text-lg">
                                         <strong>TestPro</strong> est agréé par le{' '}
                                         <strong>Fonds de Développement de la Formation Professionnelle (FDFP)</strong>, ce qui permet aux entreprises
                                         ivoiriennes de mobiliser leur contribution pour financer les formations de leurs équipes.
-                                        <br /><br />
+                                        <br />
+                                        <br />
                                         Grâce à notre catalogue riche et adapté aux besoins métiers, nous accompagnons efficacement les entreprises
                                         dans la mise en œuvre de leur plan de formation, avec une prise en charge facilitée par le FDFP.
                                     </p>
