@@ -6,6 +6,7 @@ import OffersSection from './sections/OffersSection';
 import SpecialSection from './sections/SpecialSection';
 import ValuesSection from './sections/ValuesSection';
 import WelcomeSection from './sections/WelcomeSection';
+import SEOMetadata from './SEOMetadata';
 
 /**
  * Composant principal de la page À Propos
@@ -34,6 +35,9 @@ function AboutUsCardThree() {
 
     return (
         <section className="text-gray-600 dark:bg-[#0a0e19] dark:text-white">
+            {/* Métadonnées SEO pour optimiser le référencement */}
+            <SEOMetadata />
+            
             {/* Section 1 - Bienvenue et présentation TestPro */}
             <WelcomeSection imageVariants={imageVariants} />
 
