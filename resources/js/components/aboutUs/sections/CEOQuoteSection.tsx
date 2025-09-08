@@ -30,6 +30,7 @@ export default function CEOQuoteSection({
     ceoTitle = "Alexis NANA",
     quote = "Dans l'économie numérique, la confiance se construit par la qualité. Et la qualité commence par les tests.",
     companyName = "CEO TestPro"
+    // CONSULTANT SÉNIOR TESTING EXPERT TOSCA
 }: CEOQuoteSectionProps) {
     return (
         <MotionSection>
