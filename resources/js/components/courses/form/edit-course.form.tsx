@@ -12,7 +12,7 @@ import { SharedData } from '@/types';
 import { ICourse, ICourseCategory } from '@/types/course';
 import { IPartner } from '@/types/partner';
 import 'react-quill/dist/quill.snow.css';
-import RichTextQuill from '../../ui/form/RichTextQuill';
+import AdvancedRichTextEditor from '../../ui/form/AdvancedRichTextEditor';
 import { Skeleton } from '../../ui/skeleton';
 import CourseAdditionnalForm from './course-additionnal.form';
 import CourseBasicInfoForm from './course-basic-info.form';
@@ -145,11 +145,15 @@ function CourseForm({ course }: ICourseFormProps) {
         setData('id', course.id);
         setData('excerpt', course.excerpt || '');
         setData('category_id', course?.category?.id?.toString() || '');
-        setData('duration', course.duration || '');
         setData('attachment', course.attachment || '');
         setData('lectures', course.lectures || 0);
+
+        setData('is_featured', course.is_featured);
+
+        setData('duration', course.duration || '3');
         setData('periodicity_unit', course.periodicity_unit || PeriodicityUnitEnum.DAY);
-        setData('periodicity_value', course.periodicity_value || 1); // <->duration
+        setData('periodicity_value', course.periodicity_value || 3); // <->duration
+
         setData('price', course.price ? course.price : '');
         setData('regular_price', course.regular_price ? Number(course.regular_price).toLocaleString('fr-FR') : '');
         setData('author', course.author || '');
@@ -383,11 +387,13 @@ function CourseForm({ course }: ICourseFormProps) {
                                                                     {item.key && (
                                                                         <div>
                                                                             {true && (
-                                                                                <RichTextQuill
+                                                                                <AdvancedRichTextEditor
                                                                                     label={item.label}
                                                                                     labelId={item.key}
                                                                                     value={data[item.key] as string}
-                                                                                    setData={(value: string) => setData(item.key, value)}
+                                                                                    onChange={(value: string) => setData(item.key, value)}
+                                                                                    placeholder={`Saisissez ${item.label.toLowerCase()}...`}
+                                                                                    height="250px"
                                                                                 />
                                                                             )}
                                                                             {false && (

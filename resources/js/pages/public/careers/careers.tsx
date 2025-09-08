@@ -36,7 +36,7 @@ export default function Careers() {
     const [detailSelected, setDetailSelected] = useState<number | null>(null);
     const [openDetailModal, setOpenDetailModal] = useState<boolean>(false);
     const [currentPage, setCurrentPage] = useState(1);
-    const jobsPerPage = 6;
+    const jobsPerPage = 12;
 
     const filteredJobs = jobs.filter((job) => {
         const salary = job.salary || 0;
@@ -86,7 +86,7 @@ export default function Careers() {
                         initial="hidden"
                         animate="visible"
                     >
-                        <div className="max-w-7xl mx-auto">
+                        <div className="w-full">
                             <div className="mb-6 flex items-center justify-between">
                                 <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100">Offres d'emploi</h1>
                                 <div className="space-x-2">

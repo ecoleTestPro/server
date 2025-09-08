@@ -24,7 +24,7 @@ class CourseStoreRequest extends FormRequest
         return [
             'category_id'       => 'required|exists:categories,id',
             'title'             => 'required|min:2|max:500',
-            'excerpt'           => 'required|string|min:2|max:255',
+            'excerpt'           => 'required|string',
             'media'             => 'image|mimes:jpeg,png,jpg|max:2048',
             'logo'              => 'image|mimes:jpeg,png,jpg|max:2048',
             'organization_logo' => 'image|mimes:jpeg,png,jpg|max:2048',
@@ -33,6 +33,7 @@ class CourseStoreRequest extends FormRequest
             'gallery.*'         => 'file|mimes:jpeg,png,jpg,mp4,mpeg|max:1048576',
             'description'       => 'json|min:1',
             'is_published'      => 'nullable',
+            'is_featured'       => 'nullable',
             'partner_ids'       => 'sometimes',
             'partner_ids.*'     => 'exists:partners,id',
             'regular_price'     => 'numeric|min:' . ((float) config('app.minimum_amount')),
@@ -40,7 +41,7 @@ class CourseStoreRequest extends FormRequest
             'location_mode'     => 'nullable|string|in:En présentiel,À distance,En présentiel ou à distance,Hybride',
             'periodicity_unit'  => 'nullable|string',
             'periodicity_value' => 'nullable|numeric',
-            'duration'          => 'nullable|string',
+            'duration'          => 'required|string',
             'attachment'        => 'nullable|string',
             'lectures'          => 'nullable|numeric',
             'price' => [

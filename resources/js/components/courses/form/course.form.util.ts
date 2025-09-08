@@ -42,6 +42,7 @@ export type ICourseRequest = {
     reference_tag?: string;
     location_mode?: string;
 
+    is_featured: boolean;
     is_published?: boolean; // Indicate if the course is published or a draft
 };
 
@@ -225,6 +226,7 @@ export const createPayload = (data: ICourseForm, draft: boolean): ICourseRequest
             partner_ids: data.partner_ids && data.partner_ids.length > 0 ? data.partner_ids : [],
             reference_tag: data.reference_tag || '',
             location_mode: data.location_mode || 'En présentiel ou à distance',
+            is_featured: data.is_featured || false,
         };
 
         Logger.log('[CREATE_PAYLOAD]', payload);

@@ -65,7 +65,8 @@ interface IROUTE_MAP {
         blogs: {
             list: IRouteMap;
             detail: (slug: string) => IRouteMap;
-        }
+        },
+        appointment: IRouteMap
     }
     auth: {
         login: IRouteMap,
@@ -93,7 +94,7 @@ interface IROUTE_MAP {
             templates: IRouteMap,
             logs: IRouteMap,
         }
-    }
+    },
 }
 
 export const ROUTE_MAP: IROUTE_MAP = {
@@ -136,6 +137,7 @@ export const ROUTE_MAP: IROUTE_MAP = {
             detail: (slug: string) => createIRouteMap(`/blog/${slug}`, 'Détail du blog')
 
         },
+        appointment: createIRouteMap(route('appointments.create'), 'Prendre rendez-vous'),
     },
     auth: {
         login: createIRouteMap(route('login'), 'Connexion'),

@@ -101,7 +101,7 @@ export default function PrivacyPolicyPage() {
                                 personnelles que nous détenons sur vous. Rectification : corriger vos informations personnelles si elles sont
                                 inexactes. Suppression : demander l’effacement de vos données, sauf obligation légale. Opposition : refuser le
                                 traitement de vos données pour certaines finalités. Portabilité : obtenir vos données dans un format structuré,
-                                couramment utilisé. Pour exercer vos droits, contactez-nous à info@ecoletestpro.com.
+                                couramment utilisé. Pour exercer vos droits, contactez-nous à info@testpro-group.com.
                             </p>
                         </section>
 
@@ -130,7 +130,7 @@ export default function PrivacyPolicyPage() {
                             <h2 className="mb-4 text-2xl font-semibold text-gray-900 dark:text-white">9. Nous Contacter</h2>
                             <p className="text-justify text-gray-600 dark:text-gray-300">
                                 Pour toute question concernant cette politique ou le traitement de vos données, vous pouvez nous contacter : Par
-                                e-mail : info@ecoletestpro.com Par téléphone : +225 0706915705 Adresse : TestPro, Siège social: Abidjan –
+                                e-mail : info@testpro-group.com Par téléphone : +225 0706915705 Adresse : TestPro, Siège social: Abidjan –
                                 Attécoubé Locodjro, cité Lagoona City, lot n° GH 23, ilot n°00, 01 BP 5676 ABIDJAN 01
                             </p>
                         </section>

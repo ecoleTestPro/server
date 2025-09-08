@@ -27,6 +27,7 @@ class CourseSession extends Model
         'price',
         'price_discount',
         'tva',
+        'is_confirmed',
     ];
 
     protected $casts = [
@@ -35,6 +36,7 @@ class CourseSession extends Model
         'price'          => 'float',
         'price_discount' => 'float',
         'tva'            => 'float',
+        'is_confirmed'   => 'boolean',
     ];
 
     protected $guarded = ['id'];

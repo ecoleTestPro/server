@@ -173,8 +173,9 @@ class PublicController extends PublicAbstractController
 
     public function faqs()
     {
+        $data = $this->default_data;
         return Inertia::render('public/faqs', [
-            ...$this->default_data,
+            'data' => $data,
         ]);
     }
 

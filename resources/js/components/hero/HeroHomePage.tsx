@@ -4,7 +4,6 @@ import { ICourse } from '@/types/course';
 import { ROUTE_MAP } from '@/utils/route.util';
 import { Link, usePage } from '@inertiajs/react';
 import axios from 'axios';
-import { TrendingUp } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 export default function HeroHomePage() {
@@ -114,20 +113,6 @@ export default function HeroHomePage() {
                                     </div>
                                 ))}
                             </div>
-                        </div>
-                    )}
-
-                    {/* Fallback si aucune formation featured */}
-                    {!isLoading && featuredCourses.length === 0 && (
-                        <div className="mt-8 text-center">
-                            <p className="text-white/80 mb-4">Aucune formation mise en avant pour le moment</p>
-                            <Link
-                                href={ROUTE_MAP.public.courses.list.link}
-                                className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-500 to-teal-600 hover:from-green-600 hover:to-teal-700 text-white font-medium rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
-                            >
-                                Découvrir nos formations
-                                <TrendingUp className="w-4 h-4 ml-2" />
-                            </Link>
                         </div>
                     )}
                 </div>

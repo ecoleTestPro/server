@@ -127,7 +127,7 @@ class CourseRepository extends Repository
     }
 
     /**
-     * Get all courses by category id.
+     * Get all courses by category id that have sessions.
      *
      * @param int $categoryId
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
@@ -135,9 +135,9 @@ class CourseRepository extends Repository
     public static function findAllByCategoryId($categoryId, $limit = 10)
     {
         try {
-
             return static::queryBase()
                 ->where('category_id', $categoryId)
+                ->whereHas('course_sessions') // Only courses with sessions
                 ->latest('id')
                 ->take($limit)
                 ->get();
@@ -254,7 +254,7 @@ class CourseRepository extends Repository
             'reference_tag'        => $request->reference_tag,
             'location_mode'        => $request->location_mode ?? 'En présentiel ou à distance',
             'periodicity_unit'     => $request->periodicity_unit,
-            'periodicity_value'    => $request->duration, // set duration value in periodicity_value
+            'periodicity_value'    => $request->periodicity_value,
             'duration'             => $request->duration,
             'attachment'           => $request->attachment,
             'lectures'             => $request->lectures,
@@ -393,7 +393,7 @@ class CourseRepository extends Repository
                 'reference_tag'        => $request->reference_tag ?? $course->reference_tag,
                 'location_mode'        => $request->location_mode ?? $course->location_mode ?? 'En présentiel ou à distance',
                 'periodicity_unit'     => $request->periodicity_unit ?? $course->periodicity_unit,
-                'periodicity_value'    => $request->duration ?? $course->duration,
+                'periodicity_value'    => $request->periodicity_value ?? $course->periodicity_value,
                 'duration'             => $request->duration ?? $course->duration,
                 'attachment'           => $request->attachment ?? $course->attachment,
                 'lectures'             => $request->lectures ?? $course->lectures,
@@ -402,6 +402,7 @@ class CourseRepository extends Repository
                 'price'                => $request->price,
                 'instructor_id'        => $request->instructor_id ?? $course->instructor_id,
                 'is_active'            => $isActive,
+                'is_featured'          => filter_var($request->is_featured, FILTER_VALIDATE_BOOLEAN),
                 'published_at'         => $request->is_active == 'on' ? now() : null
             ]);
         } catch (\Exception $e) {

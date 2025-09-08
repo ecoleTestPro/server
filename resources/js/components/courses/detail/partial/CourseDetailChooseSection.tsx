@@ -1,5 +1,5 @@
 import { ICourse, ICoursePeriodicity, ICourseSession } from '@/types/course';
-import { Calendar, MapPin, ArrowRight } from 'lucide-react';
+import { Calendar, MapPin, ArrowRight, CheckCircle } from 'lucide-react';
 import { RefObject, useEffect, useState } from 'react'; // Add necessary imports
 import { useTranslation } from 'react-i18next';
 import CourseInscriptionDialog from './CourseInscriptionDialog';
@@ -172,6 +172,16 @@ export const CourseSessionCard = ({
                         <MapPin className="w-4 h-4 text-gray-400" />
                         <span className="font-medium">{session.location}</span>
                     </div>
+                    
+                    {/* Statut de confirmation */}
+                    {(session as any).is_confirmed && (
+                        <div className="flex items-center gap-2">
+                            <CheckCircle className="w-5 h-5 text-green-600" />
+                            <span className="text-sm font-medium text-green-600 dark:text-green-400">
+                                {t('COURSE.SESSION.CONFIRMED', 'Session confirmée')}
+                            </span>
+                        </div>
+                    )}
                     
                     {/* Prix */}
                     {price && (
