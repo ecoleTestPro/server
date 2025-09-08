@@ -1,13 +1,13 @@
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { ICourse } from '@/types/course';
 import { ROUTE_MAP } from '@/utils/route.util';
 import { getPeriodicity, getPrice } from '@/utils/utils';
 import { Link, router } from '@inertiajs/react';
+import { Calendar, ChevronRight, Clock, Euro } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import CourseDurationBlock from '../CourseDurationBlock';
 import CourseInscriptionDialog from '../detail/partial/CourseInscriptionDialog';
-import { Calendar, Clock, Euro, ChevronRight } from 'lucide-react';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface ICourseTableProps {
     courses: ICourse[];
@@ -18,6 +18,10 @@ export default function CourseTable({ courses }: ICourseTableProps) {
     const { t } = useTranslation();
     const [courseSelected, setCourseSelected] = useState<ICourse | null>(null);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+    const durationValue = (item: ICourse): boolean | string => {
+        return getPeriodicity(item.periodicity_unit, item.periodicity_value);
+    };
 
     const handleClickRegisterCourse = (course: ICourse) => {
         router.visit(ROUTE_MAP.public.courses.detail(course.category?.slug ?? '', course.slug).link + '#course-dates', {
@@ -41,11 +45,7 @@ export default function CourseTable({ courses }: ICourseTableProps) {
         const now = new Date();
         const upcomingSessions = course.course_sessions
             .filter((session) => new Date(session.start_date) > now)
-            .sort(
-                (a, b) =>
-                    new Date(a.start_date).getTime() -
-                    new Date(b.start_date).getTime(),
-            );
+            .sort((a, b) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime());
 
         const next = upcomingSessions[0];
         if (!next) {
@@ -83,15 +83,12 @@ export default function CourseTable({ courses }: ICourseTableProps) {
                         <div className="p-4 sm:p-6">
                             {/* Header de la card */}
                             <div className="mb-4">
-                                <Link
-                                    href={ROUTE_MAP.public.courses.detail(item.category?.slug ?? '', item.slug).link}
-                                    className="block"
-                                >
+                                <Link href={ROUTE_MAP.public.courses.detail(item.category?.slug ?? '', item.slug).link} className="block">
                                     <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors duration-200 leading-tight">
                                         {item.title}
                                     </h3>
                                 </Link>
-                                
+
                                 {item.category && (
                                     <div className="mt-2">
                                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300">
@@ -110,9 +107,7 @@ export default function CourseTable({ courses }: ICourseTableProps) {
                                     </div>
                                     <div className="min-w-0 flex-1">
                                         <p className="text-xs text-blue-600 dark:text-blue-400 font-medium">Prochaine session</p>
-                                        <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">
-                                            {getNextSession(item)}
-                                        </p>
+                                        <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">{getNextSession(item)}</p>
                                     </div>
                                 </div>
 
@@ -125,7 +120,7 @@ export default function CourseTable({ courses }: ICourseTableProps) {
                                         <div className="min-w-0">
                                             <p className="text-xs text-orange-600 dark:text-orange-400 font-medium">Durée</p>
                                             <div className="text-sm font-semibold text-gray-900 dark:text-white">
-                                                <CourseDurationBlock duration={getPeriodicity(item.periodicity_unit, item.periodicity_value)} />
+                                                <CourseDurationBlock duration={durationValue(item)} />
                                             </div>
                                         </div>
                                     </div>
@@ -136,7 +131,10 @@ export default function CourseTable({ courses }: ICourseTableProps) {
                                         </div>
                                         <div className="min-w-0">
                                             <p className="text-xs text-green-600 dark:text-green-400 font-medium">Prix</p>
-                                            <div className="text-sm font-semibold text-gray-900 dark:text-white" dangerouslySetInnerHTML={{ __html: getPrice(item.price) }} />
+                                            <div
+                                                className="text-sm font-semibold text-gray-900 dark:text-white"
+                                                dangerouslySetInnerHTML={{ __html: getPrice(item.price) }}
+                                            />
                                         </div>
                                     </div>
                                 </div>
@@ -163,29 +161,16 @@ export default function CourseTable({ courses }: ICourseTableProps) {
                     <table className="w-full">
                         <thead className="text-gray-700 dark:text-gray-200 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800">
                             <tr>
-                                <th className="w-4/12 px-6 py-4 font-semibold text-left">
-                                    {t('COURSE.TABLE.TITLE', 'Formation')}
-                                </th>
-                                <th className="px-6 py-4 font-semibold text-left">
-                                    {t('COURSE.TABLE.NEXT_SESSION', 'Prochaine session')}
-                                </th>
-                                <th className="px-6 py-4 font-semibold text-left">
-                                    {t('COURSE.TABLE.DURATION', 'Durée')}
-                                </th>
-                                <th className="px-6 py-4 font-semibold text-left">
-                                    {t('COURSE.TABLE.PRICE', 'Prix')}
-                                </th>
-                                <th className="px-6 py-4 font-semibold text-center">
-                                    {t('COURSE.TABLE.REGISTER_COURSER', 'Action')}
-                                </th>
+                                <th className="w-4/12 px-6 py-4 font-semibold text-left">{t('COURSE.TABLE.TITLE', 'Formation')}</th>
+                                <th className="px-6 py-4 font-semibold text-left">{t('COURSE.TABLE.NEXT_SESSION', 'Prochaine session')}</th>
+                                <th className="px-6 py-4 font-semibold text-left">{t('COURSE.TABLE.DURATION', 'Durée')}</th>
+                                <th className="px-6 py-4 font-semibold text-left">{t('COURSE.TABLE.PRICE', 'Prix')}</th>
+                                <th className="px-6 py-4 font-semibold text-center">{t('COURSE.TABLE.REGISTER_COURSER', 'Action')}</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                             {courses.map((item, index) => (
-                                <tr 
-                                    key={index}
-                                    className="group hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-200"
-                                >
+                                <tr key={index} className="group hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-200">
                                     <td className="px-6 py-4">
                                         <div className="flex flex-col">
                                             <Link
@@ -195,9 +180,7 @@ export default function CourseTable({ courses }: ICourseTableProps) {
                                                 {item.title}
                                             </Link>
                                             {item.category && (
-                                                <span className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                                                    {item.category.title}
-                                                </span>
+                                                <span className="mt-1 text-sm text-gray-500 dark:text-gray-400">{item.category.title}</span>
                                             )}
                                         </div>
                                     </td>
@@ -210,13 +193,16 @@ export default function CourseTable({ courses }: ICourseTableProps) {
                                     <td className="px-6 py-4">
                                         <div className="flex items-center gap-2">
                                             {/* <Clock className="w-4 h-4 text-orange-500" /> */}
-                                            <CourseDurationBlock duration={getPeriodicity(item.periodicity_unit, item.periodicity_value)} />
+                                            <CourseDurationBlock duration={durationValue(item)} />
                                         </div>
                                     </td>
                                     <td className="px-6 py-4">
                                         <div className="flex items-center gap-2">
                                             {/* <Euro className="w-4 h-4 text-green-500" /> */}
-                                            <span className="font-semibold text-gray-900 dark:text-white" dangerouslySetInnerHTML={{ __html: getPrice(item.price) }} />
+                                            <span
+                                                className="font-semibold text-gray-900 dark:text-white"
+                                                dangerouslySetInnerHTML={{ __html: getPrice(item.price) }}
+                                            />
                                         </div>
                                     </td>
                                     <td className="px-6 py-4 text-center">
@@ -228,7 +214,7 @@ export default function CourseTable({ courses }: ICourseTableProps) {
                                             {t('COURSE.TABLE.REGISTER', 'Voir les dates')}
                                             <ChevronRight className="w-4 h-4" />
                                         </button>
-                                        
+
                                         {/* Icône avec tooltip pour écrans < 1278px */}
                                         <Tooltip>
                                             <TooltipTrigger asChild>

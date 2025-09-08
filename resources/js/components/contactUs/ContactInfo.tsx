@@ -1,31 +1,53 @@
 import { useTranslation } from 'react-i18next';
+import { CONTACT_INFO } from '../layouts/footer/footer';
 import MotionSection from '../motion/MotionSection';
-import TitleBadgeOne from '../ui/badge-one';
+import { HiMail, HiPhone, HiLocationMarker } from 'react-icons/hi';
 
 interface ContactInfo {
     title: string;
     contact: string;
     link?: string;
     image: string;
+    icon: React.ReactNode;
+    colorClass: string;
+    animation: string;
 }
 
 const contacts: ContactInfo[] = [
     {
         title: 'Email',
-        contact: 'info@ecoletestpro.com',
-        link: 'mailto:info@ecoletestpro.com',
+        contact: CONTACT_INFO.email,
+        link: `mailto:${CONTACT_INFO.email}`,
         image: '/assets/images/svgs/email-part-2-svgrepo-com.svg',
+        icon: <HiMail className="w-6 h-6" />,
+        colorClass: 'text-primary-600 dark:text-primary-400',
+        animation: 'animate-pulse',
     },
     {
         title: 'Téléphone',
-        contact: '+225 0706915705',
-        link: 'tel:+2250706915705',
+        contact: CONTACT_INFO.phone1,
+        link: `tel:${CONTACT_INFO.phone1}`,
         image: '/assets/images/svgs/phone-out-svgrepo-com.svg',
+        icon: <HiPhone className="w-6 h-6" />,
+        colorClass: 'text-green-600 dark:text-green-400',
+        animation: 'animate-bounce',
+    },
+    {
+        title: 'Téléphone',
+        contact: CONTACT_INFO.phone2,
+        link: `tel:${CONTACT_INFO.phone2}`,
+        image: '/assets/images/svgs/phone-out-svgrepo-com.svg',
+        icon: <HiPhone className="w-6 h-6" />,
+        colorClass: 'text-green-600 dark:text-green-400',
+        animation: 'animate-bounce animation-delay-200',
     },
     {
         title: 'Adresse',
-        contact: "Siège social: 5ème étage de la Résidence Pacy En face de l'immeuble CGK, Cocody Angré Djibi - 9ème tranche, Abidjan Côte d'Ivoire",
+        contact: CONTACT_INFO.address,
         image: '/assets/images/svgs/support_agent.svg',
+        icon: <HiLocationMarker className="w-6 h-6" />,
+        colorClass: 'text-red-600 dark:text-red-400',
+        animation: 'animate-pulse',
     },
 ];
 
@@ -45,18 +67,32 @@ export default function ContactInfo() {
                     </div>
                     <div className="grid grid-cols-1 gap-6">
                         {contacts.map((widget, index) => (
-                            <div key={index} className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
-                                <div className="flex items-center mb-3">
-                                    <img src={widget.image} alt={widget.title} className="w-8 h-8 mr-3" />
-                                    <h3 className="text-lg font-semibold">{widget.title}</h3>
+                            <div 
+                                key={index} 
+                                className="group bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:translate-x-2 border border-gray-100 dark:border-gray-700"
+                            >
+                                <div className="flex items-start gap-4">
+                                    <div className={`${widget.colorClass} ${widget.animation} flex-shrink-0`}>
+                                        {widget.icon}
+                                    </div>
+                                    <div className="flex-1">
+                                        <h3 className="text-lg font-semibold mb-2 text-gray-800 dark:text-gray-200">
+                                            {widget.title}
+                                        </h3>
+                                        {widget.link ? (
+                                            <a 
+                                                href={widget.link} 
+                                                className={`inline-block text-gray-600 dark:text-gray-400 transition-all duration-300 hover:${widget.colorClass.replace('text-', 'text-')} hover:underline group-hover:translate-x-1`}
+                                            >
+                                                {widget.contact}
+                                            </a>
+                                        ) : (
+                                            <p className="text-gray-700 dark:text-gray-300 font-medium group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors duration-300">
+                                                {widget.contact}
+                                            </p>
+                                        )}
+                                    </div>
                                 </div>
-                                {widget.link ? (
-                                    <a href={widget.link} className="text-blue-500 hover:underline mt-2 block">
-                                        {widget.contact}
-                                    </a>
-                                ) : (
-                                    <p className="text-gray-700 dark:text-gray-300">{widget.contact}</p>
-                                )}
                             </div>
                         ))}
                     </div>

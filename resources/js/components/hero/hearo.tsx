@@ -1,6 +1,5 @@
 import { ICourse, ICourseCategory } from '@/types/course';
 import { Link } from '@inertiajs/react';
-import HeroCategory from './hearoCategory';
 import HeroCourse from './HeroCourse';
 
 export interface IHeroBreadcrumbItems {
@@ -17,17 +16,17 @@ interface HeroProps {
     course?: ICourse;
 }
 
-const Hero = ({ title, description, breadcrumbItems, gradient = 'style-1', category, course }: HeroProps) => {
+const Hero = ({ title, description, breadcrumbItems, gradient = 'style-1', category: _category, course }: HeroProps) => {
     const getGradient = (style: string) => {
         switch (style) {
             case 'style-1':
-                return 'bg-gradient-to-br from-teal-100 via-teal-200 to-teal-300';
+                return 'bg-gradient-to-br from-teal-100 via-teal-200 to-teal-300 animate-gradient-shift-1';
             case 'style-2':
-                return 'bg-gradient-to-br from-blue-100 via-blue-200 to-blue-300';
+                return 'bg-gradient-to-br from-blue-100 via-blue-200 to-blue-300 animate-gradient-shift-2';
             case 'style-3':
-                return 'bg-gradient-to-br from-purple-100 via-purple-200 to-purple-300';
+                return 'bg-gradient-to-br from-purple-100 via-purple-200 to-purple-300 animate-gradient-shift-3';
             default:
-                return 'bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300';
+                return 'bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 animate-gradient-shift-default';
         }
     };
 
@@ -52,7 +51,7 @@ const Hero = ({ title, description, breadcrumbItems, gradient = 'style-1', categ
                     {description && <p className="text-lg text-gray-700 md:text-xl">{description}</p>}
                 </div>
 
-                {category && <HeroCategory category={category} />}
+                {/* {category && <HeroCategory category={category} />} */}
                 {course && <HeroCourse course={course} />}
             </div>
         </section>

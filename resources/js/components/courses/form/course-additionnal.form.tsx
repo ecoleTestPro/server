@@ -3,6 +3,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 // import { PeriodicityUnitEnum } from '@/types/course';
+import SelectCustom from '@/components/ui/select-custom';
 import { Switch } from '@/components/ui/switch';
 import TooltipCustom from '@/components/ui/TooltipCustom';
 import { ICourse } from '@/types/course';
@@ -21,7 +22,7 @@ interface CourseAdditionnalFormProps {
     fieldsetClasses?: string;
     data: ICourseForm;
     courseSelected: ICourse | null;
-    setData: (data: string, value: string | number) => void;
+    setData: (data: string, value: string | number | boolean) => void;
     processing: boolean;
     errors: ICourseFormErrors & { location_mode?: string };
     partnerTags?: string[];
@@ -54,14 +55,20 @@ export default function CourseAdditionnalForm({
             if (courseSelected.periodicity_unit && (!data.periodicity_unit || data.periodicity_unit === '')) {
                 setData('periodicity_unit', courseSelected.periodicity_unit);
             } else if (!data.periodicity_unit) {
-                setData('periodicity_unit', PERIODICITY_UNIT[0].value); 
+                setData('periodicity_unit', PERIODICITY_UNIT[0].value);
             }
 
-            // Initialisation de la valeur de périodicité si vide ou non définie
-            if (courseSelected.periodicity_value && (!data.periodicity_value || data.periodicity_value === '' || data.periodicity_value === 0)) {
-                setData('periodicity_value', courseSelected.periodicity_value);
-            } else if (!data.periodicity_value) {
-                setData('periodicity_value', 1);
+            // Initialisation de la durée si vide ou non définie
+            if (courseSelected.duration && (!data.duration || data.duration === '')) {
+                setData('duration', courseSelected.duration.toString());
+                setData('periodicity_value', courseSelected.duration.toString());
+            } else if (courseSelected.periodicity_value && (!data.periodicity_value || data.periodicity_value === '' || Number(data.periodicity_value) === 0)) {
+                // Si pas de durée mais une periodicity_value, utiliser cette valeur pour les deux
+                setData('duration', courseSelected.periodicity_value.toString());
+                setData('periodicity_value', courseSelected.periodicity_value.toString());
+            } else if (!data.duration || data.duration === '') {
+                setData('duration', '1');
+                setData('periodicity_value', '1');
             }
 
             // Initialisation du mode de formation si vide ou non défini
@@ -81,9 +88,9 @@ export default function CourseAdditionnalForm({
                         <div className="flex items-center space-x-2">
                             <Switch
                                 id="airplane-mode"
-                                checked={data.is_featured}
+                                checked={!!data.is_featured}
                                 onCheckedChange={(checked) => {
-                                    setData('is_featured', checked ? '1' : '0');
+                                    setData('is_featured', checked);
                                 }}
                             />
                             <Label htmlFor="airplane-mode">Mise en avant</Label>
@@ -133,46 +140,39 @@ export default function CourseAdditionnalForm({
                 <div className="grid gap-2">
                     <Label htmlFor="duration">
                         {t('courses.duration', 'Durée')}
-                        {/*  <span className="text-red-500">*</span> */}
+                        <span className="text-red-500">*</span>
                     </Label>
                     <Input
                         id="duration"
                         type="number"
                         value={data.duration}
-                        onChange={(e) => setData('duration', e.target.value)}
+                        onChange={(e) => {
+                            // Synchronize both duration and periodicity_value
+                            const value = e.target.value;
+                            setData('duration', value);
+                            setData('periodicity_value', value);
+                        }}
                         disabled={processing}
-                        placeholder={t('courses.duration', 'Durée (ex: 10h)')}
+                        placeholder={t('courses.duration', 'Durée (ex: 10)')}
+                        required
+                        min="1"
                     />
                     <InputError message={errors.duration} />
                 </div>
 
                 <div className="grid gap-2">
                     <Label htmlFor="periodicity_unit">
-                        {t('courses.periodicity_unit', 'Periodicité')}
+                        {t('courses.periodicity_unit', 'Unité de periodicité')}
                         {/* <span className="text-red-500">*</span> */}
                     </Label>
-                    <Select
-                        disabled={processing}
-                        value={data.periodicity_unit}
-                        defaultValue={data.periodicity_unit}
+                    <SelectCustom
+                        data={PERIODICITY_UNIT.map((unit) => ({ id: unit.value, title: unit.label, value: unit.value }))}
+                        selectLabel={t('courses.periodicity', 'Choisir une unité')}
+                        processing={processing}
                         onValueChange={(value) => setData('periodicity_unit', value)}
-                    >
-                        <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Sélectionner ..." />
-                        </SelectTrigger>
-
-                        <SelectContent>
-                            <SelectGroup>
-                                <SelectLabel>{t('courses.periodicity_unit', 'Periodicité')}</SelectLabel>
-
-                                {PERIODICITY_UNIT.map((unit) => (
-                                    <SelectItem key={unit.value} value={unit.value}>
-                                        {unit.label}
-                                    </SelectItem>
-                                ))}
-                            </SelectGroup>
-                        </SelectContent>
-                    </Select>
+                        defaultValue={data.periodicity_unit ? String(data.periodicity_unit) : PERIODICITY_UNIT[0].value}
+                        required
+                    />
                     <InputError message={errors.periodicity_unit} />
                 </div>
             </div>

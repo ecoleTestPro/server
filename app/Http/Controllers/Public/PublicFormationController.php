@@ -153,7 +153,7 @@ class PublicFormationController extends PublicAbstractController
                 'data' => $data,
             ]);
         } catch (Exception $e) {
-            dd($e);
+            // dd($e);
             Log::error("Error in courseCategory: {$e->getMessage()}");
             return redirect()->route('courses')->withErrors('Une erreur est survenue lors de la récupération des données.');
         }

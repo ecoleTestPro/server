@@ -13,8 +13,8 @@ const HeroCategory = ({ category }: HeroProps) => {
     return (
         <section>
             <div className="container mx-auto">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente ratione dignissimos expedita vitae iusto magnam? Necessitatibus
-                quasi esse explicabo, accusantium labore, beatae at sequi aspernatur voluptatem atque officia sed itaque.
+                {/* Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente ratione dignissimos expedita vitae iusto magnam? Necessitatibus
+                quasi esse explicabo, accusantium labore, beatae at sequi aspernatur voluptatem atque officia sed itaque. */}
             </div>
         </section>
     );

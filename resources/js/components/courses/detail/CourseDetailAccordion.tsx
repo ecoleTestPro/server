@@ -37,7 +37,7 @@ export default function CourseDetailAccordion({ section, sectionTitle, toggleSec
                 </div>
             </button>
             {isOpen[section] && (
-                <div className="toc-accordion-collapse px-[20px] pb-[20px] md:px-[25px]" id="detail-course-html">
+                <div className="toc-accordion-collapse px-[20px] pb-[20px] md:px-[25px] dark:text-white" id="detail-course-html">
                     {content}
                 </div>
             )}

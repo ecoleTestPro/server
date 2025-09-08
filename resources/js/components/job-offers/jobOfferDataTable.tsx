@@ -1,12 +1,12 @@
 import { IJobOffer } from '@/types';
 import { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown, MapPin, Building2, Calendar, DollarSign, Briefcase, AlertCircle } from 'lucide-react';
+import { AlertCircle, ArrowUpDown, Briefcase, Building2, Calendar, DollarSign, MapPin } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { Badge } from '../ui/badge';
 import { Button } from '../ui/button/button';
 import { DataTable } from '../ui/dataTable';
-import { Badge } from '../ui/badge';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 import JobOfferActionBtn from './jobOfferActionBtn';
-import { useTranslation } from 'react-i18next';
 
 interface Props {
     offers: IJobOffer[];
@@ -17,13 +17,13 @@ interface Props {
 
 export default function JobOfferDataTable({ offers, onEditRow, onDeleteRow, onToggleRow }: Props) {
     const { t } = useTranslation();
-    
+
     const getDaysUntilExpiry = (expiryDate: string | null | undefined) => {
         if (!expiryDate) return null;
         const days = Math.floor((new Date(expiryDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
         return days;
     };
-    
+
     const columns: ColumnDef<IJobOffer>[] = [
         {
             accessorKey: 'title',
@@ -80,17 +80,13 @@ export default function JobOfferDataTable({ offers, onEditRow, onDeleteRow, onTo
             cell: ({ row }) => {
                 const type = row.original.type;
                 const typeColors: Record<string, string> = {
-                    'CDI': 'bg-green-100 text-green-800 border-green-200',
-                    'CDD': 'bg-blue-100 text-blue-800 border-blue-200',
-                    'Stage': 'bg-purple-100 text-purple-800 border-purple-200',
-                    'Alternance': 'bg-orange-100 text-orange-800 border-orange-200',
-                    'Freelance': 'bg-indigo-100 text-indigo-800 border-indigo-200',
+                    CDI: 'bg-green-100 text-green-800 border-green-200',
+                    CDD: 'bg-blue-100 text-blue-800 border-blue-200',
+                    Stage: 'bg-purple-100 text-purple-800 border-purple-200',
+                    Alternance: 'bg-orange-100 text-orange-800 border-orange-200',
+                    Freelance: 'bg-indigo-100 text-indigo-800 border-indigo-200',
                 };
-                return (
-                    <Badge className={`text-xs ${typeColors[type] || 'bg-gray-100 text-gray-800 border-gray-200'} border`}>
-                        {type}
-                    </Badge>
-                );
+                return <Badge className={`text-xs ${typeColors[type] || 'bg-gray-100 text-gray-800 border-gray-200'} border`}>{type}</Badge>;
             },
         },
         {
@@ -113,11 +109,7 @@ export default function JobOfferDataTable({ offers, onEditRow, onDeleteRow, onTo
                 if (!salary || salary === 0) {
                     return <span className="text-gray-400 text-sm italic">Non spécifié</span>;
                 }
-                return (
-                    <div className="font-medium text-gray-900 dark:text-gray-100">
-                        {salary.toLocaleString('fr-FR')} FCFA
-                    </div>
-                );
+                return <div className="font-medium text-gray-900 dark:text-gray-100">{salary.toLocaleString('fr-FR')} FCFA</div>;
             },
         },
         {
@@ -140,21 +132,19 @@ export default function JobOfferDataTable({ offers, onEditRow, onDeleteRow, onTo
                 if (!expiryDate) {
                     return <span className="text-gray-400 text-sm italic">Pas de limite</span>;
                 }
-                
+
                 const days = getDaysUntilExpiry(expiryDate);
                 const date = new Date(expiryDate).toLocaleDateString('fr-FR');
-                
+
                 if (days !== null && days < 0) {
                     return (
                         <div className="flex items-center gap-2">
-                            <Badge className="text-xs bg-red-100 text-red-800 border border-red-200">
-                                Expirée
-                            </Badge>
+                            <Badge className="text-xs bg-red-100 text-red-800 border border-red-200">Expirée</Badge>
                             <span className="text-xs text-gray-500">{date}</span>
                         </div>
                     );
                 }
-                
+
                 if (days !== null && days <= 7) {
                     return (
                         <Tooltip>
@@ -165,13 +155,20 @@ export default function JobOfferDataTable({ offers, onEditRow, onDeleteRow, onTo
                                 </div>
                             </TooltipTrigger>
                             <TooltipContent>
-                                <p>Expire dans {days} jour{days > 1 ? 's' : ''}</p>
+                                <p>
+                                    Expire dans {days} jour{days > 1 ? 's' : ''}
+                                </p>
                             </TooltipContent>
                         </Tooltip>
                     );
                 }
-                
-                return <span className="text-sm">{date}</span>;
+
+                return (
+                    <div className="flex items-center gap-2">
+                        <Calendar className="h-4 w-4 text-gray-500" />
+                        <span className="text-sm">{expiryDate} </span>
+                    </div>
+                );
             },
         },
         {
@@ -191,11 +188,9 @@ export default function JobOfferDataTable({ offers, onEditRow, onDeleteRow, onTo
             cell: ({ row }) => {
                 const isActive = row.original.is_active;
                 return (
-                    <Badge 
+                    <Badge
                         className={`text-xs ${
-                            isActive 
-                                ? 'bg-green-100 text-green-800 border border-green-200' 
-                                : 'bg-gray-100 text-gray-600 border border-gray-200'
+                            isActive ? 'bg-green-100 text-green-800 border border-green-200' : 'bg-gray-100 text-gray-600 border border-gray-200'
                         }`}
                     >
                         {isActive ? 'Publiée' : 'Brouillon'}
@@ -227,7 +222,7 @@ export default function JobOfferDataTable({ offers, onEditRow, onDeleteRow, onTo
             </div>
         );
     }
-    
+
     return (
         <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 shadow-sm w-full">
             <DataTable columns={columns} data={offers} filterColumn="title" />
