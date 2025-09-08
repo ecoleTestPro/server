@@ -34,7 +34,7 @@ function ValueCard({ value }: ValueCardProps) {
         <div className="hover:bg-primary-100 rounded-2xl bg-white/[.54] p-2 text-center backdrop-blur-[5.400000095367432px] shadow-lg hover:shadow-xl transition-all duration-300 md:p-8 ltr:lg:text-left rtl:lg:text-right dark:bg-[#15203c]">
             {/* En-tête avec icône et titre */}
             <div className="flex flex-col items-center justify-center text-center lg:flex-row lg:text-left lg:justify-start">
-                <div className="flex">
+                <div className="flex items-center">
                     <div className="w-16 h-16 mb-4 lg:mr-4 lg:mb-0">
                         <img
                             alt={value.title}

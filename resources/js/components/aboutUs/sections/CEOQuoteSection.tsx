@@ -27,9 +27,9 @@ interface CEOQuoteSectionProps {
 export default function CEOQuoteSection({
     ceoImage = "assets/images/teams/02.png",
     ceoName = "CEO",
-    ceoTitle = "CEO",
+    ceoTitle = "Alexis NANA",
     quote = "Dans l'économie numérique, la confiance se construit par la qualité. Et la qualité commence par les tests.",
-    companyName = "TestPro"
+    companyName = "CEO TestPro"
 }: CEOQuoteSectionProps) {
     return (
         <MotionSection>
@@ -62,7 +62,7 @@ export default function CEOQuoteSection({
                                 <img
                                     src={ceoImage}
                                     alt={`Photo de ${ceoName}`}
-                                    className="mx-auto h-32 w-32 md:h-40 md:w-40 rounded-full object-cover shadow-lg"
+                                    className="mx-auto h-52 w-52  rounded-full object-cover shadow-lg"
                                 />
                                 
                                 {/* Informations du CEO */}

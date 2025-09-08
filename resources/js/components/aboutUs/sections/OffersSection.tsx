@@ -34,17 +34,42 @@ interface OfferCardProps {
 function OfferCard({ offer }: OfferCardProps) {
     return (
         <motion.div
-            className={`group relative rounded-2xl overflow-hidden backdrop-blur-sm border border-white/20 shadow-lg hover:shadow-2xl transition-all duration-500 dark:text-white ${offer.bgColor || 'bg-white/80 dark:bg-gray-800/80'}`}
+            className={`group relative rounded-2xl overflow-hidden backdrop-blur-md border border-white/30 shadow-lg hover:shadow-2xl transition-all duration-500 dark:text-white ${offer.bgColor || 'bg-white/80 dark:bg-gray-800/80'}`}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.3 }}
             whileHover={{
                 scale: 1.03,
+                backdropFilter: 'blur(20px)',
                 transition: { duration: 0.3, ease: 'easeOut' },
             }}
             whileTap={{ scale: 0.98 }}
+            animate={{
+                borderColor: ['rgba(255,255,255,0.3)', 'rgba(255,255,255,0.5)', 'rgba(255,255,255,0.3)'],
+            }}
+            transition={{
+                borderColor: {
+                    duration: 4,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                }
+            }}
         >
-            {/* Effet de gradient animé au survol */}
+            {/* Couche glassmorphism animée subtile */}
+            <motion.div 
+                className="absolute inset-0 bg-white/5 backdrop-blur-[1px]"
+                animate={{
+                    opacity: [0.1, 0.3, 0.1],
+                }}
+                transition={{
+                    duration: 6,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: Math.random() * 2
+                }}
+            />
+            
+            {/* Effet de gradient animé au survol amélioré */}
             <div className="absolute inset-0 bg-gradient-to-br from-primary-400/10 via-transparent to-primary-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
             {/* Contenu de la carte */}
@@ -145,10 +170,79 @@ export default function OffersSection() {
 
     return (
         <MotionSection className="relative overflow-hidden">
-            {/* Arrière-plan décoratif avec gradients */}
+            {/* Arrière-plan décoratif avec gradients amélioré */}
             <div className="absolute inset-0 bg-gradient-to-br from-gray-50/50 via-transparent to-primary-50/20 dark:from-gray-900/20 dark:to-primary-900/10" />
-            <div className="absolute top-1/4 right-0 w-96 h-96 bg-primary-400/5 rounded-full blur-3xl" />
-            <div className="absolute bottom-1/4 left-0 w-80 h-80 bg-blue-400/5 rounded-full blur-3xl" />
+            
+            {/* Couche glassmorphism animée */}
+            <motion.div 
+                className="absolute inset-0 backdrop-blur-[0.5px]"
+                initial={{ opacity: 0 }}
+                animate={{ 
+                    opacity: [0, 0.3, 0.1, 0.2, 0.1],
+                }}
+                transition={{
+                    duration: 8,
+                    repeat: Infinity,
+                    repeatType: "reverse",
+                    ease: "easeInOut"
+                }}
+            />
+            
+            {/* Orbes flottants avec glassmorphism */}
+            <motion.div 
+                className="absolute top-1/4 right-0 w-96 h-96 bg-primary-400/5 rounded-full blur-3xl backdrop-blur-sm border border-white/10"
+                animate={{
+                    scale: [1, 1.1, 0.9, 1],
+                    opacity: [0.3, 0.5, 0.2, 0.3],
+                }}
+                transition={{
+                    duration: 12,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                }}
+            />
+            <motion.div 
+                className="absolute bottom-1/4 left-0 w-80 h-80 bg-blue-400/5 rounded-full blur-3xl backdrop-blur-sm border border-white/10"
+                animate={{
+                    scale: [0.9, 1.2, 1, 0.9],
+                    opacity: [0.2, 0.4, 0.3, 0.2],
+                }}
+                transition={{
+                    duration: 10,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: 1
+                }}
+            />
+            
+            {/* Particules glassmorphism flottantes */}
+            <motion.div 
+                className="absolute top-1/3 left-1/4 w-32 h-32 bg-white/5 rounded-full backdrop-blur-sm border border-white/20"
+                animate={{
+                    y: [-10, 10, -10],
+                    x: [-5, 5, -5],
+                    opacity: [0.1, 0.3, 0.1],
+                }}
+                transition={{
+                    duration: 6,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                }}
+            />
+            <motion.div 
+                className="absolute bottom-1/3 right-1/3 w-24 h-24 bg-primary-200/10 rounded-full backdrop-blur-sm border border-primary-300/20"
+                animate={{
+                    y: [5, -15, 5],
+                    x: [3, -8, 3],
+                    opacity: [0.2, 0.4, 0.2],
+                }}
+                transition={{
+                    duration: 8,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: 2
+                }}
+            />
 
             <div className="relative z-10">
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8 2xl:max-w-[1320px]">
@@ -183,8 +277,37 @@ export default function OffersSection() {
                                 viewport={{ once: true }}
                                 transition={{ duration: 0.7, delay: 0.2 }}
                             >
-                                {/* Conteneur avec fond glassmorphism */}
-                                <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-3xl p-8 lg:p-10 border border-white/20 shadow-xl">
+                                {/* Conteneur avec fond glassmorphism animé */}
+                                <motion.div 
+                                    className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-lg rounded-3xl p-8 lg:p-10 border border-white/30 shadow-xl relative overflow-hidden"
+                                    animate={{
+                                        borderColor: ['rgba(255,255,255,0.3)', 'rgba(255,255,255,0.6)', 'rgba(255,255,255,0.3)'],
+                                        boxShadow: [
+                                            '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+                                            '0 25px 50px -12px rgba(59, 130, 246, 0.15)',
+                                            '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
+                                        ],
+                                    }}
+                                    transition={{
+                                        duration: 8,
+                                        repeat: Infinity,
+                                        ease: "easeInOut"
+                                    }}
+                                >
+                                    {/* Effet de shimmer subtil */}
+                                    <motion.div
+                                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12"
+                                        animate={{
+                                            x: ['-100%', '100%'],
+                                            opacity: [0, 0.5, 0],
+                                        }}
+                                        transition={{
+                                            duration: 3,
+                                            repeat: Infinity,
+                                            ease: "easeInOut",
+                                            repeatDelay: 4
+                                        }}
+                                    />
                                     {/* Paragraphe d'introduction */}
                                     <motion.p
                                         className="text-lg md:text-xl leading-relaxed text-gray-700 dark:text-gray-300 mb-6"
@@ -229,7 +352,7 @@ export default function OffersSection() {
                                             "
                                         </div>
                                     </motion.blockquote>
-                                </div>
+                                </motion.div>
                             </motion.div>
 
                             {/* Colonne de droite - Cartes d'offres */}
