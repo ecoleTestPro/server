@@ -131,7 +131,15 @@ class CategoryRepository extends Repository
                         'src' => $category->imagePath,
                     ];
                     $node['children'] = $buildTree($category->id);
-                    $node['courses'] = $includeCourses ? CourseRepository::findAllByCategoryId($category->id) : [];
+                    
+                    // Récupérer les cours avec sessions et les trier par date de session
+                    if ($includeCourses) {
+                        $courses = CourseRepository::findAllByCategoryIdWithSessions($category->id);
+                        $node['courses'] = $courses;
+                    } else {
+                        $node['courses'] = [];
+                    }
+                    
                     $tree[] = $node;
                 }
             }
@@ -150,7 +158,7 @@ class CategoryRepository extends Repository
                     'src' => $rootCategory->imagePath,
                 ];
                 $rootNode['children'] = $childrenTree;
-                $rootNode['courses'] = $includeCourses ? CourseRepository::findAllByCategoryId($rootCategory->id) : [];
+                $rootNode['courses'] = $includeCourses ? CourseRepository::findAllByCategoryIdWithSessions($rootCategory->id) : [];
 
                 return [$rootNode];
             }
