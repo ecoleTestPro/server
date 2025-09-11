@@ -12,14 +12,14 @@ import { ListCourseByCategory } from './ListCourseByCategory';
 import SidebarFilter from './SidebarFilter';
 import { Logger } from '@/utils/console.util';
 
-interface IOurCurrentCoursesProps {
+interface ICoursesIndexProps {
     coursesData?: ICourseCategory[];
     coursesDataSlice?: number;
     showSidebar?: boolean;
     showViewAllButton?: boolean;
 }
 
-const OurCurrentCourses = ({ coursesData, showSidebar = false, coursesDataSlice, showViewAllButton }: IOurCurrentCoursesProps) => {
+const CoursesIndex = ({ coursesData, showSidebar = false, coursesDataSlice, showViewAllButton }: ICoursesIndexProps) => {
     const { t } = useTranslation();
     const { auth, url } = usePage<SharedData>().props;
     
@@ -126,4 +126,4 @@ const OurCurrentCourses = ({ coursesData, showSidebar = false, coursesDataSlice,
     );
 };
 
-export default OurCurrentCourses;
+export default CoursesIndex;
