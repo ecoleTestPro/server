@@ -29,6 +29,17 @@ const SessionsTimeline = ({ sessions }: SessionsTimelineProps) => {
     const filteredSessions = useMemo(() => {
         let filtered = sessions;
 
+        // Filter out sessions with incomplete course data
+        filtered = filtered.filter((session) => {
+            return (
+                session.course && // Course must exist
+                session.course.title && // Course must have a title
+                session.course.title.trim() !== '' && // Title must not be empty
+                session.course.duration && // Course must have duration
+                session.course.duration > 0 // Duration must be positive
+            );
+        });
+
         // Apply search filter
         if (searchTerm) {
             filtered = filtered.filter(
@@ -372,9 +383,9 @@ const SessionsTimeline = ({ sessions }: SessionsTimelineProps) => {
                                                                 <div className="p-4 sm:p-6">
                                                                     <div className="mb-4">
                                                                         <div className="">
-                                                                            <div className="mb-3">
+                                                                            <div className="mb-3 max-w-[90%]">
                                                                                 <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white pr-20 sm:pr-0 leading-tight">
-                                                                                    {session.course?.title || 'Formation'}
+                                                                                    {session.course?.title}
                                                                                 </h3>
                                                                             </div>
 
@@ -396,7 +407,7 @@ const SessionsTimeline = ({ sessions }: SessionsTimelineProps) => {
                                                                                     </div>
                                                                                     <div className="min-w-0">
                                                                                         <p className="text-xs text-orange-600 dark:text-orange-400 font-medium">Durée</p>
-                                                                                        <p className="text-sm font-semibold text-gray-900 dark:text-white">{session.course?.duration || 'N/A'} jours</p>
+                                                                                        <p className="text-sm font-semibold text-gray-900 dark:text-white">{session.course?.duration} jour{Number(session.course?.duration) > 1 ? 's' : ''}</p>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
