@@ -6,6 +6,7 @@ import { getMediaUrl } from '@/utils/utils';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import 'react-quill/dist/quill.snow.css';
+import CourseQuestionForm from '../questions/CourseQuestionForm';
 import CourseDetailAccordion from './CourseDetailAccordion';
 import CoursePartners from './CoursePartners';
 import CouseDetailMedia from './CouseDetailMedia';
@@ -178,17 +179,27 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ course }) => {
                                 section={'questions'}
                                 sectionTitle={t('COURSE.DETAIL.QUESTIONS', 'Questions sur le cours')}
                                 content={
-                                    <p className="text-gray-600 dark:text-gray-300">
-                                        Pour toute question, n'hésitez pas à contacter : {email}. Si vous souhaitez réserver ce cours en tant
-                                        qu'individu ou entreprise, merci de vous adresser à :{' '}
-                                        <a className="text-secondary underline" href={`mailto:${email}`}>
-                                            {email}
-                                        </a>
-                                        .
-                                    </p>
+                                    <>
+                                        <div>
+                                            {false && (
+                                                <p className="text-gray-600 dark:text-gray-300">
+                                                    Pour toute question, n'hésitez pas à contacter : {email}. Si vous souhaitez réserver ce cours en
+                                                    tant qu'individu ou entreprise, merci de vous adresser à :{' '}
+                                                    <a className="text-secondary underline" href={`mailto:${email}`}>
+                                                        {email}
+                                                    </a>
+                                                    .
+                                                </p>
+                                            )}
+                                        </div>
+
+                                        <div className="mt-4">
+                                            <CourseQuestionForm course={course} />
+                                        </div>
+                                    </>
                                 }
                             />
-                        </div>{' '}
+                        </div>
                     </div>
 
                     <div className="col-span-1 md:col-span-1">

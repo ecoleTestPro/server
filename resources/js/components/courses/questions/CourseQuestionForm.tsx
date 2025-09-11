@@ -4,7 +4,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { ICourse } from '@/types/course';
 import { router } from '@inertiajs/react';
-import { HelpCircle, Send, User } from 'lucide-react';
+import { HelpCircle, Send } from 'lucide-react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -43,19 +43,17 @@ const CourseQuestionForm = ({ course, className = '' }: CourseQuestionFormProps)
 
     const [errors, setErrors] = useState<Record<string, string[]>>({});
 
-    const handleInputChange = (
-        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-    ) => {
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value, type } = e.target;
-        
-        setFormData(prev => ({
+
+        setFormData((prev) => ({
             ...prev,
             [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value,
         }));
 
         // Clear error when user starts typing
         if (errors[name]) {
-            setErrors(prev => {
+            setErrors((prev) => {
                 const newErrors = { ...prev };
                 delete newErrors[name];
                 return newErrors;
@@ -90,9 +88,9 @@ const CourseQuestionForm = ({ course, className = '' }: CourseQuestionFormProps)
                 setErrors(errors);
                 const firstError = Object.values(errors)[0];
                 if (Array.isArray(firstError)) {
-                    toast.error(firstError[0] || 'Une erreur s\'est produite');
+                    toast.error(firstError[0] || "Une erreur s'est produite");
                 } else {
-                    toast.error('Une erreur s\'est produite lors de l\'envoi de votre question');
+                    toast.error("Une erreur s'est produite lors de l'envoi de votre question");
                 }
             },
             onFinish: () => {
@@ -102,14 +100,16 @@ const CourseQuestionForm = ({ course, className = '' }: CourseQuestionFormProps)
     };
 
     return (
-        <div className={`bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border dark:border-gray-700 ${className}`}>
+        <div className={`bg-white dark:bg-gray-800 rounded-2xl ${className}`}>
             <div className="mb-6">
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
-                    <div className="w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center">
-                        <HelpCircle className="w-4 h-4 text-white" />
-                    </div>
-                    Questions sur le cours
-                </h3>
+                {false && (
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
+                        <div className="w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center">
+                            <HelpCircle className="w-4 h-4 text-white" />
+                        </div>
+                        Questions sur le cours
+                    </h3>
+                )}
                 <p className="text-gray-600 dark:text-gray-300 text-sm">
                     Avez-vous des questions sur "{course.title}" ? N'hésitez pas à nous contacter !
                 </p>
@@ -121,7 +121,7 @@ const CourseQuestionForm = ({ course, className = '' }: CourseQuestionFormProps)
                     <Label htmlFor="civility" className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
                         Civilité
                     </Label>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="flex items-center gap-4">
                         <div className="flex items-center gap-2">
                             <Input
                                 id="civility-madame"
@@ -151,9 +151,7 @@ const CourseQuestionForm = ({ course, className = '' }: CourseQuestionFormProps)
                             </Label>
                         </div>
                     </div>
-                    {errors.civility && (
-                        <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.civility[0]}</p>
-                    )}
+                    {errors.civility && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.civility[0]}</p>}
                 </div>
 
                 {/* Name fields */}
@@ -171,9 +169,7 @@ const CourseQuestionForm = ({ course, className = '' }: CourseQuestionFormProps)
                             className="mt-1 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                             required
                         />
-                        {errors.first_name && (
-                            <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.first_name[0]}</p>
-                        )}
+                        {errors.first_name && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.first_name[0]}</p>}
                     </div>
 
                     <div>
@@ -189,9 +185,7 @@ const CourseQuestionForm = ({ course, className = '' }: CourseQuestionFormProps)
                             className="mt-1 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                             required
                         />
-                        {errors.last_name && (
-                            <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.last_name[0]}</p>
-                        )}
+                        {errors.last_name && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.last_name[0]}</p>}
                     </div>
                 </div>
 
@@ -208,9 +202,7 @@ const CourseQuestionForm = ({ course, className = '' }: CourseQuestionFormProps)
                         onChange={handleInputChange}
                         className="mt-1 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                     />
-                    {errors.company && (
-                        <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.company[0]}</p>
-                    )}
+                    {errors.company && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.company[0]}</p>}
                 </div>
 
                 {/* Contact fields */}
@@ -228,9 +220,7 @@ const CourseQuestionForm = ({ course, className = '' }: CourseQuestionFormProps)
                             className="mt-1 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                             required
                         />
-                        {errors.email && (
-                            <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.email[0]}</p>
-                        )}
+                        {errors.email && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.email[0]}</p>}
                     </div>
 
                     <div>
@@ -245,9 +235,7 @@ const CourseQuestionForm = ({ course, className = '' }: CourseQuestionFormProps)
                             onChange={handleInputChange}
                             className="mt-1 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                         />
-                        {errors.phone && (
-                            <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.phone[0]}</p>
-                        )}
+                        {errors.phone && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.phone[0]}</p>}
                     </div>
                 </div>
 
@@ -266,9 +254,7 @@ const CourseQuestionForm = ({ course, className = '' }: CourseQuestionFormProps)
                         className="mt-1 dark:bg-gray-700 dark:border-gray-600 dark:text-white resize-none"
                         required
                     />
-                    {errors.message && (
-                        <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.message[0]}</p>
-                    )}
+                    {errors.message && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.message[0]}</p>}
                 </div>
 
                 {/* Privacy policy */}
@@ -295,9 +281,7 @@ const CourseQuestionForm = ({ course, className = '' }: CourseQuestionFormProps)
                         . <span className="text-red-500">*</span>
                     </Label>
                 </div>
-                {errors.accepts_privacy_policy && (
-                    <p className="text-sm text-red-600 dark:text-red-400">{errors.accepts_privacy_policy[0]}</p>
-                )}
+                {errors.accepts_privacy_policy && <p className="text-sm text-red-600 dark:text-red-400">{errors.accepts_privacy_policy[0]}</p>}
 
                 {/* Submit button */}
                 <div className="pt-4">

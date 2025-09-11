@@ -53,11 +53,6 @@ export default function CourseCategoryPage() {
                         {/* <OurCurrentCourses coursesData={category.children} showSidebar={true} /> */}
                         <CourseDetail course={course} />
                         
-                        {/* Questions Form Section */}
-                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                            <CourseQuestionForm course={course} />
-                        </div>
-                        
                         {course.reference_tag && <ReferenceLogos tag={course.reference_tag} imgHeight='h-32' />}
                     </>
                 )}
