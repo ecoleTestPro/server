@@ -10,7 +10,7 @@ interface AppointmentDataTableProps {
     onDelete: (appointmentId: number) => void;
 }
 
-export default function AppointmentDataTable({ appointments, onViewDetails, onDelete }: AppointmentDataTableProps) {
+export default function AppointmentDataTable({ appointments, onViewDetails }: Omit<AppointmentDataTableProps, 'onDelete'>) {
     const formatDate = (date: string) => {
         return new Date(date).toLocaleDateString('fr-FR', {
             day: '2-digit',
@@ -31,7 +31,7 @@ export default function AppointmentDataTable({ appointments, onViewDetails, onDe
     const columns: ColumnDef<Appointment>[] = [
         {
             accessorKey: 'client_info',
-            header: ({ column }) => (
+            header: () => (
                 <Tooltip>
                     <TooltipTrigger asChild>
                         <div className="flex items-center space-x-2 cursor-help">
@@ -84,7 +84,7 @@ export default function AppointmentDataTable({ appointments, onViewDetails, onDe
         },
         {
             accessorKey: 'appointment_date',
-            header: ({ column }) => (
+            header: () => (
                 <div className="flex items-center space-x-2">
                     <Calendar className="w-4 h-4" />
                     <span>Date & Heure</span>
@@ -103,7 +103,7 @@ export default function AppointmentDataTable({ appointments, onViewDetails, onDe
         },
         {
             accessorKey: 'duration',
-            header: ({ column }) => (
+            header: () => (
                 <div className="flex items-center space-x-2">
                     <Clock className="w-4 h-4" />
                     <span>Durée</span>
@@ -122,7 +122,7 @@ export default function AppointmentDataTable({ appointments, onViewDetails, onDe
         },
         {
             id: 'actions',
-            header: ({ column }) => (
+            header: () => (
                 <Tooltip>
                     <TooltipTrigger asChild>
                         <div className="flex items-center space-x-2 cursor-help">

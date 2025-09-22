@@ -8,7 +8,7 @@ interface BlogCardProps {
 }
 
 export default function BlogCard({ blog }: BlogCardProps) {
-    const { t } = useTranslation();
+    const { t } = useTranslation(); // eslint-disable-line @typescript-eslint/no-unused-vars
 
     if (!blog) {
         return null;

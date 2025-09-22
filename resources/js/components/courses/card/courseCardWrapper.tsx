@@ -38,7 +38,7 @@ function CourseCardWrapper({ searchTerm, viewMode, loading, setLoading, courses,
 
     // Fonction pour filtrer les cours par page
     const indexOfLastCourse = currentPage * coursesPerPage;
-    const indexOfFirstCourse = indexOfLastCourse - coursesPerPage;
+    // const indexOfFirstCourse = indexOfLastCourse - coursesPerPage;
     // const currentCourses = courses.slice(indexOfFirstCourse, indexOfLastCourse);
 
     // Gestion de la pagination
@@ -105,7 +105,7 @@ function CourseCardWrapper({ searchTerm, viewMode, loading, setLoading, courses,
         setIsDeleting(true);
         axios
             .delete(route('dashboard.course.delete', courseToDelete?.id))
-            .then((response) => {
+            .then(() => {
                 setShowConfirm(false);
                 setIsDeleting(false);
                 setCourseToDelete(null);
@@ -147,7 +147,7 @@ function CourseCardWrapper({ searchTerm, viewMode, loading, setLoading, courses,
         // Optional: Check for enrollments beforehand to show warning in dialog
         axios
             .get(route('dashboard.course.enrollments.count', course.id))
-            .then((response) => {
+            .then(() => {
                 const count = response.data.count;
                 if (count > 0) {
                     setEnrollmentWarning(`⚠️ Attention : ${count} utilisateur(s) sont inscrits à cette formation.`);

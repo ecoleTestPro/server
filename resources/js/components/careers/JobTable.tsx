@@ -14,12 +14,12 @@ export const JobTable: React.FC<{
 }> = ({
     jobs,
     setApplySelected,
-    applySelected,
-    openApplyModal,
+    // applySelected,
+    // openApplyModal,
     setOpenApplyModal,
-    detailSelected,
+    // detailSelected,
     setDetailSelected,
-    openDetailModal,
+    // openDetailModal,
     setOpenDetailModal,
 }) => {
     return (

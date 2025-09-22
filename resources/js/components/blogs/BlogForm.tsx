@@ -26,7 +26,7 @@ export interface IBlogForm {
     tagArray?: string[];
     status: boolean;
     blog_category_id?: number;
-    [key: string]: any; // Allow additional properties
+    [key: string]: string | boolean | number | null | undefined;
 }
 
 const createDefaultValues = (blog: IBlog | null): IBlogForm => {
@@ -69,7 +69,7 @@ export const BlogForm = ({ blog = null, categories = [], onCancel }: BlogFormPro
 
     useEffect(() => {
         setData('tags', tags.join(';'));
-    }, [tags]);
+    }, [tags, setData]);
 
     const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
         e.preventDefault();
@@ -93,13 +93,13 @@ export const BlogForm = ({ blog = null, categories = [], onCancel }: BlogFormPro
 
         axios
             .post(routeUrl, payload)
-            .then((response) => {
+            .then(() => {
                 toast.success(t('Blog saved successfully', 'Blog enregistré avec succès'));
                 reset();
                 onCancel();
                 router.visit(route('dashboard.blogs.index'));
             })
-            .catch((error) => {
+            .catch(() => {
                 toast.error(t('Error saving blog', "Erreur lors de l'enregistrement du blog"));
             });
     };

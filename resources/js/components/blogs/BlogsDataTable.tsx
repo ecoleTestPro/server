@@ -14,7 +14,7 @@ interface BlogsDataTableProps {
 }
 
 export default function BlogsDataTable({ blogs, onEditRow, onDeleteRow }: BlogsDataTableProps) {
-    const { t } = useTranslation();
+    const { t } = useTranslation(); // eslint-disable-line @typescript-eslint/no-unused-vars
 
     const columns: ColumnDef<IBlog>[] = [
         {

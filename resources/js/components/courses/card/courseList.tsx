@@ -10,7 +10,7 @@ interface CourseListProps {
 }
 
 const CourseList: React.FC<CourseListProps> = ({ courses, onDelete }) => {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
     const [openSessionDrawer, setOpenSessionDrawer] = useState(false);
     const [selectedCourseSession, setSelectedCourseSessionSession] = useState<ICourse | null>(null);
 

@@ -6,7 +6,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { cn } from '@/lib/utils';
 import axios from 'axios';
 import { fr } from 'date-fns/locale';
-import { AnimatePresence, motion, useScroll, useTransform } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowRight, Calendar, CalendarDays, CheckCircle, Clock, HelpCircle, Info, Mail, MessageSquare, Phone, User } from 'lucide-react';
 import React, { useRef, useState } from 'react';
 import DatePicker, { registerLocale } from 'react-datepicker';
@@ -42,7 +42,7 @@ interface AppointmentForm {
     client_name: string;
 }
 
-type CalendarValue = Date | null;
+// type CalendarValue = Date | null; // Unused type
 
 const AppointmentCalendar: React.FC = () => {
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -55,12 +55,12 @@ const AppointmentCalendar: React.FC = () => {
     const [showTimeSlots, setShowTimeSlots] = useState(false);
 
     const containerRef = useRef<HTMLDivElement>(null);
-    const { scrollYProgress } = useScroll({
-        target: containerRef,
-        offset: ['start start', 'end end'],
-    });
+    // const { scrollYProgress } = useScroll({
+    //     target: containerRef,
+    //     offset: ['start start', 'end end'],
+    // });
 
-    const progressWidth = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
+    // const progressWidth = useTransform(scrollYProgress, [0, 1], ['0%', '100%']); // Unused variable
 
     const [form, setForm] = useState<AppointmentForm>({
         title: '',
@@ -194,8 +194,9 @@ const AppointmentCalendar: React.FC = () => {
 
             toast.success('Rendez-vous confirmé ! Vous recevrez une confirmation par email.');
             setStep('confirmation');
-        } catch (error: any) {
-            const message = error.response?.data?.message || 'Erreur lors de la création du rendez-vous';
+        } catch (error: unknown) {
+            const message =
+                (error as { response?: { data?: { message?: string } } })?.response?.data?.message || 'Erreur lors de la création du rendez-vous';
             toast.error(message);
             console.error('Erreur:', error);
         } finally {

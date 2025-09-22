@@ -15,8 +15,8 @@ import { ICourseCategory } from '@/types/course';
 import { lazy } from 'react';
 import 'react-quill-new/dist/quill.snow.css';
 
-// const ReactQuill = lazy(() => import('react-quill'));
-const ReactQuill = lazy(() => import('react-quill-new'));
+// // const ReactQuill = lazy(() => import('react-quill'));
+// const ReactQuill = lazy(() => import('react-quill-new'));
 
 // export type ICategoryForm = {
 export type ICategoryForm = {
@@ -83,7 +83,7 @@ function CategoryForm({ closeDrawer, initialData, isSubcategoryMode = false, par
         return baseData;
     };
 
-    const { data, setData, post, processing, errors, reset } = useForm<ICategoryForm>(getInitialFormData());
+    const { data, setData, processing, errors, reset } = useForm<ICategoryForm>(getInitialFormData());
 
     /**
      * Soumet le formulaire pour créer ou mettre à jour une catégorie

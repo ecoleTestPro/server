@@ -65,9 +65,11 @@ export default function ContactForm({ handleSubmit, errors, setErrors }: Contact
                 const token = await executeRecaptcha('form_submission');
                 setData('recaptchaToken', token);
                 handleSubmit({ ...data, recaptchaToken: token }, event);
-            } catch (error) {}
+            } catch {
+                // Handle recaptcha error silently
+            }
         },
-        [executeRecaptcha, data, setData, handleSubmit],
+        [executeRecaptcha, data, setData, handleSubmit, setErrors, t],
     );
 
     const civities: ISelectItem[] = [
@@ -232,7 +234,7 @@ export default function ContactForm({ handleSubmit, errors, setErrors }: Contact
                     <p className="text-sm text-gray-500">les champs marqués d'un astérisque (*) sont obligatoires.</p>
                 </div>
                 <div className="flex justify-center">
-                    <BtnSecondary label="Envoyer" onClick={(event: any) => handleBeforeSubmit(event)} />
+                    <BtnSecondary label="Envoyer" onClick={(event: React.MouseEvent) => handleBeforeSubmit(event)} />
                 </div>
             </form>
         </div>

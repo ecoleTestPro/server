@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import MotionSection from '../../motion/MotionSection';
 
 /**
@@ -6,7 +6,7 @@ import MotionSection from '../../motion/MotionSection';
  */
 interface SpecialSectionProps {
     /** Variants d'animation pour les images */
-    imageVariants?: any;
+    imageVariants?: Variants;
 }
 
 /**

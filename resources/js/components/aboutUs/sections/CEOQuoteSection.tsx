@@ -67,32 +67,27 @@ export default function CEOQuoteSection({
                         </div>
                     </motion.div>
 
-                    {/* Éléments décoratifs désactivés mais conservés pour référence */}
-                    {false && (
-                        <>
-                            {/* Forme décorative 1 */}
-                            <motion.div
-                                className="absolute -top-[60px] -z-[1] blur-[150px] ltr:left-[65px] rtl:right-[65px]"
-                                initial={{ opacity: 0 }}
-                                whileInView={{ opacity: 1 }}
-                                viewport={{ once: true, amount: 0.2 }}
-                                transition={{ duration: 1 }}
-                            >
-                                <img src="assets/images/front-pages/shape1.png" alt="shape1" width={530} height={530} />
-                            </motion.div>
+                    {/* Éléments décoratifs désactivés
+                    <motion.div
+                        className="absolute -top-[60px] -z-[1] blur-[150px] ltr:left-[65px] rtl:right-[65px]"
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        viewport={{ once: true, amount: 0.2 }}
+                        transition={{ duration: 1 }}
+                    >
+                        <img src="assets/images/front-pages/shape1.png" alt="shape1" width={530} height={530} />
+                    </motion.div>
 
-                            {/* Forme décorative 2 */}
-                            <motion.div
-                                className="absolute -bottom-[30px] -z-[1] blur-[125px] ltr:right-[20px] rtl:left-[20px]"
-                                initial={{ opacity: 0 }}
-                                whileInView={{ opacity: 1 }}
-                                viewport={{ once: true, amount: 0.2 }}
-                                transition={{ duration: 1 }}
-                            >
-                                <img src="assets/images/front-pages/shape2.png" alt="shape2" width={447} height={453} />
-                            </motion.div>
-                        </>
-                    )}
+                    <motion.div
+                        className="absolute -bottom-[30px] -z-[1] blur-[125px] ltr:right-[20px] rtl:left-[20px]"
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        viewport={{ once: true, amount: 0.2 }}
+                        transition={{ duration: 1 }}
+                    >
+                        <img src="assets/images/front-pages/shape2.png" alt="shape2" width={447} height={453} />
+                    </motion.div>
+                    */}
                 </div>
             </div>
         </MotionSection>

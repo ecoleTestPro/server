@@ -48,7 +48,7 @@ export default function ContactSuccessSubmited() {
     };
 
     // Variantes pour le bouton
-    const buttonVariants: Variants = {
+    // const buttonVariants: Variants = {
         hover: {
             scale: [1, 1.05],
             boxShadow: '0px 4px 15px rgba(0, 0, 0, 0.2)',

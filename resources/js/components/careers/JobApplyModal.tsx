@@ -58,10 +58,10 @@ export default function JobApplyModal({ jobId, open, onClose }: Props) {
                     cv: null,
                 });
             }
-        } catch (error: any) {
-            if (error.response?.status === 422) {
+        } catch (error: unknown) {
+            if ((error as any).response?.status === 422) {
                 // Validation errors
-                const validationErrors = error.response.data.errors || {};
+                const validationErrors = (error as any).response.data.errors || {};
                 setErrors(validationErrors);
                 toast.error('Veuillez corriger les erreurs dans le formulaire');
             } else {

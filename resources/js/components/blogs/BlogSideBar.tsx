@@ -25,7 +25,7 @@ const BlogSidebar: React.FC<BlogSidebarProps> = ({
     selectedTags = [],
     onCategorySelect,
     onTagToggle,
-    onBlogClick,
+    // onBlogClick, // Unused
     onResetFilters,
 }) => {
     const { t } = useTranslation();
