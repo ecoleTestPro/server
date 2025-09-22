@@ -147,6 +147,39 @@ class CourseRepository extends Repository
     }
 
     /**
+     * Get all courses by category id that have sessions, sorted by nearest session date.
+     *
+     * @param int $categoryId
+     * @param int $limit
+     * @return \Illuminate\Support\Collection
+     */
+    public static function findAllByCategoryIdWithSessions($categoryId, $limit = 10)
+    {
+        try {
+            return static::queryBase()
+                ->where('category_id', $categoryId)
+                ->whereHas('course_sessions', function($query) {
+                    // Filtrer seulement les sessions futures ou en cours
+                    $query->where('start_date', '>=', now()->subDays(7));
+                })
+                ->with(['course_sessions' => function($query) {
+                    $query->where('start_date', '>=', now()->subDays(7))
+                          ->orderBy('start_date', 'asc');
+                }])
+                ->get()
+                ->sortBy(function($course) {
+                    // Trier par la date de la prochaine session
+                    $nextSession = $course->course_sessions->first();
+                    return $nextSession ? $nextSession->start_date : now()->addYears(10);
+                })
+                ->take($limit)
+                ->values();
+        } catch (\Exception $e) {
+            throw new \Exception('Error fetching courses with sessions by category: ' . $e->getMessage());
+        }
+    }
+
+    /**
      * Retrieve a course by its slug.
      *
      * @param string $slug The slug of the course.

@@ -1,4 +1,4 @@
-import OurCurrentCourses from '@/components/courses/list/our-current-courses';
+import OurCurrentCourses from '@/components/courses/list/courses.index';
 import Faq from '@/components/faq/Faq';
 import FeaturesSection from '@/components/hero/featuresSection';
 import Hero from '@/components/hero/hearo';

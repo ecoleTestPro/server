@@ -1,5 +1,5 @@
 import { NavItem } from "@/types";
-import { BookOpen, FileStack, Folder, HomeIcon, LayoutGrid, List, ClipboardPlus, Settings2, ListTodo, BookAIcon, ListChecks, Mail, Calendar, CalendarDays, CalendarCheck } from 'lucide-react';
+import { BookOpen, FileStack, Folder, HomeIcon, LayoutGrid, List, ClipboardPlus, Settings2, ListTodo, BookAIcon, ListChecks, Mail, Calendar, CalendarDays, CalendarCheck, HelpCircle } from 'lucide-react';
 
 
 export const MAIN_NAV_ITEMS: NavItem[] = [
@@ -27,6 +27,11 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
                 title: 'Catégories',
                 href: route('dashboard.category.index'),
                 icon: ListTodo,
+            },
+            {
+                title: 'Questions',
+                href: route('dashboard.course-questions.index'),
+                icon: HelpCircle,
             },
         ],
     },

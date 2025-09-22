@@ -1,14 +1,16 @@
 import AboutUsCard from '@/components/aboutUs/aboutUsCard';
 import AboutUsCardTwo from '@/components/aboutUs/aboutUsCardTwo';
 import AboutUsServices from '@/components/aboutUs/AboutUsServices';
-import OurCurrentCourses from '@/components/courses/list/our-current-courses';
+import OurCurrentCourses from '@/components/courses/list/courses.index';
 import Faq from '@/components/faq/Faq';
 // import FeaturesSection from '@/components/hero/featuresSection';
 import HeroHomePage from '@/components/hero/HeroHomePage';
 import Testimonials from '@/components/testimonial/Testimonials';
 import DefaultLayout from '@/layouts/public/front.layout';
 import { type SharedData } from '@/types';
+import { Logger } from '@/utils/console.util';
 import { usePage } from '@inertiajs/react';
+import { useEffect } from 'react';
 
 export default function Welcome() {
     const { auth, data } = usePage<SharedData>().props;
@@ -16,6 +18,10 @@ export default function Welcome() {
     // const [category, setCategory] = useState<ICourseCategory | null>(null);
     // const [courses, setCourses] = useState<ICourse[]>([]);
     // const [breadcrumb, setBreadcrumb] = useState<IHeroBreadcrumbItems[]>([]);
+
+    useEffect(() => {
+        Logger.log('[Home] categoriesWithCourses', data?.categories_with_courses);
+    }, [data]);
 
     return (
         <DefaultLayout title="Accueil" description="Bienvenue sur notre site d'apprentissage en ligne. Découvrez nos cours et services.">
