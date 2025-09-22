@@ -13,7 +13,7 @@ export default function CouseDetailMedia({ course }: CouseDetailMediaProps) {
     if (!course || !course.media) {
         return (
             <div className="p-4">
-                <img src="https://placehold.co/1920x2880" alt={course.title} className="w-full h-auto rounded-lg shadow-lg object-cover" />{' '}
+                {/* <img src="https://placehold.co/1920x2880" alt={course.title} className="w-full h-auto rounded-lg shadow-lg object-cover" />{' '} */}
             </div>
         );
     }

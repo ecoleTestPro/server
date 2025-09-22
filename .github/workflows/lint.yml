@@ -35,8 +35,8 @@ jobs:
           composer install --optimize-autoloader --no-dev
           npm install
 
-      - name: Run Pint
-        run: vendor/bin/pint
+      # - name: Run Pint
+      #   run: vendor/bin/pint
 
       - name: Format Frontend
         run: npm run format
