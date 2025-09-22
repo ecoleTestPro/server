@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CourseQuestionController;
 use App\Http\Controllers\Private\NewsletterController;
 use App\Http\Controllers\Public\AppointmentController;
 use App\Http\Controllers\Public\ContactUsController;
@@ -92,6 +93,11 @@ Route::group(["prefix" => "/"], function () {
     
     // API endpoint pour les formations featured
     Route::get('api/courses/featured', [PublicFormationController::class, 'getFeaturedCourses'])->name('api.courses.featured');
+
+    /**
+     * Course Questions routes
+     */
+    Route::post('course-questions', [CourseQuestionController::class, 'store'])->name('course.questions.store');
 
     /** 
      * formation routes

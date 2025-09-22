@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CourseQuestionController;
 use App\Http\Controllers\Private\BlogCategoryController;
 use App\Http\Controllers\Private\BlogController;
 use App\Http\Controllers\Private\CategoryController;
@@ -78,6 +79,15 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
     ], function () {
         Route::get('', [EnrollmentController::class, 'index'])->name('dashboard.enrollment.index');
         Route::delete('delete/{enrollment}', [EnrollmentController::class, 'destroy'])->name('dashboard.enrollment.delete');
+    });
+
+    // COURSE QUESTIONS MANAGEMENT
+    Route::group([
+        'prefix' => 'course-questions',
+    ], function () {
+        Route::get('', [CourseQuestionController::class, 'index'])->name('dashboard.course-questions.index');
+        Route::post('{question}/answer', [CourseQuestionController::class, 'answer'])->name('dashboard.course-questions.answer');
+        Route::delete('{question}', [CourseQuestionController::class, 'destroy'])->name('dashboard.course-questions.delete');
     });
 
 

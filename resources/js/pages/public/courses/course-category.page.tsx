@@ -1,4 +1,4 @@
-import OurCurrentCourses from '@/components/courses/list/our-current-courses';
+import OurCurrentCourses from '@/components/courses/list/courses.index';
 import FeaturesSection from '@/components/hero/featuresSection';
 import Hero, { IHeroBreadcrumbItems } from '@/components/hero/hearo';
 import Testimonials from '@/components/testimonial/Testimonials';

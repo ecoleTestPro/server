@@ -7,7 +7,7 @@ import DefaultLayout from '@/layouts/public/front.layout';
 import { ICourseSession } from '@/types/course';
 import { ROUTE_MAP } from '@/utils/route.util';
 import { Head } from '@inertiajs/react';
-import { BookOpen, Calendar, ChevronDown, ChevronRight, Clock, Filter, MapPin, Search } from 'lucide-react';
+import { BookOpen, Calendar, ChevronDown, ChevronRight, Filter, MapPin, Search } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 interface SessionsTimelineProps {
@@ -28,6 +28,17 @@ const SessionsTimeline = ({ sessions }: SessionsTimelineProps) => {
     // Filter and search sessions
     const filteredSessions = useMemo(() => {
         let filtered = sessions;
+
+        // Filter out sessions with incomplete course data
+        filtered = filtered.filter((session) => {
+            return (
+                session.course && // Course must exist
+                session.course.title && // Course must have a title
+                session.course.title.trim() !== '' && // Title must not be empty
+                session.course.duration && // Course must have duration
+                session.course.duration > 0 // Duration must be positive
+            );
+        });
 
         // Apply search filter
         if (searchTerm) {
@@ -180,29 +191,34 @@ const SessionsTimeline = ({ sessions }: SessionsTimelineProps) => {
                                 onClick={() => setMobileFiltersOpen(!mobileFiltersOpen)}
                                 variant="outline"
                                 className={`w-full flex items-center justify-between p-4 rounded-2xl border-2 transition-all duration-300 ${
-                                    mobileFiltersOpen 
-                                        ? 'border-emerald-200 bg-emerald-50 dark:border-emerald-700 dark:bg-emerald-900/20' 
+                                    mobileFiltersOpen
+                                        ? 'border-emerald-200 bg-emerald-50 dark:border-emerald-700 dark:bg-emerald-900/20'
                                         : 'border-gray-200 hover:border-emerald-200 dark:border-gray-700 dark:hover:border-emerald-700'
                                 }`}
                             >
                                 <span className="flex items-center gap-3">
-                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                                        mobileFiltersOpen 
-                                            ? 'bg-emerald-500 text-white' 
-                                            : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300'
-                                    }`}>
+                                    <div
+                                        className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                                            mobileFiltersOpen
+                                                ? 'bg-emerald-500 text-white'
+                                                : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300'
+                                        }`}
+                                    >
                                         <Filter className="w-5 h-5" />
                                     </div>
                                     <div className="text-left">
                                         <div className="font-semibold text-gray-900 dark:text-white">Filtres & Recherche</div>
                                         <div className="text-sm text-gray-500 dark:text-gray-400">
-                                            {filteredSessions.length} session{filteredSessions.length > 1 ? 's' : ''} trouvée{filteredSessions.length > 1 ? 's' : ''}
+                                            {filteredSessions.length} session{filteredSessions.length > 1 ? 's' : ''} trouvée
+                                            {filteredSessions.length > 1 ? 's' : ''}
                                         </div>
                                     </div>
                                 </span>
-                                <ChevronDown className={`w-5 h-5 transition-transform duration-300 ${
-                                    mobileFiltersOpen ? 'rotate-180 text-emerald-600' : 'text-gray-400'
-                                }`} />
+                                <ChevronDown
+                                    className={`w-5 h-5 transition-transform duration-300 ${
+                                        mobileFiltersOpen ? 'rotate-180 text-emerald-600' : 'text-gray-400'
+                                    }`}
+                                />
                             </Button>
                         </div>
 
@@ -270,7 +286,9 @@ const SessionsTimeline = ({ sessions }: SessionsTimelineProps) => {
                                                 <div className="text-xs sm:text-sm text-emerald-700 dark:text-emerald-300">Sessions à venir</div>
                                             </div>
                                             <div className="p-3 sm:p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border dark:border-blue-800">
-                                                <div className="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400">{filteredSessions.length}</div>
+                                                <div className="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400">
+                                                    {filteredSessions.length}
+                                                </div>
                                                 <div className="text-xs sm:text-sm text-blue-700 dark:text-blue-300">Total sessions</div>
                                             </div>
                                             <div className="p-3 sm:p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg border dark:border-purple-800">
@@ -306,9 +324,9 @@ const SessionsTimeline = ({ sessions }: SessionsTimelineProps) => {
                                         </div>
                                     ) : (
                                         groupedSessions.map((group) => (
-                                            <div 
-                                                key={group.date} 
-                                                className="relative" 
+                                            <div
+                                                key={group.date}
+                                                className="relative"
                                                 ref={(el) => {
                                                     dateRefs.current[group.date] = el;
                                                 }}
@@ -324,7 +342,8 @@ const SessionsTimeline = ({ sessions }: SessionsTimelineProps) => {
                                                                         {formatDate(group.date)}
                                                                     </h2>
                                                                     <p className="text-sm text-emerald-600 dark:text-emerald-400 font-medium">
-                                                                        {group.sessions.length} session{group.sessions.length > 1 ? 's' : ''} programmée{group.sessions.length > 1 ? 's' : ''}
+                                                                        {group.sessions.length} session{group.sessions.length > 1 ? 's' : ''}{' '}
+                                                                        programmée{group.sessions.length > 1 ? 's' : ''}
                                                                     </p>
                                                                 </div>
                                                                 <div className="w-12 h-12 bg-emerald-500 rounded-full flex items-center justify-center">
@@ -358,23 +377,39 @@ const SessionsTimeline = ({ sessions }: SessionsTimelineProps) => {
                                                         >
                                                             {/* Badge de statut en overlay pour mobile */}
                                                             <div className="relative">
-                                                                <div className={`absolute top-4 right-4 z-10 ${isUpcoming(session.start_date) ? 'block' : 'block'}`}>
+                                                                <div
+                                                                    className={`absolute top-4 right-4 z-10 ${isUpcoming(session.start_date) ? 'block' : 'block'}`}
+                                                                >
                                                                     {getStatusBadge(session)}
                                                                 </div>
-                                                                
+
                                                                 {/* Barre colorée en haut pour mobile */}
-                                                                <div className={`h-1 w-full ${
-                                                                    isUpcoming(session.start_date)
-                                                                        ? 'bg-gradient-to-r from-emerald-500 to-teal-500'
-                                                                        : 'bg-gradient-to-r from-gray-300 to-gray-400 dark:from-gray-600 dark:to-gray-700'
-                                                                }`} />
-                                                                
+                                                                <div
+                                                                    className={`h-1 w-full ${
+                                                                        isUpcoming(session.start_date)
+                                                                            ? 'bg-gradient-to-r from-emerald-500 to-teal-500'
+                                                                            : 'bg-gradient-to-r from-gray-300 to-gray-400 dark:from-gray-600 dark:to-gray-700'
+                                                                    }`}
+                                                                />
+
                                                                 <div className="p-4 sm:p-6">
                                                                     <div className="mb-4">
                                                                         <div className="">
-                                                                            <div className="mb-3">
-                                                                                <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white pr-20 sm:pr-0 leading-tight">
-                                                                                    {session.course?.title || 'Formation'}
+                                                                            <div className="mb-3 max-w-[90%]">
+                                                                                <h3 className="text-lg sm:text-xl font-bold pr-20 sm:pr-0 leading-tight">
+                                                                                    <a
+                                                                                        href={
+                                                                                            ROUTE_MAP.public.courses.detail(
+                                                                                                session.course?.category?.slug ?? '',
+                                                                                                session.course?.slug ?? '',
+                                                                                            ).link
+                                                                                        }
+                                                                                        target="_blank"
+                                                                                        rel="noopener noreferrer"
+                                                                                        className="text-gray-900 dark:text-white hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors duration-200 cursor-pointer"
+                                                                                    >
+                                                                                        {session.course?.title}
+                                                                                    </a>
                                                                                 </h3>
                                                                             </div>
 
@@ -385,8 +420,12 @@ const SessionsTimeline = ({ sessions }: SessionsTimelineProps) => {
                                                                                         <MapPin className="w-4 h-4 text-white" />
                                                                                     </div>
                                                                                     <div className="min-w-0">
-                                                                                        <p className="text-xs text-blue-600 dark:text-blue-400 font-medium">Lieu</p>
-                                                                                        <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">{session.location}</p>
+                                                                                        <p className="text-xs text-blue-600 dark:text-blue-400 font-medium">
+                                                                                            Lieu
+                                                                                        </p>
+                                                                                        <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">
+                                                                                            {session.location}
+                                                                                        </p>
                                                                                     </div>
                                                                                 </div>
 
@@ -395,8 +434,13 @@ const SessionsTimeline = ({ sessions }: SessionsTimelineProps) => {
                                                                                         <BookOpen className="w-4 h-4 text-white" />
                                                                                     </div>
                                                                                     <div className="min-w-0">
-                                                                                        <p className="text-xs text-orange-600 dark:text-orange-400 font-medium">Durée</p>
-                                                                                        <p className="text-sm font-semibold text-gray-900 dark:text-white">{session.course?.duration || 'N/A'} jours</p>
+                                                                                        <p className="text-xs text-orange-600 dark:text-orange-400 font-medium">
+                                                                                            Durée
+                                                                                        </p>
+                                                                                        <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                                                                                            {session.course?.duration} jour
+                                                                                            {Number(session.course?.duration) > 1 ? 's' : ''}
+                                                                                        </p>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -460,28 +504,36 @@ const SessionsTimeline = ({ sessions }: SessionsTimelineProps) => {
                                                                     : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 shadow-md hover:shadow-lg hover:scale-105 border border-gray-200 dark:border-gray-700'
                                                             }`}
                                                         >
-                                                            <div className={`text-xs font-bold mb-1 ${
-                                                                isActive ? 'text-white' : 'text-gray-700 dark:text-white'
-                                                            }`}>
+                                                            <div
+                                                                className={`text-xs font-bold mb-1 ${
+                                                                    isActive ? 'text-white' : 'text-gray-700 dark:text-white'
+                                                                }`}
+                                                            >
                                                                 {formatDateShort(group.date)}
                                                             </div>
-                                                            
-                                                            <div className={`text-lg font-bold ${
-                                                                isActive ? 'text-white' : 'text-emerald-600 dark:text-emerald-400'
-                                                            }`}>
+
+                                                            <div
+                                                                className={`text-lg font-bold ${
+                                                                    isActive ? 'text-white' : 'text-emerald-600 dark:text-emerald-400'
+                                                                }`}
+                                                            >
                                                                 {sessionsCount}
                                                             </div>
-                                                            
-                                                            <div className={`text-xs ${
-                                                                isActive ? 'text-emerald-100' : 'text-gray-500 dark:text-gray-400'
-                                                            }`}>
+
+                                                            <div
+                                                                className={`text-xs ${
+                                                                    isActive ? 'text-emerald-100' : 'text-gray-500 dark:text-gray-400'
+                                                                }`}
+                                                            >
                                                                 session{sessionsCount > 1 ? 's' : ''}
                                                             </div>
-                                                            
+
                                                             {upcomingSessions > 0 && (
-                                                                <div className={`w-2 h-2 rounded-full mx-auto mt-1 ${
-                                                                    isActive ? 'bg-white' : 'bg-blue-500'
-                                                                }`}></div>
+                                                                <div
+                                                                    className={`w-2 h-2 rounded-full mx-auto mt-1 ${
+                                                                        isActive ? 'bg-white' : 'bg-blue-500'
+                                                                    }`}
+                                                                ></div>
                                                             )}
                                                         </button>
                                                     );
