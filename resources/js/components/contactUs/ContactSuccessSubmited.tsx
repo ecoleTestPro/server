@@ -49,13 +49,13 @@ export default function ContactSuccessSubmited() {
 
     // Variantes pour le bouton
     // const buttonVariants: Variants = {
-        hover: {
-            scale: [1, 1.05],
-            boxShadow: '0px 4px 15px rgba(0, 0, 0, 0.2)',
-            transition: { duration: 0.3, ease: 'easeOut' },
-        },
-        tap: { scale: [0.95] },
-    };
+    //     hover: {
+    //         scale: [1, 1.05],
+    //         boxShadow: '0px 4px 15px rgba(0, 0, 0, 0.2)',
+    //         transition: { duration: 0.3, ease: 'easeOut' },
+    //     },
+    //     tap: { scale: [0.95] },
+    // };
 
     return (
         <MotionSection>

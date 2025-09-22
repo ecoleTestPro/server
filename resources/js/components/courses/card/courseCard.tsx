@@ -46,8 +46,8 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, onCourseUpdat
     const [openPartnerDrawer, setOpenPartnerDrawer] = useState(false);
     const [partners, setPartners] = useState<IPartner[]>([]);
     const [showFullDescription, setShowFullDescription] = useState(false);
-    // const [showConfirmDelete, setShowConfirmDelete] = useState(false);
-    // const [isPublishing, setIsPublishing] = useState(false);
+    const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+    const [isPublishing, setIsPublishing] = useState(false);
     const [isTogglingFeatured, setIsTogglingFeatured] = useState(false);
     const [currentCourse, setCurrentCourse] = useState<ICourse>(course);
 
@@ -58,7 +58,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, onCourseUpdat
             return t('COURSE.TABLE.NO_UPCOMING_SESSION', 'N/A');
         }
 
-        // const now = new Date();
+        const now = new Date();
         const upcomingSessions = currentCourse.course_sessions
             //.filter((session) => new Date(session.start_date) > now)
             .sort((a, b) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime());
@@ -94,7 +94,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, onCourseUpdat
         }
     };
 
-    // const handleTogglePublish = async () => {
+    const handleTogglePublish = async () => {
         setIsPublishing(true);
         try {
             // Simuler l'appel API pour publier/dépublier
@@ -143,7 +143,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, onCourseUpdat
         return text.substring(0, maxLength) + '...';
     };
 
-    // const CourseHeader = () => {
+    const CourseHeader = () => {
         return (
             <div className="mb-2 flex items-center justify-between">
                 <span className="text-sm text-green-500">Formation</span>
@@ -155,15 +155,15 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, onCourseUpdat
         );
     };
 
-    // const CourseTitle = () => {
+    const CourseTitle = () => {
         return <h2 className="mb-2 text-lg font-bold">{course.title}</h2>;
     };
 
-    // const CourseDescription = () => {
+    const CourseDescription = () => {
         return <p className="mb-4 text-gray-500">{course.excerpt}</p>;
     };
 
-    // const CourseDuration = () => {
+    const CourseDuration = () => {
         return (
             <div className="mb-2 flex items-center">
                 <div className="mr-4 flex items-center">
@@ -178,7 +178,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, onCourseUpdat
         );
     };
 
-    // const CourseFooter = () => {
+    const CourseFooter = () => {
         const formatPrice = (price: number, includesTax: boolean) => {
             const currency = 'XOF';
             return includesTax ? `${price.toLocaleString()} ${currency} (Tax Incl.)` : `${price.toLocaleString()} ${currency} `;
@@ -190,7 +190,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, onCourseUpdat
                     <div className="mr-2">
                         <span className="text-lg font-semibold">{formatPrice(course.price, course.price_includes_tax)}</span>
 
-                        {course.regular_price > /* course.price && (
+                        {course.regular_price > course.price && (
                             <span className="mr-2 text-gray-500 line-through">{course.regular_price.toLocaleString()} XOF</span>
                         )}
                     </div>
@@ -252,7 +252,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, onCourseUpdat
         );
     };
 
-    // const CourseAttachment = () => {
+    const CourseAttachment = () => {
         return course.attachment ? (
             <div className="mb-2 flex items-center">
                 <span className="text-sm text-gray-600">Attachment: {course.attachment}</span>
@@ -260,7 +260,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, onCourseUpdat
         ) : null;
     };
 
-    // const CourseStatus = () => {
+    const CourseStatus = () => {
         return (
             <div className="mb-2 flex items-center space-x-1">
                 <span>Status: </span>
@@ -370,7 +370,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, onCourseUpdat
                         <div className="flex items-center gap-2">
                             <DollarSign className="w-4 h-4 text-green-500" />
                             <span className="text-xl font-bold text-gray-900">{course.price.toLocaleString()} XOF</span>
-                            {course.regular_price !== /* course.price && (
+                            {course.regular_price !== course.price && (
                                 <span className="text-sm text-gray-500 line-through">{course.regular_price.toLocaleString()} XOF</span>
                             )}
                         </div>
