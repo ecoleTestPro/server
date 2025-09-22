@@ -4,10 +4,16 @@ on:
   push:
     branches:
       - develop
+      - develop/develop-v100
+      - release
+      - release/develop-v100
       - main
   pull_request:
     branches:
       - develop
+      - develop/develop-v100
+      - release
+      - release/develop-v100
       - main
 
 permissions:
