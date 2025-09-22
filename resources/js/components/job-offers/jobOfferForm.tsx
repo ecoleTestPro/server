@@ -11,7 +11,7 @@ import { Briefcase, Building2, Calendar, DollarSign, FileText, HelpCircle, Info,
 import { FormEventHandler, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import 'react-quill/dist/quill.snow.css';
+import 'react-quill-new/dist/quill.snow.css';
 import RichTextQuill from '../ui/form/RichTextQuill';
 import SelectCustom, { ISelectItem } from '../ui/select-custom';
 

@@ -9,7 +9,7 @@ import { PlusCircleIcon, HelpCircle, BookOpen, Tag as TagIcon, FileText, Eye, Gl
 import { FormEventHandler, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import 'react-quill/dist/quill.snow.css';
+import 'react-quill-new/dist/quill.snow.css';
 import { Button } from '../ui/button/button';
 import RichTextQuill from '../ui/form/RichTextQuill';
 import TagInput from '../ui/tag-input';

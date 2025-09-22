@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button/button';
 import { SharedData } from '@/types';
 import { ICourse, ICourseCategory } from '@/types/course';
 import { IPartner } from '@/types/partner';
-import 'react-quill/dist/quill.snow.css';
+import 'react-quill-new/dist/quill.snow.css';
 import AdvancedRichTextEditor from '../../ui/form/AdvancedRichTextEditor';
 import { Skeleton } from '../../ui/skeleton';
 import CourseAdditionnalForm from './course-additionnal.form';

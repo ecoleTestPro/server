@@ -10,7 +10,7 @@ import { Logger } from '@/utils/console.util';
 import { getMediaUrl } from '@/utils/utils';
 import { lazy, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import 'react-quill/dist/quill.snow.css';
+import 'react-quill-new/dist/quill.snow.css';
 import { Textarea } from '../../ui/text-area';
 import { ICourseForm } from './course.form.util';
 import { ICourseFormErrors } from './edit-course.form';

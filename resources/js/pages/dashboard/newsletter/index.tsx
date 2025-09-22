@@ -33,7 +33,7 @@ const formatDate = (dateString: string, formatStr?: string) => {
     });
 };
 import RichTextQuill from '@/components/ui/form/RichTextQuill';
-import 'react-quill/dist/quill.snow.css';
+import 'react-quill-new/dist/quill.snow.css';
 import { Logger } from '@/utils/console.util';
 
 export default function NewsletterIndex() {

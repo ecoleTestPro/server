@@ -71,21 +71,23 @@ export default function CourseDetailChooseSection({ course, registrationRef }: C
 
                         {/* Liste des sessions - Design épuré */}
                         <div className="space-y-3">
-                            {course.course_sessions.map((session, index) => (
-                                <CourseSessionCard
-                                    key={index}
-                                    session={session}
-                                    courseTitle={course.title}
-                                    handleClickRegister={() => {
-                                        setSelectedSession(session);
-                                        setIsDialogOpen(true);
-                                    }}
-                                    periodicity_unit={course.periodicity_unit}
-                                    periodicity_value={course.periodicity_value}
-                                    price={course.price}
-                                    regular_price={course.regular_price}
-                                />
-                            ))}
+                            {course.course_sessions
+                                .sort((a, b) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime())
+                                .map((session, index) => (
+                                    <CourseSessionCard
+                                        key={index}
+                                        session={session}
+                                        courseTitle={course.title}
+                                        handleClickRegister={() => {
+                                            setSelectedSession(session);
+                                            setIsDialogOpen(true);
+                                        }}
+                                        periodicity_unit={course.periodicity_unit}
+                                        periodicity_value={course.periodicity_value}
+                                        price={course.price}
+                                        regular_price={course.regular_price}
+                                    />
+                                ))}
                         </div>
                     </div>
                 ) : (
