@@ -3,9 +3,7 @@ import StatsBlock from '@/components/reconversion/stats-block';
 import ReferenceLogos from '@/components/references/ReferenceLogos';
 import BtnSecondary from '@/components/ui/button/btn-secondary';
 import DefaultLayout from '@/layouts/public/front.layout';
-import { IPartner, SharedData } from '@/types';
 import { ROUTE_MAP } from '@/utils/route.util';
-import { usePage } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 
 export default function ReconversionMetierPage() {

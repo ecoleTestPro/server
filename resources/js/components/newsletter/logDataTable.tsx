@@ -1,8 +1,8 @@
+import { INewsletterLog } from '@/types/newsletterLog';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, RotateCw } from 'lucide-react';
-import { DataTable } from '../ui/dataTable';
 import { Button } from '../ui/button/button';
-import { INewsletterLog } from '@/types/newsletterLog';
+import { DataTable } from '../ui/dataTable';
 
 interface Props {
     logs: INewsletterLog[];
@@ -32,13 +32,12 @@ export default function LogDataTable({ logs, onResend }: Props) {
         {
             id: 'actions',
             enableHiding: false,
-            cell: ({ row }) => (
+            cell: ({ row }) =>
                 !row.original.is_sent && (
                     <Button variant="ghost" size="icon" onClick={() => onResend?.(row.original)}>
                         <RotateCw className="h-4 w-4" />
                     </Button>
-                )
-            ),
+                ),
         },
     ];
 

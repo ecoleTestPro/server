@@ -84,7 +84,7 @@ function HeaderUserAction() {
         [t, i18n.language],
     );
 
-    onCloseDialog: () => {
+    () => {
         setOpenModal(false);
         setModalContent(null);
     };
@@ -123,23 +123,24 @@ function HeaderUserAction() {
                     <CalendarMenu />
 
                     {/* User Icons */}
-                    {false && userActionNotLogged.map(({ name, icon, link, modalComponent }) =>
-                        modalComponent ? (
-                            <button
-                                key={name}
-                                type="button"
-                                className="focus:outline-none"
-                                onClick={() => {
-                                    setModalContent(modalComponent);
-                                    setOpenModal(true);
-                                }}
-                            >
-                                <BtnHoverEffect text={name} icon={icon} />
-                            </button>
-                        ) : (
-                            <BtnLinkCustom key={name} icon={icon} href={link} title={name} />
-                        ),
-                    )}
+                    {false &&
+                        userActionNotLogged.map(({ name, icon, link, modalComponent }) =>
+                            modalComponent ? (
+                                <button
+                                    key={name}
+                                    type="button"
+                                    className="focus:outline-none"
+                                    onClick={() => {
+                                        setModalContent(modalComponent);
+                                        setOpenModal(true);
+                                    }}
+                                >
+                                    <BtnHoverEffect text={name} icon={icon} />
+                                </button>
+                            ) : (
+                                <BtnLinkCustom key={name} icon={icon} href={link} title={name} />
+                            ),
+                        )}
                 </div>
             ) : (
                 <div className="flex items-center gap-2">

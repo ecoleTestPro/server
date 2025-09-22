@@ -11,7 +11,7 @@ interface SpecialSectionProps {
 
 /**
  * Composant de la section "Ce qui nous rend spécial"
- * 
+ *
  * @component
  * @description Section présentant les spécificités et avantages de TestPro.
  * Layout en deux colonnes avec image rotée et texte explicatif.
@@ -60,15 +60,15 @@ export default function SpecialSection({ imageVariants }: SpecialSectionProps) {
                                     Qu'est-ce qui nous rend spécial ?
                                 </h2>
                             </motion.div>
-                            
+
                             {/* Description des spécificités */}
                             <p className="!mb-6 leading-relaxed text-gray-700 dark:text-gray-300 text-base md:text-lg">
-                                TestPro allie excellence pédagogique, reconnaissance officielle et impact concret. Centre d'examen certifié GASQ
-                                et organisme habilité par le FDFP, nous proposons des formations rigoureuses, pratiques et orientées projet,
-                                portées par des formateurs internationaux certifiés. Nos programmes sur mesure, basés sur des méthodologies
-                                éprouvées et des outils modernes, assurent une montée en compétences rapide et un taux d'employabilité de 100%.
-                                Grâce à notre accompagnement personnalisé et à notre travail en synergie avec vos équipes, chaque formation
-                                devient un levier stratégique pour vos projets. Avec TestPro, la formation devient un levier stratégique.
+                                TestPro allie excellence pédagogique, reconnaissance officielle et impact concret. Centre d'examen certifié GASQ et
+                                organisme habilité par le FDFP, nous proposons des formations rigoureuses, pratiques et orientées projet, portées par
+                                des formateurs internationaux certifiés. Nos programmes sur mesure, basés sur des méthodologies éprouvées et des
+                                outils modernes, assurent une montée en compétences rapide et un taux d'employabilité de 100%. Grâce à notre
+                                accompagnement personnalisé et à notre travail en synergie avec vos équipes, chaque formation devient un levier
+                                stratégique pour vos projets. Avec TestPro, la formation devient un levier stratégique.
                             </p>
                         </motion.div>
                     </motion.div>

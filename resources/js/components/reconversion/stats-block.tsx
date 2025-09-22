@@ -1,5 +1,5 @@
 import MotionSection from '@/components/motion/MotionSection';
-import { motion, animate, useInView } from 'framer-motion';
+import { animate, motion, useInView } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 
 interface StatItem {
@@ -19,7 +19,7 @@ function AnimatedNumber({ value, suffix, prefix }: { value: number; suffix?: str
             const controls = animate(0, value, {
                 duration: 1.5,
                 ease: 'easeOut',
-                onUpdate: latest => setDisplay(Math.round(latest)),
+                onUpdate: (latest) => setDisplay(Math.round(latest)),
             });
             return () => controls.stop();
         }
@@ -39,7 +39,7 @@ export default function StatsBlock() {
         {
             value: 20,
             prefix: '+',
-            label: "PROGRAMMES DE RECONVERSION DISPENSÉS AUPRÈS D’ORGANISMES NATIONAUX ET INTERNATIONAUX",
+            label: 'PROGRAMMES DE RECONVERSION DISPENSÉS AUPRÈS D’ORGANISMES NATIONAUX ET INTERNATIONAUX',
         },
         { value: 8000, prefix: '+', label: 'HEURES DE COURS' },
         { value: 80, prefix: '+', suffix: '%', label: 'RÉUSSITE AUX CERTIFICATIONS' },
@@ -60,9 +60,7 @@ export default function StatsBlock() {
                             className="space-y-2"
                         >
                             <AnimatedNumber value={stat.value} prefix={stat.prefix} suffix={stat.suffix} />
-                            <p className="mx-auto max-w-xs text-sm text-gray-600 dark:text-gray-300">
-                                {stat.label}
-                            </p>
+                            <p className="mx-auto max-w-xs text-sm text-gray-600 dark:text-gray-300">{stat.label}</p>
                         </motion.div>
                     ))}
                 </div>

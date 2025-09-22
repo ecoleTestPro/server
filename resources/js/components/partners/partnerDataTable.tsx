@@ -1,10 +1,10 @@
+import { IPartner } from '@/types/partner';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
+import { Button } from '../ui/button/button';
 import { Checkbox } from '../ui/checkbox';
 import { DataTable } from '../ui/dataTable';
-import { Button } from '../ui/button/button';
 import PartnerActionBtn from './partnerActionBtn';
-import { IPartner } from '@/types/partner';
 
 interface PartnerDataTableProps {
     partners: IPartner[];

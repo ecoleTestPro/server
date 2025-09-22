@@ -1,5 +1,4 @@
 import CourseDetail from '@/components/courses/detail/CourseDetail';
-import CourseQuestionForm from '@/components/courses/questions/CourseQuestionForm';
 import Hero, { IHeroBreadcrumbItems } from '@/components/hero/hearo';
 import ReferenceLogos from '@/components/references/ReferenceLogos';
 import Testimonials from '@/components/testimonial/Testimonials';
@@ -52,8 +51,8 @@ export default function CourseCategoryPage() {
                         <Hero title={course.title} description={''} course={course} breadcrumbItems={breadcrumb} gradient="style-2" />
                         {/* <OurCurrentCourses coursesData={category.children} showSidebar={true} /> */}
                         <CourseDetail course={course} />
-                        
-                        {course.reference_tag && <ReferenceLogos tag={course.reference_tag} imgHeight='h-32' />}
+
+                        {course.reference_tag && <ReferenceLogos tag={course.reference_tag} imgHeight="h-32" />}
                     </>
                 )}
                 <Testimonials />

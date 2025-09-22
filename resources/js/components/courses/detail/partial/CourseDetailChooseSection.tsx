@@ -220,10 +220,7 @@ export const CourseSessionCard = ({
                             onClick={handleClickRegister}
                             className="cursor-pointer w-full sm:w-auto px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
                         >
-                            {getSessionStatus() === 'ongoing'
-                                ? t('COURSE.DETAIL.JOIN', "Rejoindre")
-                                : t('COURSE.DETAIL.REGISTER', "S'inscrire")
-                            }
+                            {getSessionStatus() === 'ongoing' ? t('COURSE.DETAIL.JOIN', 'Rejoindre') : t('COURSE.DETAIL.REGISTER', "S'inscrire")}
                         </button>
                     ) : (
                         <div className="text-sm text-gray-500 dark:text-gray-400 font-medium">

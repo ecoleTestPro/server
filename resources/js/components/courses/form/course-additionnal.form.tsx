@@ -62,7 +62,10 @@ export default function CourseAdditionnalForm({
             if (courseSelected.duration && (!data.duration || data.duration === '')) {
                 setData('duration', courseSelected.duration.toString());
                 setData('periodicity_value', courseSelected.duration.toString());
-            } else if (courseSelected.periodicity_value && (!data.periodicity_value || data.periodicity_value === '' || Number(data.periodicity_value) === 0)) {
+            } else if (
+                courseSelected.periodicity_value &&
+                (!data.periodicity_value || data.periodicity_value === '' || Number(data.periodicity_value) === 0)
+            ) {
                 // Si pas de durée mais une periodicity_value, utiliser cette valeur pour les deux
                 setData('duration', courseSelected.periodicity_value.toString());
                 setData('periodicity_value', courseSelected.periodicity_value.toString());

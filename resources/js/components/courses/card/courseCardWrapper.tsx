@@ -115,13 +115,14 @@ function CourseCardWrapper({ searchTerm, viewMode, loading, setLoading, courses,
             .catch((error) => {
                 setIsDeleting(false);
                 Logger.error('Error deleting course:', error);
-                
+
                 // Check if the error is due to existing enrollments
                 if (error.response?.data?.hasEnrollments) {
                     const enrollmentCount = error.response.data.enrollmentCount;
-                    const message = error.response.data.message || 
+                    const message =
+                        error.response.data.message ||
                         `Cette formation ne peut pas être supprimée car ${enrollmentCount} utilisateur(s) y sont inscrits. Veuillez d'abord gérer les inscriptions existantes.`;
-                    
+
                     // Show a custom alert for enrollment conflict
                     toast.error(message, {
                         duration: 6000, // Show for 6 seconds
@@ -142,9 +143,10 @@ function CourseCardWrapper({ searchTerm, viewMode, loading, setLoading, courses,
         setEnrollmentWarning(null);
         setShowConfirm(true);
         setIsDeleting(false);
-        
+
         // Optional: Check for enrollments beforehand to show warning in dialog
-        axios.get(route('dashboard.course.enrollments.count', course.id))
+        axios
+            .get(route('dashboard.course.enrollments.count', course.id))
             .then((response) => {
                 const count = response.data.count;
                 if (count > 0) {

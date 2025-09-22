@@ -16,13 +16,7 @@ export default function PrivacyPolicyPage() {
     ];
 
     return (
-        <DefaultLayout
-            title={t('PAGES.PRIVACY_POLICY', 'Politique de confidentialité')}
-            description={t(
-                'PAGES.PRIVACY_POLICY_DESCRIPTION',
-                '',
-            )}
-        >
+        <DefaultLayout title={t('PAGES.PRIVACY_POLICY', 'Politique de confidentialité')} description={t('PAGES.PRIVACY_POLICY_DESCRIPTION', '')}>
             <div className="bg-gray-100 dark:bg-[#0a0e19]">
                 <Hero
                     title={t('PAGES.ABOUT_US', 'Politique de confidentialité')}
@@ -130,8 +124,8 @@ export default function PrivacyPolicyPage() {
                             <h2 className="mb-4 text-2xl font-semibold text-gray-900 dark:text-white">9. Nous Contacter</h2>
                             <p className="text-justify text-gray-600 dark:text-gray-300">
                                 Pour toute question concernant cette politique ou le traitement de vos données, vous pouvez nous contacter : Par
-                                e-mail : info@testpro-group.com Par téléphone : +225 0706915705 Adresse : TestPro, Siège social: Abidjan –
-                                Attécoubé Locodjro, cité Lagoona City, lot n° GH 23, ilot n°00, 01 BP 5676 ABIDJAN 01
+                                e-mail : info@testpro-group.com Par téléphone : +225 0706915705 Adresse : TestPro, Siège social: Abidjan – Attécoubé
+                                Locodjro, cité Lagoona City, lot n° GH 23, ilot n°00, 01 BP 5676 ABIDJAN 01
                             </p>
                         </section>
                     </div>

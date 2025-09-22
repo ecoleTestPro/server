@@ -1,4 +1,3 @@
-import ContactUs from '@/components/contactUs/ContactUs';
 import Faq from '@/components/faq/Faq';
 import Hero, { IHeroBreadcrumbItems } from '@/components/hero/hearo';
 import DefaultLayout from '@/layouts/public/front.layout';
@@ -21,7 +20,7 @@ export default function FaqsPage() {
             <div className="bg-gray-100 dark:bg-[#0a0e19]">
                 <Hero
                     title={t('PAGES.FAQ', "FAQ's")}
-                    description={t('PAGES.FAQ_DESCRIPTION', "Trouvez des réponses à vos questions fréquentes.")}
+                    description={t('PAGES.FAQ_DESCRIPTION', 'Trouvez des réponses à vos questions fréquentes.')}
                     breadcrumbItems={breadcrumbItems}
                     gradient="style-2"
                 />

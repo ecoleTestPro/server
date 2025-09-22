@@ -1,8 +1,8 @@
 import { useState } from 'react';
 
 import { ICourse } from '@/types/course';
-import { getMediaUrl } from '@/utils/utils';
 import { Logger } from '@/utils/console.util';
+import { getMediaUrl } from '@/utils/utils';
 
 interface CouseDetailMediaProps {
     course: ICourse;
@@ -24,7 +24,7 @@ export default function CouseDetailMedia({ course }: CouseDetailMediaProps) {
         <div>
             {[course.media]
                 ?.filter((media) => media.type === 'image')
-                .map((media, index) => (
+                .map((media, index) =>
                     failed[index] ? null : (
                         <img
                             key={index}
@@ -34,8 +34,8 @@ export default function CouseDetailMedia({ course }: CouseDetailMediaProps) {
                             loading="lazy"
                             onError={() => setFailed((prev) => ({ ...prev, [index]: true }))}
                         />
-                    )
-                ))}
+                    ),
+                )}
         </div>
     );
 }

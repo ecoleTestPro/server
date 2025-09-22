@@ -51,12 +51,12 @@ function OfferCard({ offer }: OfferCardProps) {
                 borderColor: {
                     duration: 4,
                     repeat: Infinity,
-                    ease: "easeInOut"
-                }
+                    ease: 'easeInOut',
+                },
             }}
         >
             {/* Couche glassmorphism animée subtile */}
-            <motion.div 
+            <motion.div
                 className="absolute inset-0 bg-white/5 backdrop-blur-[1px]"
                 animate={{
                     opacity: [0.1, 0.3, 0.1],
@@ -64,11 +64,11 @@ function OfferCard({ offer }: OfferCardProps) {
                 transition={{
                     duration: 6,
                     repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: Math.random() * 2
+                    ease: 'easeInOut',
+                    delay: Math.random() * 2,
                 }}
             />
-            
+
             {/* Effet de gradient animé au survol amélioré */}
             <div className="absolute inset-0 bg-gradient-to-br from-primary-400/10 via-transparent to-primary-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
@@ -172,24 +172,24 @@ export default function OffersSection() {
         <MotionSection className="relative overflow-hidden">
             {/* Arrière-plan décoratif avec gradients amélioré */}
             <div className="absolute inset-0 bg-gradient-to-br from-gray-50/50 via-transparent to-primary-50/20 dark:from-gray-900/20 dark:to-primary-900/10" />
-            
+
             {/* Couche glassmorphism animée */}
-            <motion.div 
+            <motion.div
                 className="absolute inset-0 backdrop-blur-[0.5px]"
                 initial={{ opacity: 0 }}
-                animate={{ 
+                animate={{
                     opacity: [0, 0.3, 0.1, 0.2, 0.1],
                 }}
                 transition={{
                     duration: 8,
                     repeat: Infinity,
-                    repeatType: "reverse",
-                    ease: "easeInOut"
+                    repeatType: 'reverse',
+                    ease: 'easeInOut',
                 }}
             />
-            
+
             {/* Orbes flottants avec glassmorphism */}
-            <motion.div 
+            <motion.div
                 className="absolute top-1/4 right-0 w-96 h-96 bg-primary-400/5 rounded-full blur-3xl backdrop-blur-sm border border-white/10"
                 animate={{
                     scale: [1, 1.1, 0.9, 1],
@@ -198,10 +198,10 @@ export default function OffersSection() {
                 transition={{
                     duration: 12,
                     repeat: Infinity,
-                    ease: "easeInOut"
+                    ease: 'easeInOut',
                 }}
             />
-            <motion.div 
+            <motion.div
                 className="absolute bottom-1/4 left-0 w-80 h-80 bg-blue-400/5 rounded-full blur-3xl backdrop-blur-sm border border-white/10"
                 animate={{
                     scale: [0.9, 1.2, 1, 0.9],
@@ -210,13 +210,13 @@ export default function OffersSection() {
                 transition={{
                     duration: 10,
                     repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: 1
+                    ease: 'easeInOut',
+                    delay: 1,
                 }}
             />
-            
+
             {/* Particules glassmorphism flottantes */}
-            <motion.div 
+            <motion.div
                 className="absolute top-1/3 left-1/4 w-32 h-32 bg-white/5 rounded-full backdrop-blur-sm border border-white/20"
                 animate={{
                     y: [-10, 10, -10],
@@ -226,10 +226,10 @@ export default function OffersSection() {
                 transition={{
                     duration: 6,
                     repeat: Infinity,
-                    ease: "easeInOut"
+                    ease: 'easeInOut',
                 }}
             />
-            <motion.div 
+            <motion.div
                 className="absolute bottom-1/3 right-1/3 w-24 h-24 bg-primary-200/10 rounded-full backdrop-blur-sm border border-primary-300/20"
                 animate={{
                     y: [5, -15, 5],
@@ -239,8 +239,8 @@ export default function OffersSection() {
                 transition={{
                     duration: 8,
                     repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: 2
+                    ease: 'easeInOut',
+                    delay: 2,
                 }}
             />
 
@@ -278,20 +278,20 @@ export default function OffersSection() {
                                 transition={{ duration: 0.7, delay: 0.2 }}
                             >
                                 {/* Conteneur avec fond glassmorphism animé */}
-                                <motion.div 
+                                <motion.div
                                     className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-lg rounded-3xl p-8 lg:p-10 border border-white/30 shadow-xl relative overflow-hidden"
                                     animate={{
                                         borderColor: ['rgba(255,255,255,0.3)', 'rgba(255,255,255,0.6)', 'rgba(255,255,255,0.3)'],
                                         boxShadow: [
                                             '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
                                             '0 25px 50px -12px rgba(59, 130, 246, 0.15)',
-                                            '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
+                                            '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
                                         ],
                                     }}
                                     transition={{
                                         duration: 8,
                                         repeat: Infinity,
-                                        ease: "easeInOut"
+                                        ease: 'easeInOut',
                                     }}
                                 >
                                     {/* Effet de shimmer subtil */}
@@ -304,8 +304,8 @@ export default function OffersSection() {
                                         transition={{
                                             duration: 3,
                                             repeat: Infinity,
-                                            ease: "easeInOut",
-                                            repeatDelay: 4
+                                            ease: 'easeInOut',
+                                            repeatDelay: 4,
                                         }}
                                     />
                                     {/* Paragraphe d'introduction */}

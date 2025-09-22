@@ -72,14 +72,14 @@ function CategoryForm({ closeDrawer, initialData, isSubcategoryMode = false, par
         if (initialData) {
             return initialData;
         }
-        
+
         const baseData = { ...defaultValues };
-        
+
         // Si on est en mode sous-catégorie, pré-sélectionner la catégorie parent
         if (isSubcategoryMode && parentCategoryId) {
             baseData.parent_id = parentCategoryId;
         }
-        
+
         return baseData;
     };
 
@@ -134,9 +134,9 @@ function CategoryForm({ closeDrawer, initialData, isSubcategoryMode = false, par
             forceFormData: true, // Important pour envoyer des fichiers
             onSuccess: () => {
                 toast.success(
-                    initialData?.id 
-                        ? t('courses.category.updateSuccess', 'Catégorie mise à jour avec succès !') 
-                        : t('courses.category.createSuccess', 'Catégorie créée avec succès !')
+                    initialData?.id
+                        ? t('courses.category.updateSuccess', 'Catégorie mise à jour avec succès !')
+                        : t('courses.category.createSuccess', 'Catégorie créée avec succès !'),
                 );
                 reset();
                 closeDrawer?.();
@@ -144,9 +144,9 @@ function CategoryForm({ closeDrawer, initialData, isSubcategoryMode = false, par
             onError: (errors) => {
                 console.error('Erreurs de validation:', errors);
                 toast.error(
-                    initialData?.id 
-                        ? t('courses.category.updateError', 'Erreur lors de la mise à jour de la catégorie') 
-                        : t('courses.category.createError', 'Erreur lors de la création de la catégorie')
+                    initialData?.id
+                        ? t('courses.category.updateError', 'Erreur lors de la mise à jour de la catégorie')
+                        : t('courses.category.createError', 'Erreur lors de la création de la catégorie'),
                 );
             },
             preserveScroll: true,
@@ -156,10 +156,9 @@ function CategoryForm({ closeDrawer, initialData, isSubcategoryMode = false, par
     return (
         <form className="mx-auto flex max-w-xl flex-col gap-8" onSubmit={submit}>
             <legend className="px-2 text-base font-semibold">
-                {isSubcategoryMode 
+                {isSubcategoryMode
                     ? t('courses.subcategoryInfo', 'Informations de la sous-catégorie')
-                    : t('courses.mainInfo', 'Informations principales')
-                }
+                    : t('courses.mainInfo', 'Informations principales')}
             </legend>
             <div className="grid gap-4">
                 <div className="grid gap-2">
@@ -181,20 +180,18 @@ function CategoryForm({ closeDrawer, initialData, isSubcategoryMode = false, par
             {/* Afficher la catégorie parente si nous sommes en mode sous-catégorie */}
             {isSubcategoryMode && parentCategoryName && (
                 <div className="grid gap-2">
-                    <Label htmlFor="parent_id">
-                        {t('courses.parentCategory', 'Catégorie parente')}
-                    </Label>
+                    <Label htmlFor="parent_id">{t('courses.parentCategory', 'Catégorie parente')}</Label>
                     <div className="flex items-center gap-2 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-md">
-                        <span className="text-blue-600 dark:text-blue-400 font-medium">
-                            {parentCategoryName}
-                        </span>
+                        <span className="text-blue-600 dark:text-blue-400 font-medium">{parentCategoryName}</span>
                     </div>
                     <InputError message={errors.parent_id} />
                 </div>
             )}
 
             <div className="grid gap-2">
-                <Label htmlFor="image">{t('courses.image', 'Image')} <span className="text-sm text-gray-500">(optionnel)</span></Label>
+                <Label htmlFor="image">
+                    {t('courses.image', 'Image')} <span className="text-sm text-gray-500">(optionnel)</span>
+                </Label>
                 <InputFile
                     id="image"
                     onFilesChange={(files) => {
@@ -242,12 +239,11 @@ function CategoryForm({ closeDrawer, initialData, isSubcategoryMode = false, par
 
             <Button type="submit" className="mt-2 w-full" disabled={processing}>
                 {processing && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
-                {initialData?.id 
-                    ? t('courses.update', 'Mettre à jour la catégorie') 
-                    : isSubcategoryMode 
-                        ? t('courses.createSubcategory', 'Créer la sous-catégorie')
-                        : t('courses.create', 'Créer la catégorie')
-                }
+                {initialData?.id
+                    ? t('courses.update', 'Mettre à jour la catégorie')
+                    : isSubcategoryMode
+                      ? t('courses.createSubcategory', 'Créer la sous-catégorie')
+                      : t('courses.create', 'Créer la catégorie')}
             </Button>
         </form>
     );

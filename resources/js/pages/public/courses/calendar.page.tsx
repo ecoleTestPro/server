@@ -7,10 +7,10 @@ import { ICourse, ICourseSession } from '@/types/course';
 import { ROUTE_MAP } from '@/utils/route.util';
 import { Link } from '@inertiajs/react';
 import axios from 'axios';
+import { fr } from 'date-fns/locale';
 import { useEffect, useState } from 'react';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { fr } from 'date-fns/locale';
 import { useTranslation } from 'react-i18next';
 
 // Enregistrer la locale française

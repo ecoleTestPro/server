@@ -10,5 +10,5 @@ const cardDivVariants = {
 
 export const motionVariants = {
     sectionVariants,
-    cardDivVariants
-}
+    cardDivVariants,
+};

@@ -83,7 +83,10 @@ export default function AboutUsServices() {
                                     data-aos-offset="50"
                                 >
                                     {services.map((service, index) => (
-                                        <div key={index} className="space-y-4 p-4 bg-white/50 dark:bg-gray-800/50 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300">
+                                        <div
+                                            key={index}
+                                            className="space-y-4 p-4 bg-white/50 dark:bg-gray-800/50 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300"
+                                        >
                                             <div className="text-2xl text-secondary">
                                                 <i className="flaticon-experts" />
                                             </div>
@@ -107,7 +110,9 @@ export default function AboutUsServices() {
                                                             </Link>
                                                         </strong>
                                                     </p>
-                                                    {item.description && <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">{item.description}</p>}
+                                                    {item.description && (
+                                                        <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">{item.description}</p>
+                                                    )}
                                                 </div>
                                             ))}
                                         </div>

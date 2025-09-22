@@ -1,17 +1,17 @@
+import TestimonialDataTable from '@/components/testimonials/testimonialDataTable';
+import TestimonialForm from '@/components/testimonials/testimonialForm';
+import { ConfirmDialog } from '@/components/ui/confirmDialog';
+import Drawer from '@/components/ui/drawer';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import AppLayout from '@/layouts/dashboard/app-layout';
 import { SharedData, type BreadcrumbItem } from '@/types';
+import { ITestimonial } from '@/types/testimonial';
 import { Head, router, usePage } from '@inertiajs/react';
+import axios from 'axios';
+import { CirclePlus, HelpCircle, Info, MessageSquareQuote } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import TestimonialForm from '@/components/testimonials/testimonialForm';
-import { MessageSquareQuote, HelpCircle, Info, CirclePlus } from 'lucide-react';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import Drawer from '@/components/ui/drawer';
-import axios from 'axios';
-import TestimonialDataTable from '@/components/testimonials/testimonialDataTable';
-import { ITestimonial } from '@/types/testimonial';
-import { ConfirmDialog } from '@/components/ui/confirmDialog';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -57,17 +57,15 @@ export default function DashboardTestimonial() {
     const handleToggle = async (row: ITestimonial) => {
         try {
             const response = await axios.post(route('dashboard.testimonial.toggle', row.id));
-            
+
             if (response.data.success) {
                 toast.success(response.data.message);
-                
+
                 // Mettre à jour l'état local du témoignage
-                setTestimonials(prevTestimonials => 
-                    prevTestimonials.map(testimonial => 
-                        testimonial.id === row.id 
-                            ? { ...testimonial, is_active: response.data.is_active }
-                            : testimonial
-                    )
+                setTestimonials((prevTestimonials) =>
+                    prevTestimonials.map((testimonial) =>
+                        testimonial.id === row.id ? { ...testimonial, is_active: response.data.is_active } : testimonial,
+                    ),
                 );
             }
         } catch (error) {
@@ -97,26 +95,25 @@ export default function DashboardTestimonial() {
                                     </TooltipTrigger>
                                     <TooltipContent>
                                         <p className="max-w-xs">
-                                            Collectez et gérez les retours de vos clients. Les témoignages
-                                            renforcent votre crédibilité et aident à convaincre de nouveaux prospects.
+                                            Collectez et gérez les retours de vos clients. Les témoignages renforcent votre crédibilité et aident à
+                                            convaincre de nouveaux prospects.
                                         </p>
                                     </TooltipContent>
                                 </Tooltip>
                             </div>
                             <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-4">
-                                Cette section vous permet de collecter et afficher les avis de vos clients satisfaits. 
-                                Les témoignages sont un élément clé pour établir la confiance avec vos prospects. 
-                                Ajoutez les retours positifs de vos clients avec leur nom, poste et commentaire 
-                                pour les afficher sur votre site web et renforcer votre crédibilité.
+                                Cette section vous permet de collecter et afficher les avis de vos clients satisfaits. Les témoignages sont un élément
+                                clé pour établir la confiance avec vos prospects. Ajoutez les retours positifs de vos clients avec leur nom, poste et
+                                commentaire pour les afficher sur votre site web et renforcer votre crédibilité.
                             </p>
                             <div className="flex flex-wrap gap-4 text-xs text-gray-500">
                                 <div className="flex items-center gap-1">
                                     <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                                    <span>Actifs : {testimonials.filter(t => t.is_active).length}</span>
+                                    <span>Actifs : {testimonials.filter((t) => t.is_active).length}</span>
                                 </div>
                                 <div className="flex items-center gap-1">
                                     <div className="w-2 h-2 bg-gray-400 rounded-full"></div>
-                                    <span>Inactifs : {testimonials.filter(t => !t.is_active).length}</span>
+                                    <span>Inactifs : {testimonials.filter((t) => !t.is_active).length}</span>
                                 </div>
                                 <div className="flex items-center gap-1">
                                     <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
@@ -127,14 +124,16 @@ export default function DashboardTestimonial() {
                         <div className="flex flex-col items-end gap-3 flex-shrink-0">
                             <div className="flex items-center gap-2 text-sm text-gray-500">
                                 <Info className="h-4 w-4" />
-                                <span>{testimonials.length} témoignage{testimonials.length > 1 ? 's' : ''}</span>
+                                <span>
+                                    {testimonials.length} témoignage{testimonials.length > 1 ? 's' : ''}
+                                </span>
                             </div>
                             <Tooltip>
                                 <TooltipTrigger asChild>
-                                    <button 
-                                        className="bg-primary hover:bg-primary/90 text-primary-foreground p-3 rounded-lg transition-colors flex items-center gap-2" 
+                                    <button
+                                        className="bg-primary hover:bg-primary/90 text-primary-foreground p-3 rounded-lg transition-colors flex items-center gap-2"
                                         onClick={() => setOpenForm(true)}
-                                        aria-label={t('Add testimonial', "Ajouter un témoignage")}
+                                        aria-label={t('Add testimonial', 'Ajouter un témoignage')}
                                     >
                                         <CirclePlus className="h-5 w-5" />
                                         <span className="hidden sm:inline">Nouveau témoignage</span>
@@ -148,14 +147,14 @@ export default function DashboardTestimonial() {
                     </div>
                 </div>
 
-                <Drawer 
-                    title={t('Testimonial', "Témoignage")} 
-                    open={openForm} 
+                <Drawer
+                    title={t('Testimonial', 'Témoignage')}
+                    open={openForm}
                     setOpen={(o) => {
                         setOpenForm(o);
                         if (!o) setSelected(undefined);
-                    }} 
-                    component={<TestimonialForm closeDrawer={() => setOpenForm(false)} initialData={selected} />} 
+                    }}
+                    component={<TestimonialForm closeDrawer={() => setOpenForm(false)} initialData={selected} />}
                 />
 
                 <ConfirmDialog

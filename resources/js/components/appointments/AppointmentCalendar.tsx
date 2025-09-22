@@ -5,12 +5,12 @@ import { Label } from '@/components/ui/label';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import axios from 'axios';
+import { fr } from 'date-fns/locale';
 import { AnimatePresence, motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight, Calendar, CalendarDays, CheckCircle, Clock, HelpCircle, Info, Mail, MessageSquare, Phone, User } from 'lucide-react';
 import React, { useRef, useState } from 'react';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { fr } from 'date-fns/locale';
 import toast from 'react-hot-toast';
 
 // Enregistrer la locale française
@@ -74,11 +74,31 @@ const AppointmentCalendar: React.FC = () => {
 
     const durations = [
         { value: 15, label: '15 min', description: 'Question rapide', color: 'bg-blue-100 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400' },
-        { value: 30, label: '30 min', description: 'Consultation standard', color: 'bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-400' },
-        { value: 45, label: '45 min', description: 'Entretien approfondi', color: 'bg-purple-100 text-purple-700 dark:bg-purple-900/20 dark:text-purple-400' },
-        { value: 60, label: '1h', description: 'Rendez-vous détaillé', color: 'bg-orange-100 text-orange-700 dark:bg-orange-900/20 dark:text-orange-400' },
+        {
+            value: 30,
+            label: '30 min',
+            description: 'Consultation standard',
+            color: 'bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-400',
+        },
+        {
+            value: 45,
+            label: '45 min',
+            description: 'Entretien approfondi',
+            color: 'bg-purple-100 text-purple-700 dark:bg-purple-900/20 dark:text-purple-400',
+        },
+        {
+            value: 60,
+            label: '1h',
+            description: 'Rendez-vous détaillé',
+            color: 'bg-orange-100 text-orange-700 dark:bg-orange-900/20 dark:text-orange-400',
+        },
         { value: 90, label: '1h30', description: 'Session complète', color: 'bg-pink-100 text-pink-700 dark:bg-pink-900/20 dark:text-pink-400' },
-        { value: 120, label: '2h', description: 'Accompagnement personnalisé', color: 'bg-red-100 text-red-700 dark:bg-red-900/20 dark:text-red-400' },
+        {
+            value: 120,
+            label: '2h',
+            description: 'Accompagnement personnalisé',
+            color: 'bg-red-100 text-red-700 dark:bg-red-900/20 dark:text-red-400',
+        },
     ];
 
     // Gérer la sélection de date
@@ -153,20 +173,24 @@ const AppointmentCalendar: React.FC = () => {
 
         setSubmitting(true);
         try {
-            await axios.post(route('appointments.store'), {
-                title: form.title || `Rendez-vous de ${form.client_name}`,
-                description: form.description,
-                appointment_date: form.appointment_date,
-                duration: form.duration,
-                client_email: form.client_email,
-                client_phone: form.client_phone,
-                client_name: form.client_name,
-            }, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+            await axios.post(
+                route('appointments.store'),
+                {
+                    title: form.title || `Rendez-vous de ${form.client_name}`,
+                    description: form.description,
+                    appointment_date: form.appointment_date,
+                    duration: form.duration,
+                    client_email: form.client_email,
+                    client_phone: form.client_phone,
+                    client_name: form.client_name,
                 },
-            });
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+                    },
+                },
+            );
 
             toast.success('Rendez-vous confirmé ! Vous recevrez une confirmation par email.');
             setStep('confirmation');
@@ -388,7 +412,10 @@ const AppointmentCalendar: React.FC = () => {
                                                     </div>
                                                 ) : showTimeSlots ? (
                                                     <>
-                                                        <motion.div className="flex items-center justify-center gap-3 mb-2" whileHover={{ scale: 1.02 }}>
+                                                        <motion.div
+                                                            className="flex items-center justify-center gap-3 mb-2"
+                                                            whileHover={{ scale: 1.02 }}
+                                                        >
                                                             <div className="p-2 bg-teal-100 dark:bg-teal-900/20 rounded-lg">
                                                                 <Clock className="w-6 h-6 text-teal-600" />
                                                             </div>
@@ -531,9 +558,7 @@ const AppointmentCalendar: React.FC = () => {
                                         <MessageSquare className="w-6 h-6 text-teal-600" />
                                         Détails du rendez-vous
                                     </CardTitle>
-                                    <CardDescription>
-                                        Remplissez vos informations pour confirmer votre rendez-vous
-                                    </CardDescription>
+                                    <CardDescription>Remplissez vos informations pour confirmer votre rendez-vous</CardDescription>
                                 </CardHeader>
                                 <CardContent>
                                     <form onSubmit={handleSubmit} className="space-y-8">
@@ -844,7 +869,8 @@ const AppointmentCalendar: React.FC = () => {
                                             <div className="text-left">
                                                 <p className="text-blue-900 dark:text-blue-100 font-medium">Email de confirmation envoyé</p>
                                                 <p className="text-blue-700 dark:text-blue-300 text-sm mt-1">
-                                                    Un email a été envoyé à <strong>{form.client_email}</strong> avec tous les détails de votre rendez-vous.
+                                                    Un email a été envoyé à <strong>{form.client_email}</strong> avec tous les détails de votre
+                                                    rendez-vous.
                                                 </p>
                                             </div>
                                         </div>

@@ -19,17 +19,17 @@ interface CEOQuoteSectionProps {
 
 /**
  * Composant de la section citation du directeur général
- * 
+ *
  * @component
  * @description Section présentant une citation inspirante du CEO avec sa photo.
  * Layout responsive en deux colonnes avec citation mise en valeur et profil du dirigeant.
  */
 export default function CEOQuoteSection({
-    ceoImage = "assets/images/teams/02.png",
-    ceoName = "CEO",
-    ceoTitle = "Alexis NANA",
+    ceoImage = 'assets/images/teams/02.png',
+    ceoName = 'CEO',
+    ceoTitle = 'Alexis NANA',
     quote = "Dans l'économie numérique, la confiance se construit par la qualité. Et la qualité commence par les tests.",
-    companyName = "CEO TestPro"
+    companyName = 'CEO TestPro',
     // CONSULTANT SÉNIOR TESTING EXPERT TOSCA
 }: CEOQuoteSectionProps) {
     return (
@@ -50,9 +50,7 @@ export default function CEOQuoteSection({
                                 <div className="flex items-center h-full">
                                     <div>
                                         {/* Citation mise en évidence */}
-                                        <blockquote className="leading-relaxed text-xl md:text-2xl lg:text-3xl font-medium">
-                                            « {quote} »
-                                        </blockquote>
+                                        <blockquote className="leading-relaxed text-xl md:text-2xl lg:text-3xl font-medium">« {quote} »</blockquote>
                                     </div>
                                 </div>
                             </div>
@@ -60,19 +58,11 @@ export default function CEOQuoteSection({
                             {/* Section Profil CEO - 2/5 de l'espace */}
                             <div className="col-span-1 md:col-span-2 text-center">
                                 {/* Photo du CEO */}
-                                <img
-                                    src={ceoImage}
-                                    alt={`Photo de ${ceoName}`}
-                                    className="mx-auto h-52 w-52  rounded-full object-cover shadow-lg"
-                                />
-                                
+                                <img src={ceoImage} alt={`Photo de ${ceoName}`} className="mx-auto h-52 w-52  rounded-full object-cover shadow-lg" />
+
                                 {/* Informations du CEO */}
-                                <p className="mt-4 font-semibold text-lg">
-                                    {ceoTitle}
-                                </p>
-                                <p className="text-gray-600 dark:text-gray-400">
-                                    {companyName}
-                                </p>
+                                <p className="mt-4 font-semibold text-lg">{ceoTitle}</p>
+                                <p className="text-gray-600 dark:text-gray-400">{companyName}</p>
                             </div>
                         </div>
                     </motion.div>
@@ -90,7 +80,7 @@ export default function CEOQuoteSection({
                             >
                                 <img src="assets/images/front-pages/shape1.png" alt="shape1" width={530} height={530} />
                             </motion.div>
-                            
+
                             {/* Forme décorative 2 */}
                             <motion.div
                                 className="absolute -bottom-[30px] -z-[1] blur-[125px] ltr:right-[20px] rtl:left-[20px]"

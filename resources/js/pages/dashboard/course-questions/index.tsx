@@ -6,11 +6,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/dashboard/app-layout';
 import { SharedData, type BreadcrumbItem } from '@/types';
-import { ICourse, ICourseCategory } from '@/types/course';
+import { ICourse } from '@/types/course';
 import { Logger } from '@/utils/console.util';
-import { Head, router, usePage } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';
 import axios from 'axios';
-import { Calendar, CheckCircle, Eye, ExternalLink, HelpCircle, Mail, MessageSquare, Reply, Search, Trash2, User, XCircle } from 'lucide-react';
+import { Calendar, CheckCircle, ExternalLink, HelpCircle, Mail, MessageSquare, Reply, Search, Trash2, User, XCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -83,7 +83,7 @@ export default function CourseQuestionsIndex() {
             }
 
             const response = await axios.get(`${route('dashboard.course-questions.index')}?${params}`);
-            
+
             if (response.data.success) {
                 setQuestions(response.data.data);
                 Logger.log('Questions fetched successfully', response.data.data);
@@ -134,7 +134,7 @@ export default function CourseQuestionsIndex() {
 
         try {
             const response = await axios.delete(route('dashboard.course-questions.delete', questionId));
-            
+
             if (response.data.success) {
                 toast.success('Question supprimée avec succès');
                 fetchQuestions(questions?.current_page || 1);
@@ -173,7 +173,7 @@ export default function CourseQuestionsIndex() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Questions sur les cours" />
-            
+
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border dark:border-gray-700">
                     {/* Header */}
@@ -191,9 +191,7 @@ export default function CourseQuestionsIndex() {
                                 </p>
                             </div>
                             <div className="text-right">
-                                <div className="text-2xl font-bold text-emerald-600">
-                                    {questions?.total || 0}
-                                </div>
+                                <div className="text-2xl font-bold text-emerald-600">{questions?.total || 0}</div>
                                 <div className="text-sm text-gray-500">Question{(questions?.total || 0) > 1 ? 's' : ''} au total</div>
                             </div>
                         </div>
@@ -214,7 +212,7 @@ export default function CourseQuestionsIndex() {
                                     />
                                 </div>
                             </div>
-                            
+
                             <div className="w-full sm:w-48">
                                 <Label className="text-sm font-medium">Statut</Label>
                                 <Select value={statusFilter} onValueChange={setStatusFilter}>
@@ -241,20 +239,13 @@ export default function CourseQuestionsIndex() {
                         ) : !questions || questions.data.length === 0 ? (
                             <div className="text-center py-12">
                                 <HelpCircle className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                                <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-                                    Aucune question
-                                </h3>
-                                <p className="text-gray-500">
-                                    Aucune question n'a encore été posée sur vos formations.
-                                </p>
+                                <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">Aucune question</h3>
+                                <p className="text-gray-500">Aucune question n'a encore été posée sur vos formations.</p>
                             </div>
                         ) : (
                             <div className="space-y-4">
                                 {questions.data.map((question) => (
-                                    <div
-                                        key={question.id}
-                                        className="border dark:border-gray-700 rounded-lg p-4 hover:shadow-md transition-shadow"
-                                    >
+                                    <div key={question.id} className="border dark:border-gray-700 rounded-lg p-4 hover:shadow-md transition-shadow">
                                         <div className="flex items-start justify-between mb-3">
                                             <div className="flex items-center gap-3">
                                                 <div className="w-10 h-10 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
@@ -269,9 +260,7 @@ export default function CourseQuestionsIndex() {
                                                             <Mail className="w-3 h-3" />
                                                             {question.email}
                                                         </span>
-                                                        {question.company && (
-                                                            <span>• {question.company}</span>
-                                                        )}
+                                                        {question.company && <span>• {question.company}</span>}
                                                         <span className="flex items-center gap-1">
                                                             <Calendar className="w-3 h-3" />
                                                             {formatDate(question.created_at)}
@@ -279,9 +268,7 @@ export default function CourseQuestionsIndex() {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="flex items-center gap-2">
-                                                {getStatusBadge(question)}
-                                            </div>
+                                            <div className="flex items-center gap-2">{getStatusBadge(question)}</div>
                                         </div>
 
                                         <div className="mb-3">
@@ -311,9 +298,7 @@ export default function CourseQuestionsIndex() {
                                                         Réponse (le {formatDate(question.answered_at!)})
                                                     </span>
                                                 </div>
-                                                <p className="text-green-800 dark:text-green-200">
-                                                    {question.admin_response}
-                                                </p>
+                                                <p className="text-green-800 dark:text-green-200">{question.admin_response}</p>
                                             </div>
                                         )}
 
@@ -373,17 +358,15 @@ export default function CourseQuestionsIndex() {
                                 <Reply className="w-5 h-5 text-emerald-600" />
                                 Répondre à la question
                             </h3>
-                            <p className="text-gray-600 dark:text-gray-300 mt-1">
-                                Formation: {selectedQuestion.course.title}
-                            </p>
+                            <p className="text-gray-600 dark:text-gray-300 mt-1">Formation: {selectedQuestion.course.title}</p>
                         </div>
 
                         <div className="p-6">
                             <div className="mb-4">
-                                <Label className="text-sm font-medium">Question de {selectedQuestion.first_name} {selectedQuestion.last_name}</Label>
-                                <div className="mt-2 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                                    {selectedQuestion.message}
-                                </div>
+                                <Label className="text-sm font-medium">
+                                    Question de {selectedQuestion.first_name} {selectedQuestion.last_name}
+                                </Label>
+                                <div className="mt-2 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">{selectedQuestion.message}</div>
                             </div>
 
                             <div className="mb-6">

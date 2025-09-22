@@ -71,7 +71,7 @@ export default function CourseDetailOverview({ course }: CourseDetailOverviewPro
                 {course.attachment && (
                     <li className={liClassName}>
                         <Files className="size-6 mr-1" />
-                        {t('COURSE.ATTACHMENT', 'Documents')} : <p >{course.attachment}</p>
+                        {t('COURSE.ATTACHMENT', 'Documents')} : <p>{course.attachment}</p>
                     </li>
                 )}
             </ul>

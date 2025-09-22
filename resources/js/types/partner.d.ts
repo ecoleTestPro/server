@@ -1,4 +1,4 @@
-import { IMedia } from "./course";
+import { IMedia } from './course';
 
 export interface IPartner {
     id?: number;

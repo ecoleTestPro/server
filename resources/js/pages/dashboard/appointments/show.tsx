@@ -6,58 +6,45 @@ import AppLayout from '@/layouts/dashboard/app-layout';
 import { cn } from '@/lib/utils';
 import { Appointment } from '@/types';
 import { Head, router } from '@inertiajs/react';
-import { 
-    AlertCircle, 
-    ArrowLeft, 
-    Calendar, 
-    CheckCircle, 
-    Clock, 
-    Edit, 
-    Mail, 
-    MessageSquare, 
-    Phone, 
-    Tag, 
-    User, 
-    XCircle 
-} from 'lucide-react';
+import { AlertCircle, ArrowLeft, Calendar, CheckCircle, Clock, Mail, MessageSquare, Phone, Tag, User, XCircle } from 'lucide-react';
 
 interface Props {
     appointment: Appointment;
 }
 
 const statusConfig = {
-    pending: { 
-        label: 'En attente', 
-        color: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400', 
+    pending: {
+        label: 'En attente',
+        color: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400',
         icon: AlertCircle,
-        description: 'Le rendez-vous est en attente de confirmation'
+        description: 'Le rendez-vous est en attente de confirmation',
     },
-    confirmed: { 
-        label: 'Confirmé', 
-        color: 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400', 
+    confirmed: {
+        label: 'Confirmé',
+        color: 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400',
         icon: CheckCircle,
-        description: 'Le rendez-vous a été confirmé'
+        description: 'Le rendez-vous a été confirmé',
     },
-    completed: { 
-        label: 'Terminé', 
-        color: 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400', 
+    completed: {
+        label: 'Terminé',
+        color: 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400',
         icon: CheckCircle,
-        description: 'Le rendez-vous s\'est déroulé avec succès'
+        description: "Le rendez-vous s'est déroulé avec succès",
     },
-    cancelled: { 
-        label: 'Annulé', 
-        color: 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400', 
+    cancelled: {
+        label: 'Annulé',
+        color: 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400',
         icon: XCircle,
-        description: 'Le rendez-vous a été annulé'
+        description: 'Le rendez-vous a été annulé',
     },
 };
 
 const typeLabels = {
     consultation: 'Consultation',
-    information: 'Demande d\'information',
+    information: "Demande d'information",
     support: 'Support technique',
     enrollment: 'Inscription formation',
-    other: 'Autre'
+    other: 'Autre',
 };
 
 export default function AppointmentShow({ appointment }: Props) {
@@ -80,14 +67,18 @@ export default function AppointmentShow({ appointment }: Props) {
     };
 
     const handleStatusChange = (newStatus: string) => {
-        router.put(`/admin/appointments/${appointment.id}/status`, {
-            status: newStatus
-        }, {
-            preserveState: true,
-            onSuccess: () => {
-                // Success message will be handled by flash message
-            }
-        });
+        router.put(
+            `/admin/appointments/${appointment.id}/status`,
+            {
+                status: newStatus,
+            },
+            {
+                preserveState: true,
+                onSuccess: () => {
+                    // Success message will be handled by flash message
+                },
+            },
+        );
     };
 
     const statusInfo = statusConfig[appointment.status as keyof typeof statusConfig];
@@ -101,50 +92,32 @@ export default function AppointmentShow({ appointment }: Props) {
                 {/* Header */}
                 <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-4">
-                        <Button 
-                            variant="ghost" 
-                            size="sm"
-                            onClick={() => router.visit('/admin/appointments')}
-                            className="flex items-center space-x-2"
-                        >
+                        <Button variant="ghost" size="sm" onClick={() => router.visit('/admin/appointments')} className="flex items-center space-x-2">
                             <ArrowLeft className="w-4 h-4" />
                             <span>Retour à la liste</span>
                         </Button>
                         <div className="h-6 w-px bg-gray-300 dark:bg-gray-600"></div>
                         <div>
-                            <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
-                                Détails du rendez-vous
-                            </h1>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">
-                                ID: #{appointment.id}
-                            </p>
+                            <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">Détails du rendez-vous</h1>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">ID: #{appointment.id}</p>
                         </div>
                     </div>
 
                     <div className="flex items-center space-x-3">
                         {appointment.status === 'pending' && (
-                            <Button
-                                onClick={() => handleStatusChange('confirmed')}
-                                className="bg-green-600 hover:bg-green-700"
-                            >
+                            <Button onClick={() => handleStatusChange('confirmed')} className="bg-green-600 hover:bg-green-700">
                                 <CheckCircle className="w-4 h-4 mr-2" />
                                 Confirmer
                             </Button>
                         )}
                         {appointment.status === 'confirmed' && (
-                            <Button
-                                onClick={() => handleStatusChange('completed')}
-                                className="bg-blue-600 hover:bg-blue-700"
-                            >
+                            <Button onClick={() => handleStatusChange('completed')} className="bg-blue-600 hover:bg-blue-700">
                                 <CheckCircle className="w-4 h-4 mr-2" />
                                 Marquer terminé
                             </Button>
                         )}
                         {(appointment.status === 'pending' || appointment.status === 'confirmed') && (
-                            <Button
-                                onClick={() => handleStatusChange('cancelled')}
-                                variant="destructive"
-                            >
+                            <Button onClick={() => handleStatusChange('cancelled')} variant="destructive">
                                 <XCircle className="w-4 h-4 mr-2" />
                                 Annuler
                             </Button>
@@ -166,17 +139,13 @@ export default function AppointmentShow({ appointment }: Props) {
                             <CardContent className="space-y-4">
                                 <div>
                                     <label className="text-sm font-medium text-gray-500 dark:text-gray-400">Titre</label>
-                                    <p className="text-lg font-medium text-gray-900 dark:text-white mt-1">
-                                        {appointment.title}
-                                    </p>
+                                    <p className="text-lg font-medium text-gray-900 dark:text-white mt-1">{appointment.title}</p>
                                 </div>
 
                                 {appointment.description && (
                                     <div>
                                         <label className="text-sm font-medium text-gray-500 dark:text-gray-400">Description</label>
-                                        <p className="text-gray-700 dark:text-gray-300 mt-1 leading-relaxed">
-                                            {appointment.description}
-                                        </p>
+                                        <p className="text-gray-700 dark:text-gray-300 mt-1 leading-relaxed">{appointment.description}</p>
                                     </div>
                                 )}
 
@@ -185,9 +154,7 @@ export default function AppointmentShow({ appointment }: Props) {
                                         <label className="text-sm font-medium text-gray-500 dark:text-gray-400">Date et heure</label>
                                         <div className="flex items-center space-x-2 mt-1">
                                             <Calendar className="w-4 h-4 text-gray-400" />
-                                            <span className="text-gray-900 dark:text-white">
-                                                {formatDate(appointment.appointment_date)}
-                                            </span>
+                                            <span className="text-gray-900 dark:text-white">{formatDate(appointment.appointment_date)}</span>
                                         </div>
                                     </div>
 
@@ -195,9 +162,7 @@ export default function AppointmentShow({ appointment }: Props) {
                                         <label className="text-sm font-medium text-gray-500 dark:text-gray-400">Durée</label>
                                         <div className="flex items-center space-x-2 mt-1">
                                             <Clock className="w-4 h-4 text-gray-400" />
-                                            <span className="text-gray-900 dark:text-white">
-                                                {formatDuration(appointment.duration)}
-                                            </span>
+                                            <span className="text-gray-900 dark:text-white">{formatDuration(appointment.duration)}</span>
                                         </div>
                                     </div>
 
@@ -244,9 +209,7 @@ export default function AppointmentShow({ appointment }: Props) {
                                     <User className="w-5 h-5" />
                                     <span>Informations client</span>
                                 </CardTitle>
-                                <CardDescription>
-                                    Coordonnées et informations de contact
-                                </CardDescription>
+                                <CardDescription>Coordonnées et informations de contact</CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 {appointment.user ? (
@@ -254,20 +217,14 @@ export default function AppointmentShow({ appointment }: Props) {
                                         <label className="text-sm font-medium text-gray-500 dark:text-gray-400">Utilisateur enregistré</label>
                                         <div className="flex items-center space-x-2 mt-1">
                                             <User className="w-4 h-4 text-green-600" />
-                                            <span className="text-gray-900 dark:text-white font-medium">
-                                                {appointment.user.name}
-                                            </span>
+                                            <span className="text-gray-900 dark:text-white font-medium">{appointment.user.name}</span>
                                         </div>
-                                        <p className="text-sm text-gray-500 mt-1">
-                                            {appointment.user.email}
-                                        </p>
+                                        <p className="text-sm text-gray-500 mt-1">{appointment.user.email}</p>
                                     </div>
                                 ) : (
                                     <div>
                                         <label className="text-sm font-medium text-gray-500 dark:text-gray-400">Client invité</label>
-                                        <p className="text-sm text-orange-600 dark:text-orange-400 mt-1">
-                                            Non enregistré sur la plateforme
-                                        </p>
+                                        <p className="text-sm text-orange-600 dark:text-orange-400 mt-1">Non enregistré sur la plateforme</p>
                                     </div>
                                 )}
 
@@ -276,7 +233,7 @@ export default function AppointmentShow({ appointment }: Props) {
                                         <label className="text-sm font-medium text-gray-500 dark:text-gray-400">Email</label>
                                         <div className="flex items-center space-x-2 mt-1">
                                             <Mail className="w-4 h-4 text-gray-400" />
-                                            <a 
+                                            <a
                                                 href={`mailto:${appointment.client_email}`}
                                                 className="text-teal-600 hover:text-teal-700 dark:text-teal-400"
                                             >
@@ -291,7 +248,7 @@ export default function AppointmentShow({ appointment }: Props) {
                                         <label className="text-sm font-medium text-gray-500 dark:text-gray-400">Téléphone</label>
                                         <div className="flex items-center space-x-2 mt-1">
                                             <Phone className="w-4 h-4 text-gray-400" />
-                                            <a 
+                                            <a
                                                 href={`tel:${appointment.client_phone}`}
                                                 className="text-teal-600 hover:text-teal-700 dark:text-teal-400"
                                             >
@@ -320,7 +277,7 @@ export default function AppointmentShow({ appointment }: Props) {
                                             month: 'long',
                                             year: 'numeric',
                                             hour: '2-digit',
-                                            minute: '2-digit'
+                                            minute: '2-digit',
                                         })}
                                     </p>
                                 </div>
@@ -334,7 +291,7 @@ export default function AppointmentShow({ appointment }: Props) {
                                                 month: 'long',
                                                 year: 'numeric',
                                                 hour: '2-digit',
-                                                minute: '2-digit'
+                                                minute: '2-digit',
                                             })}
                                         </p>
                                     </div>

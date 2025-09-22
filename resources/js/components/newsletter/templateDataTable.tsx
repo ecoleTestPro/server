@@ -1,8 +1,8 @@
+import { INewsletterTemplate } from '@/types/newsletterTemplate';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, Trash2 } from 'lucide-react';
-import { DataTable } from '../ui/dataTable';
 import { Button } from '../ui/button/button';
-import { INewsletterTemplate } from '@/types/newsletterTemplate';
+import { DataTable } from '../ui/dataTable';
 
 interface Props {
     templates: INewsletterTemplate[];

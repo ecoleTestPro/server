@@ -1,15 +1,13 @@
 import Hero, { IHeroBreadcrumbItems } from '@/components/hero/hearo';
+import ReferenceLogos from '@/components/references/ReferenceLogos';
 import TitleBadgeOne from '@/components/ui/badge-one';
 import CardOne, { StaticFeatureItem } from '@/components/ui/card/card-one';
 import PrevNextPage, { IPrevNextPage } from '@/components/ui/prev-next-page';
 import { CLASS_NAME } from '@/data/styles/style.constant';
 import DefaultLayout from '@/layouts/public/front.layout';
-import { type SharedData } from '@/types';
 import { motionVariants } from '@/utils/motion.util';
 import { ROUTE_MAP } from '@/utils/route.util';
-import { Link, usePage } from '@inertiajs/react';
-import ReferenceLogos from '@/components/references/ReferenceLogos';
-import { IPartner } from '@/types/partner';
+import { Link } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 
@@ -180,7 +178,7 @@ export default function ConsultingAudit() {
 
                 <BlockTwo />
 
-                <ReferenceLogos tag='audit-conseil' />
+                <ReferenceLogos tag="audit-conseil" />
 
                 <PrevNextPage pages={prevNextPage} />
             </div>

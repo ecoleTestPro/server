@@ -104,7 +104,7 @@ const PublicAppointmentCreate: React.FC<PublicAppointmentCreateProps> = ({ busin
                         Notre équipe est à votre disposition pour répondre à toutes vos questions.
                     </p>
 
-                    <Social variant='two' />
+                    <Social variant="two" />
                 </div>
             </section>
         </DefaultLayout>

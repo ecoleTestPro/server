@@ -1,8 +1,8 @@
+import axios from 'axios';
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import BtnSecondary from '../ui/button/btn-secondary';
-import axios from 'axios';
-import toast from 'react-hot-toast';
 
 export default function NewsletterCTA() {
     const { t } = useTranslation();
@@ -17,7 +17,7 @@ export default function NewsletterCTA() {
                 toast.success(t('newsletter.subscribed', 'Inscription réussie'));
                 setEmail('');
             })
-            .catch(() => toast.error(t('newsletter.error', 'Erreur lors de l\'inscription')));
+            .catch(() => toast.error(t('newsletter.error', "Erreur lors de l'inscription")));
     };
 
     return (

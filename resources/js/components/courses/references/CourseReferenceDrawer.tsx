@@ -89,7 +89,7 @@ export default function CourseReferenceDrawer({ open, setOpen, course, partners,
                 toast.error('Veuillez sélectionner au moins une référence.');
                 return;
             }
-            
+
             // Générer automatiquement le tag si nécessaire
             const autoTag = partnerTags || generateAutoTag(course.slug);
 
@@ -98,17 +98,17 @@ export default function CourseReferenceDrawer({ open, setOpen, course, partners,
                 partner_ids: selectedPartners,
                 reference_tag: autoTag,
             });
-            
+
             toast.success('Références associées avec succès');
             setOpen(false);
-            
+
             // Créer un objet cours mis à jour avec les nouvelles références
             const updatedCourse: ICourse = {
                 ...course,
                 partners: response.data.partners,
-                reference_tag: autoTag
+                reference_tag: autoTag,
             };
-            
+
             if (onSuccess) {
                 onSuccess(updatedCourse);
             }

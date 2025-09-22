@@ -10,7 +10,6 @@ import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ListCourseByCategory } from './ListCourseByCategory';
 import SidebarFilter from './SidebarFilter';
-import { Logger } from '@/utils/console.util';
 
 interface ICoursesIndexProps {
     coursesData?: ICourseCategory[];
@@ -22,7 +21,7 @@ interface ICoursesIndexProps {
 const CoursesIndex = ({ coursesData, showSidebar = false, coursesDataSlice, showViewAllButton }: ICoursesIndexProps) => {
     const { t } = useTranslation();
     const { auth, url } = usePage<SharedData>().props;
-    
+
     // Déterminer si on est sur la page d'accueil
     const isHomePage = url === '/' || url === '/home';
     const shouldShowButton = showViewAllButton !== undefined ? showViewAllButton : isHomePage;
@@ -34,10 +33,10 @@ const CoursesIndex = ({ coursesData, showSidebar = false, coursesDataSlice, show
         }
         return undefined;
     }, [coursesData, coursesDataSlice]);
-    
+
     const [filteredCourses, setFilteredCourses] = useState<ICourseCategory[] | undefined>(courses);
     const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
-    
+
     // Mettre à jour filteredCourses quand courses change
     useEffect(() => {
         setFilteredCourses(courses);
@@ -59,7 +58,6 @@ const CoursesIndex = ({ coursesData, showSidebar = false, coursesDataSlice, show
             setFilteredCourses(newFilteredCourses);
         }
     };
-
 
     // Basculer l'affichage de la barre latérale
     const toggleSidebar = () => {

@@ -1,6 +1,6 @@
 import { ROUTE_MAP } from '@/utils/route.util';
 import { Link } from '@inertiajs/react';
-import { ArrowRight, Clock, Mail, MapPin, MessageCircle, Phone } from 'lucide-react';
+import { ArrowRight, Mail, MapPin, MessageCircle, Phone } from 'lucide-react';
 import { CONTACT_INFO } from '../layouts/footer/footer';
 
 export const TEAMS = [

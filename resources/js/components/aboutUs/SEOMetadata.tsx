@@ -14,7 +14,7 @@ interface SEOMetadataProps {
 
 /**
  * Composant pour les métadonnées SEO de la page À propos
- * 
+ *
  * @component
  * @description Gère toutes les métadonnées pour optimiser le référencement :
  * - Balises meta classiques (title, description, keywords)
@@ -22,116 +22,106 @@ interface SEOMetadataProps {
  * - Twitter Cards
  * - Données structurées JSON-LD pour Google
  */
-export default function SEOMetadata({ 
-    title = "À propos de TestPro - Expert en test logiciel et formations certifiantes ISTQB",
+export default function SEOMetadata({
+    title = 'À propos de TestPro - Expert en test logiciel et formations certifiantes ISTQB',
     description = "Découvrez TestPro, centre de formation certifié GASQ Platinium et agréé FDFP. Spécialisé dans le test logiciel, formations ISTQB, audit qualité et accompagnement digital en Côte d'Ivoire.",
-    canonicalUrl = "https://testpro.ci/about"
+    canonicalUrl = 'https://testpro.ci/about',
 }: SEOMetadataProps) {
-
     /** Données structurées pour l'organisation */
     const organizationSchema = {
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "TestPro",
-        "alternateName": "TestPro Côte d'Ivoire",
-        "description": "Centre de formation spécialisé en test logiciel, certifications ISTQB et transformation digitale",
-        "url": "https://testpro.ci",
-        "logo": "https://testpro.ci/assets/images/logo.png",
-        "image": "https://testpro.ci/assets/images/testpro-about.jpg",
-        "foundingDate": "2020",
-        "founder": {
-            "@type": "Person",
-            "name": "CEO TestPro",
-            "jobTitle": "Directeur Général"
+        '@context': 'https://schema.org',
+        '@type': 'Organization',
+        name: 'TestPro',
+        alternateName: "TestPro Côte d'Ivoire",
+        description: 'Centre de formation spécialisé en test logiciel, certifications ISTQB et transformation digitale',
+        url: 'https://testpro.ci',
+        logo: 'https://testpro.ci/assets/images/logo.png',
+        image: 'https://testpro.ci/assets/images/testpro-about.jpg',
+        foundingDate: '2020',
+        founder: {
+            '@type': 'Person',
+            name: 'CEO TestPro',
+            jobTitle: 'Directeur Général',
         },
-        "address": {
-            "@type": "PostalAddress",
-            "streetAddress": "Cocody",
-            "addressLocality": "Abidjan",
-            "addressCountry": "CI"
+        address: {
+            '@type': 'PostalAddress',
+            streetAddress: 'Cocody',
+            addressLocality: 'Abidjan',
+            addressCountry: 'CI',
         },
-        "contactPoint": [
+        contactPoint: [
             {
-                "@type": "ContactPoint",
-                "telephone": "+225-XX-XX-XX-XX",
-                "contactType": "customer service",
-                "availableLanguage": ["French", "English"]
-            }
+                '@type': 'ContactPoint',
+                telephone: '+225-XX-XX-XX-XX',
+                contactType: 'customer service',
+                availableLanguage: ['French', 'English'],
+            },
         ],
-        "sameAs": [
-            "https://linkedin.com/company/testpro-ci",
-            "https://facebook.com/testpro.ci"
-        ],
-        "areaServed": {
-            "@type": "Place",
-            "name": "Côte d'Ivoire"
+        sameAs: ['https://linkedin.com/company/testpro-ci', 'https://facebook.com/testpro.ci'],
+        areaServed: {
+            '@type': 'Place',
+            name: "Côte d'Ivoire",
         },
-        "serviceType": [
-            "Formation professionnelle",
-            "Test logiciel",
-            "Certification ISTQB",
-            "Audit qualité",
-            "Conseil en transformation digitale"
-        ],
-        "accreditation": [
+        serviceType: ['Formation professionnelle', 'Test logiciel', 'Certification ISTQB', 'Audit qualité', 'Conseil en transformation digitale'],
+        accreditation: [
             {
-                "@type": "Certification",
-                "name": "GASQ Platinium",
-                "certificationBody": "GASQ"
+                '@type': 'Certification',
+                name: 'GASQ Platinium',
+                certificationBody: 'GASQ',
             },
             {
-                "@type": "Certification", 
-                "name": "Agrément FDFP",
-                "certificationBody": "FDFP"
-            }
+                '@type': 'Certification',
+                name: 'Agrément FDFP',
+                certificationBody: 'FDFP',
+            },
         ],
-        "knowsAbout": [
-            "Test logiciel",
-            "ISTQB",
-            "Automatisation des tests",
-            "Assurance qualité",
-            "Formation professionnelle",
-            "Transformation digitale"
-        ]
+        knowsAbout: [
+            'Test logiciel',
+            'ISTQB',
+            'Automatisation des tests',
+            'Assurance qualité',
+            'Formation professionnelle',
+            'Transformation digitale',
+        ],
     };
 
     /** Données structurées pour les services */
     const servicesSchema = {
-        "@context": "https://schema.org",
-        "@type": "Service",
-        "name": "Formation Test Logiciel",
-        "provider": {
-            "@type": "Organization",
-            "name": "TestPro"
+        '@context': 'https://schema.org',
+        '@type': 'Service',
+        name: 'Formation Test Logiciel',
+        provider: {
+            '@type': 'Organization',
+            name: 'TestPro',
         },
-        "serviceType": "Formation professionnelle",
-        "description": "Formations certifiantes en test logiciel, préparation ISTQB, audit qualité et conseils stratégiques",
-        "areaServed": {
-            "@type": "Place",
-            "name": "Côte d'Ivoire"
+        serviceType: 'Formation professionnelle',
+        description: 'Formations certifiantes en test logiciel, préparation ISTQB, audit qualité et conseils stratégiques',
+        areaServed: {
+            '@type': 'Place',
+            name: "Côte d'Ivoire",
         },
-        "hasOfferCatalog": {
-            "@type": "OfferCatalog",
-            "name": "Formations TestPro",
-            "itemListElement": [
+        hasOfferCatalog: {
+            '@type': 'OfferCatalog',
+            name: 'Formations TestPro',
+            itemListElement: [
                 {
-                    "@type": "Offer",
-                    "itemOffered": {
-                        "@type": "Course",
-                        "name": "Formation ISTQB Foundation",
-                        "description": "Formation certifiante ISTQB Foundation Level"
-                    }
+                    '@type': 'Offer',
+                    itemOffered: {
+                        '@type': 'Course',
+                        name: 'Formation ISTQB Foundation',
+                        description: 'Formation certifiante ISTQB Foundation Level',
+                    },
                 },
                 {
-                    "@type": "Offer",
-                    "itemOffered": {
-                        "@type": "Course",
-                        "name": "Automatisation des tests",
-                        "description": "Formation aux outils d'automatisation des tests"
-                    }
-                }
-            ]
-        }
+                    '@type': 'Offer',
+                    itemOffered: {
+                        '@type': 'Course',
+                        name: 'Automatisation des tests',
+                        description: "Formation aux outils d'automatisation des tests",
+                    },
+                },
+            ],
+        },
     };
 
     return (
@@ -139,7 +129,10 @@ export default function SEOMetadata({
             {/* Balises Meta classiques */}
             <title>{title}</title>
             <meta name="description" content={description} />
-            <meta name="keywords" content="TestPro, test logiciel, ISTQB, formation, certification, GASQ, FDFP, Côte d'Ivoire, Abidjan, assurance qualité, automatisation tests, audit qualité, transformation digitale" />
+            <meta
+                name="keywords"
+                content="TestPro, test logiciel, ISTQB, formation, certification, GASQ, FDFP, Côte d'Ivoire, Abidjan, assurance qualité, automatisation tests, audit qualité, transformation digitale"
+            />
             <meta name="author" content="TestPro" />
             <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
             <link rel="canonical" href={canonicalUrl} />
@@ -182,14 +175,8 @@ export default function SEOMetadata({
             <meta name="rating" content="general" />
 
             {/* Données structurées JSON-LD */}
-            <script 
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
-            />
-            <script 
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(servicesSchema) }}
-            />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(servicesSchema) }} />
 
             {/* Balises spécifiques aux moteurs de recherche */}
             <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />

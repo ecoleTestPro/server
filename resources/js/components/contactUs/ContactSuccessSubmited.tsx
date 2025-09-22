@@ -1,9 +1,8 @@
+import { ROUTE_MAP } from '@/utils/route.util';
 import { motion, useAnimation, Variants } from 'framer-motion';
-import { Link } from '@inertiajs/react';
 import { useEffect } from 'react';
 import MotionSection from '../motion/MotionSection';
 import BtnSecondary from '../ui/button/btn-secondary';
-import { ROUTE_MAP } from '@/utils/route.util';
 
 export default function ContactSuccessSubmited() {
     const checkControls = useAnimation();
@@ -70,23 +69,13 @@ export default function ContactSuccessSubmited() {
                     className="relative flex flex-col items-center bg-white items-center dark:bg-gray-800 p-8 rounded-2xl shadow-xl max-w-md w-full transform transition-transform hover:-translate-y-1"
                     variants={childVariants}
                 >
-                    <motion.h2
-                        className="text-3xl font-bold text-center text-gray-800 dark:text-gray-100 mb-4"
-                        variants={childVariants}
-                    >
+                    <motion.h2 className="text-3xl font-bold text-center text-gray-800 dark:text-gray-100 mb-4" variants={childVariants}>
                         Merci pour votre message !
                     </motion.h2>
-                    <motion.p
-                        className="text-center text-gray-600 dark:text-gray-300 mb-6"
-                        variants={childVariants}
-                    >
+                    <motion.p className="text-center text-gray-600 dark:text-gray-300 mb-6" variants={childVariants}>
                         Votre message a été envoyé avec succès. Notre équipe vous contactera sous peu.
                     </motion.p>
-                    <motion.div
-                        className="mb-6"
-                        variants={childVariants}
-                        animate={checkControls}
-                    >
+                    <motion.div className="mb-6" variants={childVariants} animate={checkControls}>
                         <svg
                             className="w-16 h-16 text-green-500"
                             fill="none"
@@ -106,7 +95,7 @@ export default function ContactSuccessSubmited() {
                         </svg>
                     </motion.div>
                     <motion.div variants={childVariants}>
-                       <BtnSecondary className="w-full" label="Retourner sur la page d'accueil" href={ROUTE_MAP.public.home.link} />
+                        <BtnSecondary className="w-full" label="Retourner sur la page d'accueil" href={ROUTE_MAP.public.home.link} />
                     </motion.div>
                 </motion.div>
             </motion.div>

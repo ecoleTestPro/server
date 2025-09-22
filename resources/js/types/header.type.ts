@@ -21,7 +21,6 @@ export interface MenuChildren {
     items: MenuChildItem[];
 }
 
-
 export interface MenuChildItem {
     id: string;
     label: string;

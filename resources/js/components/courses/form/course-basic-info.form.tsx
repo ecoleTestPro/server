@@ -6,7 +6,6 @@ import { Label } from '@/components/ui/label';
 // import { PeriodicityUnitEnum } from '@/types/course';
 import SelectCustom, { ISelectItem } from '@/components/ui/select-custom';
 import { ICourse, ICourseCategory } from '@/types/course';
-import { Logger } from '@/utils/console.util';
 import { getMediaUrl } from '@/utils/utils';
 import { lazy, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -49,20 +48,11 @@ export default function CourseBasicInfoForm({
 }: CourseBasicInfoFormProps) {
     const { t } = useTranslation();
 
-    const thumbnailPreview = useMemo(
-        () => (courseSelected?.media ? [getMediaUrl(courseSelected.media)] : undefined),
-        [courseSelected?.media]
-    );
-    const logoPreview = useMemo(
-        () => (courseSelected?.logo ? [getMediaUrl(courseSelected.logo)] : undefined),
-        [courseSelected?.logo]
-    );
+    const thumbnailPreview = useMemo(() => (courseSelected?.media ? [getMediaUrl(courseSelected.media)] : undefined), [courseSelected?.media]);
+    const logoPreview = useMemo(() => (courseSelected?.logo ? [getMediaUrl(courseSelected.logo)] : undefined), [courseSelected?.logo]);
     const orgLogoPreview = useMemo(
-        () =>
-            courseSelected?.organization_logo
-                ? [getMediaUrl(courseSelected.organization_logo)]
-                : undefined,
-        [courseSelected?.organization_logo]
+        () => (courseSelected?.organization_logo ? [getMediaUrl(courseSelected.organization_logo)] : undefined),
+        [courseSelected?.organization_logo],
     );
 
     const category_list = (): ISelectItem[] => {

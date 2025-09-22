@@ -35,7 +35,6 @@ export default function BlogCard({ blog }: BlogCardProps) {
                         <span className="text-sm text-gray-400">{blog.created_at}</span>
                     </div>
                 </div>
-              
             </div>
         </div>
     );

@@ -1,6 +1,3 @@
-
-
-
 export class Logger {
     static showLog: boolean = true;
 
@@ -11,19 +8,19 @@ export class Logger {
 
     static log(message: string, ...optionalParams: any[]) {
         if (Logger.showLog) {
-            console.log("[LOG] " + message, ...optionalParams);
+            console.log('[LOG] ' + message, ...optionalParams);
         }
     }
 
     static warn(message: string, ...optionalParams: any[]) {
         if (Logger.showLog) {
-            console.warn("[WARN] " + message, ...optionalParams);
+            console.warn('[WARN] ' + message, ...optionalParams);
         }
     }
 
     static error(message: string, ...optionalParams: any[]) {
         if (Logger.showLog) {
-            console.error("[ERROR] " + message, ...optionalParams);
+            console.error('[ERROR] ' + message, ...optionalParams);
         }
     }
 
@@ -36,5 +33,4 @@ export class Logger {
             }
         }
     }
-
 }

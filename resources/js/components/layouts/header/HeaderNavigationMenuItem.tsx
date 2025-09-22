@@ -7,9 +7,9 @@ import {
     NavigationMenuTrigger,
     navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu';
+import { cn } from '@/lib/utils';
 import { IMainMenuItem } from '@/types/header.type';
 import { Link, usePage } from '@inertiajs/react';
-import { cn } from '@/lib/utils';
 import ListItem from './ListItem';
 
 interface HeaderNavigationMenuItemProps {
@@ -152,10 +152,7 @@ export default function HeaderNavigationMenuItem({ menuItem }: HeaderNavigationM
                         </>
                     ) : (
                         /* Si pas d'enfants, on rend un simple lien */
-                        <NavigationMenuLink
-                            asChild
-                            className={cn(navigationMenuTriggerStyle(), isActive && 'border-l-4 border-primary')}
-                        >
+                        <NavigationMenuLink asChild className={cn(navigationMenuTriggerStyle(), isActive && 'border-l-4 border-primary')}>
                             <Link href={menuItem.href || '#'}>{menuItem.label}</Link>
                         </NavigationMenuLink>
                     )}

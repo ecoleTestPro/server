@@ -7,7 +7,9 @@ import { SharedData } from '@/types';
 import { ICourse } from '@/types/course';
 import { IPartner } from '@/types/partner';
 import { ROUTE_MAP } from '@/utils/route.util';
+import { getPeriodicity } from '@/utils/utils';
 import { Link, usePage } from '@inertiajs/react';
+import axios from 'axios';
 import {
     Building2,
     Calendar1,
@@ -26,10 +28,8 @@ import {
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import axios from 'axios';
 import { FaClock, FaMapMarkerAlt } from 'react-icons/fa';
 import './CourseCard.css'; // Link to CSS file
-import { getPeriodicity } from '@/utils/utils';
 
 interface CourseCardProps {
     course: ICourse;
@@ -479,11 +479,11 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onDelete, onCourseUpdat
                     </div>
                 </div>
             </div>
-            <CourseReferenceDrawer 
-                open={openPartnerDrawer} 
-                setOpen={setOpenPartnerDrawer} 
-                course={currentCourse} 
-                partners={partners} 
+            <CourseReferenceDrawer
+                open={openPartnerDrawer}
+                setOpen={setOpenPartnerDrawer}
+                course={currentCourse}
+                partners={partners}
                 onSuccess={handleCourseUpdate}
             />
         </TooltipProvider>
