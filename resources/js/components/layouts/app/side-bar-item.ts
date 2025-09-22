@@ -28,11 +28,11 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
                 href: route('dashboard.category.index'),
                 icon: ListTodo,
             },
-            {
-                title: 'Questions',
-                href: route('dashboard.course-questions.index'),
-                icon: HelpCircle,
-            },
+            // {
+            //     title: 'Questions',
+            //     href: route('dashboard.course-questions.index'),
+            //     icon: HelpCircle,
+            // },
         ],
     },
     // {
