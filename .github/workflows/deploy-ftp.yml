@@ -1,0 +1,175 @@
+name: Deploy to FTP Server
+
+on:
+  push:
+    branches:
+      - main
+      - production
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🔧 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: 📦 Install Node dependencies
+        run: npm ci
+
+      - name: 🏗️ Build frontend assets
+        run: npm run build
+
+      - name: 🔧 Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, xml, ctype, iconv, intl, pdo, pdo_mysql, dom, filter, gd, json, tokenizer
+          coverage: none
+
+      - name: 📦 Install Composer dependencies (production)
+        run: |
+          composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
+          php artisan config:cache
+          php artisan route:cache
+          php artisan view:cache
+
+      - name: 📝 Create manifest copy
+        run: cp public/build/manifest.json public/mix-manifest.json
+
+      - name: 🚀 Deploy via FTP
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          FTP_PATH: ${{ secrets.FTP_PATH }}
+        run: |
+          # Install lftp
+          sudo apt-get update
+          sudo apt-get install -y lftp
+
+          # Create deployment script
+          cat > deploy.sh << 'EOF'
+          #!/bin/bash
+
+          # Configuration
+          EXCLUDE_LIST=(
+            ".git/"
+            ".github/"
+            "node_modules/"
+            "tests/"
+            "storage/app/public/"
+            "storage/framework/cache/data/"
+            "storage/framework/sessions/"
+            "storage/framework/testing/"
+            "storage/framework/views/"
+            "storage/logs/"
+            ".env"
+            ".env.example"
+            ".env.testing"
+            "docker/"
+            "docker-compose.yml"
+            "Dockerfile"
+            ".dockerignore"
+            "*.md"
+            "phpunit.xml"
+            ".editorconfig"
+            ".gitignore"
+            ".gitattributes"
+            "package-lock.json"
+            "composer.lock"
+            "vite.config.ts"
+            "tsconfig.json"
+            "eslint.config.js"
+            ".prettierrc"
+            ".prettierignore"
+            ".vscode/"
+            ".claude/"
+            "build.sh"
+            "start.sh"
+            "Makefile"
+          )
+
+          # Build exclude string for lftp
+          EXCLUDES=""
+          for item in "${EXCLUDE_LIST[@]}"; do
+            EXCLUDES="$EXCLUDES -x $item"
+          done
+
+          # Deploy using lftp with mirror command
+          lftp -e "
+            set ssl:verify-certificate false
+            set ftp:list-options -a
+            set cmd:fail-exit true
+            open ftp://$FTP_USERNAME:$FTP_PASSWORD@$FTP_SERVER
+            mirror --reverse --delete --verbose=1 \
+              --parallel=5 \
+              --exclude-glob .git/ \
+              --exclude-glob node_modules/ \
+              --exclude-glob tests/ \
+              --exclude-glob storage/logs/*.log \
+              --exclude-glob storage/framework/cache/data/* \
+              --exclude-glob storage/framework/sessions/* \
+              --exclude-glob storage/framework/views/* \
+              --exclude .env \
+              --exclude .env.example \
+              --exclude docker-compose.yml \
+              --exclude Dockerfile \
+              --exclude .dockerignore \
+              --exclude build.sh \
+              --exclude start.sh \
+              --exclude vite.config.ts \
+              --exclude tsconfig.json \
+              --exclude composer.lock \
+              --exclude package-lock.json \
+              ./ $FTP_PATH
+            quit
+          "
+          EOF
+
+          chmod +x deploy.sh
+          ./deploy.sh
+
+      - name: 🧹 Clear remote cache (optional)
+        continue-on-error: true
+        run: |
+          # Create PHP script to clear cache
+          cat > clear-cache.php << 'EOF'
+          <?php
+          // Clear Laravel cache
+          $cachePaths = [
+              'bootstrap/cache/*.php',
+              'storage/framework/cache/data/*',
+              'storage/framework/views/*.php',
+              'storage/framework/sessions/*'
+          ];
+
+          foreach ($cachePaths as $path) {
+              $files = glob($path);
+              foreach ($files as $file) {
+                  if (is_file($file) && basename($file) !== '.gitignore') {
+                      unlink($file);
+                  }
+              }
+          }
+
+          echo "Cache cleared successfully!";
+          EOF
+
+          # Upload and execute the script
+          lftp -e "
+            set ssl:verify-certificate false
+            open ftp://$FTP_USERNAME:$FTP_PASSWORD@$FTP_SERVER
+            put clear-cache.php -o $FTP_PATH/clear-cache.php
+            quit
+          "
+
+          # Note: You'll need to execute this script manually via your hosting panel
+          # or create a temporary public route to trigger it
