@@ -140,8 +140,8 @@ export default function PrivacyPolicyPage() {
                             <h2 className="mb-4 text-2xl font-semibold text-gray-900 dark:text-white">12. Nous Contacter</h2>
                             <p className="text-justify text-gray-600 dark:text-gray-300">
                                 Pour toute question concernant ces CGU ou nos services, vous pouvez nous joindre : Par e-mail : info@testpro-group.com
-                                Par téléphone : +225 0706915705 Adresse : TestPro, Siège social: Abidjan – Attécoubé Locodjro, cité Lagoona
-                                City, lot n° GH 23, ilot n°00, 01 BP 5676 ABIDJAN 01
+                                Par téléphone : +225 0706915705 Adresse : TestPro, Siège social: Abidjan – Attécoubé Locodjro, cité Lagoona City, lot
+                                n° GH 23, ilot n°00, 01 BP 5676 ABIDJAN 01
                             </p>
                         </section>
                     </div>

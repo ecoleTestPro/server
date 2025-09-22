@@ -31,7 +31,7 @@ export function HeaderNavTwo({ menu, menuRight, className, isMobile, mobile = fa
     }
 
     const mergeMenu = (): { left: IMainMenuItem[]; right: IMainMenuItem[] } => {
-        let leftInitial: IMainMenuItem[] = [...menu];
+        const leftInitial: IMainMenuItem[] = [...menu];
         let rightInitial: IMainMenuItem[] = [];
 
         if (menuRight && menuRight.length > 0) {

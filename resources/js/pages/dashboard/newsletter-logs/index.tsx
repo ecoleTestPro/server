@@ -1,11 +1,11 @@
+import LogDataTable from '@/components/newsletter/logDataTable';
 import AppLayout from '@/layouts/dashboard/app-layout';
 import { SharedData, type BreadcrumbItem } from '@/types';
+import { INewsletterLog } from '@/types/newsletterLog';
 import { Head, router, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import LogDataTable from '@/components/newsletter/logDataTable';
-import { INewsletterLog } from '@/types/newsletterLog';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -31,11 +31,15 @@ export default function NewsletterLogs() {
     }, [data]);
 
     const handleResend = (log: INewsletterLog) => {
-        router.post(route('dashboard.newsletter-logs.resend', log.id), {}, {
-            onSuccess: () => {
-                toast.success(t('mail.resent', 'Mail renvoyé'));
+        router.post(
+            route('dashboard.newsletter-logs.resend', log.id),
+            {},
+            {
+                onSuccess: () => {
+                    toast.success(t('mail.resent', 'Mail renvoyé'));
+                },
             },
-        });
+        );
     };
 
     return (

@@ -1,5 +1,4 @@
 import { ICourse } from '@/types/course';
-import { formatPrice } from '@/utils/utils';
 import { useTranslation } from 'react-i18next';
 import CourseDetailOverview from '../courses/detail/partial/CourseDetailOverview';
 

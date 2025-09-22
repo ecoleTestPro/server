@@ -121,10 +121,10 @@ export default function DashboardCategory() {
             toast.error('ID de catégorie manquant');
             return;
         }
-        
+
         setIsDeleting(true);
         Logger.log('Deleting category with ID:', categorySelected.id);
-        
+
         router.delete(route('dashboard.category.delete', categorySelected.id), {
             onSuccess: () => {
                 setShowConfirm(false);
@@ -159,9 +159,9 @@ export default function DashboardCategory() {
                     {/* <CourseTable /> */}
                     <CategoryToolBar
                         FormComponent={
-                            <CategoryForm 
-                                closeDrawer={handleCloseCategory} 
-                                initialData={categorySelected} 
+                            <CategoryForm
+                                closeDrawer={handleCloseCategory}
+                                initialData={categorySelected}
                                 isSubcategoryMode={isSubcategoryMode}
                                 parentCategoryId={parentCategoryId}
                                 parentCategoryName={parentCategoryName}

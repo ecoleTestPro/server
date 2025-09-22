@@ -45,7 +45,7 @@ export default function Dashboard() {
      */
     const handleGetAllCourses = () => {
         setLoading(true);
-        
+
         axios
             .get(route('dashboard.course.all'))
             .then((response) => {

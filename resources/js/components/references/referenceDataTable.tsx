@@ -138,7 +138,6 @@ export default function ReferenceDataTable({ references, onEditRow, onDeleteRow,
         },
     ];
 
-
     if (loading) {
         return (
             <div className="space-y-4">

@@ -1,9 +1,6 @@
-import React, { Suspense, useEffect, useState } from 'react';
 import { ApexOptions } from 'apexcharts';
+import React, { Suspense, useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
-
-
-
 
 const SplineAreaChart: React.FC = () => {
     // Chart

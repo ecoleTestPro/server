@@ -7,10 +7,10 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import type { INotificationInstance } from '@/types';
 import axios from 'axios';
 import { Bell } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import type { INotificationInstance } from '@/types';
 import { Button } from '../ui/button/button';
 
 export function NotificationsDropdown() {

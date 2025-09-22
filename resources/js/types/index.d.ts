@@ -47,32 +47,31 @@ export interface User {
     // [key: string]: unknown; // This allows for additional properties...
 }
 
-
 export interface IDataWithPagination<T> {
-    current_page: number,
-    data: T[],
-    first_page_url: string,
-    from: number,
-    last_page: number,
-    last_page_url: string,
+    current_page: number;
+    data: T[];
+    first_page_url: string;
+    from: number;
+    last_page: number;
+    last_page_url: string;
     links: {
-        url: string | null,
-        label: string,
-        active: boolean
-    }[],
-    next_page_url: string | null,
-    path: string,
-    per_page: number,
-    prev_page_url: string | null,
-    to: number,
-    total: number
+        url: string | null;
+        label: string;
+        active: boolean;
+    }[];
+    next_page_url: string | null;
+    path: string;
+    per_page: number;
+    prev_page_url: string | null;
+    to: number;
+    total: number;
 }
 
-export * from './partner';
-export * from './notification';
 export * from './job-offer';
-export * from './newsletterTemplate';
 export * from './newsletterLog';
+export * from './newsletterTemplate';
+export * from './notification';
+export * from './partner';
 
 // Appointment types
 export interface Appointment {

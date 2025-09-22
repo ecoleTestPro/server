@@ -2,9 +2,7 @@ import { ICourseCategory } from '@/types/course';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, ChevronDown, ChevronRight, Folder, FolderOpen, Tag } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import { Badge } from '../ui/badge';
 import { Button } from '../ui/button/button';
-import { Checkbox } from '../ui/checkbox';
 import { DataTable } from '../ui/dataTable';
 import CategoryActionBtn from './categoryActionBtn';
 

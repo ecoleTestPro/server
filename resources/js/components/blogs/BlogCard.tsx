@@ -8,7 +8,7 @@ interface BlogCardProps {
 }
 
 export default function BlogCard({ blog }: BlogCardProps) {
-    const { t } = useTranslation();
+    const { t } = useTranslation(); // eslint-disable-line @typescript-eslint/no-unused-vars
 
     if (!blog) {
         return null;
@@ -35,7 +35,6 @@ export default function BlogCard({ blog }: BlogCardProps) {
                         <span className="text-sm text-gray-400">{blog.created_at}</span>
                     </div>
                 </div>
-              
             </div>
         </div>
     );

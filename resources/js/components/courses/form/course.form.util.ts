@@ -1,5 +1,5 @@
-import { ICourseDescription } from "@/types/course";
-import { Logger } from "@/utils/console.util";
+import { ICourseDescription } from '@/types/course';
+import { Logger } from '@/utils/console.util';
 
 export enum PeriodicityUnitEnum {
     DAY = 'DAY',
@@ -178,8 +178,6 @@ export const COURSE_DEFAULT_VALUES: ICourseForm = {
     video: null,
 };
 
-
-
 export const createPayload = (data: ICourseForm, draft: boolean): ICourseRequest => {
     try {
         const payload: ICourseRequest = {
@@ -206,19 +204,19 @@ export const createPayload = (data: ICourseForm, draft: boolean): ICourseRequest
             periodicity_value: data.periodicity_value || 1,
             price: data.price
                 ? Number(
-                    data.price
-                        .toString()
-                        .replace(/\s/g, '')
-                        .replace(/[^0-9]/g, ''),
-                )
+                      data.price
+                          .toString()
+                          .replace(/\s/g, '')
+                          .replace(/[^0-9]/g, ''),
+                  )
                 : 0,
             regular_price: data.regular_price
                 ? Number(
-                    data.regular_price
-                        .toString()
-                        .replace(/\s/g, '')
-                        .replace(/[^0-9]/g, ''),
-                )
+                      data.regular_price
+                          .toString()
+                          .replace(/\s/g, '')
+                          .replace(/[^0-9]/g, ''),
+                  )
                 : 0,
             title: data.title || '',
             attachment: data.attachment || '',

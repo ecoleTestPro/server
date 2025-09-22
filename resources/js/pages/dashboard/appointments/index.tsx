@@ -1,6 +1,6 @@
 import AppointmentDataTable from '@/components/appointments/AppointmentDataTable';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import AppLayout from '@/layouts/dashboard/app-layout';
 import { Appointment } from '@/types';
@@ -22,11 +22,9 @@ interface Props {
     };
 }
 
-
 export default function AppointmentsIndex({ appointments, filters }: Props) {
     const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-
 
     const formatDuration = (minutes: number) => {
         if (minutes < 60) return `${minutes}min`;
@@ -34,7 +32,6 @@ export default function AppointmentsIndex({ appointments, filters }: Props) {
         const remainingMinutes = minutes % 60;
         return remainingMinutes > 0 ? `${hours}h${remainingMinutes}` : `${hours}h`;
     };
-
 
     const handleViewDetails = (appointment: Appointment) => {
         setSelectedAppointment(appointment);
@@ -53,7 +50,6 @@ export default function AppointmentsIndex({ appointments, filters }: Props) {
             });
         }
     };
-
 
     return (
         <AppLayout>
@@ -87,11 +83,7 @@ export default function AppointmentsIndex({ appointments, filters }: Props) {
                 </div>
 
                 {/* Appointments DataTable */}
-                <AppointmentDataTable
-                    appointments={appointments.data}
-                    onViewDetails={handleViewDetails}
-                    onDelete={handleDelete}
-                />
+                <AppointmentDataTable appointments={appointments.data} onViewDetails={handleViewDetails} onDelete={handleDelete} />
 
                 {/* Modal de détails */}
                 <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
@@ -186,7 +178,6 @@ export default function AppointmentsIndex({ appointments, filters }: Props) {
                                                 </CardDescription>
                                             </CardHeader>
                                             <CardContent className="space-y-3 lg:space-y-4">
-
                                                 {selectedAppointment.client_email && (
                                                     <div>
                                                         <label className="text-xs lg:text-sm font-medium text-gray-500 dark:text-gray-400">

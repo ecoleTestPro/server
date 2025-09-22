@@ -105,24 +105,24 @@ export default function Careers() {
                                 </div>
                             </div>
                             <JobSearchFilters onFilterChange={setFilters} />
-                            <JobList 
-                                applySelected={applySelected} 
-                                setApplySelected={setApplySelected} 
-                                openApplyModal={openApplyModal} 
+                            <JobList
+                                applySelected={applySelected}
+                                setApplySelected={setApplySelected}
+                                openApplyModal={openApplyModal}
                                 setOpenApplyModal={setOpenApplyModal}
                                 detailSelected={detailSelected}
                                 setDetailSelected={setDetailSelected}
                                 openDetailModal={openDetailModal}
                                 setOpenDetailModal={setOpenDetailModal}
-                                jobs={paginatedJobs} 
-                                view={viewMode} 
+                                jobs={paginatedJobs}
+                                view={viewMode}
                             />
                             <JobPagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
                             <JobApplyModal jobId={applySelected || 0} open={openApplyModal} onClose={() => setOpenApplyModal(false)} />
                             {detailSelected && (
-                                <JobDetailModal 
-                                    job={jobs.find(j => j.id === detailSelected) || {} as IJobOffer}
-                                    open={openDetailModal} 
+                                <JobDetailModal
+                                    job={jobs.find((j) => j.id === detailSelected) || ({} as IJobOffer)}
+                                    open={openDetailModal}
                                     onClose={() => setOpenDetailModal(false)}
                                     onApply={() => {
                                         setApplySelected(detailSelected);

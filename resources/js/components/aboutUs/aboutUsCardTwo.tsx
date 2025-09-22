@@ -37,8 +37,6 @@ function AboutUsCardTwo() {
                         <h2 className="!mb-0 !text-2xl !leading-tight -tracking-[.5px] font-bold md:!text-3xl md:-tracking-[.6px] lg:!text-4xl lg:-tracking-[.8px] xl:!text-5xl xl:-tracking-[1px]">
                             Nous associons notre Expertise, nos programmes de Certification et notre approche Pratique pour garantir une qualité
                             irréprochable de nos services
-                            {false &&
-                                ' assurant ainsi la satisfaction de nos clients et partenaires, tout en adoptant et en développant des méthodologies innovantes.'}
                         </h2>
                     </div>
 

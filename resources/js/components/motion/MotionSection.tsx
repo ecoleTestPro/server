@@ -13,23 +13,23 @@ interface IMotionSectionProps {
     viewport?: { once: boolean; amount: number };
 }
 
-export default function MotionSection({ 
-    children, 
-    once = true, 
-    amount = 0.2, 
+export default function MotionSection({
+    children,
+    once = true,
+    amount = 0.2,
     className,
     style,
-    initial = "hidden",
-    whileInView = "visible",
-    viewport
+    initial = 'hidden',
+    whileInView = 'visible',
+    viewport,
 }: IMotionSectionProps) {
     const finalViewport = viewport || { once, amount };
-    
+
     return (
-        <motion.section 
-            initial={initial} 
-            whileInView={whileInView} 
-            viewport={finalViewport} 
+        <motion.section
+            initial={initial}
+            whileInView={whileInView}
+            viewport={finalViewport}
             variants={motionVariants.sectionVariants}
             className={className}
             style={style}

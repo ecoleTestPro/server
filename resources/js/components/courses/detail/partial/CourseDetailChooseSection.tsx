@@ -1,9 +1,9 @@
 import { ICourse, ICoursePeriodicity, ICourseSession } from '@/types/course';
-import { Calendar, MapPin, ArrowRight, CheckCircle } from 'lucide-react';
+import { Logger } from '@/utils/console.util';
+import { ArrowRight, Calendar, CheckCircle, MapPin } from 'lucide-react';
 import { RefObject, useEffect, useState } from 'react'; // Add necessary imports
 import { useTranslation } from 'react-i18next';
 import CourseInscriptionDialog from './CourseInscriptionDialog';
-import { Logger } from '@/utils/console.util';
 
 interface CourseDetailChooseSectionProps {
     course: ICourse;
@@ -71,29 +71,29 @@ export default function CourseDetailChooseSection({ course, registrationRef }: C
 
                         {/* Liste des sessions - Design épuré */}
                         <div className="space-y-3">
-                            {course.course_sessions.map((session, index) => (
-                                <CourseSessionCard
-                                    key={index}
-                                    session={session}
-                                    courseTitle={course.title}
-                                    handleClickRegister={() => {
-                                        setSelectedSession(session);
-                                        setIsDialogOpen(true);
-                                    }}
-                                    periodicity_unit={course.periodicity_unit}
-                                    periodicity_value={course.periodicity_value}
-                                    price={course.price}
-                                    regular_price={course.regular_price}
-                                />
-                            ))}
+                            {course.course_sessions
+                                .sort((a, b) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime())
+                                .map((session, index) => (
+                                    <CourseSessionCard
+                                        key={index}
+                                        session={session}
+                                        courseTitle={course.title}
+                                        handleClickRegister={() => {
+                                            setSelectedSession(session);
+                                            setIsDialogOpen(true);
+                                        }}
+                                        periodicity_unit={course.periodicity_unit}
+                                        periodicity_value={course.periodicity_value}
+                                        price={course.price}
+                                        regular_price={course.regular_price}
+                                    />
+                                ))}
                         </div>
                     </div>
                 ) : (
                     <div className="text-center py-8">
                         <Calendar className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                        <p className="text-gray-500 dark:text-gray-400">
-                            {t('COURSE.DETAIL.NO_SESSIONS', 'Aucune session programmée')}
-                        </p>
+                        <p className="text-gray-500 dark:text-gray-400">{t('COURSE.DETAIL.NO_SESSIONS', 'Aucune session programmée')}</p>
                     </div>
                 )}
             </div>
@@ -134,25 +134,42 @@ export const CourseSessionCard = ({
         return date.toLocaleDateString('fr-FR', {
             day: 'numeric',
             month: 'short',
-            year: 'numeric'
+            year: 'numeric',
         });
+    };
+
+    // Obtenir le statut de la session
+    const getSessionStatus = () => {
+        const now = new Date();
+        const startDate = new Date(session.start_date);
+        const endDate = new Date(session.end_date || session.start_date);
+
+        if (now < startDate) {
+            return 'upcoming'; // À venir
+        } else if (now >= startDate && now <= endDate) {
+            return 'ongoing'; // En cours
+        } else {
+            return 'ended'; // Terminée
+        }
     };
 
     // Vérifier si la session est disponible pour inscription
     const isAvailable = () => {
-        return new Date(session.start_date) > new Date();
+        const status = getSessionStatus();
+        // On peut s'inscrire si la session est à venir ou en cours
+        return status === 'upcoming' || status === 'ongoing';
     };
 
     return (
-        <div className={`group border rounded-lg p-4 transition-all duration-200 hover:shadow-md ${
-            isAvailable() 
-                ? 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-emerald-300 dark:hover:border-emerald-600' 
-                : 'border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50'
-        }`}>
-            
+        <div
+            className={`group border rounded-lg p-4 transition-all duration-200 hover:shadow-md ${
+                isAvailable()
+                    ? 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-emerald-300 dark:hover:border-emerald-600'
+                    : 'border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50'
+            }`}
+        >
             {/* Layout responsive simple */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                
                 {/* Informations session */}
                 <div className="flex-1 space-y-2 sm:space-y-1">
                     {/* Dates */}
@@ -166,13 +183,13 @@ export const CourseSessionCard = ({
                             </>
                         )}
                     </div>
-                    
+
                     {/* Lieu */}
                     <div className="flex items-center gap-2 text-gray-900 dark:text-white">
                         <MapPin className="w-4 h-4 text-gray-400" />
                         <span className="font-medium">{session.location}</span>
                     </div>
-                    
+
                     {/* Statut de confirmation */}
                     {(session as any).is_confirmed && (
                         <div className="flex items-center gap-2">
@@ -182,19 +199,17 @@ export const CourseSessionCard = ({
                             </span>
                         </div>
                     )}
-                    
+
                     {/* Prix */}
-                    {price && (
+                    {price && price > 0 ? (
                         <div className="flex items-center gap-2">
-                            <span className="text-lg font-semibold text-gray-900 dark:text-white">
-                                {price} FCFA
-                            </span>
+                            <span className="text-lg font-semibold text-gray-900 dark:text-white">{price} FCFA</span>
                             {regular_price && regular_price > price && (
-                                <span className="text-sm text-gray-500 line-through">
-                                    {regular_price} FCFA
-                                </span>
+                                <span className="text-sm text-gray-500 line-through">{regular_price} FCFA</span>
                             )}
                         </div>
+                    ) : (
+                        ''
                     )}
                 </div>
 
@@ -205,11 +220,11 @@ export const CourseSessionCard = ({
                             onClick={handleClickRegister}
                             className="cursor-pointer w-full sm:w-auto px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
                         >
-                            {t('COURSE.DETAIL.REGISTER', 'S\'inscrire')}
+                            {getSessionStatus() === 'ongoing' ? t('COURSE.DETAIL.JOIN', 'Rejoindre') : t('COURSE.DETAIL.REGISTER', "S'inscrire")}
                         </button>
                     ) : (
                         <div className="text-sm text-gray-500 dark:text-gray-400 font-medium">
-                            Session terminée
+                            {t('COURSE.DETAIL.SESSION_ENDED', 'Session terminée')}
                         </div>
                     )}
                 </div>

@@ -78,7 +78,7 @@ function FeaturesSection() {
         Logger.log('[FeaturesSection] data', data);
 
         if (data && data.featured_courses && data.featured_courses.length > 0) {
-            let features: Feature[] = data.featured_courses.map((course: ICourse) => buildFeatureItem(course));
+            const features: Feature[] = data.featured_courses.map((course: ICourse) => buildFeatureItem(course));
             setFeatureCourses(features);
         }
 

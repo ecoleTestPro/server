@@ -8,7 +8,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { IPartner } from '@/types/partner';
 import { getMediaUrl } from '@/utils/utils';
 import axios from 'axios';
-import { ImageOff, Loader2, X, HelpCircle, Building2, Tag, Image as ImageIcon } from 'lucide-react';
+import { Building2, HelpCircle, Image as ImageIcon, ImageOff, Loader2, Tag, X } from 'lucide-react';
 import { FormEventHandler, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -165,10 +165,9 @@ export default function ReferenceForm({ closeDrawer, initialData, onSuccess }: R
                             {initialData?.id ? 'Modifier une référence' : 'Ajouter une nouvelle référence'}
                         </h3>
                         <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-                            {initialData?.id 
+                            {initialData?.id
                                 ? 'Mettez à jour les informations de votre partenaire ou référence client.'
-                                : 'Ajoutez un nouveau partenaire ou référence client avec son logo, ses informations et ses tags pour une meilleure organisation.'
-                            }
+                                : 'Ajoutez un nouveau partenaire ou référence client avec son logo, ses informations et ses tags pour une meilleure organisation.'}
                         </p>
                     </div>
                 </div>
@@ -216,21 +215,20 @@ export default function ReferenceForm({ closeDrawer, initialData, onSuccess }: R
                                 </button>
                             </TooltipTrigger>
                             <TooltipContent>
-                                <p>Organisez vos partenaires par catégories (ex: client, fournisseur, partenaire technologique). Séparez les tags par des points-virgules.</p>
+                                <p>
+                                    Organisez vos partenaires par catégories (ex: client, fournisseur, partenaire technologique). Séparez les tags par
+                                    des points-virgules.
+                                </p>
                             </TooltipContent>
                         </Tooltip>
                     </div>
-                    <TagInput 
-                        tags={tags} 
-                        onChange={setTags} 
-                        placeholder="Ex: client;partenaire;fournisseur"
-                    />
+                    <TagInput tags={tags} onChange={setTags} placeholder="Ex: client;partenaire;fournisseur" />
                     <InputError message={errors.tag?.[0]} />
                     <p className="text-xs text-gray-500">
                         💡 Utilisez des tags pour organiser vos partenaires par secteur, type de collaboration, etc.
                     </p>
                 </div>
-                
+
                 <div className="grid gap-3">
                     <div className="flex items-center gap-2">
                         <Label htmlFor="picture" className="flex items-center gap-2">
@@ -285,9 +283,7 @@ export default function ReferenceForm({ closeDrawer, initialData, onSuccess }: R
                             </Tooltip>
                             {file && (
                                 <div className="absolute -bottom-8 left-0 right-0 text-center">
-                                    <span className="text-xs text-green-600 bg-green-50 px-2 py-1 rounded">
-                                        ✓ Nouvelle image sélectionnée
-                                    </span>
+                                    <span className="text-xs text-green-600 bg-green-50 px-2 py-1 rounded">✓ Nouvelle image sélectionnée</span>
                                 </div>
                             )}
                         </div>
@@ -327,19 +323,18 @@ export default function ReferenceForm({ closeDrawer, initialData, onSuccess }: R
                         Formats supportés: JPEG, PNG, JPG, GIF, SVG. Taille maximale: 2 Mo.
                     </p>
                 </div>
-                
-                <Button 
-                    type="submit" 
-                    className="mt-4 w-full bg-teal-600 hover:bg-teal-700 text-white transition-all duration-200 shadow-sm hover:shadow-md" 
+
+                <Button
+                    type="submit"
+                    className="mt-4 w-full bg-teal-600 hover:bg-teal-700 text-white transition-all duration-200 shadow-sm hover:shadow-md"
                     disabled={processing}
                 >
                     {processing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    {processing 
-                        ? t('Saving', 'Sauvegarde...') 
-                        : initialData?.id 
-                            ? t('Update', 'Mettre à jour la référence') 
-                            : t('Create', 'Créer la référence')
-                    }
+                    {processing
+                        ? t('Saving', 'Sauvegarde...')
+                        : initialData?.id
+                          ? t('Update', 'Mettre à jour la référence')
+                          : t('Create', 'Créer la référence')}
                 </Button>
             </form>
         </div>

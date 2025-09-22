@@ -1,6 +1,6 @@
 import { ROUTE_MAP } from '@/utils/route.util';
 import { Link } from '@inertiajs/react';
-import { ArrowRight, Clock, Mail, MapPin, MessageCircle, Phone } from 'lucide-react';
+import { ArrowRight, Mail, MapPin, MessageCircle, Phone } from 'lucide-react';
 import { CONTACT_INFO } from '../layouts/footer/footer';
 
 export const TEAMS = [
@@ -138,7 +138,7 @@ const ContactCard = () => {
                     </div>
 
                     {/* Bloc équipe - Gardé désactivé */}
-                    {false && (
+                    {/* disabled && (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
                             {TEAMS.map((member, index) => (
                                 <div
@@ -155,7 +155,7 @@ const ContactCard = () => {
                                 </div>
                             ))}
                         </div>
-                    )}
+                    )*/}
                 </div>
             </div>
         </section>

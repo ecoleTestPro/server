@@ -46,15 +46,15 @@ export const JobSearchFilters: React.FC<{
                     <option value="Freelance">Freelance</option>
                     <option value="Stage">Stage</option>
                 </select>
-                {false && (
-                    <input
-                        type="number"
-                        placeholder="Salaire minimum (€)"
-                        value={minSalary || ''}
-                        onChange={(e) => setMinSalary(Number(e.target.value))}
-                        className="p-3 border rounded-lg dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-500"
-                    />
-                )}
+                {/* Salary filter disabled
+                <input
+                    type="number"
+                    placeholder="Salaire minimum (€)"
+                    value={minSalary || ''}
+                    onChange={(e) => setMinSalary(Number(e.target.value))}
+                    className="p-3 border rounded-lg dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                />
+                */}
             </div>
         </motion.div>
     );

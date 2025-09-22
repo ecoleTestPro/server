@@ -83,7 +83,7 @@ export default function EnrollmentDataTable({ enrollments, onDeleteRow }: Enroll
         {
             accessorKey: 'created_at',
             header: 'Date',
-            cell: ({ row }) => <span>{row.original.created_at?.toString().slice(0,10) || ''}</span>,
+            cell: ({ row }) => <span>{row.original.created_at?.toString().slice(0, 10) || ''}</span>,
         },
         {
             id: 'actions',

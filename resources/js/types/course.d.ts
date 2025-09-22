@@ -1,11 +1,10 @@
-import { IDataWithPagination, IJobOffer } from ".";
-import { IBlog, IBlogCategory } from "./blogs";
-import { ITestimonial } from "./testimonial";
-import { IFaq } from "./faq";
-import { IPartner } from "./partner";
+import { IDataWithPagination, IJobOffer } from '.';
+import { IBlog, IBlogCategory } from './blogs';
+import { IFaq } from './faq';
+import { IPartner } from './partner';
+import { ITestimonial } from './testimonial';
 
-
-export enum PeriodicityUnitEnum { 
+export enum PeriodicityUnitEnum {
     DAY = 'DAY',
     WEEK = 'WEEK',
     MONTH = 'MONTH',
@@ -15,14 +14,14 @@ export enum PeriodicityUnitEnum {
 export type mediaType = 'image' | 'video' | 'audio' | 'document' | 'other';
 
 export interface IMedia {
-    id: number,
-    src: string,
-    path: string,
-    extension: string,
-    type: mediaType,
-    created_at: string,
-    updated_at: string,
-    url?: string
+    id: number;
+    src: string;
+    path: string;
+    extension: string;
+    type: mediaType;
+    created_at: string;
+    updated_at: string;
+    url?: string;
 }
 
 export type ICoursePeriodicity = 'DAY' | 'WEEK' | 'MONTH' | 'YEAR';
@@ -33,7 +32,7 @@ export interface ICourseDescription {
      * This field can contain HTML or markdown formatted text.
      * It should provide a comprehensive overview of the course content, including topics covered, methodologies used
      */
-    content: string
+    content: string;
 
     /**
      * Short description of the course
@@ -53,37 +52,37 @@ export interface ICourseDescription {
      * Pedagogical objectives of the course
      * This field should outline the learning outcomes and skills that participants are expected to achieve upon completion of the course.
      */
-    pedagogical_objectives?: string
+    pedagogical_objectives?: string;
 
     /**
      * Course strengths and unique selling points
      * This field should highlight what makes the course stand out, such as unique teaching methods, expert instructors, or practical applications.
      */
-    course_strengths?: string
+    course_strengths?: string;
 
     /**
      * Evaluation methods for the course
      * This field should describe how participants will be assessed, such as through quizzes, projects, or exams.
      */
-    evaluation?: string
+    evaluation?: string;
 
     /**
      * Target audience for the course
      * This field should specify who the course is intended for, such as beginners, professionals, or specific industries.
      */
-    prerequisites?: string
+    prerequisites?: string;
 
     /**
      * Frequently asked questions about the course
      * This field should address common queries or concerns that potential participants may have about the course.
      */
-    why_choose?: string
+    why_choose?: string;
 
     /**
      * Questions and answers related to the course
      * This field should provide answers to common questions that participants may have about the course content, structure, or requirements.
      */
-    exam?: string
+    exam?: string;
 }
 
 export interface ICourse {
@@ -119,9 +118,7 @@ export interface ICourse {
     course_sessions?: ICourseSession[];
     partners?: IPartner[];
     reference_tag?: string;
-
 }
-
 
 export interface ICourseCategory {
     id?: number;
@@ -135,7 +132,7 @@ export interface ICourseCategory {
     media?: string;
     color?: string;
     image?: IMedia;
-    courses?: ICourse[],
+    courses?: ICourse[];
 }
 
 export const createCourseCategory = (): ICourseCategory => {
@@ -150,54 +147,53 @@ export const createCourseCategory = (): ICourseCategory => {
         image: undefined,
         courses: [],
     };
-}
+};
 
 export interface ICourseEnrollment {
-    user_id: number,
-    user_fullname: string | null,
-    user_email: string | null,
-    user_phone: string | null,
-    course_id: number,
-    course_session_id: number,
-    user: User,
-    course: ICourse,
-    mode: string,
-    progress: number,
-    last_activity: string,
-    is_certificate_downloaded: boolean,
-    created_at: string,
-    updated_at: string,
-    id: number,
+    user_id: number;
+    user_fullname: string | null;
+    user_email: string | null;
+    user_phone: string | null;
+    course_id: number;
+    course_session_id: number;
+    user: User;
+    course: ICourse;
+    mode: string;
+    progress: number;
+    last_activity: string;
+    is_certificate_downloaded: boolean;
+    created_at: string;
+    updated_at: string;
+    id: number;
 }
 
 export interface ICourseSession {
-    id: number,
-    location: string,
-    country: string,
-    city: string,
-    longitude: number,
-    latitude: number,
-    timezone: string,
-    language: string,
-    start_date: string,
-    end_date: string,
-    price: number,
-    price_discount: number,
-    tva: number,
-    course : ICourse,
-    schedules: ICourseSessionSchedule[],
+    id: number;
+    location: string;
+    country: string;
+    city: string;
+    longitude: number;
+    latitude: number;
+    timezone: string;
+    language: string;
+    start_date: string;
+    end_date: string;
+    price: number;
+    price_discount: number;
+    tva: number;
+    course: ICourse;
+    schedules: ICourseSessionSchedule[];
 }
 
 export interface ICourseSessionSchedule {
-    id: number
-    course_session_id: number
-    start_time: string
-    end_time: string
-    date: string
-    title?: string
-    description?: string
+    id: number;
+    course_session_id: number;
+    start_time: string;
+    end_time: string;
+    date: string;
+    title?: string;
+    description?: string;
 }
-
 
 export interface ICustomSharedData {
     /**
@@ -207,7 +203,7 @@ export interface ICustomSharedData {
         total?: number;
         list?: ICourse[];
         list_with_pagination?: IDataWithPagination<ICourse>;
-    }
+    };
 
     /**
      * Single course
@@ -227,7 +223,7 @@ export interface ICustomSharedData {
     /**
      * Paginated list of course categories
      */
-    categories: ICourseCategory[]; 
+    categories: ICourseCategory[];
 
     /**
      * List of course categories with their courses
@@ -243,46 +239,46 @@ export interface ICustomSharedData {
         courses: ICourse[];
         categories: ICourseCategory[];
         blogs: any[]; // Assuming blogs is an array of objects, adjust type as needed
-    }
+    };
 
     users?: {
         total?: number;
         last_30_days?: number;
-        list?: User[]
-    }
+        list?: User[];
+    };
 
     admin_users?: {
         total?: number;
         last_30_days?: number;
-        list?: User[]
-    }
+        list?: User[];
+    };
 
     enrollments?: {
         total?: number;
         last_30_days?: number;
-        list?: IDataWithPagination<ICourseEnrollment>
-    }
+        list?: IDataWithPagination<ICourseEnrollment>;
+    };
 
     notifications?: {
         unread_count?: number;
-    }
+    };
 
     blogs?: {
         total?: number;
         list?: IBlog[];
         categories?: IBlogCategory[];
-        single: IBlog
-    }
+        single: IBlog;
+    };
 
-    testimonials?: IDataWithPagination<ITestimonial>
-    faqs?: IFaq[]
+    testimonials?: IDataWithPagination<ITestimonial>;
+    faqs?: IFaq[];
 
-    references?: IPartner[]
+    references?: IPartner[];
 
     chart_data?: {
         enrollment_area: IChartData;
         course_area: IChartData;
-    }
+    };
 
-    job_offers : IJobOffer[];
+    job_offers: IJobOffer[];
 }

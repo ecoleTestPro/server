@@ -19,13 +19,13 @@ export const JobCard: React.FC<{
     setOpenDetailModal: React.Dispatch<React.SetStateAction<boolean>>;
 }> = ({
     job,
-    applySelected,
+    // applySelected,
     setApplySelected,
-    openApplyModal,
+    // openApplyModal,
     setOpenApplyModal,
-    detailSelected,
+    // detailSelected,
     setDetailSelected,
-    openDetailModal,
+    // openDetailModal,
     setOpenDetailModal,
 }) => {
     const cardVariants: Variants = {

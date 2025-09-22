@@ -107,26 +107,28 @@ export default function AuthSplitLayout({ children, title, description }: PropsW
                     </div>
 
                     {/* Bottom Quote/Testimonial */}
-                    {false && <div className="relative z-10">
-                        <div className="p-6 bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10">
-                            <div className="flex items-start space-x-4">
-                                <div className="flex-shrink-0">
-                                    <div className="w-12 h-12 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full flex items-center justify-center">
-                                        <span className="text-white font-semibold text-sm">👨‍🎓</span>
+                    {false && (
+                        <div className="relative z-10">
+                            <div className="p-6 bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10">
+                                <div className="flex items-start space-x-4">
+                                    <div className="flex-shrink-0">
+                                        <div className="w-12 h-12 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full flex items-center justify-center">
+                                            <span className="text-white font-semibold text-sm">👨‍🎓</span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="flex-1">
-                                    <p className="text-white font-medium text-sm mb-2">
-                                        "Une plateforme exceptionnelle qui m'a permis d'évoluer rapidement dans ma carrière. Les formations sont de
-                                        qualité professionnelle."
-                                    </p>
-                                    <div className="text-emerald-200 text-xs">
-                                        <span className="font-semibold">Sarah M.</span> • Développeuse Full-Stack
+                                    <div className="flex-1">
+                                        <p className="text-white font-medium text-sm mb-2">
+                                            "Une plateforme exceptionnelle qui m'a permis d'évoluer rapidement dans ma carrière. Les formations sont
+                                            de qualité professionnelle."
+                                        </p>
+                                        <div className="text-emerald-200 text-xs">
+                                            <span className="font-semibold">Sarah M.</span> • Développeuse Full-Stack
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>}
+                    )}
                 </div>
 
                 {/* Right Panel - Form Section */}

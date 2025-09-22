@@ -13,14 +13,14 @@ interface IReferenceActionBtnProps {
 
 export default function ReferenceActionBtn({ row, onEdit, onDelete }: IReferenceActionBtnProps) {
     const reference = row.original;
-    
+
     return (
         <div className="flex space-x-1">
             <Tooltip>
                 <TooltipTrigger asChild>
-                    <Button 
-                        variant={'ghost'} 
-                        size="icon" 
+                    <Button
+                        variant={'ghost'}
+                        size="icon"
                         onClick={() => onEdit?.(row.original)}
                         className="hover:bg-blue-50 hover:text-blue-600 transition-colors"
                     >
@@ -29,15 +29,17 @@ export default function ReferenceActionBtn({ row, onEdit, onDelete }: IReference
                     </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                    <p>Modifier les informations de <strong>{reference.name}</strong> (nom, logo, tags, lien web)</p>
+                    <p>
+                        Modifier les informations de <strong>{reference.name}</strong> (nom, logo, tags, lien web)
+                    </p>
                 </TooltipContent>
             </Tooltip>
 
             <Tooltip>
                 <TooltipTrigger asChild>
-                    <Button 
-                        variant={'ghost'} 
-                        size="icon" 
+                    <Button
+                        variant={'ghost'}
+                        size="icon"
                         onClick={() => onDelete?.(row.original)}
                         className="hover:bg-red-50 hover:text-red-600 transition-colors"
                     >
@@ -46,7 +48,9 @@ export default function ReferenceActionBtn({ row, onEdit, onDelete }: IReference
                     </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                    <p>Supprimer définitivement <strong>{reference.name}</strong> de vos références</p>
+                    <p>
+                        Supprimer définitivement <strong>{reference.name}</strong> de vos références
+                    </p>
                 </TooltipContent>
             </Tooltip>
         </div>

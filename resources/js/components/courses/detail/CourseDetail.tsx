@@ -5,7 +5,7 @@ import { sanitizeHTML } from '@/utils/quill-html-parser';
 import { getMediaUrl } from '@/utils/utils';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import 'react-quill/dist/quill.snow.css';
+import 'react-quill-new/dist/quill.snow.css';
 import CourseQuestionForm from '../questions/CourseQuestionForm';
 import CourseDetailAccordion from './CourseDetailAccordion';
 import CoursePartners from './CoursePartners';

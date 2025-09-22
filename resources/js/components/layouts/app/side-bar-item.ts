@@ -1,6 +1,20 @@
-import { NavItem } from "@/types";
-import { BookOpen, FileStack, Folder, HomeIcon, LayoutGrid, List, ClipboardPlus, Settings2, ListTodo, BookAIcon, ListChecks, Mail, Calendar, CalendarDays, CalendarCheck, HelpCircle } from 'lucide-react';
-
+import { NavItem } from '@/types';
+import {
+    BookAIcon,
+    BookOpen,
+    Calendar,
+    CalendarCheck,
+    ClipboardPlus,
+    FileStack,
+    Folder,
+    HelpCircle,
+    HomeIcon,
+    LayoutGrid,
+    List,
+    ListChecks,
+    ListTodo,
+    Mail,
+} from 'lucide-react';
 
 export const MAIN_NAV_ITEMS: NavItem[] = [
     {
@@ -28,11 +42,11 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
                 href: route('dashboard.category.index'),
                 icon: ListTodo,
             },
-            // {
-            //     title: 'Questions',
-            //     href: route('dashboard.course-questions.index'),
-            //     icon: HelpCircle,
-            // },
+            {
+                title: 'Questions',
+                href: route('dashboard.course-questions.index'),
+                icon: HelpCircle,
+            },
         ],
     },
     // {
@@ -46,7 +60,7 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
         icon: FileStack,
     },
     {
-        title: 'Offres d\'emploi',
+        title: "Offres d'emploi",
         href: route('dashboard.job-offers.index'),
         icon: ClipboardPlus,
     },
@@ -74,7 +88,7 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
                 title: 'Liste des RDV',
                 href: route('dashboard.appointments.index'),
                 icon: List,
-            }, 
+            },
             {
                 title: 'Horaires',
                 href: route('dashboard.appointments.settings.hours'),

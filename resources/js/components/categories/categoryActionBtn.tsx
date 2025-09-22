@@ -1,5 +1,5 @@
 import { ICourseCategory } from '@/types/course';
-import { SquarePen, Trash2, Plus } from 'lucide-react';
+import { Plus, SquarePen, Trash2 } from 'lucide-react';
 import { Button } from '../ui/button/button';
 
 interface ICategoryActionBtnProps {

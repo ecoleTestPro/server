@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
+import { HiLocationMarker, HiMail, HiPhone } from 'react-icons/hi';
 import { CONTACT_INFO } from '../layouts/footer/footer';
 import MotionSection from '../motion/MotionSection';
-import { HiMail, HiPhone, HiLocationMarker } from 'react-icons/hi';
 
 interface ContactInfo {
     title: string;
@@ -52,7 +52,7 @@ const contacts: ContactInfo[] = [
 ];
 
 export default function ContactInfo() {
-    const { t } = useTranslation();
+    const {} = useTranslation(); // t unused
     return (
         <MotionSection>
             <div>
@@ -67,21 +67,17 @@ export default function ContactInfo() {
                     </div>
                     <div className="grid grid-cols-1 gap-6">
                         {contacts.map((widget, index) => (
-                            <div 
-                                key={index} 
+                            <div
+                                key={index}
                                 className="group bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:translate-x-2 border border-gray-100 dark:border-gray-700"
                             >
                                 <div className="flex items-start gap-4">
-                                    <div className={`${widget.colorClass} ${widget.animation} flex-shrink-0`}>
-                                        {widget.icon}
-                                    </div>
+                                    <div className={`${widget.colorClass} ${widget.animation} flex-shrink-0`}>{widget.icon}</div>
                                     <div className="flex-1">
-                                        <h3 className="text-lg font-semibold mb-2 text-gray-800 dark:text-gray-200">
-                                            {widget.title}
-                                        </h3>
+                                        <h3 className="text-lg font-semibold mb-2 text-gray-800 dark:text-gray-200">{widget.title}</h3>
                                         {widget.link ? (
-                                            <a 
-                                                href={widget.link} 
+                                            <a
+                                                href={widget.link}
                                                 className={`inline-block text-gray-600 dark:text-gray-400 transition-all duration-300 hover:${widget.colorClass.replace('text-', 'text-')} hover:underline group-hover:translate-x-1`}
                                             >
                                                 {widget.contact}

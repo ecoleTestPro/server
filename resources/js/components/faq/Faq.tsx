@@ -1,7 +1,7 @@
 import { CLASS_NAME } from '@/data/styles/style.constant';
+import { IFaq, SharedData } from '@/types';
 import { usePage } from '@inertiajs/react';
 import { useState } from 'react';
-import { IFaq, SharedData } from '@/types';
 
 const DEFAULT_FAQ: IFaq[] = [
     {

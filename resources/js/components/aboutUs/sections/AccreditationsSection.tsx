@@ -29,7 +29,7 @@ interface AccreditationCardProps {
 
 /**
  * Composant pour afficher une carte d'agrément individuelle
- * 
+ *
  * @component
  * @description Carte présentant un agrément avec logo, titre et description détaillée.
  * Layout en grille responsive avec logo à gauche et contenu à droite.
@@ -45,16 +45,14 @@ function AccreditationCard({ accreditation }: AccreditationCardProps) {
                     className={`mx-auto object-contain ${accreditation.logoClasses || 'h-16 md:h-20 lg:h-24'}`}
                 />
             </div>
-            
+
             {/* Section Contenu */}
             <div className="space-y-4 col-span-1 md:col-span-5">
                 {/* Titre de l'agrément */}
-                <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">
-                    {accreditation.title}
-                </h3>
-                
+                <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">{accreditation.title}</h3>
+
                 {/* Description détaillée */}
-                <div 
+                <div
                     className="leading-relaxed text-gray-700 dark:text-gray-300 text-base md:text-lg"
                     dangerouslySetInnerHTML={{ __html: accreditation.description }}
                 />
@@ -65,7 +63,7 @@ function AccreditationCard({ accreditation }: AccreditationCardProps) {
 
 /**
  * Composant de la section des agréments et certifications
- * 
+ *
  * @component
  * @description Section présentant les agréments officiels de TestPro :
  * GASQ Platinium et FDFP. Mise en page avec cartes détaillées et séparateur visuel.
@@ -90,7 +88,7 @@ export default function AccreditationsSection() {
                 <br /><br />
                 Cette reconnaissance renforce notre crédibilité en tant qu'acteur clé de la formation en assurance qualité
                 logicielle.
-            `
+            `,
         },
         {
             name: 'FDFP',
@@ -105,8 +103,8 @@ export default function AccreditationsSection() {
                 <br /><br />
                 Grâce à notre catalogue riche et adapté aux besoins métiers, nous accompagnons efficacement les entreprises
                 dans la mise en œuvre de leur plan de formation, avec une prise en charge facilitée par le FDFP.
-            `
-        }
+            `,
+        },
     ];
 
     return (
@@ -115,20 +113,16 @@ export default function AccreditationsSection() {
                 <div className={`${CLASS_NAME.sectionContentPadding}`}>
                     <div className="container mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
                         {/* Titre de la section */}
-                        <h2 className="!mb-8 text-2xl font-bold md:text-3xl lg:text-4xl xl:text-5xl leading-tight text-center">
-                            Nos Agréments
-                        </h2>
-                        
+                        <h2 className="!mb-8 text-2xl font-bold md:text-3xl lg:text-4xl xl:text-5xl leading-tight text-center">Nos Agréments</h2>
+
                         {/* Affichage des agréments */}
                         {accreditations.map((accreditation, index) => (
                             <div key={accreditation.name}>
                                 {/* Carte d'agrément */}
                                 <AccreditationCard accreditation={accreditation} />
-                                
+
                                 {/* Séparateur entre les cartes (sauf pour la dernière) */}
-                                {index < accreditations.length - 1 && (
-                                    <div className="w-full border-t border-gray-200 my-4" />
-                                )}
+                                {index < accreditations.length - 1 && <div className="w-full border-t border-gray-200 my-4" />}
                             </div>
                         ))}
                     </div>

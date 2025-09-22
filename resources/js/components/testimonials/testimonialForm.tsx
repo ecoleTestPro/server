@@ -1,20 +1,19 @@
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button/button';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { InputFile } from '@/components/ui/inputFile';
 import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/text-area';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { ITestimonial } from '@/types/testimonial';
 import { Logger } from '@/utils/console.util';
 import { router, useForm } from '@inertiajs/react';
 import axios from 'axios';
-import { FormEventHandler, useState, useEffect } from 'react';
+import { Briefcase, Eye, FileText, HelpCircle, MessageSquareQuote, User } from 'lucide-react';
+import { FormEventHandler, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import { MessageSquareQuote, HelpCircle, User, Briefcase, FileText, Eye, Star } from 'lucide-react';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { Switch } from '@/components/ui/switch';
 
 interface TestimonialFormProps {
     closeDrawer?: () => void;
@@ -56,7 +55,7 @@ export default function TestimonialForm({ closeDrawer, initialData }: Testimonia
         formData.append('description', data.description);
         formData.append('rating', data.rating.toString());
         formData.append('is_active', data.is_active ? '1' : '0');
-        
+
         if (file) {
             formData.append('picture', file);
         }
@@ -65,12 +64,12 @@ export default function TestimonialForm({ closeDrawer, initialData }: Testimonia
         const config = {
             headers: {
                 'Content-Type': 'multipart/form-data',
-                'X-HTTP-Method-Override': initialData?.id ? 'PUT' : 'POST'
-            }
+                'X-HTTP-Method-Override': initialData?.id ? 'PUT' : 'POST',
+            },
         };
 
         const axiosMethod = initialData?.id ? axios.post : axios.post; // Utiliser POST avec method override pour les fichiers
-        
+
         axiosMethod(routeUrl, formData, config)
             .then(() => {
                 toast.success(
@@ -83,7 +82,7 @@ export default function TestimonialForm({ closeDrawer, initialData }: Testimonia
             })
             .catch((error) => {
                 Logger.error('Erreur lors de la soumission:', error);
-                
+
                 if (error.response?.data?.errors) {
                     // Gestion des erreurs de validation Laravel
                     Object.keys(error.response.data.errors).forEach((key) => {
@@ -115,14 +114,16 @@ export default function TestimonialForm({ closeDrawer, initialData }: Testimonia
                         </TooltipTrigger>
                         <TooltipContent>
                             <p className="max-w-xs">
-                                {initialData?.id ? 'Modifiez les informations de ce témoignage client.' : 'Ajoutez un nouveau témoignage pour renforcer votre crédibilité auprès de vos prospects.'}
+                                {initialData?.id
+                                    ? 'Modifiez les informations de ce témoignage client.'
+                                    : 'Ajoutez un nouveau témoignage pour renforcer votre crédibilité auprès de vos prospects.'}
                             </p>
                         </TooltipContent>
                     </Tooltip>
                 </div>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                    {initialData?.id 
-                        ? 'Modifiez les informations du témoignage ci-dessous.' 
+                    {initialData?.id
+                        ? 'Modifiez les informations du témoignage ci-dessous.'
                         : 'Les témoignages clients renforcent votre crédibilité. Remplissez les informations ci-dessous pour ajouter un nouveau témoignage.'}
                 </p>
             </div>
@@ -142,17 +143,16 @@ export default function TestimonialForm({ closeDrawer, initialData }: Testimonia
                             </TooltipTrigger>
                             <TooltipContent>
                                 <p className="max-w-xs">
-                                    Le nom complet du client qui a laissé ce témoignage. 
-                                    Utilisez le vrai nom pour plus d'authenticité.
+                                    Le nom complet du client qui a laissé ce témoignage. Utilisez le vrai nom pour plus d'authenticité.
                                 </p>
                             </TooltipContent>
                         </Tooltip>
                     </div>
-                    <Input 
-                        id="name" 
-                        required 
-                        value={data.name} 
-                        onChange={(e) => setData('name', e.target.value)} 
+                    <Input
+                        id="name"
+                        required
+                        value={data.name}
+                        onChange={(e) => setData('name', e.target.value)}
                         disabled={processing}
                         placeholder="Ex: Jean Dupont"
                         className="mt-1"
@@ -173,8 +173,7 @@ export default function TestimonialForm({ closeDrawer, initialData }: Testimonia
                             </TooltipTrigger>
                             <TooltipContent>
                                 <p className="max-w-xs">
-                                    Le poste ou la fonction du client dans son entreprise. 
-                                    Cela ajoute de la crédibilité au témoignage.
+                                    Le poste ou la fonction du client dans son entreprise. Cela ajoute de la crédibilité au témoignage.
                                 </p>
                             </TooltipContent>
                         </Tooltip>
@@ -204,8 +203,8 @@ export default function TestimonialForm({ closeDrawer, initialData }: Testimonia
                             </TooltipTrigger>
                             <TooltipContent>
                                 <p className="max-w-xs">
-                                    Le commentaire positif du client sur votre service ou produit. 
-                                    Plus il est spécifique et détaillé, plus il sera convaincant.
+                                    Le commentaire positif du client sur votre service ou produit. Plus il est spécifique et détaillé, plus il sera
+                                    convaincant.
                                 </p>
                             </TooltipContent>
                         </Tooltip>
@@ -220,53 +219,49 @@ export default function TestimonialForm({ closeDrawer, initialData }: Testimonia
                         className="mt-1 min-h-[100px]"
                         rows={4}
                     />
-                    <p className="text-xs text-gray-500 mt-1">
-                        Rédigez un témoignage authentique et spécifique pour plus d'impact
-                    </p>
+                    <p className="text-xs text-gray-500 mt-1">Rédigez un témoignage authentique et spécifique pour plus d'impact</p>
                     <InputError message={errors.description} />
                 </div>
-            {false && (
-                <div className="grid gap-2">
-                    <Label htmlFor="rating">{t('Rating', 'Note')}</Label>
-                    <Input
-                        id="rating"
-                        type="number"
-                        min={1}
-                        max={5}
-                        required
-                        value={data.rating}
-                        onChange={(e) => setData('rating', Number(e.target.value))}
-                        disabled={processing}
-                    />
-                    <InputError message={errors.rating} />
-                </div>
-            )}
-            {false && (
-                <div className="grid gap-2">
-                    <Label htmlFor="picture">{t('Image')}</Label>
-                    <InputFile
-                        id="picture"
-                        onFilesChange={(files) => {
-                            if (files && files.length > 0) {
-                                setFile(files[0]);
-                                setData('media_id', undefined as any);
-                            } else {
-                                setFile(null);
-                            }
-                        }}
-                        accept="image/*"
-                        multiple={false}
-                        disabled={processing}
-                    />
-                    <InputError message={errors.media_id} />
-                </div>
-            )}
+                {false && (
+                    <div className="grid gap-2">
+                        <Label htmlFor="rating">{t('Rating', 'Note')}</Label>
+                        <Input
+                            id="rating"
+                            type="number"
+                            min={1}
+                            max={5}
+                            required
+                            value={data.rating}
+                            onChange={(e) => setData('rating', Number(e.target.value))}
+                            disabled={processing}
+                        />
+                        <InputError message={errors.rating} />
+                    </div>
+                )}
+                {false && (
+                    <div className="grid gap-2">
+                        <Label htmlFor="picture">{t('Image')}</Label>
+                        <InputFile
+                            id="picture"
+                            onFilesChange={(files) => {
+                                if (files && files.length > 0) {
+                                    setFile(files[0]);
+                                    setData('media_id', undefined as any);
+                                } else {
+                                    setFile(null);
+                                }
+                            }}
+                            accept="image/*"
+                            multiple={false}
+                            disabled={processing}
+                        />
+                        <InputError message={errors.media_id} />
+                    </div>
+                )}
                 <div>
                     <div className="flex items-center gap-2 mb-2">
                         <Eye className="h-4 w-4 text-primary" />
-                        <Label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                            {t('Visibility', 'Visibilité')}
-                        </Label>
+                        <Label className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('Visibility', 'Visibilité')}</Label>
                         <Tooltip>
                             <TooltipTrigger asChild>
                                 <button type="button" className="text-gray-400 hover:text-gray-600 transition-colors">
@@ -275,18 +270,13 @@ export default function TestimonialForm({ closeDrawer, initialData }: Testimonia
                             </TooltipTrigger>
                             <TooltipContent>
                                 <p className="max-w-xs">
-                                    Choisissez si ce témoignage doit être visible sur votre site web 
-                                    ou resté caché pour modification ultérieure.
+                                    Choisissez si ce témoignage doit être visible sur votre site web ou resté caché pour modification ultérieure.
                                 </p>
                             </TooltipContent>
                         </Tooltip>
                     </div>
                     <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                        <Switch 
-                            checked={data.is_active}
-                            onCheckedChange={(checked) => setData('is_active', checked)}
-                            id="visibility-status"
-                        />
+                        <Switch checked={data.is_active} onCheckedChange={(checked) => setData('is_active', checked)} id="visibility-status" />
                         <label htmlFor="visibility-status" className="text-sm font-medium cursor-pointer">
                             {data.is_active ? (
                                 <span className="text-green-600">Visible sur le site (actif)</span>
@@ -298,26 +288,19 @@ export default function TestimonialForm({ closeDrawer, initialData }: Testimonia
                 </div>
 
                 <div className="flex justify-between items-center pt-6 border-t border-gray-200">
-                    <Button
-                        type="button"
-                        onClick={() => closeDrawer?.()}
-                        variant="outline"
-                        className="px-6"
-                    >
+                    <Button type="button" onClick={() => closeDrawer?.()} variant="outline" className="px-6">
                         {t('Cancel', 'Annuler')}
                     </Button>
-                    <Button 
-                        type="submit" 
-                        disabled={processing}
-                        className="bg-primary hover:bg-primary/90 px-8"
-                    >
+                    <Button type="submit" disabled={processing} className="bg-primary hover:bg-primary/90 px-8">
                         {processing ? (
                             <span className="flex items-center gap-2">
                                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                                 {initialData?.id ? t('Updating...', 'Modification...') : t('Creating...', 'Création...')}
                             </span>
+                        ) : initialData?.id ? (
+                            t('Update Testimonial', 'Modifier le témoignage')
                         ) : (
-                            initialData?.id ? t('Update Testimonial', 'Modifier le témoignage') : t('Add Testimonial', 'Ajouter le témoignage')
+                            t('Add Testimonial', 'Ajouter le témoignage')
                         )}
                     </Button>
                 </div>

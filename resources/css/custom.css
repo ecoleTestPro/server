@@ -1,10 +1,7 @@
-
-
 button,
 a {
     cursor: pointer;
 }
-
 
 .bg-primary-50 {
     background-color: oklch(0.98 0.04 144.16);
@@ -166,10 +163,7 @@ border-secondary-900 {
     border-color: oklch(0.56 0.16 253.28);
 }
 
-
-
 /* Animations personnalisées */
-
 
 /*
  * Fade-in animations
@@ -191,7 +185,6 @@ border-secondary-900 {
     }
 }
 
-
 .animate-fade-in-up {
     animation: fadeInUp 0.6s ease-out forwards;
 }
@@ -207,7 +200,6 @@ border-secondary-900 {
         transform: translateY(0);
     }
 }
-
 
 /* .animate-gradient {
     background-size: 200% 200%;
@@ -227,7 +219,6 @@ border-secondary-900 {
         background-position: 0% 50%;
     }
 } */
-
 
 .animation-delay-200 {
     animation-delay: 0.2s;
@@ -254,7 +245,6 @@ border-secondary-900 {
 }
 
 @keyframes pulse-scale {
-
     0%,
     100% {
         transform: scale(1);
@@ -293,7 +283,6 @@ border-secondary-900 {
         transform: translateY(-20px);
     }
 }
-
 
 .animate-scroll {
     animation: scrollText 10s linear infinite;
@@ -354,7 +343,6 @@ border-secondary-900 {
 .react-datepicker__day--today {
     @apply bg-gray-200 dark:bg-gray-700;
 }
-
 
 /* .detail-course-html h1 {
     font-size: 1.5rem;

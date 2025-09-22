@@ -1,5 +1,5 @@
 import { CLASS_NAME } from '@/data/styles/style.constant';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import MotionSection from '../../motion/MotionSection';
 
 /**
@@ -7,12 +7,12 @@ import MotionSection from '../../motion/MotionSection';
  */
 interface WelcomeSectionProps {
     /** Variants d'animation pour les images */
-    imageVariants?: any;
+    imageVariants?: Variants;
 }
 
 /**
  * Composant de la section de bienvenue TestPro
- * 
+ *
  * @component
  * @description Section d'introduction avec image et présentation de l'entreprise TestPro.
  * Contient une image principale avec icône flottante et le texte de présentation.
@@ -71,12 +71,7 @@ export default function WelcomeSection({ imageVariants }: WelcomeSectionProps) {
                             viewport={{ once: true, amount: 0.2 }}
                         >
                             {/* En-tête de bienvenue */}
-                            <motion.div
-                                className="mb-[40px] text-left"
-                                initial="hidden"
-                                whileInView="visible"
-                                viewport={{ once: true, amount: 0.2 }}
-                            >
+                            <motion.div className="mb-[40px] text-left" initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }}>
                                 <h2 className="!mb-[15px] text-2xl font-bold md:text-3xl lg:text-4xl xl:text-5xl leading-tight">
                                     Bienvenue chez TestPro, votre partenaire stratégique en transformation digitale.
                                 </h2>
@@ -84,11 +79,11 @@ export default function WelcomeSection({ imageVariants }: WelcomeSectionProps) {
 
                             {/* Description de l'entreprise */}
                             <p className="!mb-6 leading-relaxed text-gray-700 dark:text-gray-300 text-base md:text-lg">
-                                Dans un monde où la transformation digitale redéfinit les standards de performance, l'approximation n'a plus sa
-                                place. Fiabilité, sécurité et robustesse sont désormais des exigences stratégiques pour toute organisation. C'est
-                                dans cette dynamique que TestPro s'impose comme un acteur de référence internationale. Spécialisé dans le test
-                                logiciel, la formation certifiante et l'accompagnement sur mesure, nous aidons les entreprises à atteindre
-                                l'excellence opérationnelle à chaque étape de leur évolution numérique.
+                                Dans un monde où la transformation digitale redéfinit les standards de performance, l'approximation n'a plus sa place.
+                                Fiabilité, sécurité et robustesse sont désormais des exigences stratégiques pour toute organisation. C'est dans cette
+                                dynamique que TestPro s'impose comme un acteur de référence internationale. Spécialisé dans le test logiciel, la
+                                formation certifiante et l'accompagnement sur mesure, nous aidons les entreprises à atteindre l'excellence
+                                opérationnelle à chaque étape de leur évolution numérique.
                             </p>
                         </motion.div>
                     </motion.div>

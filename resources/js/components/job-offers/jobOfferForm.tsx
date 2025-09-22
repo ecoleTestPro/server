@@ -11,7 +11,7 @@ import { Briefcase, Building2, Calendar, DollarSign, FileText, HelpCircle, Info,
 import { FormEventHandler, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import 'react-quill/dist/quill.snow.css';
+import 'react-quill-new/dist/quill.snow.css';
 import RichTextQuill from '../ui/form/RichTextQuill';
 import SelectCustom, { ISelectItem } from '../ui/select-custom';
 
@@ -114,18 +114,18 @@ export default function JobOfferForm({ closeDrawer, initialData }: Props) {
 
     const parseDate = (dateString: string): string => {
         if (!dateString) return '';
-        
+
         // Si la date est déjà au format Y-m-d, la retourner directement
         if (dateString.match(/^\d{4}-\d{2}-\d{2}$/)) {
             return dateString;
         }
-        
+
         // Si la date est au format d/m/Y (venant du backend), la convertir
         if (dateString.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
             const [day, month, year] = dateString.split('/');
             return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
         }
-        
+
         // Essayer de parser la date comme objet Date
         try {
             const date = new Date(dateString);
@@ -135,7 +135,7 @@ export default function JobOfferForm({ closeDrawer, initialData }: Props) {
         } catch (error) {
             console.log('Error parsing date:', error);
         }
-        
+
         return '';
     };
 
@@ -168,7 +168,7 @@ export default function JobOfferForm({ closeDrawer, initialData }: Props) {
             </div>
 
             <form className="" onSubmit={submit}>
-                <div className="flex flex-col gap-6 h-[calc(100vh-500px)] overflow-y-auto"> 
+                <div className="flex flex-col gap-6 h-[calc(100vh-500px)] overflow-y-auto">
                     <div className="grid gap-3">
                         <div className="flex items-center gap-2">
                             <Label htmlFor="title" className="flex items-center gap-2">

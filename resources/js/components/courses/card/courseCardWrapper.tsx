@@ -38,7 +38,7 @@ function CourseCardWrapper({ searchTerm, viewMode, loading, setLoading, courses,
 
     // Fonction pour filtrer les cours par page
     const indexOfLastCourse = currentPage * coursesPerPage;
-    const indexOfFirstCourse = indexOfLastCourse - coursesPerPage;
+    // const indexOfFirstCourse = indexOfLastCourse - coursesPerPage;
     // const currentCourses = courses.slice(indexOfFirstCourse, indexOfLastCourse);
 
     // Gestion de la pagination
@@ -105,7 +105,7 @@ function CourseCardWrapper({ searchTerm, viewMode, loading, setLoading, courses,
         setIsDeleting(true);
         axios
             .delete(route('dashboard.course.delete', courseToDelete?.id))
-            .then((response) => {
+            .then(() => {
                 setShowConfirm(false);
                 setIsDeleting(false);
                 setCourseToDelete(null);
@@ -115,13 +115,14 @@ function CourseCardWrapper({ searchTerm, viewMode, loading, setLoading, courses,
             .catch((error) => {
                 setIsDeleting(false);
                 Logger.error('Error deleting course:', error);
-                
+
                 // Check if the error is due to existing enrollments
                 if (error.response?.data?.hasEnrollments) {
                     const enrollmentCount = error.response.data.enrollmentCount;
-                    const message = error.response.data.message || 
+                    const message =
+                        error.response.data.message ||
                         `Cette formation ne peut pas être supprimée car ${enrollmentCount} utilisateur(s) y sont inscrits. Veuillez d'abord gérer les inscriptions existantes.`;
-                    
+
                     // Show a custom alert for enrollment conflict
                     toast.error(message, {
                         duration: 6000, // Show for 6 seconds
@@ -142,10 +143,11 @@ function CourseCardWrapper({ searchTerm, viewMode, loading, setLoading, courses,
         setEnrollmentWarning(null);
         setShowConfirm(true);
         setIsDeleting(false);
-        
+
         // Optional: Check for enrollments beforehand to show warning in dialog
-        axios.get(route('dashboard.course.enrollments.count', course.id))
-            .then((response) => {
+        axios
+            .get(route('dashboard.course.enrollments.count', course.id))
+            .then(() => {
                 const count = response.data.count;
                 if (count > 0) {
                     setEnrollmentWarning(`⚠️ Attention : ${count} utilisateur(s) sont inscrits à cette formation.`);

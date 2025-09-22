@@ -1,16 +1,12 @@
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import AppLayout from '@/layouts/dashboard/app-layout';
-import { cn } from '@/lib/utils';
 import { AppointmentType } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
-import { Reorder } from 'framer-motion';
-import { Edit, GripVertical, Plus, Trash2, Type } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import React, { useState } from 'react';
 
 interface Props {
@@ -131,7 +127,7 @@ export default function AppointmentTypesSettings({ appointmentDurations }: Props
                         <Plus className="w-4 h-4 mr-2" />
                         Nouveau type
                     </Button>
-                </div> 
+                </div>
 
                 {/* Create/Edit Dialog */}
                 <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

@@ -1,20 +1,23 @@
-import AppLayout from '@/layouts/dashboard/app-layout';
-import { Head, usePage } from '@inertiajs/react';
-import { useEffect, useState } from 'react';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { DataTable } from '@/components/ui/dataTable';
+import RichTextQuill from '@/components/ui/form/RichTextQuill';
 import { Input } from '@/components/ui/input';
-import { useTranslation } from 'react-i18next';
-import { INewsletterTemplate } from '@/types/newsletterTemplate';
-import { INewsletterAnalytics, INewsletterLog } from '@/types/newsletter';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { DataTable } from '@/components/ui/dataTable';
+import AppLayout from '@/layouts/dashboard/app-layout';
+import { INewsletterAnalytics, INewsletterLog } from '@/types/newsletter';
+import { INewsletterTemplate } from '@/types/newsletterTemplate';
+import { Logger } from '@/utils/console.util';
+import { Head, usePage } from '@inertiajs/react';
 import { ColumnDef } from '@tanstack/react-table';
-import { Mail, Users, Send, AlertTriangle, CheckCircle, Clock, TrendingUp } from 'lucide-react';
 import axios from 'axios';
+import { AlertTriangle, CheckCircle, Clock, Mail, Send, TrendingUp, Users } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
+import 'react-quill-new/dist/quill.snow.css';
 // import { format } from 'date-fns';
 // import { fr } from 'date-fns/locale';
 
@@ -24,17 +27,14 @@ const formatDate = (dateString: string, formatStr?: string) => {
     if (formatStr === 'HH:mm') {
         return date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
     }
-    return date.toLocaleDateString('fr-FR', { 
-        day: '2-digit', 
-        month: '2-digit', 
+    return date.toLocaleDateString('fr-FR', {
+        day: '2-digit',
+        month: '2-digit',
         year: 'numeric',
         hour: '2-digit',
-        minute: '2-digit'
+        minute: '2-digit',
     });
 };
-import RichTextQuill from '@/components/ui/form/RichTextQuill';
-import 'react-quill/dist/quill.snow.css';
-import { Logger } from '@/utils/console.util';
 
 export default function NewsletterIndex() {
     const { t } = useTranslation();
@@ -98,13 +98,13 @@ export default function NewsletterIndex() {
     const submit = async (e: React.FormEvent) => {
         e.preventDefault();
         setSending(true);
-        
+
         try {
             const response = await axios.post(route('dashboard.newsletters.send'), {
                 subject,
-                content
+                content,
             });
-            
+
             // Afficher le message de succès avec les statistiques
             if (response.data.stats) {
                 const { success, failed, total } = response.data.stats;
@@ -116,19 +116,18 @@ export default function NewsletterIndex() {
             } else {
                 toast.success(response.data.message || t('Newsletter sent successfully', 'Newsletter envoyée avec succès'));
             }
-            
+
             // Réinitialiser le formulaire
             setSubject('');
             setContent('');
             setTemplateId('');
-            
+
             // Recharger les analytics et passer à l'onglet analytics
             await loadAnalytics();
             setActiveTab('analytics');
-            
         } catch (error: any) {
             Logger.error('Error sending newsletter:', error);
-            
+
             // Gestion des erreurs détaillée
             if (error.response?.data?.message) {
                 toast.error(error.response.data.message);
@@ -138,14 +137,16 @@ export default function NewsletterIndex() {
                 // Erreurs de validation
                 const errors = error.response.data.errors;
                 if (errors) {
-                    Object.values(errors).flat().forEach((err: any) => {
-                        toast.error(err);
-                    });
+                    Object.values(errors)
+                        .flat()
+                        .forEach((err: any) => {
+                            toast.error(err);
+                        });
                 } else {
                     toast.error(t('Validation error', 'Erreur de validation'));
                 }
             } else {
-                toast.error(t('Error sending newsletter', 'Erreur lors de l\'envoi de la newsletter'));
+                toast.error(t('Error sending newsletter', "Erreur lors de l'envoi de la newsletter"));
             }
         } finally {
             setSending(false);
@@ -223,7 +224,7 @@ export default function NewsletterIndex() {
     return (
         <AppLayout breadcrumbs={[{ title: 'Newsletters', href: '/dashboard/newsletters' }]}>
             <Head title="Newsletter Dashboard" />
-            
+
             <div className="space-y-6 p-6">
                 {/* Header with title and stats overview */}
                 <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
@@ -233,7 +234,7 @@ export default function NewsletterIndex() {
                             {t('Manage your newsletter campaigns and track performance', 'Gérez vos campagnes newsletter et suivez les performances')}
                         </p>
                     </div>
-                    
+
                     {analytics && (
                         <div className="flex items-center space-x-4 text-sm">
                             <div className="flex items-center space-x-2">
@@ -257,7 +258,7 @@ export default function NewsletterIndex() {
                         </TabsTrigger>
                         <TabsTrigger value="logs" className="flex items-center space-x-2">
                             <Send className="h-4 w-4" />
-                            <span>{t('Sending Logs', 'Logs d\'envoi')}</span>
+                            <span>{t('Sending Logs', "Logs d'envoi")}</span>
                         </TabsTrigger>
                     </TabsList>
 
@@ -291,17 +292,17 @@ export default function NewsletterIndex() {
                                             </Select>
                                         </div>
                                     )}
-                                    
+
                                     <div className="space-y-2">
                                         <label className="text-sm font-medium">{t('Subject', 'Sujet')}</label>
                                         <Input
                                             value={subject}
                                             onChange={(e) => setSubject(e.target.value)}
-                                            placeholder={t('Enter email subject', 'Saisissez le sujet de l\'email')}
+                                            placeholder={t('Enter email subject', "Saisissez le sujet de l'email")}
                                             required
                                         />
                                     </div>
-                                    
+
                                     <div className="space-y-2">
                                         <label className="text-sm font-medium">{t('Content', 'Contenu')}</label>
                                         <RichTextQuill
@@ -312,13 +313,13 @@ export default function NewsletterIndex() {
                                             className="min-h-[300px]"
                                         />
                                     </div>
-                                    
+
                                     <div className="flex items-center justify-between">
                                         <div className="text-sm text-muted-foreground">
                                             {false && analytics && (
                                                 <span>
                                                     {t('Will be sent to {{count}} subscribers', {
-                                                        count: analytics.stats.total_subscribers
+                                                        count: analytics.stats.total_subscribers,
                                                     })}
                                                 </span>
                                             )}
@@ -360,7 +361,7 @@ export default function NewsletterIndex() {
                                             <div className="text-2xl font-bold">{analytics.stats.total_subscribers}</div>
                                         </CardContent>
                                     </Card>
-                                    
+
                                     <Card>
                                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                                             <CardTitle className="text-sm font-medium">{t('Successfully Sent', 'Envoyés avec succès')}</CardTitle>
@@ -370,17 +371,17 @@ export default function NewsletterIndex() {
                                             <div className="text-2xl font-bold text-green-600">{analytics.stats.total_sent}</div>
                                         </CardContent>
                                     </Card>
-                                    
+
                                     <Card>
                                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                            <CardTitle className="text-sm font-medium">{t('Failed Sends', 'Échecs d\'envoi')}</CardTitle>
+                                            <CardTitle className="text-sm font-medium">{t('Failed Sends', "Échecs d'envoi")}</CardTitle>
                                             <AlertTriangle className="h-4 w-4 text-red-500" />
                                         </CardHeader>
                                         <CardContent>
                                             <div className="text-2xl font-bold text-red-600">{analytics.stats.total_failed}</div>
                                         </CardContent>
                                     </Card>
-                                    
+
                                     <Card>
                                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                                             <CardTitle className="text-sm font-medium">{t('Pending', 'En attente')}</CardTitle>
@@ -391,13 +392,13 @@ export default function NewsletterIndex() {
                                         </CardContent>
                                     </Card>
                                 </div>
-                                
+
                                 {analytics.recent_logs.length > 0 && (
                                     <Card>
                                         <CardHeader>
                                             <CardTitle>{t('Recent Activity', 'Activité Récente')}</CardTitle>
                                             <CardDescription>
-                                                {t('Latest newsletter sending attempts', 'Dernières tentatives d\'envoi de newsletter')}
+                                                {t('Latest newsletter sending attempts', "Dernières tentatives d'envoi de newsletter")}
                                             </CardDescription>
                                         </CardHeader>
                                         <CardContent>
@@ -414,14 +415,15 @@ export default function NewsletterIndex() {
                                                             )}
                                                             <div>
                                                                 <p className="text-sm font-medium">{log.email}</p>
-                                                                <p className="text-xs text-muted-foreground truncate max-w-[200px]">
-                                                                    {log.subject}
-                                                                </p>
+                                                                <p className="text-xs text-muted-foreground truncate max-w-[200px]">{log.subject}</p>
                                                             </div>
                                                         </div>
                                                         <div className="text-xs text-muted-foreground">
-                                                            {log.sent_at ? formatDate(log.sent_at, 'HH:mm') : 
-                                                             log.created_at ? formatDate(log.created_at, 'HH:mm') : ''}
+                                                            {log.sent_at
+                                                                ? formatDate(log.sent_at, 'HH:mm')
+                                                                : log.created_at
+                                                                  ? formatDate(log.created_at, 'HH:mm')
+                                                                  : ''}
                                                         </div>
                                                     </div>
                                                 ))}
@@ -447,9 +449,12 @@ export default function NewsletterIndex() {
                             <CardHeader>
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <CardTitle>{t('Sending Logs', 'Logs d\'Envoi')}</CardTitle>
+                                        <CardTitle>{t('Sending Logs', "Logs d'Envoi")}</CardTitle>
                                         <CardDescription>
-                                            {t('Detailed logs of all newsletter sending attempts', 'Logs détaillés de toutes les tentatives d\'envoi de newsletter')}
+                                            {t(
+                                                'Detailed logs of all newsletter sending attempts',
+                                                "Logs détaillés de toutes les tentatives d'envoi de newsletter",
+                                            )}
                                         </CardDescription>
                                     </div>
                                     <Button onClick={loadLogs} variant="outline" size="sm">
@@ -459,9 +464,9 @@ export default function NewsletterIndex() {
                             </CardHeader>
                             <CardContent>
                                 {logs.length > 0 ? (
-                                    <DataTable 
-                                        columns={logColumns} 
-                                        data={logs} 
+                                    <DataTable
+                                        columns={logColumns}
+                                        data={logs}
                                         filterColumn="email"
                                         filterPlaceholder={t('Filter by email...', 'Filtrer par email...')}
                                         showSearch={true}
@@ -470,8 +475,13 @@ export default function NewsletterIndex() {
                                 ) : (
                                     <div className="text-center py-8 text-muted-foreground">
                                         <Send className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                                        <p>{t('No sending logs found', 'Aucun log d\'envoi trouvé')}</p>
-                                        <p className="text-sm">{t('Logs will appear here after sending newsletters', 'Les logs apparaîtront ici après l\'envoi de newsletters')}</p>
+                                        <p>{t('No sending logs found', "Aucun log d'envoi trouvé")}</p>
+                                        <p className="text-sm">
+                                            {t(
+                                                'Logs will appear here after sending newsletters',
+                                                "Les logs apparaîtront ici après l'envoi de newsletters",
+                                            )}
+                                        </p>
                                     </div>
                                 )}
                             </CardContent>

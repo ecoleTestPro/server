@@ -10,7 +10,7 @@ import { ICourse } from '@/types/course';
 import { Info } from 'lucide-react';
 import { lazy, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import 'react-quill/dist/quill.snow.css';
+import 'react-quill-new/dist/quill.snow.css';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '../../ui/select';
 import { ICourseForm, PERIODICITY_UNIT } from './course.form.util';
 import { ICourseFormErrors } from './edit-course.form';
@@ -62,7 +62,10 @@ export default function CourseAdditionnalForm({
             if (courseSelected.duration && (!data.duration || data.duration === '')) {
                 setData('duration', courseSelected.duration.toString());
                 setData('periodicity_value', courseSelected.duration.toString());
-            } else if (courseSelected.periodicity_value && (!data.periodicity_value || data.periodicity_value === '' || Number(data.periodicity_value) === 0)) {
+            } else if (
+                courseSelected.periodicity_value &&
+                (!data.periodicity_value || data.periodicity_value === '' || Number(data.periodicity_value) === 0)
+            ) {
                 // Si pas de durée mais une periodicity_value, utiliser cette valeur pour les deux
                 setData('duration', courseSelected.periodicity_value.toString());
                 setData('periodicity_value', courseSelected.periodicity_value.toString());

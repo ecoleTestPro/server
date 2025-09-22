@@ -25,28 +25,20 @@ interface SessionCardProps {
 
 /**
  * Composant pour afficher une carte de session individuelle
- * 
+ *
  * @component
  * @description Affiche les informations d'une session avec ses actions possibles
  * (édition, suppression, duplication, confirmation)
  */
-export default function SessionCard({
-    session,
-    isSelected,
-    onToggleSelection,
-    onDuplicate,
-    onEdit,
-    onDelete,
-    onToggleConfirmed,
-}: SessionCardProps) {
+export default function SessionCard({ session, isSelected, onToggleSelection, onDuplicate, onEdit, onDelete, onToggleConfirmed }: SessionCardProps) {
     const { t } = useTranslation();
-    
+
     /** Vérifie si la session est passée */
     const isPast = new Date(session.end_date) < new Date();
-    
+
     /** Vérifie si la session est aujourd'hui */
     const isToday = new Date(session.start_date).toDateString() === new Date().toDateString();
-    
+
     /** Statut de confirmation de la session */
     const isConfirmed = (session as any).is_confirmed;
 
@@ -87,20 +79,14 @@ export default function SessionCard({
                             {' - '}
                             {formatDate(session.end_date)}
                         </div>
-                        
+
                         {/* Lieu de la session */}
-                        <div className="text-gray-600">
-                            📍 {session.location || t('course.session.no_location', 'Lieu non défini')}
-                        </div>
-                        
+                        <div className="text-gray-600">📍 {session.location || t('course.session.no_location', 'Lieu non défini')}</div>
+
                         {/* Statut de confirmation */}
                         {isConfirmed !== undefined && (
                             <div className="flex items-center gap-1 mt-1">
-                                {isConfirmed ? (
-                                    <CheckCircle className="w-4 h-4 text-green-600" />
-                                ) : (
-                                    <XCircle className="w-4 h-4 text-gray-400" />
-                                )}
+                                {isConfirmed ? <CheckCircle className="w-4 h-4 text-green-600" /> : <XCircle className="w-4 h-4 text-gray-400" />}
                                 <span className="text-xs text-gray-600">
                                     {isConfirmed
                                         ? t('course.session.confirmed', 'Session confirmée')
@@ -126,13 +112,9 @@ export default function SessionCard({
                             }
                             className="p-1 h-7 w-7"
                         >
-                            {isConfirmed ? (
-                                <XCircle className="w-3 h-3 text-orange-600" />
-                            ) : (
-                                <CheckCircle className="w-3 h-3 text-green-600" />
-                            )}
+                            {isConfirmed ? <XCircle className="w-3 h-3 text-orange-600" /> : <CheckCircle className="w-3 h-3 text-green-600" />}
                         </Button>
-                        
+
                         {/* Bouton duplication */}
                         <Button
                             variant="ghost"
@@ -143,7 +125,7 @@ export default function SessionCard({
                         >
                             <Copy className="w-3 h-3" />
                         </Button>
-                        
+
                         {/* Bouton édition */}
                         <Button
                             variant="ghost"
@@ -154,7 +136,7 @@ export default function SessionCard({
                         >
                             <Edit2 className="w-3 h-3" />
                         </Button>
-                        
+
                         {/* Bouton suppression */}
                         <Button
                             variant="ghost"

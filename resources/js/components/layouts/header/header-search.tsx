@@ -4,11 +4,11 @@ import { Logger } from '@/utils/console.util';
 import { ROUTE_MAP } from '@/utils/route.util';
 import { Link, router, useForm, usePage } from '@inertiajs/react';
 import axios from 'axios';
-import { Search, Loader, BookOpen, Clock, ArrowRight, X } from 'lucide-react';
-import { useState, useRef, useEffect } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { ArrowRight, BookOpen, Clock, Loader, Search, X } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import { motion, AnimatePresence } from 'framer-motion';
 
 interface ISearch {
     search: string;
@@ -33,7 +33,7 @@ export default function HeaderSearch({ className }: HeaderSearchProps) {
     const [searchText, setSearchText] = useState<string>(searchTerm || '');
     const [showDropdown, setShowDropdown] = useState<boolean>(false);
     const [courseResults, setCourseResults] = useState<ICourse[]>([]);
-    
+
     const searchContainerRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -69,7 +69,7 @@ export default function HeaderSearch({ className }: HeaderSearchProps) {
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchText(e.target.value);
         setSearchResult({ search: e.target.value });
-        
+
         if (e.target.value.length > 0) {
             setShowDropdown(true);
         }
@@ -90,14 +90,14 @@ export default function HeaderSearch({ className }: HeaderSearchProps) {
             router.visit(`${ROUTE_MAP.public.search.link}?search=${encodeURIComponent(searchText)}`);
         }
     };
-    
+
     const handleFocus = () => {
         setFocused(true);
         if (searchText.length > 0) {
             setShowDropdown(true);
         }
     };
-    
+
     const handleClearSearch = () => {
         setSearchText('');
         setSearchResult({ search: '' });
@@ -105,12 +105,12 @@ export default function HeaderSearch({ className }: HeaderSearchProps) {
         setShowDropdown(false);
         inputRef.current?.focus();
     };
-    
+
     const handleResultClick = () => {
         setShowDropdown(false);
         setFocused(false);
     };
-    
+
     // Handle click outside to close dropdown
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -119,26 +119,20 @@ export default function HeaderSearch({ className }: HeaderSearchProps) {
                 setFocused(false);
             }
         };
-        
+
         document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
     return (
         <div className={className} ref={searchContainerRef}>
-            <motion.div 
-                className="relative mx-auto w-full max-w-xl"
-                animate={{ scale: focused ? 1.02 : 1 }}
-                transition={{ duration: 0.2 }}
-            >
+            <motion.div className="relative mx-auto w-full max-w-xl" animate={{ scale: focused ? 1.02 : 1 }} transition={{ duration: 0.2 }}>
                 <div className="relative overflow-hidden rounded-2xl bg-white shadow-lg ring-1 ring-black/5 dark:bg-gray-900 dark:ring-white/10">
                     <form className="flex items-center" onSubmit={handleSubmit}>
                         <div className="flex items-center pl-4">
-                            <Search className={`h-5 w-5 transition-colors duration-200 ${
-                                focused ? 'text-primary-500' : 'text-gray-400'
-                            }`} />
+                            <Search className={`h-5 w-5 transition-colors duration-200 ${focused ? 'text-primary-500' : 'text-gray-400'}`} />
                         </div>
-                        
+
                         <input
                             ref={inputRef}
                             placeholder="Rechercher des formations, certifications..."
@@ -148,7 +142,7 @@ export default function HeaderSearch({ className }: HeaderSearchProps) {
                             onChange={handleSearch}
                             onFocus={handleFocus}
                         />
-                        
+
                         <div className="flex items-center pr-2 space-x-1">
                             {searchText && (
                                 <motion.button
@@ -164,7 +158,7 @@ export default function HeaderSearch({ className }: HeaderSearchProps) {
                                     <X className="h-4 w-4" />
                                 </motion.button>
                             )}
-                            
+
                             <motion.button
                                 type="submit"
                                 className="flex h-8 items-center justify-center rounded-lg bg-primary-500 px-3 text-white shadow-sm transition-colors hover:bg-primary-600 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50"
@@ -192,15 +186,10 @@ export default function HeaderSearch({ className }: HeaderSearchProps) {
                                 <div className="max-h-96 overflow-y-auto">
                                     {loading ? (
                                         <div className="flex items-center justify-center py-12">
-                                            <motion.div
-                                                animate={{ rotate: 360 }}
-                                                transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-                                            >
+                                            <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}>
                                                 <Loader className="h-6 w-6 text-primary-500" />
                                             </motion.div>
-                                            <span className="ml-3 text-sm text-gray-500 dark:text-gray-400">
-                                                Recherche en cours...
-                                            </span>
+                                            <span className="ml-3 text-sm text-gray-500 dark:text-gray-400">Recherche en cours...</span>
                                         </div>
                                     ) : (
                                         <div className="p-4">
@@ -225,7 +214,9 @@ export default function HeaderSearch({ className }: HeaderSearchProps) {
                                                                 className="group relative"
                                                             >
                                                                 <Link
-                                                                    href={ROUTE_MAP.public.courses.detail(course.category?.slug ?? '', course.slug).link}
+                                                                    href={
+                                                                        ROUTE_MAP.public.courses.detail(course.category?.slug ?? '', course.slug).link
+                                                                    }
                                                                     onClick={handleResultClick}
                                                                     className="flex items-center rounded-lg p-3 transition-colors hover:bg-gray-50 dark:hover:bg-gray-800"
                                                                 >
@@ -244,9 +235,9 @@ export default function HeaderSearch({ className }: HeaderSearchProps) {
                                                             </motion.div>
                                                         ))}
                                                     </div>
-                                                    
+
                                                     {courseResults.length >= 5 && (
-                                                        <motion.div 
+                                                        <motion.div
                                                             className="mt-4 border-t border-gray-100 pt-3 dark:border-gray-800"
                                                             initial={{ opacity: 0 }}
                                                             animate={{ opacity: 1 }}
@@ -268,9 +259,7 @@ export default function HeaderSearch({ className }: HeaderSearchProps) {
                                                     <div className="mb-3 rounded-full bg-gray-100 p-3 dark:bg-gray-800">
                                                         <Search className="h-6 w-6 text-gray-400" />
                                                     </div>
-                                                    <p className="text-sm font-medium text-gray-900 dark:text-white">
-                                                        Aucun résultat trouvé
-                                                    </p>
+                                                    <p className="text-sm font-medium text-gray-900 dark:text-white">Aucun résultat trouvé</p>
                                                     <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
                                                         Essayez avec d'autres termes de recherche
                                                     </p>

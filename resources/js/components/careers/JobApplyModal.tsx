@@ -1,12 +1,12 @@
 import { IJobApplication } from '@/types';
+import axios from 'axios';
+import { Loader2, Upload } from 'lucide-react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import axios from 'axios';
 import { Button } from '../ui/button/button';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '../ui/dialog';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '../ui/dialog';
-import { Loader2, Upload } from 'lucide-react';
 
 interface Props {
     jobId: number;
@@ -58,10 +58,10 @@ export default function JobApplyModal({ jobId, open, onClose }: Props) {
                     cv: null,
                 });
             }
-        } catch (error: any) {
-            if (error.response?.status === 422) {
+        } catch (error: unknown) {
+            if ((error as any).response?.status === 422) {
                 // Validation errors
-                const validationErrors = error.response.data.errors || {};
+                const validationErrors = (error as any).response.data.errors || {};
                 setErrors(validationErrors);
                 toast.error('Veuillez corriger les erreurs dans le formulaire');
             } else {
@@ -90,7 +90,7 @@ export default function JobApplyModal({ jobId, open, onClose }: Props) {
                 <DialogHeader>
                     <DialogTitle className="text-center">Postuler à cette offre</DialogTitle>
                 </DialogHeader>
-                
+
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="space-y-4">
                         <div className="space-y-2">
@@ -165,16 +165,11 @@ export default function JobApplyModal({ jobId, open, onClose }: Props) {
                     </div>
 
                     <DialogFooter className="gap-3">
-                        <Button 
-                            type="button" 
-                            variant="outline" 
-                            onClick={onClose}
-                            disabled={isSubmitting}
-                        >
+                        <Button type="button" variant="outline" onClick={onClose} disabled={isSubmitting}>
                             Annuler
                         </Button>
-                        <Button 
-                            type="submit" 
+                        <Button
+                            type="submit"
                             disabled={isSubmitting || !form.name || !form.email || !form.phone || !form.cv}
                             className="min-w-[100px]"
                         >

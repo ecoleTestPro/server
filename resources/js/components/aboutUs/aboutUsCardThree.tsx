@@ -37,7 +37,7 @@ function AboutUsCardThree() {
         <section className="text-gray-600 dark:bg-[#0a0e19] dark:text-white">
             {/* Métadonnées SEO pour optimiser le référencement */}
             <SEOMetadata />
-            
+
             {/* Section 1 - Bienvenue et présentation TestPro */}
             <WelcomeSection imageVariants={imageVariants} />
 

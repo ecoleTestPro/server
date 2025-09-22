@@ -1,15 +1,15 @@
+import JobOfferDataTable from '@/components/job-offers/jobOfferDataTable';
+import JobOfferForm from '@/components/job-offers/jobOfferForm';
+import { Button } from '@/components/ui/button/button';
+import { ConfirmDialog } from '@/components/ui/confirmDialog';
+import Drawer from '@/components/ui/drawer';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import AppLayout from '@/layouts/dashboard/app-layout';
-import { SharedData, IJobOffer, BreadcrumbItem } from '@/types';
+import { BreadcrumbItem, IJobOffer, SharedData } from '@/types';
 import { Head, router, usePage } from '@inertiajs/react';
+import { Briefcase, CirclePlus, HelpCircle, Info } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import JobOfferForm from '@/components/job-offers/jobOfferForm';
-import JobOfferDataTable from '@/components/job-offers/jobOfferDataTable';
-import { ConfirmDialog } from '@/components/ui/confirmDialog';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { Button } from '@/components/ui/button/button';
-import Drawer from '@/components/ui/drawer';
-import { HelpCircle, Info, Briefcase, CirclePlus } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -78,30 +78,36 @@ export default function DashboardJobOffers() {
                                     </TooltipTrigger>
                                     <TooltipContent>
                                         <p className="max-w-xs">
-                                            Gérez vos offres d'emploi et opportunités de carrière. Publiez des postes, 
-                                            définissez les critères et gérez les dates d'expiration.
+                                            Gérez vos offres d'emploi et opportunités de carrière. Publiez des postes, définissez les critères et
+                                            gérez les dates d'expiration.
                                         </p>
                                     </TooltipContent>
                                 </Tooltip>
                             </div>
                             <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-4">
-                                Cette section vous permet de publier et gérer les offres d'emploi de votre entreprise. 
-                                Vous pouvez créer des annonces détaillées avec les informations sur le poste, le salaire, 
-                                la localisation et les dates de candidature. Les offres actives seront visibles sur votre 
-                                site public et permettront aux candidats de postuler directement.
+                                Cette section vous permet de publier et gérer les offres d'emploi de votre entreprise. Vous pouvez créer des annonces
+                                détaillées avec les informations sur le poste, le salaire, la localisation et les dates de candidature. Les offres
+                                actives seront visibles sur votre site public et permettront aux candidats de postuler directement.
                             </p>
                             <div className="flex flex-wrap gap-4 text-xs text-gray-500">
                                 <div className="flex items-center gap-1">
                                     <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                                    <span>Offres actives : {offers.filter(o => o.is_active).length}</span>
+                                    <span>Offres actives : {offers.filter((o) => o.is_active).length}</span>
                                 </div>
                                 <div className="flex items-center gap-1">
                                     <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
-                                    <span>Expire bientôt : {offers.filter(o => {
-                                        if (!o.expires_at) return false;
-                                        const daysUntilExpiry = Math.floor((new Date(o.expires_at).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
-                                        return daysUntilExpiry > 0 && daysUntilExpiry <= 7;
-                                    }).length}</span>
+                                    <span>
+                                        Expire bientôt :{' '}
+                                        {
+                                            offers.filter((o) => {
+                                                if (!o.expires_at) return false;
+                                                const daysUntilExpiry = Math.floor(
+                                                    (new Date(o.expires_at).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24),
+                                                );
+                                                return daysUntilExpiry > 0 && daysUntilExpiry <= 7;
+                                            }).length
+                                        }
+                                    </span>
                                 </div>
                                 <div className="flex items-center gap-1">
                                     <div className="w-2 h-2 bg-gray-400 rounded-full"></div>
@@ -112,12 +118,14 @@ export default function DashboardJobOffers() {
                         <div className="flex flex-col items-end gap-3 flex-shrink-0">
                             <div className="flex items-center gap-2 text-sm text-gray-500">
                                 <Info className="h-4 w-4" />
-                                <span>{offers.length} offre{offers.length > 1 ? 's' : ''}</span>
+                                <span>
+                                    {offers.length} offre{offers.length > 1 ? 's' : ''}
+                                </span>
                             </div>
                             <Tooltip>
                                 <TooltipTrigger asChild>
-                                    <Button 
-                                        className="bg-teal-600 hover:bg-teal-700 text-white p-3 transition-colors flex items-center gap-2" 
+                                    <Button
+                                        className="bg-teal-600 hover:bg-teal-700 text-white p-3 transition-colors flex items-center gap-2"
                                         onClick={() => setOpenForm(true)}
                                         aria-label={t('Add offer', "Ajouter une offre d'emploi")}
                                     >
@@ -133,20 +141,23 @@ export default function DashboardJobOffers() {
                     </div>
                 </div>
 
-                <Drawer 
-                    title={t('Job Offer', "Offre d'emploi")} 
-                    open={openForm} 
+                <Drawer
+                    title={t('Job Offer', "Offre d'emploi")}
+                    open={openForm}
                     setOpen={(o) => {
                         setOpenForm(o);
                         if (!o) setSelected(undefined);
-                    }} 
-                    component={<JobOfferForm closeDrawer={() => setOpenForm(false)} initialData={selected} />} 
+                    }}
+                    component={<JobOfferForm closeDrawer={() => setOpenForm(false)} initialData={selected} />}
                 />
 
                 <ConfirmDialog
                     open={showConfirm}
                     title={t('Delete offer', "Supprimer l'offre d'emploi")}
-                    description={t('Are you sure?', "Êtes-vous sûr de vouloir supprimer cette offre d'emploi ? Cette action est irréversible et l'offre ne sera plus visible pour les candidats.")}
+                    description={t(
+                        'Are you sure?',
+                        "Êtes-vous sûr de vouloir supprimer cette offre d'emploi ? Cette action est irréversible et l'offre ne sera plus visible pour les candidats.",
+                    )}
                     confirmLabel={t('Delete', 'Supprimer')}
                     cancelLabel={t('Cancel', 'Annuler')}
                     onConfirm={handleDelete}

@@ -65,10 +65,11 @@ export default function ContactForm({ handleSubmit, errors, setErrors }: Contact
                 const token = await executeRecaptcha('form_submission');
                 setData('recaptchaToken', token);
                 handleSubmit({ ...data, recaptchaToken: token }, event);
-            } catch (error) {
+            } catch {
+                // Handle recaptcha error silently
             }
         },
-        [executeRecaptcha, data, setData, handleSubmit],
+        [executeRecaptcha, data, setData, handleSubmit, setErrors, t],
     );
 
     const civities: ISelectItem[] = [
@@ -93,7 +94,9 @@ export default function ContactForm({ handleSubmit, errors, setErrors }: Contact
                             onValueChange={(value) => setData('civility', value as Civility)}
                             required
                         />
-                        {errors?.civility?.map((error, index) => <InputError key={index} message={error} />)}
+                        {errors?.civility?.map((error, index) => (
+                            <InputError key={index} message={error} />
+                        ))}
                     </div>
                     <div className="col-span-1 lg:col-span-4">
                         <div className="grid gap-2">
@@ -110,7 +113,9 @@ export default function ContactForm({ handleSubmit, errors, setErrors }: Contact
                                 placeholder={t('courses.lastName', 'Nom')}
                                 autoComplete="on"
                             />
-                            {errors?.lastName?.map((error, index) => <InputError key={index} message={error} />)}
+                            {errors?.lastName?.map((error, index) => (
+                                <InputError key={index} message={error} />
+                            ))}
                         </div>
                     </div>
                     <div className="col-span-1 lg:col-span-4">
@@ -128,7 +133,9 @@ export default function ContactForm({ handleSubmit, errors, setErrors }: Contact
                                 placeholder={t('courses.firstName', 'Prénom')}
                                 autoComplete="on"
                             />
-                            {errors?.firstName?.map((error, index) => <InputError key={index} message={error} />)}
+                            {errors?.firstName?.map((error, index) => (
+                                <InputError key={index} message={error} />
+                            ))}
                         </div>
                     </div>
                     <div className="col-span-1 lg:col-span-4">
@@ -146,7 +153,9 @@ export default function ContactForm({ handleSubmit, errors, setErrors }: Contact
                                 placeholder={t('courses.email', 'Email')}
                                 autoComplete="on"
                             />
-                            {errors?.email?.map((error, index) => <InputError key={index} message={error} />)}
+                            {errors?.email?.map((error, index) => (
+                                <InputError key={index} message={error} />
+                            ))}
                         </div>
                     </div>
                     <div className="col-span-1 lg:col-span-4">
@@ -164,7 +173,9 @@ export default function ContactForm({ handleSubmit, errors, setErrors }: Contact
                                 placeholder={t('courses.phone', 'Téléphone')}
                                 autoComplete="on"
                             />
-                            {errors?.phone?.map((error, index) => <InputError key={index} message={error} />)}
+                            {errors?.phone?.map((error, index) => (
+                                <InputError key={index} message={error} />
+                            ))}
                         </div>
                     </div>
                     <div className="col-span-1 lg:col-span-8 grid gap-2">
@@ -178,7 +189,9 @@ export default function ContactForm({ handleSubmit, errors, setErrors }: Contact
                             placeholder={t('courses.company', 'Entreprise')}
                             autoComplete="on"
                         />
-                        {errors?.company?.map((error, index) => <InputError key={index} message={error} />)}
+                        {errors?.company?.map((error, index) => (
+                            <InputError key={index} message={error} />
+                        ))}
                     </div>
                     <div className="col-span-1 lg:col-span-8">
                         <div className="animate-form-field mb-[20px] md:mb-[25px]" style={{ animationDelay: '0.2s' }}>
@@ -195,7 +208,9 @@ export default function ContactForm({ handleSubmit, errors, setErrors }: Contact
                                 placeholder="Entrez le sujet de votre message"
                                 autoComplete="on"
                             />
-                            {errors?.subjectMessage?.map((error, index) => <InputError key={index} message={error} />)}
+                            {errors?.subjectMessage?.map((error, index) => (
+                                <InputError key={index} message={error} />
+                            ))}
                         </div>
                         <div className="animate-form-field mb-[20px] md:mb-[25px]" style={{ animationDelay: '0.5s' }}>
                             <label className="mb-[10px] block font-medium text-black dark:text-white">
@@ -208,7 +223,9 @@ export default function ContactForm({ handleSubmit, errors, setErrors }: Contact
                                 value={data.message}
                                 onChange={(e) => setData('message', e.target.value)}
                             ></textarea>
-                            {errors?.message?.map((error, index) => <InputError key={index} message={error} />)}
+                            {errors?.message?.map((error, index) => (
+                                <InputError key={index} message={error} />
+                            ))}
                         </div>
                     </div>
                 </div>
@@ -217,7 +234,7 @@ export default function ContactForm({ handleSubmit, errors, setErrors }: Contact
                     <p className="text-sm text-gray-500">les champs marqués d'un astérisque (*) sont obligatoires.</p>
                 </div>
                 <div className="flex justify-center">
-                    <BtnSecondary label="Envoyer" onClick={(event: any) => handleBeforeSubmit(event)} />
+                    <BtnSecondary label="Envoyer" onClick={(event: React.MouseEvent) => handleBeforeSubmit(event)} />
                 </div>
             </form>
         </div>

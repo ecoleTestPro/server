@@ -1,8 +1,8 @@
 import { ITestimonial } from '@/types/testimonial';
 import { SquarePen, Trash2 } from 'lucide-react';
 import { Button } from '../ui/button/button';
-import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 import { Switch } from '../ui/switch';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 
 interface ITestimonialActionBtnProps {
     row: {
@@ -22,19 +22,11 @@ export default function TestimonialActionBtn({ row, onEdit, onDelete, onToggle }
             <Tooltip>
                 <TooltipTrigger asChild>
                     <div className="flex items-center">
-                        <Switch 
-                            checked={isActive}
-                            onCheckedChange={() => onToggle?.(testimonial)}
-                        />
+                        <Switch checked={isActive} onCheckedChange={() => onToggle?.(testimonial)} />
                     </div>
                 </TooltipTrigger>
                 <TooltipContent>
-                    <p>
-                        {isActive 
-                            ? 'Cliquez pour masquer ce témoignage du site web' 
-                            : 'Cliquez pour afficher ce témoignage sur le site web'
-                        }
-                    </p>
+                    <p>{isActive ? 'Cliquez pour masquer ce témoignage du site web' : 'Cliquez pour afficher ce témoignage sur le site web'}</p>
                 </TooltipContent>
             </Tooltip>
 

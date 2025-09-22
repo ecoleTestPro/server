@@ -29,11 +29,7 @@ export default function TestimonialCard({ show_rating, clean, testimonial }: Tes
                             <h6 className="area-title text-lg !leading-none">{testimonial.name}</h6>
                             <p className="area-description mt-1.5 !leading-none">{testimonial.designation}</p>
                         </div>
-                        <img
-                            data-src="{{ asset('/images/svgs/quote-down-svgrepo-com.svg') }}"
-                            alt="Quote icon"
-                            className="shrink-0 animate-bounce"
-                        />
+                        <img data-src="{{ asset('/images/svgs/quote-down-svgrepo-com.svg') }}" alt="Quote icon" className="shrink-0 animate-bounce" />
                     </div>
                 </div>
             </div>

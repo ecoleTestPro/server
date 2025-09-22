@@ -3,8 +3,6 @@ import NewsletterCTA from '@/components/newsletter/newletter-cta';
 import { ROUTE_MAP } from '@/utils/route.util';
 import { Link } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
-import { FaFacebook, FaLinkedin, FaWhatsapp } from 'react-icons/fa';
-import { HiMail, HiPhone, HiLocationMarker } from 'react-icons/hi';
 import Social from './social';
 
 export const CONTACT_INFO = {
@@ -97,7 +95,7 @@ export default function Footer() {
                         </div>
 
                         {/* Contact */}
-                        <Social variant='one' /> 
+                        <Social variant="one" />
                     </div>
                 </div>
                 <div className="from-secondary-100 to-secondary-200 absolute top-0 right-0 bottom-0 left-0 -z-[1] bg-gradient-to-br dark:hidden dark:from-gray-900 dark:to-gray-800" />

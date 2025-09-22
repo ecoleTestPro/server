@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button/button';
 import { Input } from '@/components/ui/input';
-import { CalendarPlus, Edit2, Plus, Save, Trash2, X } from 'lucide-react';
+import { CalendarPlus, Edit2, Plus, Save, Trash2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 /**
@@ -39,7 +39,7 @@ interface SessionFormProps {
 
 /**
  * Composant de formulaire pour créer ou éditer des sessions de formation
- * 
+ *
  * @component
  * @description Ce composant gère l'interface de création et d'édition des sessions,
  * permettant d'ajouter plusieurs sessions à la fois avec leurs dates et lieux
@@ -66,9 +66,7 @@ export default function SessionForm({
             {/* En-tête du formulaire */}
             <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                 {isEditing ? <Edit2 className="w-4 h-4" /> : <CalendarPlus className="w-4 h-4" />}
-                {isEditing
-                    ? t('course.session.edit_session', 'Modifier la session')
-                    : t('course.session.new_sessions', 'Nouvelles sessions à créer')}
+                {isEditing ? t('course.session.edit_session', 'Modifier la session') : t('course.session.new_sessions', 'Nouvelles sessions à créer')}
             </h3>
 
             {/* Liste des sessions */}
@@ -91,13 +89,11 @@ export default function SessionForm({
                             </Button>
                         )}
                     </div>
-                    
+
                     {/* Champs du formulaire */}
                     <div className="grid grid-cols-2 gap-2">
                         <div>
-                            <label className="block text-sm font-medium mb-1">
-                                {t('start_date', 'Date de début')}
-                            </label>
+                            <label className="block text-sm font-medium mb-1">{t('start_date', 'Date de début')}</label>
                             <Input
                                 type="datetime-local"
                                 value={session.start_date}
@@ -106,9 +102,7 @@ export default function SessionForm({
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium mb-1">
-                                {t('end_date', 'Date de fin')}
-                            </label>
+                            <label className="block text-sm font-medium mb-1">{t('end_date', 'Date de fin')}</label>
                             <Input
                                 type="datetime-local"
                                 value={session.end_date}
@@ -118,9 +112,7 @@ export default function SessionForm({
                         </div>
                     </div>
                     <div>
-                        <label className="block text-sm font-medium mb-1">
-                            {t('location', 'Lieu')}
-                        </label>
+                        <label className="block text-sm font-medium mb-1">{t('location', 'Lieu')}</label>
                         <Input
                             type="text"
                             value={session.location}
@@ -146,10 +138,10 @@ export default function SessionForm({
                     {isEditing
                         ? t('course.session.editing_mode', 'Modification en cours')
                         : sessions.length === 1
-                        ? t('course.session.single_session_ready', '1 session prête à être enregistrée')
-                        : t('course.session.multiple_sessions_ready', `${sessions.length} sessions prêtes à être enregistrées`)}
+                          ? t('course.session.single_session_ready', '1 session prête à être enregistrée')
+                          : t('course.session.multiple_sessions_ready', `${sessions.length} sessions prêtes à être enregistrées`)}
                 </div>
-                
+
                 <div className="flex gap-2">
                     <Button variant="outline" type="button" onClick={onCancel} disabled={loading}>
                         {t('cancel', 'Annuler')}
@@ -158,11 +150,7 @@ export default function SessionForm({
                         type="button"
                         onClick={onSubmit}
                         disabled={loading || !isFormValid}
-                        className={
-                            isEditing
-                                ? 'bg-yellow-600 hover:bg-yellow-700 text-white'
-                                : 'bg-green-600 hover:bg-green-700 text-white'
-                        }
+                        className={isEditing ? 'bg-yellow-600 hover:bg-yellow-700 text-white' : 'bg-green-600 hover:bg-green-700 text-white'}
                     >
                         {loading ? (
                             <>

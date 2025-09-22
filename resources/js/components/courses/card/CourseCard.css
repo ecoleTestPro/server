@@ -6,7 +6,9 @@
     border-radius: 0.5rem;
     background-color: var(--color-background);
     box-shadow: var(--shadow);
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    transition:
+        transform 0.2s ease-in-out,
+        box-shadow 0.2s ease-in-out;
 }
 
 .course-card:hover {
