@@ -29,7 +29,7 @@ export default function CEOQuoteSection({
     ceoName = 'CEO',
     ceoTitle = 'Alexis NANA',
     quote = "Dans l'économie numérique, la confiance se construit par la qualité. Et la qualité commence par les tests.",
-    companyName = 'CEO TestPro',
+    companyName = 'CEO TestPro | Expert en Assurance Qualité Logicielle | Formateur ISTQB, IREB, IQBBA, IIBA, PSPO, PSM',
     // CONSULTANT SÉNIOR TESTING EXPERT TOSCA
 }: CEOQuoteSectionProps) {
     return (

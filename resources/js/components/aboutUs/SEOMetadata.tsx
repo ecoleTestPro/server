@@ -40,8 +40,8 @@ export default function SEOMetadata({
         foundingDate: '2020',
         founder: {
             '@type': 'Person',
-            name: 'CEO TestPro',
-            jobTitle: 'Directeur Général',
+            name: 'Alexis NANA',
+            jobTitle: 'CEO TestPro | Expert en Assurance Qualité Logicielle | Formateur ISTQB, IREB, IQBBA, IIBA, PSPO, PSM',
         },
         address: {
             '@type': 'PostalAddress',
