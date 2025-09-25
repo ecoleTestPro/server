@@ -27,6 +27,32 @@ error() {
 # Début du script
 log "Début du processus de build..."
 
+# Format Frontend
+log "Formatage du code frontend..."
+if npm run format; then
+    success "Code formaté avec succès"
+else
+    error "Le formatage a échoué"
+    exit 1
+fi
+
+# Lint Frontend
+log "Vérification du linting frontend..."
+if npm run lint; then
+    success "Linting terminé avec succès"
+else
+    warning "Le linting a détecté des erreurs, mais le build continue..."
+fi
+
+# Tests
+log "Exécution des tests..."
+if ./vendor/bin/pest; then
+    success "Tests passés avec succès"
+else
+    error "Les tests ont échoué"
+    exit 1
+fi
+
 # Compilation de l'application
 log "Compilation de l'application avec npm run build..."
 if npm run build; then
