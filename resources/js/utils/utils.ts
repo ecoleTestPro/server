@@ -72,6 +72,33 @@ const getNextSessionDate = (course: ICourse): Date | null => {
 };
 
 /**
+ * Obtient la date de session la plus proche pour un cours
+ * @param course - Le cours à analyser
+ * @returns La date de la session la plus proche ou "N/A"
+ */
+export const getNextSession = (course: ICourse): string | "N/A" => {
+    if (!course.course_sessions || course.course_sessions.length === 0) {
+        return "N/A";
+    }
+
+    const now = new Date();
+    const upcomingSessions = course.course_sessions
+        .filter((session) => new Date(session.start_date) > now)
+        .sort((a, b) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime());
+
+    const next = upcomingSessions[0];
+    if (!next) {
+        return "N/A";
+    }
+
+    if (next.end_date) {
+        return `${next.start_date} - ${next.end_date}`;
+    }
+
+    return next.start_date;
+};
+
+/**
  * Takes a ICustomSharedData object and returns a list of ICourseCategory
  * with their courses populated, filtered and sorted by session date.
  *

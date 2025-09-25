@@ -1,6 +1,7 @@
 import { ICourseEnrollment } from '@/types/course';
 import { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown, Mail, Phone, Trash2 } from 'lucide-react';
+import { AlertTriangle, ArrowUpDown, Mail, Phone, Trash2 } from 'lucide-react';
+import { Badge } from '../ui/badge';
 import { Button } from '../ui/button/button';
 import { DataTable } from '../ui/dataTable';
 
@@ -8,6 +9,12 @@ interface EnrollmentDataTableProps {
     enrollments: ICourseEnrollment[];
     onDeleteRow?: (row: ICourseEnrollment) => void;
 }
+
+const modeOptions = [
+    { label: 'En ligne', value: 'online' },
+    { label: 'En présentiel', value: 'in-person' },
+    { label: 'En hybride (en ligne + présentiel)', value: 'hybrid' },
+];
 
 export default function EnrollmentDataTable({ enrollments, onDeleteRow }: EnrollmentDataTableProps) {
     const columns: ColumnDef<ICourseEnrollment>[] = [
@@ -73,12 +80,27 @@ export default function EnrollmentDataTable({ enrollments, onDeleteRow }: Enroll
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             ),
-            cell: ({ row }) => <span>{row.original.course?.title || '-'}</span>,
+            cell: ({ row }) => {
+                if (!row.original.course?.title) {
+                    return (
+                        <div className="flex items-center gap-2 cursor-help">
+                            <Badge variant="destructive" className="gap-1 animate-pulse">
+                                <AlertTriangle className="h-3 w-3" />
+                                Formation supprimée
+                            </Badge>
+                        </div>
+                    );
+                }
+                return <span>{row.original.course.title}</span>;
+            },
         },
         {
             accessorKey: 'mode',
             header: 'Mode',
-            cell: ({ row }) => <span>{row.original.mode}</span>,
+            cell: ({ row }) => {
+                const label = modeOptions.find((option) => option.value === row.original.mode)?.label || '-';
+                return <span>{label}</span>;
+            },
         },
         {
             accessorKey: 'created_at',
@@ -87,7 +109,6 @@ export default function EnrollmentDataTable({ enrollments, onDeleteRow }: Enroll
         },
         {
             id: 'actions',
-            enableHiding: false,
             cell: ({ row }) => (
                 <Button variant="ghost" size="icon" onClick={() => onDeleteRow?.(row.original)}>
                     <Trash2 className="text-red-600 h-4 w-4" />

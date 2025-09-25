@@ -62,7 +62,6 @@ class CourseRepository extends Repository
                         });
                 })
                 ->latest('id')
-                ->withTrashed()
                 ->get();
         } catch (\Exception $e) {
             throw new \Exception('Error fetching courses: ' . $e->getMessage());

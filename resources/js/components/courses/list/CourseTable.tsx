@@ -1,7 +1,7 @@
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { ICourse } from '@/types/course';
 import { ROUTE_MAP } from '@/utils/route.util';
-import { getPeriodicity, getPrice } from '@/utils/utils';
+import { getNextSession, getPeriodicity, getPrice } from '@/utils/utils';
 import { Link, router } from '@inertiajs/react';
 import { Calendar, ChevronRight, Clock, Euro } from 'lucide-react';
 import { useState } from 'react';
@@ -35,28 +35,6 @@ export default function CourseTable({ courses }: ICourseTableProps) {
     const handleCloseDialog = () => {
         setCourseSelected(null);
         setIsDialogOpen(false);
-    };
-
-    const getNextSession = (course: ICourse): string => {
-        if (!course.course_sessions || course.course_sessions.length === 0) {
-            return t('COURSE.TABLE.NO_UPCOMING_SESSION', 'N/A');
-        }
-
-        const now = new Date();
-        const upcomingSessions = course.course_sessions
-            .filter((session) => new Date(session.start_date) > now)
-            .sort((a, b) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime());
-
-        const next = upcomingSessions[0];
-        if (!next) {
-            return t('COURSE.TABLE.NO_UPCOMING_SESSION', 'N/A');
-        }
-
-        if (next.end_date) {
-            return `${next.start_date} - ${next.end_date}`;
-        }
-
-        return next.start_date;
     };
 
     if (!courses || courses.length === 0) {
@@ -169,6 +147,7 @@ export default function CourseTable({ courses }: ICourseTableProps) {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                            {/* .filter((item) => getNextSession(item) != 'N/A') */}
                             {courses.map((item, index) => (
                                 <tr key={index} className="group hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-200">
                                     <td className="px-6 py-4">
@@ -187,6 +166,7 @@ export default function CourseTable({ courses }: ICourseTableProps) {
                                     <td className="px-6 py-4">
                                         <div className="flex items-center gap-2">
                                             <Calendar className="w-4 h-4 text-blue-500" />
+                                            {/* TODO: ajouter le nombre de sessions */}
                                             <span className="text-gray-700 dark:text-gray-300">{getNextSession(item)}</span>
                                         </div>
                                     </td>
