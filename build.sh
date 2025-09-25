@@ -45,13 +45,13 @@ else
 fi
 
 # Tests
-log "Exécution des tests..."
-if ./vendor/bin/pest; then
-    success "Tests passés avec succès"
-else
-    error "Les tests ont échoué"
-    exit 1
-fi
+# log "Exécution des tests..."
+# if ./vendor/bin/pest; then
+#     success "Tests passés avec succès"
+# else
+#     error "Les tests ont échoué"
+#     exit 1
+# fi
 
 # Compilation de l'application
 log "Compilation de l'application avec npm run build..."

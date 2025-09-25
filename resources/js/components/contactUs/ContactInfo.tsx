@@ -1,4 +1,3 @@
-import { useTranslation } from 'react-i18next';
 import { HiLocationMarker, HiMail, HiPhone } from 'react-icons/hi';
 import { CONTACT_INFO } from '../layouts/footer/footer';
 import MotionSection from '../motion/MotionSection';
