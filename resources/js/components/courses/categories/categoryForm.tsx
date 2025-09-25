@@ -12,7 +12,6 @@ import { Label } from '@/components/ui/label';
 import { InputFile } from '@/components/ui/inputFile';
 import { SharedData } from '@/types';
 import { ICourseCategory } from '@/types/course';
-import { lazy } from 'react';
 import 'react-quill-new/dist/quill.snow.css';
 
 // // const ReactQuill = lazy(() => import('react-quill'));

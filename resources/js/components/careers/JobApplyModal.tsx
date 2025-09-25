@@ -59,11 +59,16 @@ export default function JobApplyModal({ jobId, open, onClose }: Props) {
                 });
             }
         } catch (error: unknown) {
-            if ((error as any).response?.status === 422) {
-                // Validation errors
-                const validationErrors = (error as any).response.data.errors || {};
-                setErrors(validationErrors);
-                toast.error('Veuillez corriger les erreurs dans le formulaire');
+            if (error && typeof error === 'object' && 'response' in error) {
+                const axiosError = error as { response?: { status: number; data: { errors?: Record<string, string[]> } } };
+                if (axiosError.response?.status === 422) {
+                    // Validation errors
+                    const validationErrors = axiosError.response.data.errors || {};
+                    setErrors(validationErrors as Partial<IJobApplication>);
+                    toast.error('Veuillez corriger les erreurs dans le formulaire');
+                } else {
+                    toast.error("Erreur lors de l'envoi de la candidature");
+                }
             } else {
                 toast.error("Erreur lors de l'envoi de la candidature");
             }
@@ -155,11 +160,11 @@ export default function JobApplyModal({ jobId, open, onClose }: Props) {
                             </div>
                             {form.cv && (
                                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                    <span className="truncate">{form.cv?.name}</span>
-                                    <span>({Math.round(form.cv?.size / 1024 || 0)} KB)</span>
+                                    <span className="truncate">{form.cv.name}</span>
+                                    <span>({Math.round((form.cv.size || 0) / 1024)} KB)</span>
                                 </div>
                             )}
-                            {errors.cv && <p className="text-sm text-destructive">{errors.cv}</p>}
+                            {errors?.cv && <p className="text-sm text-destructive">{errors?.cv}</p>}
                             <p className="text-xs text-muted-foreground">Taille maximale: 5MB</p>
                         </div>
                     </div>

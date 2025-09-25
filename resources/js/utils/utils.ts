@@ -76,9 +76,9 @@ const getNextSessionDate = (course: ICourse): Date | null => {
  * @param course - Le cours à analyser
  * @returns La date de la session la plus proche ou "N/A"
  */
-export const getNextSession = (course: ICourse): string | "N/A" => {
+export const getNextSession = (course: ICourse): string | 'N/A' => {
     if (!course.course_sessions || course.course_sessions.length === 0) {
-        return "N/A";
+        return 'N/A';
     }
 
     const now = new Date();
@@ -88,7 +88,7 @@ export const getNextSession = (course: ICourse): string | "N/A" => {
 
     const next = upcomingSessions[0];
     if (!next) {
-        return "N/A";
+        return 'N/A';
     }
 
     if (next.end_date) {

@@ -17,26 +17,21 @@ interface BlogSidebarProps {
     onResetFilters: () => void;
 }
 
-/**
- * Formate une date en format lisible français
- */
-const formatDate = (dateString: string): string => {
-    return new Date(dateString).toLocaleDateString('fr-FR', {
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric',
-    });
-};
+// Fonctions utilitaires commentées pour usage futur
+// const formatDate = (dateString: string): string => {
+//     return new Date(dateString).toLocaleDateString('fr-FR', {
+//         day: 'numeric',
+//         month: 'short',
+//         year: 'numeric',
+//     });
+// };
 
-/**
- * Estime le temps de lecture basé sur le contenu
- */
-const estimateReadingTime = (content: string): number => {
-    const wordsPerMinute = 200;
-    const textContent = content.replace(/<[^>]*>/g, '');
-    const wordCount = textContent.split(/\s+/).length;
-    return Math.ceil(wordCount / wordsPerMinute);
-};
+// const estimateReadingTime = (content: string): number => {
+//     const wordsPerMinute = 200;
+//     const textContent = content.replace(/<[^>]*>/g, '');
+//     const wordCount = textContent.split(/\s+/).length;
+//     return Math.ceil(wordCount / wordsPerMinute);
+// };
 
 const BlogSidebar: React.FC<BlogSidebarProps> = ({
     categories,
@@ -48,7 +43,7 @@ const BlogSidebar: React.FC<BlogSidebarProps> = ({
     onTagToggle,
     onResetFilters,
 }) => {
-    const { t } = useTranslation();
+    // const { t } = useTranslation();
 
     return (
         <div className="space-y-6">

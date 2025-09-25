@@ -120,7 +120,7 @@ function CourseCardWrapper({ searchTerm, viewMode, loading, setLoading, courses,
                             style: {
                                 maxWidth: '500px',
                             },
-                        }
+                        },
                     );
                 } else {
                     toast.success(t('courses.delete', 'Formation supprimée avec succès !'));
@@ -198,7 +198,8 @@ function CourseCardWrapper({ searchTerm, viewMode, loading, setLoading, courses,
                                             <p className="font-semibold text-amber-900 mb-2">ATTENTION - Inscriptions existantes</p>
                                             <p className="text-amber-800">{enrollmentWarning}</p>
                                             <p className="text-amber-700 mt-2 text-sm">
-                                                La suppression de cette formation peut créer des incohérences dans les données des utilisateurs inscrits.
+                                                La suppression de cette formation peut créer des incohérences dans les données des utilisateurs
+                                                inscrits.
                                             </p>
                                         </div>
                                     </div>
@@ -212,7 +213,7 @@ function CourseCardWrapper({ searchTerm, viewMode, loading, setLoading, courses,
                         )}
                     </>
                 }
-                confirmLabel={enrollmentWarning ? "Supprimer quand même" : "Supprimer"}
+                confirmLabel={enrollmentWarning ? 'Supprimer quand même' : 'Supprimer'}
                 cancelLabel="Annuler"
                 onConfirm={handleDelete}
                 onCancel={() => {
