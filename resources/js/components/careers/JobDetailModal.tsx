@@ -1,6 +1,6 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { IJobOffer } from '@/types';
-import { FaBriefcase, FaCalendarAlt, FaEuroSign, FaMapMarkerAlt } from 'react-icons/fa';
+import { FaBriefcase, FaCalendarAlt, FaCashRegister, FaEuroSign, FaMapMarkerAlt, FaMoneyBill } from 'react-icons/fa';
 import BtnSecondary from '../ui/button/btn-secondary';
 
 interface Props {
@@ -50,7 +50,7 @@ export default function JobDetailModal({ job, open, onClose, onApply }: Props) {
 
                         {job.salary && (
                             <div className="flex items-center gap-2">
-                                <FaEuroSign className="text-yellow-500" />
+                                <FaMoneyBill className="text-yellow-500" />
                                 <span className="text-gray-700 dark:text-gray-300">
                                     <strong>Salaire:</strong> {job.salary.toLocaleString()} (FCFA)
                                 </span>
