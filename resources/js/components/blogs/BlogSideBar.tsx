@@ -3,7 +3,6 @@ import { ROUTE_MAP } from '@/utils/route.util';
 import { Link } from '@inertiajs/react';
 import { Calendar, Clock, Folder, Hash } from 'lucide-react';
 import React from 'react';
-import { useTranslation } from 'react-i18next';
 
 interface BlogSidebarProps {
     categories: IBlogCategory[];

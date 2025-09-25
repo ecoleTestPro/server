@@ -1,9 +1,7 @@
 import AboutUsServices from '@/components/aboutUs/AboutUsServices';
 import Hero, { IHeroBreadcrumbItems } from '@/components/hero/hearo';
 import DefaultLayout from '@/layouts/public/front.layout';
-import { type SharedData } from '@/types';
 import { ROUTE_MAP } from '@/utils/route.util';
-import { usePage } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 
 export default function ServicesPage() {
