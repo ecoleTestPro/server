@@ -20,13 +20,13 @@ const Hero = ({ title, description, breadcrumbItems, gradient = 'style-1', categ
     const getGradient = (style: string) => {
         switch (style) {
             case 'style-1':
-                return 'bg-gradient-to-br from-teal-100 via-teal-200 to-teal-300 animate-gradient-shift-1';
+                return 'bg-gradient-to-br from-teal-100 via-teal-200 to-teal-300 animate-gradient-shift-disable-1';
             case 'style-2':
-                return 'bg-gradient-to-br from-blue-100 via-blue-200 to-blue-300 animate-gradient-shift-2';
+                return 'bg-gradient-to-br from-blue-100 via-blue-200 to-blue-300 animate-gradient-shift-disable-2';
             case 'style-3':
-                return 'bg-gradient-to-br from-purple-100 via-purple-200 to-purple-300 animate-gradient-shift-3';
+                return 'bg-gradient-to-br from-purple-100 via-purple-200 to-purple-300 animate-gradient-shift-disable-3';
             default:
-                return 'bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 animate-gradient-shift-default';
+                return 'bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 animate-gradient-shift-disable-default';
         }
     };
 
