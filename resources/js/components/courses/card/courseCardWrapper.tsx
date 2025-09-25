@@ -105,36 +105,33 @@ function CourseCardWrapper({ searchTerm, viewMode, loading, setLoading, courses,
         setIsDeleting(true);
         axios
             .delete(route('dashboard.course.delete', courseToDelete?.id))
-            .then(() => {
+            .then((response) => {
                 setShowConfirm(false);
                 setIsDeleting(false);
                 setCourseToDelete(null);
-                toast.success(t('courses.delete', 'Formation supprimée avec succès !'));
+                setEnrollmentWarning(null);
+
+                // Show success message with enrollment warning if applicable
+                if (response.data.hadEnrollments) {
+                    toast.success(
+                        `Formation supprimée avec succès !\n⚠️ ${response.data.enrollmentCount} utilisateur(s) étaient inscrits à cette formation.`,
+                        {
+                            duration: 6000,
+                            style: {
+                                maxWidth: '500px',
+                            },
+                        }
+                    );
+                } else {
+                    toast.success(t('courses.delete', 'Formation supprimée avec succès !'));
+                }
+
                 handleGetAllCourses?.();
             })
             .catch((error) => {
                 setIsDeleting(false);
                 Logger.error('Error deleting course:', error);
-
-                // Check if the error is due to existing enrollments
-                if (error.response?.data?.hasEnrollments) {
-                    const enrollmentCount = error.response.data.enrollmentCount;
-                    const message =
-                        error.response.data.message ||
-                        `Cette formation ne peut pas être supprimée car ${enrollmentCount} utilisateur(s) y sont inscrits. Veuillez d'abord gérer les inscriptions existantes.`;
-
-                    // Show a custom alert for enrollment conflict
-                    toast.error(message, {
-                        duration: 6000, // Show for 6 seconds
-                        style: {
-                            maxWidth: '500px',
-                        },
-                    });
-                    setShowConfirm(false);
-                    setCourseToDelete(null);
-                } else {
-                    toast.error(t('courses.delete_error', 'Erreur lors de la suppression de la formation.'));
-                }
+                toast.error(t('courses.delete_error', 'Erreur lors de la suppression de la formation.'));
             });
     };
 
@@ -147,10 +144,10 @@ function CourseCardWrapper({ searchTerm, viewMode, loading, setLoading, courses,
         // Optional: Check for enrollments beforehand to show warning in dialog
         axios
             .get(route('dashboard.course.enrollments.count', course.id))
-            .then(() => {
+            .then((response) => {
                 const count = response.data.count;
                 if (count > 0) {
-                    setEnrollmentWarning(`⚠️ Attention : ${count} utilisateur(s) sont inscrits à cette formation.`);
+                    setEnrollmentWarning(`${count} utilisateur(s) sont actuellement inscrits à cette formation.`);
                 }
             })
             .catch((error) => {
@@ -192,15 +189,30 @@ function CourseCardWrapper({ searchTerm, viewMode, loading, setLoading, courses,
                 title="Supprimer la formation"
                 description={
                     <>
-                        Voulez-vous vraiment supprimer cette formation ? Cette action est irréversible.
-                        {enrollmentWarning && (
-                            <div className="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded-md text-yellow-800 text-sm">
-                                {enrollmentWarning}
-                            </div>
+                        {enrollmentWarning ? (
+                            <>
+                                <div className="mb-4 p-4 bg-amber-50 border-2 border-amber-400 rounded-lg">
+                                    <div className="flex items-start">
+                                        <div className="text-amber-600 mr-3 text-2xl">⚠️</div>
+                                        <div>
+                                            <p className="font-semibold text-amber-900 mb-2">ATTENTION - Inscriptions existantes</p>
+                                            <p className="text-amber-800">{enrollmentWarning}</p>
+                                            <p className="text-amber-700 mt-2 text-sm">
+                                                La suppression de cette formation peut créer des incohérences dans les données des utilisateurs inscrits.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p className="text-gray-700">
+                                    Êtes-vous sûr de vouloir supprimer cette formation malgré les inscriptions existantes ?
+                                </p>
+                            </>
+                        ) : (
+                            <p>Voulez-vous vraiment supprimer cette formation ? Cette action est irréversible.</p>
                         )}
                     </>
                 }
-                confirmLabel="Supprimer"
+                confirmLabel={enrollmentWarning ? "Supprimer quand même" : "Supprimer"}
                 cancelLabel="Annuler"
                 onConfirm={handleDelete}
                 onCancel={() => {

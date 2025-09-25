@@ -279,23 +279,21 @@ class CourseController extends Controller
     {
         try {
             $course = CourseRepository::query()->findOrFail($id);
-            
+
             // Check if there are any enrollments for this course
             $enrollmentCount = \App\Models\Enrollment::where('course_id', $id)->count();
-            
-            if ($enrollmentCount > 0) {
-                return response()->json([
-                    'message' => "Cette formation ne peut pas être supprimée car {$enrollmentCount} utilisateur(s) y sont inscrits. Veuillez d'abord gérer les inscriptions existantes.",
-                    'status' => 409, // Conflict status
-                    'hasEnrollments' => true,
-                    'enrollmentCount' => $enrollmentCount
-                ]);
-            }
-            
-            $course->delete();
+
+            // Use soft delete to update deleted_at
+            $course->delete(); // This will soft delete because the model uses SoftDeletes trait
+
+            // Return success with enrollment warning if applicable
             return response()->json([
-                'message' => 'Course deleted successfully',
+                'message' => $enrollmentCount > 0
+                    ? "Formation supprimée avec succès. Attention : {$enrollmentCount} utilisateur(s) étaient inscrits à cette formation."
+                    : 'Formation supprimée avec succès',
                 'status' => 200,
+                'hadEnrollments' => $enrollmentCount > 0,
+                'enrollmentCount' => $enrollmentCount
             ]);
         } catch (\Exception $e) {
             return response()->json([

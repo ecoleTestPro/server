@@ -1,5 +1,6 @@
 import { ICourseCategory } from '@/types/course';
 import { ROUTE_MAP } from '@/utils/route.util';
+import { getNextSession } from '@/utils/utils';
 import { Link } from '@inertiajs/react';
 import CourseTable from './CourseTable';
 
@@ -22,7 +23,7 @@ export const ListCourseByCategory = ({ title, slug, coursesList }: ListCourseByC
                 )}
             </h2>
             {coursesList.map((category) => (
-                <CourseTable key={category.id} courses={category.courses || []} />
+                <CourseTable key={category.id} courses={category?.courses?.filter((course) => getNextSession(course) != 'N/A') || []} />
             ))}
         </div>
     );

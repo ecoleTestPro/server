@@ -85,7 +85,14 @@ export default function Blogs() {
                 <div className={CLASS_NAME.section}>
                     <div className="container mx-auto">
                         <div className="grid grid-col-1 md:grid-cols-12 gap-4">
-                            <div className="col-span-12 md:col-span-4">
+                            <div className="col-span-12 md:col-span-8">
+                                <div className="py-[12px] md:py-[24px]">
+                                    <BlogGridList blogs={currentBlogs} />
+                                    <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+                                </div>
+                            </div>
+
+                            <div className="col-span-12 md:col-span-4 p-2">
                                 <BlogSidebar
                                     categories={blogCategories}
                                     tags={tags()}
@@ -112,12 +119,6 @@ export default function Blogs() {
                                         setCurrentPage(1);
                                     }}
                                 />
-                            </div>
-                            <div className="col-span-12 md:col-span-8">
-                                <div className="py-[12px] md:py-[24px]">
-                                    <BlogGridList blogs={currentBlogs} />
-                                    <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
-                                </div>
                             </div>
                         </div>
                     </div>

@@ -257,6 +257,7 @@ export interface ICustomSharedData {
         total?: number;
         last_30_days?: number;
         list?: IDataWithPagination<ICourseEnrollment>;
+        data: ICourseEnrollment[];
     };
 
     notifications?: {

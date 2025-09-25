@@ -115,14 +115,14 @@ const SessionsTimeline = ({ sessions }: SessionsTimelineProps) => {
 
         if (endDate && now > endDate) {
             return (
-                <Badge variant="secondary" className="text-xs">
+                <Badge variant="secondary" className="text-xs text-white">
                     Terminée
                 </Badge>
             );
         } else if (now >= startDate && (!endDate || now <= endDate)) {
-            return <Badge className="bg-green-500 text-xs">En cours</Badge>;
+            return <Badge className="bg-green-500 text-xs text-white">En cours</Badge>;
         } else if (startDate > now) {
-            return <Badge className="bg-blue-500 text-xs">À venir</Badge>;
+            return <Badge className="bg-blue-500 text-xs text-white">À venir</Badge>;
         }
         return null;
     };
