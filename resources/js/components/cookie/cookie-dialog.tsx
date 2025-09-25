@@ -16,7 +16,7 @@ export function CookieConsent({
     description = 'We use cookies to enhance your experience. By accepting, you agree to our cookie policy.',
     acceptLabel = 'Accept Cookies',
     declineLabel = 'Decline',
-    policyLink = '/cookie-policy',
+    // policyLink = '/cookie-policy', // Non utilisé actuellement
 }: CookieConsentProps) {
     const [isOpen, setIsOpen] = React.useState(false);
 

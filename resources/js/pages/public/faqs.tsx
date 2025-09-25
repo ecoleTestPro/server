@@ -7,7 +7,7 @@ import { usePage } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 
 export default function FaqsPage() {
-    const { auth } = usePage<SharedData>().props;
+    // const { auth } = usePage<SharedData>().props; // Non utilisé
     const { t } = useTranslation();
 
     const breadcrumbItems: IHeroBreadcrumbItems[] = [

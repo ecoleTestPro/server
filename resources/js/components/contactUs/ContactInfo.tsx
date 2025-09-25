@@ -52,7 +52,7 @@ const contacts: ContactInfo[] = [
 ];
 
 export default function ContactInfo() {
-    const {} = useTranslation(); // t unused
+    // const { t } = useTranslation(); // Non utilisé actuellement
     return (
         <MotionSection>
             <div>

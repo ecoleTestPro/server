@@ -7,7 +7,7 @@ export const JobSearchFilters: React.FC<{
     const [title, setTitle] = useState('');
     const [location, setLocation] = useState('');
     const [type, setType] = useState('');
-    const [minSalary, setMinSalary] = useState(0);
+    const [minSalary] = useState(0); // setMinSalary non utilisé
 
     useEffect(() => {
         onFilterChange({ title, location, type, minSalary });

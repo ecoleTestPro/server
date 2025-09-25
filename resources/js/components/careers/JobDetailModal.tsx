@@ -48,13 +48,15 @@ export default function JobDetailModal({ job, open, onClose, onApply }: Props) {
                             </div>
                         )}
 
-                        {job.salary && (
+                        {job.salary && job.salary > 0 ? (
                             <div className="flex items-center gap-2">
                                 <FaMoneyBill className="text-yellow-500" />
                                 <span className="text-gray-700 dark:text-gray-300">
                                     <strong>Salaire:</strong> {job.salary.toLocaleString()} (FCFA)
                                 </span>
                             </div>
+                        ) : (
+                            ''
                         )}
                     </div>
 

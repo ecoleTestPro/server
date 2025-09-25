@@ -39,15 +39,15 @@ const fixMalformedHeaders = (html: string): string => {
     // Pattern to match consecutive header tags with single characters or short content
     const headerPattern = /(<h([1-6])[^>]*>)([^<]{1,3})(<\/h\2>)(\s*<h\2[^>]*>[^<]{1,3}<\/h\2>)*/gi;
 
-    return html.replace(headerPattern, (match, openTag, level, firstContent) => {
+    return html.replace(headerPattern, (match, openTag, level) => {
         // Extract all consecutive header content
-        const headerRegex = new RegExp(`<h${level}[^>]*>([^<]*)<\/h${level}>`, 'gi');
+        const headerRegex = new RegExp(`<h${level}[^>]*>([^<]*)</h${level}>`, 'gi');
         const matches = match.match(headerRegex) || [];
 
         // Combine all the content from consecutive headers
         const combinedContent = matches
             .map((headerMatch) => {
-                const contentMatch = headerMatch.match(new RegExp(`<h${level}[^>]*>([^<]*)<\/h${level}>`, 'i'));
+                const contentMatch = headerMatch.match(new RegExp(`<h${level}[^>]*>([^<]*)</h${level}>`, 'i'));
                 return contentMatch ? contentMatch[1] : '';
             })
             .join('');
