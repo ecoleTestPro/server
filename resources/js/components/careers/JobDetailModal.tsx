@@ -1,6 +1,6 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { IJobOffer } from '@/types';
-import { FaBriefcase, FaCalendarAlt, FaCashRegister, FaEuroSign, FaMapMarkerAlt, FaMoneyBill } from 'react-icons/fa';
+import { FaBriefcase, FaCalendarAlt, FaMapMarkerAlt, FaMoneyBill } from 'react-icons/fa';
 import BtnSecondary from '../ui/button/btn-secondary';
 
 interface Props {

@@ -24,7 +24,11 @@ export default function BlogCard({ blog }: BlogCardProps) {
                 });
             }}
         >
-            <img src={'https://placehold.co/600x400'} alt={blog.title} className="h-48 w-full object-cover" />
+            {blog.image ? (
+                <img src={'https://placehold.co/600x400'} alt={blog.title} className="h-48 w-full object-cover" />
+            ) : (
+                <div className="h-48 w-full bg-gray-200"></div>
+            )}
             <div className="p-6 flex flex-col flex-1">
                 <h2 className="text-lg font-bold mb-2 text-gray-800 line-clamp-2">{blog.title}</h2>
                 <p className="text-base text-gray-600 mb-4 flex-1 line-clamp-3">{blog.excerpt}</p>
