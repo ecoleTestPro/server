@@ -116,7 +116,7 @@ export default function Header() {
         label: 'Programmes de reconversion',
         href: ROUTE_MAP.public.reconversionMetier.link,
         description: 'Découvrez nos programmes de reconversion professionnelle.',
-        image: 'https://placehold.jp/150x150.png',
+        image: '/assets/images/Formation-en-ligne-.jpeg',
     };
 
     const updateCourseMenuPart = (
