@@ -33,11 +33,11 @@ const Hero = ({ title, description, breadcrumbItems, gradient = 'style-1', categ
     return (
         <section className={`${getGradient(gradient)} py-12 text-gray-900 dark:text-white md:py-16`}>
             <div className="container mx-auto px-4 md:px-6 lg:px-8">
-                <nav className="mb-4 text-sm text-gray-700 dark:text-gray-300">
+                <nav className="mb-4 text-sm text-gray-700 dark:text-black">
                     <ol className="flex flex-wrap items-center gap-2">
                         {breadcrumbItems.map((item, index) => (
                             <li key={index}>
-                                <Link href={item.href} className="transition-colors hover:text-teal-700 dark:hover:text-teal-300">
+                                <Link href={item.href} className="transition-colors hover:underline">
                                     {item.label}
                                 </Link>
                                 {index < breadcrumbItems.length - 1 && <span className="mx-2">›</span>}
@@ -47,7 +47,7 @@ const Hero = ({ title, description, breadcrumbItems, gradient = 'style-1', categ
                 </nav>
                 <hr className="mb-4 w-1/6 border-gray-400 dark:border-gray-600 md:w-1/12" />
                 <div className="w-4/5">
-                    <h1 className="mb-4 text-4xl font-bold md:text-5xl">{title}</h1>
+                    <h1 className="mb-4 text-4xl font-bold md:text-5xl text-[#111]">{title}</h1>
                     {description && <p className="w-4/5 text-lg text-gray-800 dark:text-gray-200 md:text-xl">{description}</p>}
                 </div>
 
