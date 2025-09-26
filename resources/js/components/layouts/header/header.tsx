@@ -85,7 +85,7 @@ export default function Header() {
 
         const output: MenuChildItem[] = filteredCategories.map((category) => {
             const defaultDescription =
-                'Les formations vous préparent au passage de nombreuses certifications internationales. Validez vos compétences et accroissez votre employabilité ainsi que votre efficacité au sein de votre entreprise.';
+                '';
 
             let childItems: MenuChildItem[] = [];
 

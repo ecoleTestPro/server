@@ -39,7 +39,7 @@ export default function HeaderNavigationMenuItem({ menuItem }: HeaderNavigationM
                                     {menuItem.label}
                                 </Link>
                             </NavigationMenuTrigger>
-                            <NavigationMenuContent className="z-50 bg-gray-50">
+                            <NavigationMenuContent className="z-50 bg-gray-50 max-h-[70vh] overflow-y-auto">
                                 {/* Increased z-index to 50 */}
                                 <ul
                                     className={`z-20 grid gap-2 ${menuItem.gridClass ? menuItem.gridClass : 'grid-cols-1'}  ${menuItem.maxWidth ? menuItem.maxWidth : 'min-w-[300px]'} p-4`}
@@ -60,7 +60,7 @@ export default function HeaderNavigationMenuItem({ menuItem }: HeaderNavigationM
                                         menuItem.children.items.map((item) => (
                                             <li key={item.id} className="col-span-1">
                                                 <NavigationMenuLink asChild>
-                                                    <div className="">
+                                                    <div className="flex flex-col h-full">
                                                         {/* Gestion des éléments */}
                                                         <div className="grid grid-cols-12 gap-x-5">
                                                             <div className="col-span-12">
@@ -86,8 +86,8 @@ export default function HeaderNavigationMenuItem({ menuItem }: HeaderNavigationM
 
                                                             {/* Gestion des sous éléments */}
                                                             <div className="col-span-12">
-                                                                <div>
-                                                                    {item.subItems && item.subItems.length && (
+                                                                <div className="max-h-60 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
+                                                                    {item.subItems && item.subItems.length > 0 && (
                                                                         <ul className="space-y-2">
                                                                             {item.subItems.map((subItem) => (
                                                                                 <ListItem
@@ -131,17 +131,19 @@ export default function HeaderNavigationMenuItem({ menuItem }: HeaderNavigationM
                                                             </div>
 
                                                             {/* Voir plus */}
-                                                            <div className="col-span-12">
-                                                                <hr className="mt-2 mb-1 border-gray-200 dark:border-gray-700 w-1/4" />
-                                                                {item.href && item.href !== '#' && (
-                                                                    <Link
-                                                                        className="mt-2 text-sm text-green-500 hover:underline"
-                                                                        href={item.href || '#'}
-                                                                    >
-                                                                        Voir plus
-                                                                    </Link>
-                                                                )}
-                                                            </div>
+                                                            {false && (
+                                                                <div className="col-span-12">
+                                                                    <hr className="mt-2 mb-1 border-gray-200 dark:border-gray-700 w-1/4" />
+                                                                    {item.href && item.href !== '#' && (
+                                                                        <Link
+                                                                            className="mt-2 text-sm text-green-500 hover:underline"
+                                                                            href={item.href || '#'}
+                                                                        >
+                                                                            Voir plus
+                                                                        </Link>
+                                                                    )}
+                                                                </div>
+                                                            )}
                                                         </div>
                                                     </div>
                                                 </NavigationMenuLink>
