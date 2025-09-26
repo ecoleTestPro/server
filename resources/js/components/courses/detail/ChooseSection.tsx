@@ -9,7 +9,7 @@ interface ChooseSectionProps {
 
 const ChooseSection: React.FC<ChooseSectionProps> = ({ course }) => {
     return (
-        <section className={`${CLASS_NAME.section} ${CLASS_NAME.sectionContentPaddingAltNoBottom} bg-white/15 dark:bg-[#0a0e19]`}>
+        <section className={`${CLASS_NAME.section} ${CLASS_NAME.sectionContentPaddingAlt} bg-white/15 dark:bg-[#0a0e19]`}>
             <div className="container mx-auto">
                 <h1 className="text-2xl font-bold mb-4 text-black dark:text-white">Choisir une session</h1>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

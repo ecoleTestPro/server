@@ -276,6 +276,11 @@ export interface ICustomSharedData {
 
     references?: IPartner[];
 
+    /**
+     * Related courses to the current course
+     */
+    related_courses?: ICourse[];
+
     chart_data?: {
         enrollment_area: IChartData;
         course_area: IChartData;

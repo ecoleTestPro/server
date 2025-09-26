@@ -463,4 +463,29 @@ class CourseRepository extends Repository
 
         return $mediaType;
     }
+
+    /**
+     * Get related courses based on category and tags
+     *
+     * @param Course $course
+     * @param int $limit
+     * @return \Illuminate\Support\Collection
+     */
+    public static function getRelatedCourses(Course $course, $limit = 4)
+    {
+        try {
+            return static::queryBase()
+                ->where('id', '!=', $course->id) // Exclude current course
+                ->where('category_id', $course->category_id) // Same category
+                ->whereHas('course_sessions', function($query) {
+                    // Only courses with upcoming sessions
+                    $query->where('start_date', '>=', now()->subDays(7));
+                })
+                ->latest('id')
+                ->limit($limit)
+                ->get();
+        } catch (\Exception $e) {
+            throw new \Exception('Error fetching related courses: ' . $e->getMessage());
+        }
+    }
 }
