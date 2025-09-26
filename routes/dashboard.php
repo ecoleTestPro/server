@@ -37,6 +37,11 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
 
     // NOTIFICATIONS
     Route::get('notifications', [NotificationController::class, 'index'])->name('dashboard.notifications.index');
+    Route::get('notifications/all', [NotificationController::class, 'all'])->name('dashboard.notifications.all');
+    Route::put('notifications/{id}/mark-as-read', [NotificationController::class, 'markAsRead'])->name('dashboard.notifications.mark-as-read');
+    Route::put('notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('dashboard.notifications.mark-all-as-read');
+    Route::delete('notifications/{id}', [NotificationController::class, 'delete'])->name('dashboard.notifications.delete');
+    Route::delete('notifications/clear-all', [NotificationController::class, 'clearAll'])->name('dashboard.notifications.clear-all');
 
 
     // COURSE MANAGEMENT
