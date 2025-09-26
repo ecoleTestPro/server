@@ -149,6 +149,9 @@ class PublicFormationController extends PublicAbstractController
                 $data['references'] = PartnerRepository::getActiveReferences($course->reference_tag);
             }
 
+            // Get related courses
+            $data['related_courses'] = CourseRepository::getRelatedCourses($course);
+
             return Inertia::render('public/courses/course-detail.page', [
                 'data' => $data,
             ]);
