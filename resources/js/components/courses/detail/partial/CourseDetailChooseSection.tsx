@@ -1,9 +1,9 @@
+import DateDisplay from '@/components/ui/DateDisplay';
 import { ICourse, ICoursePeriodicity, ICourseSession } from '@/types/course';
 import { Logger } from '@/utils/console.util';
 import { Calendar, CheckCircle, MapPin } from 'lucide-react';
 import { RefObject, useEffect, useState } from 'react'; // Add necessary imports
 import { useTranslation } from 'react-i18next';
-import DateDisplay from '@/components/ui/DateDisplay';
 import CourseInscriptionDialog from './CourseInscriptionDialog';
 
 interface CourseDetailChooseSectionProps {
@@ -134,7 +134,6 @@ export const CourseSessionCard = ({
         });
     };
 
-
     const formatPrice = (value?: number) => {
         if (typeof value !== 'number') return '';
         try {
@@ -185,12 +184,7 @@ export const CourseSessionCard = ({
                 <div className="grid grid-cols-1 md:grid-cols-12 items-center gap-4">
                     {/* Colonne date (badge vert) */}
                     <div className="md:col-span-3">
-                        <DateDisplay
-                            startDate={session.start_date}
-                            endDate={session.end_date}
-                            size="md"
-                            variant="default"
-                        />
+                        <DateDisplay startDate={session.start_date} endDate={session.end_date} size="md" variant="default" />
                     </div>
 
                     {/* Colonne infos (ville, langue, horaires) */}

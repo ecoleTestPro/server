@@ -41,8 +41,8 @@ const QuestionCourse: React.FC<QuestionCourseProps> = ({ course }) => {
                                         <div>
                                             {false && (
                                                 <p className="text-gray-600 dark:text-gray-300">
-                                                    Pour toute question, n'hésitez pas à contacter : {email}. Si vous souhaitez réserver ce
-                                                    cours en tant qu'individu ou entreprise, merci de vous adresser à :{' '}
+                                                    Pour toute question, n'hésitez pas à contacter : {email}. Si vous souhaitez réserver ce cours en
+                                                    tant qu'individu ou entreprise, merci de vous adresser à :{' '}
                                                     <a className="text-secondary underline" href={`mailto:${email}`}>
                                                         {email}
                                                     </a>

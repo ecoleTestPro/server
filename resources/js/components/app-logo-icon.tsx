@@ -13,18 +13,7 @@ function AppLogoIcon(props: AppLogoIconProps) {
     // to treat it as a new component on each render, which can unmount/remount
     // the <img> and trigger repeated network requests when parents re-render
     // (e.g., on scroll).
-    return (
-        <img
-            width={width}
-            height={height}
-            src="/logo.png"
-            alt="Logo"
-            className={className}
-            loading="eager"
-            decoding="async"
-            draggable={false}
-        />
-    );
+    return <img width={width} height={height} src="/logo.png" alt="Logo" className={className} loading="eager" decoding="async" draggable={false} />;
 }
 
 export default memo(AppLogoIcon);
