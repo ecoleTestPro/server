@@ -66,7 +66,7 @@ class NotificationController extends PrivateAbstractController
                 ->where('id', $id)
                 ->where(function ($query) use ($userId) {
                     $query->whereNull('recipient_id')
-                          ->orWhere('recipient_id', $userId);
+                        ->orWhere('recipient_id', $userId);
                 })
                 ->firstOrFail();
 
@@ -89,13 +89,12 @@ class NotificationController extends PrivateAbstractController
     public function markAllAsRead(Request $request)
     {
         try {
+            $userId = auth()->id();
+
             $updated = NotificationInstanceRepository::query()
-                ->where(function ($query) {
-                    $userId = auth()->id();
-                    $query->whereNull('recipient_id');
-                    if ($userId) {
-                        $query->orWhere('recipient_id', $userId);
-                    }
+                ->where(function ($query) use ($userId) {
+                    $query->whereNull('recipient_id')
+                        ->orWhere('recipient_id', $userId);
                 })
                 ->where('is_read', false)
                 ->update(['is_read' => true]);
@@ -122,7 +121,7 @@ class NotificationController extends PrivateAbstractController
                 ->where('id', $id)
                 ->where(function ($query) use ($userId) {
                     $query->whereNull('recipient_id')
-                          ->orWhere('recipient_id', $userId);
+                        ->orWhere('recipient_id', $userId);
                 })
                 ->firstOrFail();
 
@@ -144,23 +143,19 @@ class NotificationController extends PrivateAbstractController
     public function clearAll(Request $request)
     {
         try {
+            $userId = auth()->id();
+
             $deletedCount = NotificationInstanceRepository::query()
-                ->where(function ($query) {
-                    $userId = auth()->id();
-                    $query->whereNull('recipient_id');
-                    if ($userId) {
-                        $query->orWhere('recipient_id', $userId);
-                    }
+                ->where(function ($query) use ($userId) {
+                    $query->whereNull('recipient_id')
+                        ->orWhere('recipient_id', $userId);
                 })
                 ->count();
 
             NotificationInstanceRepository::query()
-                ->where(function ($query) {
-                    $userId = auth()->id();
-                    $query->whereNull('recipient_id');
-                    if ($userId) {
-                        $query->orWhere('recipient_id', $userId);
-                    }
+                ->where(function ($query) use ($userId) {
+                    $query->whereNull('recipient_id')
+                        ->orWhere('recipient_id', $userId);
                 })
                 ->delete();
 

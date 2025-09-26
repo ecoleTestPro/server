@@ -46,7 +46,7 @@ const NotificationHeader: React.FC<NotificationHeaderProps> = ({ unreadCount, to
                         </TooltipContent>
                     </Tooltip>
 
-                    <Tooltip>
+                    {/* <Tooltip>
                         <TooltipTrigger asChild>
                             <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-destructive hover:text-destructive" onClick={() => setShowClearAllDialog(true)}>
                                 <Trash2 className="h-4 w-4" />
@@ -55,7 +55,7 @@ const NotificationHeader: React.FC<NotificationHeaderProps> = ({ unreadCount, to
                         <TooltipContent>
                             <p>Vider toutes les notifications</p>
                         </TooltipContent>
-                    </Tooltip>
+                    </Tooltip> */}
                 </div>
             )}
 

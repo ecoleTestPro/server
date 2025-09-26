@@ -36,19 +36,19 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ notification, onMar
                 !notification.is_read ? 'bg-blue-50/50 dark:bg-blue-950/20' : ''
             }`}
         >
-            {/* Unread indicator */}
-            {!notification.is_read && <div className="absolute left-1 top-1/2 -translate-y-1/2 w-2 h-2 bg-blue-500 rounded-full"></div>}
-
             <div className="flex items-start gap-3 pl-2">
                 {/* Icon */}
-                <div className={`flex-shrink-0 mt-0.5 ${!notification.is_read ? 'text-blue-500' : 'text-muted-foreground'}`}>
+                <div className={`flex-shrink-0 mt-0.5 ${!notification.is_read ? 'text-blue-500 animate-pulse' : 'text-muted-foreground'}`}>
                     <Clock className="h-4 w-4" />
                 </div>
 
                 {/* Content */}
                 <div className="flex-1 min-w-0">
-                    <div className={`text-sm font-medium leading-snug ${!notification.is_read ? 'text-foreground' : 'text-muted-foreground'}`}>
+                    <div className={`flex  gap-x-1 text-sm font-medium leading-snug ${!notification.is_read ? 'text-foreground' : 'text-muted-foreground'}`}>
                         {notification.heading}
+
+                        {/* Unread indicator */}
+                        {!notification.is_read && <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>}
                     </div>
                     <div className="text-sm text-muted-foreground mt-1 line-clamp-2">{notification.content}</div>
                     <div className="flex items-center justify-between mt-2">
