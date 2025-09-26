@@ -7,15 +7,7 @@ import NotificationHeader from './NotificationHeader';
 import NotificationsList from './NotificationsList';
 
 export function NotificationsDropdown() {
-    const {
-        notifications,
-        unreadCount,
-        isLoading,
-        markAsRead,
-        markAllAsRead,
-        deleteNotification,
-        clearAllNotifications
-    } = useNotifications();
+    const { notifications, unreadCount, isLoading, markAsRead, markAllAsRead, deleteNotification, clearAllNotifications } = useNotifications();
 
     return (
         <DropdownMenu>

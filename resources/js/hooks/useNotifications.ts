@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import axios from 'axios';
 import type { INotificationInstance } from '@/types';
+import axios from 'axios';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 
 interface NotificationData {
@@ -36,18 +36,16 @@ export function useNotifications() {
         try {
             const response = await axios.get(route('dashboard.notifications.check-new'), {
                 params: {
-                    last_check: lastCheckRef.current
-                }
+                    last_check: lastCheckRef.current,
+                },
             });
 
             const data: NotificationData = response.data;
 
             if (data.has_new && data.notifications.length > 0) {
                 // Add new notifications to the beginning of the list
-                setNotifications(prev => {
-                    const newNotifications = data.notifications.filter(
-                        newNotif => !prev.some(existingNotif => existingNotif.id === newNotif.id)
-                    );
+                setNotifications((prev) => {
+                    const newNotifications = data.notifications.filter((newNotif) => !prev.some((existingNotif) => existingNotif.id === newNotif.id));
                     return [...newNotifications, ...prev];
                 });
 
@@ -91,15 +89,9 @@ export function useNotifications() {
         try {
             await axios.put(route('dashboard.notifications.mark-as-read', notificationId));
 
-            setNotifications(prev =>
-                prev.map(notif =>
-                    notif.id === notificationId
-                        ? { ...notif, is_read: true }
-                        : notif
-                )
-            );
+            setNotifications((prev) => prev.map((notif) => (notif.id === notificationId ? { ...notif, is_read: true } : notif)));
 
-            setUnreadCount(prev => Math.max(0, prev - 1));
+            setUnreadCount((prev) => Math.max(0, prev - 1));
             toast.success('Notification marquée comme lue');
         } catch (error) {
             console.error('Error marking notification as read:', error);
@@ -109,7 +101,7 @@ export function useNotifications() {
 
     // Mark all notifications as read
     const markAllAsRead = useCallback(async () => {
-        const unreadNotifications = notifications.filter(n => !n.is_read);
+        const unreadNotifications = notifications.filter((n) => !n.is_read);
         if (unreadNotifications.length === 0) {
             toast('Toutes les notifications sont déjà lues', { icon: 'ℹ️' });
             return;
@@ -118,7 +110,7 @@ export function useNotifications() {
         try {
             await axios.put(route('dashboard.notifications.mark-all-as-read'));
 
-            setNotifications(prev => prev.map(notif => ({ ...notif, is_read: true })));
+            setNotifications((prev) => prev.map((notif) => ({ ...notif, is_read: true })));
             setUnreadCount(0);
             toast.success(`${unreadNotifications.length} notification(s) marquée(s) comme lues`);
         } catch (error) {
@@ -132,12 +124,12 @@ export function useNotifications() {
         try {
             await axios.delete(route('dashboard.notifications.delete', notificationId));
 
-            setNotifications(prev => {
-                const notification = prev.find(n => n.id === notificationId);
+            setNotifications((prev) => {
+                const notification = prev.find((n) => n.id === notificationId);
                 if (notification && !notification.is_read) {
-                    setUnreadCount(currentCount => Math.max(0, currentCount - 1));
+                    setUnreadCount((currentCount) => Math.max(0, currentCount - 1));
                 }
-                return prev.filter(n => n.id !== notificationId);
+                return prev.filter((n) => n.id !== notificationId);
             });
 
             toast.success('Notification supprimée');
@@ -201,6 +193,6 @@ export function useNotifications() {
         deleteNotification,
         clearAllNotifications,
         startPolling,
-        stopPolling
+        stopPolling,
     };
 }

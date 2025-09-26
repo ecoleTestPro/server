@@ -44,7 +44,9 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ notification, onMar
 
                 {/* Content */}
                 <div className="flex-1 min-w-0">
-                    <div className={`flex  gap-x-1 text-sm font-medium leading-snug ${!notification.is_read ? 'text-foreground' : 'text-muted-foreground'}`}>
+                    <div
+                        className={`flex  gap-x-1 text-sm font-medium leading-snug ${!notification.is_read ? 'text-foreground' : 'text-muted-foreground'}`}
+                    >
                         {notification.heading}
 
                         {/* Unread indicator */}

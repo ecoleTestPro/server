@@ -84,8 +84,7 @@ export default function Header() {
         const filteredCategories = categories.filter((category) => category); // .parent_id === parentId
 
         const output: MenuChildItem[] = filteredCategories.map((category) => {
-            const defaultDescription =
-                '';
+            const defaultDescription = '';
 
             let childItems: MenuChildItem[] = [];
 

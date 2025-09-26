@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button/button';
 import { ConfirmDialog } from '@/components/ui/confirmDialog';
 import { DropdownMenuLabel } from '@/components/ui/dropdown-menu';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { CheckCheck, Trash2 } from 'lucide-react';
+import { CheckCheck } from 'lucide-react';
 import { useState } from 'react';
 
 interface NotificationHeaderProps {

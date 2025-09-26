@@ -26,21 +26,12 @@ export function TestNotificationButton() {
 
     return (
         <div className="fixed bottom-4 right-4 flex flex-col gap-2 z-50">
-            <Button
-                onClick={createTestNotification}
-                className="flex items-center gap-2 shadow-lg"
-                size="sm"
-            >
+            <Button onClick={createTestNotification} className="flex items-center gap-2 shadow-lg" size="sm">
                 <Bell className="h-4 w-4" />
                 Test Notif Personnelle
             </Button>
 
-            <Button
-                onClick={createGeneralTestNotification}
-                variant="secondary"
-                className="flex items-center gap-2 shadow-lg"
-                size="sm"
-            >
+            <Button onClick={createGeneralTestNotification} variant="secondary" className="flex items-center gap-2 shadow-lg" size="sm">
                 <Users className="h-4 w-4" />
                 Test Notif Générale
             </Button>
