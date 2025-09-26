@@ -1,8 +1,9 @@
 import { ICourse, ICoursePeriodicity, ICourseSession } from '@/types/course';
 import { Logger } from '@/utils/console.util';
-import { ArrowRight, Calendar, CheckCircle, MapPin } from 'lucide-react';
+import { Calendar, CheckCircle, MapPin } from 'lucide-react';
 import { RefObject, useEffect, useState } from 'react'; // Add necessary imports
 import { useTranslation } from 'react-i18next';
+import DateDisplay from '@/components/ui/DateDisplay';
 import CourseInscriptionDialog from './CourseInscriptionDialog';
 
 interface CourseDetailChooseSectionProps {
@@ -133,9 +134,6 @@ export const CourseSessionCard = ({
         });
     };
 
-    const formatDay = (dateString: string) => new Date(dateString).toLocaleDateString('fr-FR', { day: 'numeric' });
-    const formatMonth = (dateString: string) => new Date(dateString).toLocaleDateString('fr-FR', { month: 'short' }).replace('.', '').toUpperCase();
-    const formatYear = (dateString: string) => new Date(dateString).toLocaleDateString('fr-FR', { year: 'numeric' });
 
     const formatPrice = (value?: number) => {
         if (typeof value !== 'number') return '';
@@ -187,27 +185,12 @@ export const CourseSessionCard = ({
                 <div className="grid grid-cols-1 md:grid-cols-12 items-center gap-4">
                     {/* Colonne date (badge vert) */}
                     <div className="md:col-span-3">
-                        <div className="flex items-center gap-2">
-                            {session.start_date && (
-                                <div className="w-16 h-16 rounded-md bg-emerald-100 text-emerald-800 flex flex-col items-center justify-center mx-auto md:mx-0">
-                                    <div className="text-xl font-bold leading-5">{formatDay(session.start_date)}</div>
-                                    <div className="text-[10px] font-semibold tracking-wide">{formatMonth(session.start_date)}</div>
-                                    <div className="text-[10px] text-emerald-700">{formatYear(session.start_date)}</div>
-                                </div>
-                            )}
-                            {session.start_date && session.end_date && (
-                                <div className="w-16 flex items-center justify-center">
-                                    <ArrowRight className="w-6 h-6" />
-                                </div>
-                            )}
-                            {session.start_date && session.end_date && (
-                                <div className="w-16 h-16 rounded-md bg-emerald-100 text-emerald-800 flex flex-col items-center justify-center mx-auto md:mx-0">
-                                    <div className="text-xl font-bold leading-5">{formatDay(session.end_date)}</div>
-                                    <div className="text-[10px] font-semibold tracking-wide">{formatMonth(session.end_date)}</div>
-                                    <div className="text-[10px] text-emerald-700">{formatYear(session.end_date)}</div>
-                                </div>
-                            )}
-                        </div>
+                        <DateDisplay
+                            startDate={session.start_date}
+                            endDate={session.end_date}
+                            size="md"
+                            variant="default"
+                        />
                     </div>
 
                     {/* Colonne infos (ville, langue, horaires) */}

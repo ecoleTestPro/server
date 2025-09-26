@@ -1,7 +1,8 @@
+import DateDisplay from '@/components/ui/DateDisplay';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { ICourse } from '@/types/course';
 import { ROUTE_MAP } from '@/utils/route.util';
-import { getNextSession, getPeriodicity, getPrice } from '@/utils/utils';
+import { getPeriodicity, getPrice } from '@/utils/utils';
 import { Link, router } from '@inertiajs/react';
 import { Calendar, ChevronRight, Clock, Euro } from 'lucide-react';
 import { useState } from 'react';
@@ -35,6 +36,28 @@ export default function CourseTable({ courses }: ICourseTableProps) {
     const handleCloseDialog = () => {
         setCourseSelected(null);
         setIsDialogOpen(false);
+    };
+
+    // Get the next session for date display
+    const getNextSessionDates = (course: ICourse): { startDate?: string; endDate?: string } => {
+        if (!course.course_sessions || course.course_sessions.length === 0) {
+            return {};
+        }
+
+        const now = new Date();
+        const upcomingSessions = course.course_sessions
+            .filter((session) => new Date(session.start_date) > now)
+            .sort((a, b) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime());
+
+        const nextSession = upcomingSessions[0];
+        if (!nextSession) {
+            return {};
+        }
+
+        return {
+            startDate: nextSession.start_date,
+            endDate: nextSession.end_date,
+        };
     };
 
     if (!courses || courses.length === 0) {
@@ -85,7 +108,16 @@ export default function CourseTable({ courses }: ICourseTableProps) {
                                     </div>
                                     <div className="min-w-0 flex-1">
                                         <p className="text-xs text-blue-600 dark:text-blue-400 font-medium">Prochaine session</p>
-                                        <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">{getNextSession(item)}</p>
+                                        <div className="text-sm font-semibold text-gray-900 dark:text-white">
+                                            {(() => {
+                                                const { startDate, endDate } = getNextSessionDates(item);
+                                                return startDate ? (
+                                                    <DateDisplay startDate={startDate} endDate={endDate} variant="compact" />
+                                                ) : (
+                                                    <span className="truncate">N/A</span>
+                                                );
+                                            })()}
+                                        </div>
                                     </div>
                                 </div>
 
@@ -141,7 +173,7 @@ export default function CourseTable({ courses }: ICourseTableProps) {
                             <tr>
                                 <th className="w-4/12 px-6 py-4 font-semibold text-left">{t('COURSE.TABLE.TITLE', 'Formation')}</th>
                                 <th className="px-6 py-4 font-semibold text-left">{t('COURSE.TABLE.NEXT_SESSION', 'Prochaine session')}</th>
-                                <th className="px-6 py-4 font-semibold text-left">{t('COURSE.TABLE.DURATION', 'Durée')}</th>
+                                {/* <th className="px-6 py-4 font-semibold text-left">{t('COURSE.TABLE.DURATION', 'Durée')}</th> */}
                                 <th className="px-6 py-4 font-semibold text-left">{t('COURSE.TABLE.PRICE', 'Prix')}</th>
                                 <th className="px-6 py-4 font-semibold text-center">{t('COURSE.TABLE.REGISTER_COURSER', 'Action')}</th>
                             </tr>
@@ -167,15 +199,24 @@ export default function CourseTable({ courses }: ICourseTableProps) {
                                         <div className="flex items-center gap-2">
                                             <Calendar className="w-4 h-4 text-blue-500" />
                                             {/* TODO: ajouter le nombre de sessions */}
-                                            <span className="text-gray-700 dark:text-gray-300">{getNextSession(item)}</span>
+                                            {(() => {
+                                                const { startDate, endDate } = getNextSessionDates(item);
+                                                return startDate ? (
+                                                    <DateDisplay startDate={startDate} endDate={endDate} variant="compact" />
+                                                ) : (
+                                                    <span className="text-gray-700 dark:text-gray-300">N/A</span>
+                                                );
+                                            })()}
                                         </div>
                                     </td>
-                                    <td className="px-6 py-4">
-                                        <div className="flex items-center gap-2">
-                                            {/* <Clock className="w-4 h-4 text-orange-500" /> */}
-                                            <CourseDurationBlock duration={durationValue(item)} />
-                                        </div>
-                                    </td>
+                                    {false && (
+                                        <td className="px-6 py-4">
+                                            <div className="flex items-center gap-2">
+                                                {/* <Clock className="w-4 h-4 text-orange-500" /> */}
+                                                <CourseDurationBlock duration={durationValue(item)} />
+                                            </div>
+                                        </td>
+                                    )}
                                     <td className="px-6 py-4">
                                         <div className="flex items-center gap-2">
                                             {/* <Euro className="w-4 h-4 text-green-500" /> */}
