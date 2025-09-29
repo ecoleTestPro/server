@@ -107,11 +107,15 @@ jobs:
           # Deploy using lftp with mirror command
           lftp -e "
             set ssl:verify-certificate false
+            set ftp:ssl-allow false
             set ftp:list-options -a
             set cmd:fail-exit true
-            open ftp://$FTP_USERNAME:$FTP_PASSWORD@$FTP_SERVER
+            set net:timeout 10
+            set net:max-retries 3
+            open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_SERVER
+            cd $FTP_PATH || exit 1
             mirror --reverse --delete --verbose=1 \
-              --parallel=5 \
+              --parallel=3 \
               --exclude-glob .git/ \
               --exclude-glob node_modules/ \
               --exclude-glob vendor/ \
@@ -131,12 +135,33 @@ jobs:
               --exclude tsconfig.json \
               --exclude composer.lock \
               --exclude package-lock.json \
-              ./ $FTP_PATH
+              ./ ./
             quit
           "
           EOF
 
           chmod +x deploy.sh
+
+          # Debug FTP connection first
+          echo "🔍 Testing FTP connection..."
+          lftp -e "
+            set ssl:verify-certificate false
+            set ftp:ssl-allow false
+            set net:timeout 10
+            debug 3
+            open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_SERVER || exit 1
+            pwd
+            ls
+            quit
+          " || {
+            echo "❌ FTP connection failed. Please check:"
+            echo "- FTP_SERVER: ${FTP_SERVER:0:10}..."
+            echo "- FTP_USERNAME: ${FTP_USERNAME:0:5}..."
+            echo "- FTP_PATH: $FTP_PATH"
+            exit 1
+          }
+
+          echo "✅ FTP connection successful. Proceeding with deployment..."
           ./deploy.sh
 
       - name: 🧹 Clear remote cache (optional)
@@ -168,8 +193,11 @@ jobs:
           # Upload and execute the script
           lftp -e "
             set ssl:verify-certificate false
-            open ftp://$FTP_USERNAME:$FTP_PASSWORD@$FTP_SERVER
-            put clear-cache.php -o $FTP_PATH/clear-cache.php
+            set ftp:ssl-allow false
+            set net:timeout 10
+            open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_SERVER
+            cd $FTP_PATH
+            put clear-cache.php
             quit
           "
 
