@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - production
+      - release/develop-v100
   workflow_dispatch:
 
 jobs:
@@ -113,6 +114,7 @@ jobs:
               --parallel=5 \
               --exclude-glob .git/ \
               --exclude-glob node_modules/ \
+              --exclude-glob vendor/ \
               --exclude-glob tests/ \
               --exclude-glob storage/logs/*.log \
               --exclude-glob storage/framework/cache/data/* \
