@@ -29,7 +29,7 @@ const feature: { title: string; description: string; image: string }[] = [
 ];
 
 export default function ServiceIntegrationSpecialists() {
-    const { auth, data } = usePage<SharedData>().props;
+    const {} = usePage<SharedData>().props;
     const { t } = useTranslation();
 
     const pageTitle = t('PAGES.SERVICES.INTEGRATION_SPECIALISTS', 'Intégration de Spécialistes dans Vos Locaux');
@@ -180,7 +180,7 @@ export default function ServiceIntegrationSpecialists() {
         );
     };
 
-    const BlockTwo = () => {
+    /* const BlockTwo = () => {
         return (
             <motion.section
                 className={`body-font ${CLASS_NAME.bgWhite}`}
@@ -230,9 +230,9 @@ export default function ServiceIntegrationSpecialists() {
                 </div>
             </motion.section>
         );
-    };
+    }; */
 
-    const BlockThree = () => {
+    /* const BlockThree = () => {
         return (
             <motion.section
                 className={`body-font ${CLASS_NAME.bgWhite}`}
@@ -302,9 +302,9 @@ export default function ServiceIntegrationSpecialists() {
                 </div>
             </motion.section>
         );
-    };
+    }; */
 
-    const BlockFour = () => {
+    /* const BlockFour = () => {
         return (
             <motion.section
                 className={`body-font ${CLASS_NAME.bgWhite}`}
@@ -367,7 +367,7 @@ export default function ServiceIntegrationSpecialists() {
                 </div>
             </motion.section>
         );
-    };
+    }; */
 
     return (
         <DefaultLayout title={pageTitle}>

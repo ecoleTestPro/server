@@ -1,7 +1,6 @@
 import { IJobOffer } from '@/types';
 import { ColumnDef } from '@tanstack/react-table';
 import { AlertCircle, ArrowUpDown, Briefcase, Building2, Calendar, DollarSign, MapPin } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button/button';
 import { DataTable } from '../ui/dataTable';
@@ -16,7 +15,7 @@ interface Props {
 }
 
 export default function JobOfferDataTable({ offers, onEditRow, onDeleteRow, onToggleRow }: Props) {
-    const { t } = useTranslation();
+    // const { t } = useTranslation();
 
     const getDaysUntilExpiry = (expiryDate: string | null | undefined) => {
         if (!expiryDate) return null;

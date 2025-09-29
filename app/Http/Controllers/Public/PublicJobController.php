@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\PublicAbstractController;
 use App\Http\Requests\JobApplicationStoreRequest;
 use App\Mail\JobApplicationMail;
 use App\Models\JobOffer;
@@ -12,17 +13,20 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 
-class PublicJobController extends Controller
+class PublicJobController extends PublicAbstractController
 {
     private string $email;
+    private $default_data = [];
 
     public function __construct()
     {
         $this->email = env('CONTACT_EMAIL', 'contact@example.com');
+        $this->default_data = $this->getDefaultData();
     }
 
     public function list()
     {
+        $data = $this->default_data;
         $offers = JobOfferRepository::query()
             ->where('is_active', true)
             ->where(function ($query) {
@@ -41,7 +45,7 @@ class PublicJobController extends Controller
         try {
             // Récupérer les détails de l'offre d'emploi
             $jobOffer = JobOffer::findOrFail($request->job_offer_id);
-            
+
             Mail::to($this->email)->send(new JobApplicationMail(
                 $request->name,
                 $request->email,

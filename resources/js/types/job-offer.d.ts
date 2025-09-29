@@ -13,7 +13,7 @@ export interface IJobOfferBase {
 }
 
 export interface IJobOffer extends IJobOfferBase {
-    [key: string]: any;
+    [key: string]: string | number | File | null;
 }
 
 export interface IJobApplication {

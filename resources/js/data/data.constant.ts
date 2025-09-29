@@ -58,7 +58,7 @@ export const DEFULAT_MAIN_MENU: IMainMenuItem[] = [
                 {
                     id: 'consulting-subitem',
                     label: 'Consulting',
-                    href: '#',
+                    href: ROUTE_MAP.public.services.consulting.auditOfMaturityOfTests.link,
                     image: '/assets/images/bg_menu_box.jpg',
                     subItems: [
                         {
@@ -88,7 +88,7 @@ export const DEFULAT_MAIN_MENU: IMainMenuItem[] = [
                 {
                     id: 'services-subitem',
                     label: 'Services',
-                    href: '#',
+                    href: ROUTE_MAP.public.services.testSerivces.index.link,
                     image: '/assets/images/businessmen-desk-scaled.jpg',
                     subItems: [
                         {

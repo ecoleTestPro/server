@@ -53,7 +53,12 @@
     {{-- <link rel="stylesheet" href="{{ mix('css/custom.css') }}"> --}}
 
     {{-- On prod --}}
-    <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
+    {{-- <link rel="stylesheet" href="{{ asset('css/custom.css') }}"> --}}
+    @unless(app()->environment('testing'))
+        @if(file_exists(public_path('css/custom.css')))
+            <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
+        @endif
+    @endunless
 
     {{-- AOS --}}
     <script src="bower_components/aos/dist/aos.js"></script>

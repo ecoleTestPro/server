@@ -76,8 +76,8 @@ const convertQuillLists = (html: string): string => {
  * Converts a specific Quill list type to standard HTML
  */
 const convertQuillListType = (html: string, quillType: string, htmlTag: string): string => {
-    // Find all paragraphs with data-list attribute
-    const listPattern = new RegExp(`<p[^>]*data-list="${quillType}"[^>]*>(.*?)<\/p>`, 'gi');
+     
+    const listPattern = new RegExp(`<p[^>]*data-list="${quillType}"[^>]*>(.*?)</p>`, 'gi');
 
     if (!listPattern.test(html)) {
         return html;

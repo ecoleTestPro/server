@@ -12,16 +12,13 @@ import { usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 
 export default function CourseCategoryPage() {
-    const { auth, data } = usePage<SharedData>().props;
-    const references: IPartner[] = (data as any)?.references ?? [];
-    const [loading, setLoading] = useState<boolean>(false);
+    const { data } = usePage<SharedData>().props;
+    const references: IPartner[] = (data as { references?: IPartner[] })?.references ?? [];
     // const [category, setCategory] = useState<ICourseCategory | null>(null);
     const [course, setCourse] = useState<ICourse | null>(null);
     const [breadcrumb, setBreadcrumb] = useState<IHeroBreadcrumbItems[]>([]);
-    const [error, setError] = useState<string | false>(false);
 
     useEffect(() => {
-        setLoading(true);
 
         Logger.log('[COURSE_CATEGORY_PAGE] useEffect - data', data);
 

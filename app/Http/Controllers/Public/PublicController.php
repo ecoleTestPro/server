@@ -24,6 +24,7 @@ class PublicController extends PublicAbstractController
     {
         $this->default_data = $this->getDefaultData();
     }
+    
     public function index()
     {
         $data = $this->default_data;

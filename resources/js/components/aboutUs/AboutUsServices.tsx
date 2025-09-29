@@ -61,8 +61,8 @@ export default function AboutUsServices() {
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 xl:gap-16">
                         <div className="h-full flex items-center ">
                             <div className="space-y-6" data-aos="fade-right" data-aos-duration="1500" data-aos-offset="50">
-                                <div className="space-y-3">
-                                    <span className="inline-block text-sm font-semibold text-gray-600 dark:text-white mb-2">Nos Services</span>
+                                <div className="space-y-3 pt-[12px]">
+                                    {/* <span className="inline-block text-sm font-semibold text-gray-600 dark:text-white mb-2">Nos Services</span> */}
                                     <h2 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold leading-tight">
                                         Collaborez avec des entreprises leaders du secteur
                                     </h2>
