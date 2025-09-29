@@ -241,7 +241,7 @@ export const CourseSessionCard = ({
                     {/* Colonne prix + action */}
                     <div className="md:col-span-3 flex flex-col sm:flex-row md:flex-col items-center md:items-end gap-2 md:gap-3">
                         <div className="text-right w-full sm:w-auto">
-                            {typeof effectivePrice === 'number' && effectivePrice > 0 && (
+                            {typeof effectivePrice === 'number' && effectivePrice > 0 ? (
                                 <>
                                     <div className="text-gray-900 dark:text-white font-semibold text-lg">{formatPrice(effectivePrice)} FCFA</div>
                                     {regular_price && regular_price > (effectivePrice || 0) && (
@@ -251,7 +251,7 @@ export const CourseSessionCard = ({
                                         <div className="text-[11px] text-gray-500">excl. {(session as any).tva}% TVA</div>
                                     )}
                                 </>
-                            )}
+                            ) : null}
                         </div>
 
                         <div className="w-full sm:w-auto mt-1">

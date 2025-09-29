@@ -13,15 +13,13 @@ const ChooseSection: React.FC<ChooseSectionProps> = ({ course }) => {
             <div className="container mx-auto">
                 <h1 className="text-2xl font-bold mb-4 text-black dark:text-white">Choisir une session</h1>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className="toc-accordion col-span-1 md:col-span-2" id="tablesOfContentAccordion">
-                        <div className="col-span-1 md:col-span-3">
-                            {/* Registration Section with ref */}
-                            <div id="course-dates" className="">
-                                {/* ref={registrationRef} */}
-                                <div>
-                                    {/* registrationRef={registrationRef} */}
-                                    <CourseDetailChooseSection course={course} />
-                                </div>
+                    <div className="toc-accordion col-span-1 md:col-span-3" id="tablesOfContentAccordion">
+                        {/* Registration Section with ref */}
+                        <div id="course-dates" className="">
+                            {/* ref={registrationRef} */}
+                            <div>
+                                {/* registrationRef={registrationRef} */}
+                                <CourseDetailChooseSection course={course} />
                             </div>
                         </div>
                     </div>

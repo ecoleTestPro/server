@@ -1,63 +1,55 @@
 import { Badge } from '@/components/ui/badge';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import type { INotificationInstance } from '@/types';
-import axios from 'axios';
+import { Button } from '@/components/ui/button/button';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { useNotifications } from '@/hooks/useNotifications';
 import { Bell } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import { Button } from '../ui/button/button';
+import NotificationHeader from './NotificationHeader';
+import NotificationsList from './NotificationsList';
 
 export function NotificationsDropdown() {
-    const [notifications, setNotifications] = useState<INotificationInstance[]>([]);
-
-    const fetchNotifications = () => {
-        axios
-            .get(route('dashboard.notifications.index'))
-            .then((res) => {
-                setNotifications(res.data.notifications ?? []);
-            })
-            .catch(() => {
-                setNotifications([]);
-            });
-    };
-
-    useEffect(() => {
-        fetchNotifications();
-    }, []);
+    const { notifications, unreadCount, isLoading, markAsRead, markAllAsRead, deleteNotification, clearAllNotifications } = useNotifications();
 
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="icon" className="relative">
                     <Bell className="h-4 w-4" />
-                    {notifications.length > 0 && (
-                        <Badge variant="destructive" className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0">
-                            {notifications.length}
+                    {unreadCount > 0 && (
+                        <Badge variant="destructive" className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs">
+                            {unreadCount > 99 ? '99+' : unreadCount}
                         </Badge>
                     )}
                 </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-80" align="end">
-                <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+            <DropdownMenuContent className="w-96" align="end">
+                <NotificationHeader
+                    unreadCount={unreadCount}
+                    totalCount={notifications.length}
+                    onMarkAllAsRead={markAllAsRead}
+                    onClearAll={clearAllNotifications}
+                />
+
                 <DropdownMenuSeparator />
-                {notifications.length === 0 ? (
-                    <DropdownMenuItem className="flex-col items-start">
-                        <div className="text-sm">Aucune notification</div>
-                    </DropdownMenuItem>
-                ) : (
-                    notifications.map((notification) => (
-                        <DropdownMenuItem key={notification.id} className="flex-col items-start gap-1">
-                            <div className="text-sm font-medium">{notification.heading}</div>
-                            <div className="text-sm text-muted-foreground">{notification.content}</div>
-                            <div className="text-xs text-muted-foreground">{notification.created_at}</div>
-                        </DropdownMenuItem>
-                    ))
+
+                <NotificationsList notifications={notifications} isLoading={isLoading} onMarkAsRead={markAsRead} onDelete={deleteNotification} />
+
+                {/* Footer - Voir toutes les notifications */}
+                {false && notifications.length > 0 && (
+                    <>
+                        <DropdownMenuSeparator />
+                        <div className="p-2">
+                            <Button
+                                variant="ghost"
+                                className="w-full justify-center text-sm"
+                                onClick={() => {
+                                    // Navigate to notifications page
+                                    window.location.href = route('dashboard.notifications.all');
+                                }}
+                            >
+                                Voir toutes les notifications
+                            </Button>
+                        </div>
+                    </>
                 )}
             </DropdownMenuContent>
         </DropdownMenu>

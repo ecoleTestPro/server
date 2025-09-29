@@ -84,8 +84,7 @@ export default function Header() {
         const filteredCategories = categories.filter((category) => category); // .parent_id === parentId
 
         const output: MenuChildItem[] = filteredCategories.map((category) => {
-            const defaultDescription =
-                'Les formations vous préparent au passage de nombreuses certifications internationales. Validez vos compétences et accroissez votre employabilité ainsi que votre efficacité au sein de votre entreprise.';
+            const defaultDescription = '';
 
             let childItems: MenuChildItem[] = [];
 
@@ -116,7 +115,7 @@ export default function Header() {
         label: 'Programmes de reconversion',
         href: ROUTE_MAP.public.reconversionMetier.link,
         description: 'Découvrez nos programmes de reconversion professionnelle.',
-        image: 'https://placehold.jp/150x150.png',
+        image: '/assets/images/Formation-en-ligne-.jpeg',
     };
 
     const updateCourseMenuPart = (

@@ -18,6 +18,8 @@ use App\Http\Controllers\Private\PartnerController;
 use App\Http\Controllers\Private\JobOfferController;
 use App\Http\Controllers\Private\EnrollmentController;
 use App\Http\Controllers\Private\NotificationController;
+use App\Http\Controllers\Private\NotificationStreamController;
+use App\Http\Controllers\TestNotificationController;
 use App\Http\Controllers\Settings\PasswordController;
 use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\Admin\BusinessHoursController;
@@ -37,6 +39,17 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
 
     // NOTIFICATIONS
     Route::get('notifications', [NotificationController::class, 'index'])->name('dashboard.notifications.index');
+    Route::get('notifications/all', [NotificationController::class, 'all'])->name('dashboard.notifications.all');
+    Route::put('notifications/{id}/mark-as-read', [NotificationController::class, 'markAsRead'])->name('dashboard.notifications.mark-as-read');
+    Route::put('notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('dashboard.notifications.mark-all-as-read');
+    Route::delete('notifications/{id}', [NotificationController::class, 'delete'])->name('dashboard.notifications.delete');
+    Route::delete('notifications/clear-all', [NotificationController::class, 'clearAll'])->name('dashboard.notifications.clear-all');
+    Route::get('notifications/count', [NotificationStreamController::class, 'count'])->name('dashboard.notifications.count');
+    Route::get('notifications/check-new', [NotificationStreamController::class, 'checkNew'])->name('dashboard.notifications.check-new');
+
+    // Test routes (remove in production)
+    Route::post('test/notification', [TestNotificationController::class, 'createTestNotification'])->name('test.notification');
+    Route::post('test/notification-general', [TestNotificationController::class, 'createGeneralTestNotification'])->name('test.notification.general');
 
 
     // COURSE MANAGEMENT
