@@ -163,23 +163,20 @@ export default function SearchPage() {
                                     />
 
                                     <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
-                                        {/* Real-time search toggle */}
-                                        {/* Disabled real-time search toggle */}
-                                        {false && (
-                                            <motion.label
-                                                className="flex items-center space-x-2 text-sm text-gray-600 cursor-pointer"
-                                                whileHover={{ scale: 1.02 }}
-                                            >
-                                                <input
-                                                    type="checkbox"
-                                                    checked={realTimeSearch}
-                                                    onChange={(e) => setRealTimeSearch(e.target.checked)}
-                                                    className="rounded border-gray-300 text-primary focus:ring-primary"
-                                                />
-                                                <span>Temps réel</span>
-                                            </motion.label>
-                                        )}{' '}
-                                        */
+                                        {/* Real-time search toggle - Disabled
+                                        <motion.label
+                                            className="flex items-center space-x-2 text-sm text-gray-600 cursor-pointer"
+                                            whileHover={{ scale: 1.02 }}
+                                        >
+                                            <input
+                                                type="checkbox"
+                                                checked={realTimeSearch}
+                                                onChange={(e) => setRealTimeSearch(e.target.checked)}
+                                                className="rounded border-gray-300 text-primary focus:ring-primary"
+                                            />
+                                            <span>Temps réel</span>
+                                        </motion.label>
+                                        */}
                                         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                                             <Button
                                                 type="submit"

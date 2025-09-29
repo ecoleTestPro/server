@@ -77,7 +77,7 @@ const convertQuillLists = (html: string): string => {
  */
 const convertQuillListType = (html: string, quillType: string, htmlTag: string): string => {
      
-    const listPattern = new RegExp(`<p[^>]*data-list="${quillType}"[^>]*>(.*?)<\/p>`, 'gi');
+    const listPattern = new RegExp(`<p[^>]*data-list="${quillType}"[^>]*>(.*?)</p>`, 'gi');
 
     if (!listPattern.test(html)) {
         return html;
