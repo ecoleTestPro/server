@@ -1,6 +1,5 @@
 import { CLASS_NAME } from '@/data/styles/style.constant';
 import { ICourse } from '@/types/course';
-import { Logger } from '@/utils/console.util';
 import { sanitizeHTML } from '@/utils/quill-html-parser';
 import { getMediaUrl } from '@/utils/utils';
 import { JSX, useState } from 'react';

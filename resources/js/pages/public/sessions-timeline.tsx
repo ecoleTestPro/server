@@ -96,7 +96,6 @@ const SessionsTimeline = ({ sessions }: SessionsTimelineProps) => {
         });
     };
 
-
     const isUpcoming = (dateString: string) => {
         return new Date(dateString) >= new Date();
     };

@@ -12,7 +12,7 @@ const ChooseSection: React.FC<ChooseSectionProps> = ({ course }) => {
         <section className={`${CLASS_NAME.section} ${CLASS_NAME.sectionContentPaddingAlt} bg-white/15 dark:bg-[#0a0e19]`}>
             <div className="container mx-auto">
                 <h1 className="text-2xl font-bold mb-4 text-black dark:text-white">Choisir une session</h1>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 gap-6">
                     <div className="toc-accordion col-span-1 md:col-span-3" id="tablesOfContentAccordion">
                         {/* Registration Section with ref */}
                         <div id="course-dates" className="">

@@ -19,7 +19,6 @@ export default function CourseCategoryPage() {
     const [breadcrumb, setBreadcrumb] = useState<IHeroBreadcrumbItems[]>([]);
 
     useEffect(() => {
-
         Logger.log('[COURSE_CATEGORY_PAGE] useEffect - data', data);
 
         if (data && data.course && data.course.id && data.course.slug) {
