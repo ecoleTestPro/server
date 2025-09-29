@@ -16,10 +16,10 @@ class TestNotificationController extends Controller
 
         $notification = NotificationInstanceRepository::createAndBroadcast([
             'notification_id' => 1, // Vous pouvez créer une notification par défaut
-            'recipient_id' => $userId,
-            'heading' => 'Test de notification en temps réel',
-            'content' => 'Ceci est un test de notification créé à ' . now()->format('H:i:s'),
-            'is_read' => false,
+            'recipient_id'    => $userId,
+            'heading'         => 'Test de notification en temps réel',
+            'content'         => 'Ceci est un test de notification créé à ' . now()->format('H:i:s'),
+            'is_read'         => false,
             'metadata' => json_encode([
                 'type' => 'test',
                 'created_by' => 'system'
