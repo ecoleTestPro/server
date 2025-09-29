@@ -203,9 +203,11 @@ export const getPeriodicity = (periodicityUnit: ICoursePeriodicity, periodicityV
 };
 
 export const handleErrorsRequest = (
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     error: any,
     setLoading: (loading: boolean) => void,
     toastError: (t: string) => void,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     setErrors: (errors: any) => void,
 ): void => {
     try {

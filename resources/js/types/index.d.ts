@@ -84,7 +84,7 @@ export interface Appointment {
     status: 'pending' | 'confirmed' | 'completed' | 'cancelled';
     client_email?: string;
     client_phone?: string;
-    metadata?: Record<string, any>;
+    // metadata?: Record<string, any>;
     user_id?: number;
     admin_user_id?: number;
     user?: User;

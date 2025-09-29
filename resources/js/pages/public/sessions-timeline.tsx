@@ -96,13 +96,6 @@ const SessionsTimeline = ({ sessions }: SessionsTimelineProps) => {
         });
     };
 
-    const formatTime = (dateString: string) => {
-        const date = new Date(dateString);
-        return date.toLocaleTimeString('fr-FR', {
-            hour: '2-digit',
-            minute: '2-digit',
-        });
-    };
 
     const isUpcoming = (dateString: string) => {
         return new Date(dateString) >= new Date();
@@ -168,7 +161,7 @@ const SessionsTimeline = ({ sessions }: SessionsTimelineProps) => {
         }
     }, [groupedSessions, activeDate]);
 
-    const [pageTitle, setPageTitle] = useState('Sessions de Formation');
+    const pageTitle = 'Sessions de Formation';
     const breadcrumbItems: IHeroBreadcrumbItems[] = [
         { label: 'Accueil', href: ROUTE_MAP.public.home.link },
         { label: pageTitle, href: '#' },
@@ -259,7 +252,7 @@ const SessionsTimeline = ({ sessions }: SessionsTimelineProps) => {
                                                     key={filter.key}
                                                     variant={selectedFilter === filter.key ? 'default' : 'outline'}
                                                     onClick={() => {
-                                                        setSelectedFilter(filter.key as any);
+                                                        setSelectedFilter(filter.key as 'all' | 'upcoming' | 'past');
                                                         setMobileFiltersOpen(false);
                                                     }}
                                                     className={`w-full justify-start h-11 text-sm ${

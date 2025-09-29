@@ -20,7 +20,7 @@ const DescriptionCourse: React.FC<DescriptionCourseProps> = ({ course }) => {
     // Composant helper pour rendre le HTML avec les styles appropriés
     const RichContent = ({ html }: { html: string }) => {
         const cleanedHTML = sanitizeHTML(html);
-        Logger.log('[CourseDetail] Cleaned HTML:', cleanedHTML);
+        // Logger.log('[CourseDetail] Cleaned HTML:', cleanedHTML);
 
         return <div className={proseClasses} dangerouslySetInnerHTML={{ __html: cleanedHTML }} />;
     };

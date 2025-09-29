@@ -34,8 +34,8 @@ const MONTHS = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet'
 export default function AppointmentsCalendar({ appointments, filters }: Props) {
     const [currentDate, setCurrentDate] = useState(new Date());
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-    const [selectedType, setSelectedType] = useState(filters.type || 'all');
-    const [selectedStatus, setSelectedStatus] = useState(filters.status || 'all');
+    const [selectedType] = useState(filters.type || 'all');
+    const [selectedStatus] = useState(filters.status || 'all');
 
     const today = new Date();
     const year = currentDate.getFullYear();

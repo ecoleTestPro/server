@@ -9,7 +9,7 @@ import { ICourse } from '@/types/course';
 import { ROUTE_MAP } from '@/utils/route.util';
 import { Link, usePage } from '@inertiajs/react';
 import axios from 'axios';
-import { AnimatePresence, motion, useInView } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { BookOpen, Loader2, Search } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -27,7 +27,7 @@ export default function SearchPage() {
     const [courses, setCourses] = useState<ICourse[]>([]);
     const [searchText, setSearchText] = useState<string>(searchTerm);
     const [loading, setLoading] = useState<boolean>(false);
-    const [sortBy, setSortBy] = useState<'relevance' | 'date' | 'title'>('relevance');
+    const [sortBy] = useState<'relevance' | 'date' | 'title'>('relevance');
     const [filteredCourses, setFilteredCourses] = useState<ICourse[]>([]);
     const [searchStats, setSearchStats] = useState({ total: 0, searchTime: 0 });
     const [realTimeSearch, setRealTimeSearch] = useState<boolean>(true);
@@ -35,7 +35,6 @@ export default function SearchPage() {
     const searchStartTime = useRef<number>(0);
     const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const resultsRef = useRef<HTMLDivElement>(null);
-    const isInView = useInView(resultsRef, { once: true, amount: 0.1 });
 
     const breadcrumb: IHeroBreadcrumbItems[] = [
         { label: 'Home', href: ROUTE_MAP.public.home.link },
@@ -165,6 +164,7 @@ export default function SearchPage() {
 
                                     <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
                                         {/* Real-time search toggle */}
+                                        {/* Disabled real-time search toggle */}
                                         {false && (
                                             <motion.label
                                                 className="flex items-center space-x-2 text-sm text-gray-600 cursor-pointer"
@@ -178,8 +178,8 @@ export default function SearchPage() {
                                                 />
                                                 <span>Temps réel</span>
                                             </motion.label>
-                                        )}
-
+                                        )}{' '}
+                                        */
                                         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                                             <Button
                                                 type="submit"
@@ -204,7 +204,6 @@ export default function SearchPage() {
                             </form>
                         </Card>
                     </motion.div>
-
                     {/* Search Stats and Controls */}
                     <AnimatePresence>
                         {(filteredCourses.length > 0 || loading) && (
@@ -219,17 +218,16 @@ export default function SearchPage() {
                             </motion.div>
                         )}
                     </AnimatePresence>
-
                     {/* Debug Info - Remove in production */}
-                    {false && process.env.NODE_ENV === 'development' && (
+                    {/* Disabled debug info */}
+                    {/* {false && process?.env?.NODE_ENV === 'development' && (
                         <div className="mb-4 p-4 bg-yellow-100 rounded-lg text-xs">
                             <p>Debug: searchText = "{searchText}"</p>
                             <p>Debug: filteredCourses.length = {filteredCourses.length}</p>
                             <p>Debug: loading = {loading ? 'true' : 'false'}</p>
                             <p>Debug: courses.length = {courses.length}</p>
                         </div>
-                    )}
-
+                    )} */}
                     {/* Results */}
                     <div ref={resultsRef}>
                         {loading ? (
