@@ -1,5 +1,4 @@
-import { I } from "node_modules/framer-motion/dist/types.d-B_QPEvFK";
-import { User } from ".";
+import { User } from '.';
 
 export interface IBlogCategory {
     id: number;

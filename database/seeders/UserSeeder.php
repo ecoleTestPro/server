@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
     {
         $localAdmin = UserRepository::query()->updateOrCreate(
             [
-                'email' => 'admin@example.com',
+                'email' => 'admin@testpro-group.com',
             ],
             [
                 'phone'             => '011' . rand(100000000, 999999999),
@@ -34,7 +34,7 @@ class UserSeeder extends Seeder
 
         $localAdmin = UserRepository::query()->updateOrCreate(
             [
-                'email' => 'developper@testpro.com',
+                'email' => 'developper@testpro-group.com',
             ],
             [
                 'phone'             => '011' . rand(100000000, 999999999),

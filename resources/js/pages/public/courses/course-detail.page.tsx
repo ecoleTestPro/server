@@ -12,17 +12,13 @@ import { usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 
 export default function CourseCategoryPage() {
-    const { auth, data } = usePage<SharedData>().props;
-    const references: IPartner[] = (data as any)?.references ?? [];
-    const [loading, setLoading] = useState<boolean>(false);
+    const { data } = usePage<SharedData>().props;
+    const references: IPartner[] = (data as { references?: IPartner[] })?.references ?? [];
     // const [category, setCategory] = useState<ICourseCategory | null>(null);
     const [course, setCourse] = useState<ICourse | null>(null);
     const [breadcrumb, setBreadcrumb] = useState<IHeroBreadcrumbItems[]>([]);
-    const [error, setError] = useState<string | false>(false);
 
     useEffect(() => {
-        setLoading(true);
-
         Logger.log('[COURSE_CATEGORY_PAGE] useEffect - data', data);
 
         if (data && data.course && data.course.id && data.course.slug) {
@@ -44,14 +40,15 @@ export default function CourseCategoryPage() {
     }, [data]);
 
     return (
-        <DefaultLayout title="Welcome" description="Welcome">
+        <DefaultLayout title="Formations" description="Formations">
             <div className="bg-gray-100 dark:bg-[#0a0e19]">
                 {course && (
                     <>
                         <Hero title={course.title} description={''} course={course} breadcrumbItems={breadcrumb} gradient="style-2" />
                         {/* <OurCurrentCourses coursesData={category.children} showSidebar={true} /> */}
                         <CourseDetail course={course} />
-                        {course.reference_tag && <ReferenceLogos tag={course.reference_tag} imgHeight='h-32' />}
+
+                        {course.reference_tag && <ReferenceLogos tag={course.reference_tag} imgHeight="h-32" />}
                     </>
                 )}
                 <Testimonials />

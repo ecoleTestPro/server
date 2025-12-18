@@ -11,17 +11,17 @@ import { Button } from '@/components/ui/button/button';
 import { SharedData } from '@/types';
 import { ICourse, ICourseCategory } from '@/types/course';
 import { IPartner } from '@/types/partner';
-import 'react-quill/dist/quill.snow.css';
-import RichTextQuill from '../../ui/form/RichTextQuill';
+import 'react-quill-new/dist/quill.snow.css';
+import AdvancedRichTextEditor from '../../ui/form/AdvancedRichTextEditor';
 import { Skeleton } from '../../ui/skeleton';
 import CourseAdditionnalForm from './course-additionnal.form';
 import CourseBasicInfoForm from './course-basic-info.form';
 
 import RichTextCKEditor from '@/components/ui/form/RichTextCKEditor';
+import { Logger } from '@/utils/console.util';
 import { ROUTE_MAP } from '@/utils/route.util';
 import axios from 'axios';
 import { COURSE_DEFAULT_VALUES, createPayload, ICourseForm, PeriodicityUnitEnum } from './course.form.util';
-import { Logger } from '@/utils/console.util';
 
 export type ICourseFormErrors = { [key in keyof ICourseForm]?: string[] };
 
@@ -145,11 +145,15 @@ function CourseForm({ course }: ICourseFormProps) {
         setData('id', course.id);
         setData('excerpt', course.excerpt || '');
         setData('category_id', course?.category?.id?.toString() || '');
-        setData('duration', course.duration || '');
         setData('attachment', course.attachment || '');
         setData('lectures', course.lectures || 0);
+
+        setData('is_featured', course.is_featured);
+
+        setData('duration', course.duration || '3');
         setData('periodicity_unit', course.periodicity_unit || PeriodicityUnitEnum.DAY);
-        setData('periodicity_value', course.periodicity_value || 1);
+        setData('periodicity_value', course.periodicity_value || 3); // <->duration
+
         setData('price', course.price ? course.price : '');
         setData('regular_price', course.regular_price ? Number(course.regular_price).toLocaleString('fr-FR') : '');
         setData('author', course.author || '');
@@ -383,11 +387,13 @@ function CourseForm({ course }: ICourseFormProps) {
                                                                     {item.key && (
                                                                         <div>
                                                                             {true && (
-                                                                                <RichTextQuill
+                                                                                <AdvancedRichTextEditor
                                                                                     label={item.label}
                                                                                     labelId={item.key}
                                                                                     value={data[item.key] as string}
-                                                                                    setData={(value: string) => setData(item.key, value)}
+                                                                                    onChange={(value: string) => setData(item.key, value)}
+                                                                                    placeholder={`Saisissez ${item.label.toLowerCase()}...`}
+                                                                                    height="250px"
                                                                                 />
                                                                             )}
                                                                             {false && (
@@ -439,15 +445,17 @@ function CourseForm({ course }: ICourseFormProps) {
                                             {t('courses.partners', 'Associer des partenaires')}
                                         </Button>
                                     )}
-                                    <Button
-                                        type="button"
-                                        onClick={() => submit(data, true)}
-                                        className="mt-2  bg-gray-400 hover:bg-gray-500 "
-                                        disabled={processing}
-                                    >
-                                        {processing && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
-                                        {t('courses.create', 'Sauvegarder comme brouillon')}
-                                    </Button>
+                                    {false && (
+                                        <Button
+                                            type="button"
+                                            onClick={() => submit(data, true)}
+                                            className="mt-2  bg-gray-400 hover:bg-gray-500 "
+                                            disabled={processing}
+                                        >
+                                            {processing && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
+                                            {t('courses.create', 'Sauvegarder comme brouillon')}
+                                        </Button>
+                                    )}
 
                                     <div className="mt-[30vh] w-full">
                                         <Button

@@ -77,11 +77,12 @@ class PublicFormationController extends PublicAbstractController
     public function courses()
     {
         $data = $this->default_data;
-        $data['category'] = CategoryRepository::findAll();
+        
+        // Récupérer toutes les catégories avec leurs cours
+        $data['categories_with_courses'] = CategoryRepository::getRecursiveTree(true);
+        
+        // Récupérer toutes les formations
         $data['courses']['list'] = CourseRepository::findAll();
-        // dd($data['courses']);
-
-        // dd($featuredCourses);
 
         return Inertia::render('public/courses/courses.page', [
             'data' => $data,
@@ -148,11 +149,14 @@ class PublicFormationController extends PublicAbstractController
                 $data['references'] = PartnerRepository::getActiveReferences($course->reference_tag);
             }
 
+            // Get related courses
+            $data['related_courses'] = CourseRepository::getRelatedCourses($course);
+
             return Inertia::render('public/courses/course-detail.page', [
                 'data' => $data,
             ]);
         } catch (Exception $e) {
-            dd($e);
+            // dd($e);
             Log::error("Error in courseCategory: {$e->getMessage()}");
             return redirect()->route('courses')->withErrors('Une erreur est survenue lors de la récupération des données.');
         }
@@ -164,5 +168,32 @@ class PublicFormationController extends PublicAbstractController
         return Inertia::render('public/courses/calendar.page', [
             'data' => $data,
         ]);
+    }
+
+    /**
+     * API endpoint pour récupérer les formations mises en avant (featured)
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getFeaturedCourses(Request $request)
+    {
+        try {
+            $limit = $request->input('limit', 6);
+            $featuredCourses = CourseRepository::getFeaturedCourses($limit);
+
+            return response()->json([
+                'success' => true,
+                'courses' => $featuredCourses,
+                'count' => $featuredCourses->count()
+            ]);
+        } catch (Exception $e) {
+            Log::error("Error in getFeaturedCourses: {$e->getMessage()}");
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur lors de la récupération des formations mises en avant.',
+                'courses' => []
+            ], 500);
+        }
     }
 }

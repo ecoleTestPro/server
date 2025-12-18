@@ -1,6 +1,5 @@
-import { IMainMenuItem } from "@/types/header.type";
-import { ROUTE_MAP } from "@/utils/route.util";
-
+import { IMainMenuItem } from '@/types/header.type';
+import { ROUTE_MAP } from '@/utils/route.util';
 
 /**
  * Default main menu items for the application.
@@ -19,8 +18,7 @@ export const DEFULAT_MAIN_MENU: IMainMenuItem[] = [
         href: ROUTE_MAP.public.courses.list.link,
         title: 'Formations',
         // featureImage: '/assets/images/pexels-divinetechygirl-1181634.jpg',
-        description:
-            '',
+        description: '',
         gridClass: 'grid-cols-1 lg:grid-cols-3',
         maxWidth: 'w-[900px]',
         children: {
@@ -33,7 +31,7 @@ export const DEFULAT_MAIN_MENU: IMainMenuItem[] = [
                     label: 'Programmes de reconversion',
                     href: ROUTE_MAP.public.reconversionMetier.link,
                     description: 'Découvrez nos programmes de reconversion professionnelle.',
-                    image: 'https://placehold.jp/150x150.png',
+                    // image: 'https://placehold.jp/150x150.png',
                 },
             ],
         },
@@ -60,63 +58,65 @@ export const DEFULAT_MAIN_MENU: IMainMenuItem[] = [
                 {
                     id: 'consulting-subitem',
                     label: 'Consulting',
-                    href: '#',
+                    href: ROUTE_MAP.public.services.consulting.auditOfMaturityOfTests.link,
                     image: '/assets/images/bg_menu_box.jpg',
                     subItems: [
                         {
                             id: 'consulting-audit',
                             label: 'Audit de maturité de test',
                             href: ROUTE_MAP.public.services.consulting.auditOfMaturityOfTests.link,
-                            description: "Découvrez les formations disponibles dès maintenant, organisées par catégories. Trouvez le cours qui correspond à vos besoins et inscrivez-vous pour progresser dans votre parcours professionnel.",
-                            image: 'https://placehold.co/512x512',
+                            description:
+                                'Découvrez les formations disponibles dès maintenant, organisées par catégories. Trouvez le cours qui correspond à vos besoins et inscrivez-vous pour progresser dans votre parcours professionnel.',
+                            // image: 'https://placehold.co/512x512',
                             subItems: [
                                 {
                                     id: 'consulting-audit',
                                     label: 'Audit de maturité de test',
                                     href: ROUTE_MAP.public.services.consulting.auditOfMaturityOfTests.link,
-                                    image: 'https://placehold.co/512x512',
+                                    // image: 'https://placehold.co/512x512',
                                 },
                                 {
                                     id: 'consulting-testing',
                                     label: 'Conseil Testing',
                                     href: ROUTE_MAP.public.services.consulting.consultingTesting.link,
-                                    image: 'https://placehold.co/512x512'
-                                }
-                            ]
+                                    // image: 'https://placehold.co/512x512',
+                                },
+                            ],
                         },
-                    ]
+                    ],
                 },
                 {
                     id: 'services-subitem',
                     label: 'Services',
-                    href: '#',
+                    href: ROUTE_MAP.public.services.testSerivces.index.link,
                     image: '/assets/images/businessmen-desk-scaled.jpg',
                     subItems: [
                         {
                             id: 'consulting-audit',
                             label: 'Audit de maturité de test',
                             href: ROUTE_MAP.public.services.testSerivces.testOutsourcingServices.link,
-                            description: "Découvrez les formations disponibles dès maintenant, organisées par catégories. Trouvez le cours qui correspond à vos besoins et inscrivez-vous pour progresser dans votre parcours professionnel.",
-                            image: 'https://placehold.co/512x512',
+                            description:
+                                'Découvrez les formations disponibles dès maintenant, organisées par catégories. Trouvez le cours qui correspond à vos besoins et inscrivez-vous pour progresser dans votre parcours professionnel.',
+                            // image: 'https://placehold.co/512x512',
                             subItems: [
                                 {
                                     id: 'consulting-audit',
-                                    label: 'Services d\'externalisation des tests',
+                                    label: "Services d'externalisation des tests",
                                     href: ROUTE_MAP.public.services.testSerivces.testOutsourcingServices.link,
-                                    image: 'https://placehold.co/512x512',
+                                    // image: 'https://placehold.co/512x512',
                                 },
                                 {
                                     id: 'consulting-testing',
-                                    label:  "Intégration de spécialistes",
+                                    label: 'Intégration de spécialistes',
                                     href: ROUTE_MAP.public.services.testSerivces.integrationSpecialists.link,
-                                    image: 'https://placehold.co/512x512'
-                                }
-                            ]
+                                    // image: 'https://placehold.co/512x512',
+                                },
+                            ],
                         },
-                    ]
+                    ],
                 },
-            ]
-        }
+            ],
+        },
     },
     { id: 'blog', label: 'Blog/News', href: ROUTE_MAP.public.blogs.list.link },
     {
@@ -124,7 +124,8 @@ export const DEFULAT_MAIN_MENU: IMainMenuItem[] = [
         label: 'Carrières',
         href: ROUTE_MAP.public.careers.link,
         title: 'Carrières',
-        description: 'Découvrez nos opportunités de carrière et rejoignez notre équipe. Nous recherchons des talents passionnés pour contribuer à notre succès.',
+        description:
+            'Découvrez nos opportunités de carrière et rejoignez notre équipe. Nous recherchons des talents passionnés pour contribuer à notre succès.',
     },
 ];
 
@@ -133,7 +134,7 @@ export const DEFULAT_MAIN_MENU_RIGHT: IMainMenuItem[] = [
     // { id: 'calendrier', label: 'Calendrier', href: ROUTE_MAP.public.calendar.link },
     // { id: 'timeline', label: 'Timeline', href: ROUTE_MAP.public.sessionsTimeline.link },
     { id: 'rendez-vous', label: 'Rendez-vous', href: route('appointments.create'), isCta: false },
-    { id: 'contact', label: 'Contact', href: ROUTE_MAP.public.contact.link, isCta: true }
+    { id: 'contact', label: 'Contact', href: ROUTE_MAP.public.contact.link, isCta: true },
 ];
 
 const FORMATION_MAIN_MENU_PART_CHILDREN = {
@@ -180,11 +181,10 @@ const FORMATION_MAIN_MENU_PART_CHILDREN = {
     },
 };
 
-
 // for localhost -> localhost:8000
 // export const RECAPTCHA_SITE_KEY_PUBLIC: string = "6LdOgHgrAAAAACDxYFx2jRkoJIov4VK6XqMbz6gK";
 // export const RECAPTCHA_SITE_KEY_PRIVATE: string = "6LdOgHgrAAAAAN6brCXYKUTyh6ToFeOT20pla4VD";
 
 // For testpro-group.com -> domaine
-export const RECAPTCHA_SITE_KEY_PUBLIC: string = "6Lf-ma0rAAAAACD72JF7bgKWJDpspagN8ext6wO9";
-export const RECAPTCHA_SITE_KEY_PRIVATE: string = "6Lf-ma0rAAAAAM6FJ2UnmrV6sYfFcQgwZptv9Tlg";
+export const RECAPTCHA_SITE_KEY_PUBLIC: string = '6Lf-ma0rAAAAACD72JF7bgKWJDpspagN8ext6wO9';
+export const RECAPTCHA_SITE_KEY_PRIVATE: string = '6Lf-ma0rAAAAAM6FJ2UnmrV6sYfFcQgwZptv9Tlg';

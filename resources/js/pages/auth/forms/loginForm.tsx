@@ -1,5 +1,5 @@
 import { useForm } from '@inertiajs/react';
-import { LoaderCircle, Mail, Lock, Eye, EyeOff, CheckCircle } from 'lucide-react';
+import { CheckCircle, Eye, EyeOff, LoaderCircle, Lock, Mail } from 'lucide-react';
 import { FormEventHandler, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -28,7 +28,7 @@ export default function LoginForm({ status, canResetPassword, onCloseDialog }: L
     const [loginError, setLoginError] = useState<string | null>(null);
     const [showPassword, setShowPassword] = useState(false);
     const [focusedField, setFocusedField] = useState<string | null>(null);
-    
+
     const { data, setData, post, processing, errors, reset } = useForm<Required<ILoginForm>>({
         email: '',
         password: '',
@@ -64,9 +64,7 @@ export default function LoginForm({ status, canResetPassword, onCloseDialog }: L
                     <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl sm:rounded-2xl mb-3 sm:mb-4 shadow-lg">
                         <div className="text-white text-lg sm:text-2xl">🎓</div>
                     </div>
-                    <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">
-                        {t('login.welcome', 'Bienvenue')}
-                    </h1>
+                    <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">{t('login.welcome', 'Bienvenue')}</h1>
                     <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 px-2">
                         {t('login.subtitle', 'Connectez-vous à votre compte')}
                     </p>
@@ -75,9 +73,7 @@ export default function LoginForm({ status, canResetPassword, onCloseDialog }: L
                 {status && (
                     <div className="flex items-center gap-3 p-3 sm:p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-lg">
                         <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-green-600 dark:text-green-400 flex-shrink-0" />
-                        <div className="text-xs sm:text-sm font-medium text-green-800 dark:text-green-200">
-                            {status}
-                        </div>
+                        <div className="text-xs sm:text-sm font-medium text-green-800 dark:text-green-200">{status}</div>
                     </div>
                 )}
 
@@ -89,11 +85,11 @@ export default function LoginForm({ status, canResetPassword, onCloseDialog }: L
                         </Label>
                         <div className="relative group">
                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <Mail className={`h-4 w-4 sm:h-5 sm:w-5 transition-colors duration-200 ${
-                                    focusedField === 'email' || data.email
-                                        ? 'text-emerald-500' 
-                                        : 'text-gray-400 dark:text-gray-500'
-                                }`} />
+                                <Mail
+                                    className={`h-4 w-4 sm:h-5 sm:w-5 transition-colors duration-200 ${
+                                        focusedField === 'email' || data.email ? 'text-emerald-500' : 'text-gray-400 dark:text-gray-500'
+                                    }`}
+                                />
                             </div>
                             <Input
                                 id="email"
@@ -111,11 +107,7 @@ export default function LoginForm({ status, canResetPassword, onCloseDialog }: L
                                     focusedField === 'email'
                                         ? 'border-emerald-500 shadow-md shadow-emerald-100 dark:shadow-emerald-900/20'
                                         : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
-                                } ${
-                                    errors.email
-                                        ? 'border-red-400 focus:border-red-500'
-                                        : ''
-                                }`}
+                                } ${errors.email ? 'border-red-400 focus:border-red-500' : ''}`}
                             />
                             {data.email && isValidEmail(data.email) && (
                                 <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
@@ -138,8 +130,8 @@ export default function LoginForm({ status, canResetPassword, onCloseDialog }: L
                                 {t('login.password', 'Mot de passe')}
                             </Label>
                             {canResetPassword && (
-                                <TextLink 
-                                    href={route('password.request')} 
+                                <TextLink
+                                    href={route('password.request')}
                                     className="text-xs sm:text-sm text-emerald-600 hover:text-emerald-500 dark:text-emerald-400 dark:hover:text-emerald-300 font-medium transition-colors"
                                     tabIndex={5}
                                 >
@@ -149,11 +141,11 @@ export default function LoginForm({ status, canResetPassword, onCloseDialog }: L
                         </div>
                         <div className="relative group">
                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <Lock className={`h-4 w-4 sm:h-5 sm:w-5 transition-colors duration-200 ${
-                                    focusedField === 'password' || data.password
-                                        ? 'text-emerald-500' 
-                                        : 'text-gray-400 dark:text-gray-500'
-                                }`} />
+                                <Lock
+                                    className={`h-4 w-4 sm:h-5 sm:w-5 transition-colors duration-200 ${
+                                        focusedField === 'password' || data.password ? 'text-emerald-500' : 'text-gray-400 dark:text-gray-500'
+                                    }`}
+                                />
                             </div>
                             <Input
                                 id="password"
@@ -170,11 +162,7 @@ export default function LoginForm({ status, canResetPassword, onCloseDialog }: L
                                     focusedField === 'password'
                                         ? 'border-emerald-500 shadow-md shadow-emerald-100 dark:shadow-emerald-900/20'
                                         : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
-                                } ${
-                                    errors.password
-                                        ? 'border-red-400 focus:border-red-500'
-                                        : ''
-                                }`}
+                                } ${errors.password ? 'border-red-400 focus:border-red-500' : ''}`}
                             />
                             <button
                                 type="button"
@@ -208,10 +196,7 @@ export default function LoginForm({ status, canResetPassword, onCloseDialog }: L
                                 tabIndex={3}
                                 className="data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-600"
                             />
-                            <Label 
-                                htmlFor="remember" 
-                                className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 cursor-pointer select-none"
-                            >
+                            <Label htmlFor="remember" className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 cursor-pointer select-none">
                                 {t('login.rememberMe', 'Se souvenir de moi')}
                             </Label>
                         </div>
@@ -228,10 +213,10 @@ export default function LoginForm({ status, canResetPassword, onCloseDialog }: L
                     )}
 
                     {/* Submit Button */}
-                    <Button 
-                        type="submit" 
-                        className="w-full h-10 sm:h-12 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-medium rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-70 disabled:cursor-not-allowed text-sm sm:text-base" 
-                        tabIndex={4} 
+                    <Button
+                        type="submit"
+                        className="w-full h-10 sm:h-12 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-medium rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-70 disabled:cursor-not-allowed text-sm sm:text-base"
+                        tabIndex={4}
                         disabled={processing}
                     >
                         <div className="flex items-center justify-center gap-2">
@@ -246,9 +231,7 @@ export default function LoginForm({ status, canResetPassword, onCloseDialog }: L
                             <div className="w-full border-t border-gray-200 dark:border-gray-700"></div>
                         </div>
                         <div className="relative flex justify-center text-xs sm:text-sm">
-                            <span className="px-3 sm:px-4 bg-white dark:bg-gray-900 text-gray-500 dark:text-gray-400">
-                                {t('login.or', 'ou')}
-                            </span>
+                            <span className="px-3 sm:px-4 bg-white dark:bg-gray-900 text-gray-500 dark:text-gray-400">{t('login.or', 'ou')}</span>
                         </div>
                     </div>
 
@@ -256,8 +239,8 @@ export default function LoginForm({ status, canResetPassword, onCloseDialog }: L
                     <div className="text-center px-2">
                         <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
                             {t('login.noAccount', "Vous n'avez pas de compte ?")}{' '}
-                            <TextLink 
-                                href={route('auth.register')} 
+                            <TextLink
+                                href={route('auth.register')}
                                 tabIndex={5}
                                 className="font-medium text-emerald-600 hover:text-emerald-500 dark:text-emerald-400 dark:hover:text-emerald-300 transition-colors"
                             >

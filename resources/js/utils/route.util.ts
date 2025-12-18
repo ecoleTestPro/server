@@ -1,4 +1,4 @@
-import { Logger } from "./console.util";
+import { Logger } from './console.util';
 
 interface IRouteMap {
     link: string;
@@ -29,7 +29,7 @@ const createIRouteMap = (link: string, title?: string, linkFile?: string): IRout
             linkFile: '',
         };
     }
-}
+};
 
 interface IROUTE_MAP {
     public: {
@@ -55,45 +55,46 @@ interface IROUTE_MAP {
                 index: IRouteMap;
                 auditOfMaturityOfTests: IRouteMap;
                 consultingTesting: IRouteMap;
-            },
+            };
             testSerivces: {
                 index: IRouteMap;
                 testOutsourcingServices: IRouteMap;
                 integrationSpecialists: IRouteMap;
-            }
-        }
+            };
+        };
         blogs: {
             list: IRouteMap;
             detail: (slug: string) => IRouteMap;
-        }
-    }
+        };
+        appointment: IRouteMap;
+    };
     auth: {
-        login: IRouteMap,
-        register: IRouteMap,
-        forgotPassword: IRouteMap,
-        resetPassword: IRouteMap,
-        verifyEmail: IRouteMap,
-        adminLogin: IRouteMap,
-    },
+        login: IRouteMap;
+        register: IRouteMap;
+        forgotPassword: IRouteMap;
+        resetPassword: IRouteMap;
+        verifyEmail: IRouteMap;
+        adminLogin: IRouteMap;
+    };
     dashboard: {
-        dashboard: IRouteMap,
+        dashboard: IRouteMap;
         course: {
-            list: IRouteMap,
-            create: IRouteMap,
-            edit: (slug: string) => IRouteMap
-        },
+            list: IRouteMap;
+            create: IRouteMap;
+            edit: (slug: string) => IRouteMap;
+        };
         blogs: {
-            index: IRouteMap,
-            create: IRouteMap,
-            edit: (slug: string) => IRouteMap
-        },
+            index: IRouteMap;
+            create: IRouteMap;
+            edit: (slug: string) => IRouteMap;
+        };
         newsletters: {
-            index: IRouteMap,
-            compose: IRouteMap,
-            templates: IRouteMap,
-            logs: IRouteMap,
-        }
-    }
+            index: IRouteMap;
+            compose: IRouteMap;
+            templates: IRouteMap;
+            logs: IRouteMap;
+        };
+    };
 }
 
 export const ROUTE_MAP: IROUTE_MAP = {
@@ -116,7 +117,7 @@ export const ROUTE_MAP: IROUTE_MAP = {
             },
             detail: (categorySlug: string, slug: string) => {
                 return createIRouteMap(`/formation/${categorySlug}/${slug}`, 'Détail de la formation');
-            }
+            },
         },
         services: {
             index: createIRouteMap(route('services'), 'Nos services'),
@@ -128,14 +129,17 @@ export const ROUTE_MAP: IROUTE_MAP = {
             testSerivces: {
                 index: createIRouteMap(route('services.test.outsourcing'), 'Services de test'),
                 testOutsourcingServices: createIRouteMap(route('services.test.outsourcing'), 'Services d’externalisation de test'),
-                integrationSpecialists: createIRouteMap(route('services.integration.specialists'), 'Intégration de Spécialistes dans Vos LocauxTest Outsourcing Services'),
-            }
+                integrationSpecialists: createIRouteMap(
+                    route('services.integration.specialists'),
+                    'Intégration de Spécialistes dans Vos LocauxTest Outsourcing Services',
+                ),
+            },
         },
         blogs: {
             list: createIRouteMap('/blogs', 'Blogs'),
-            detail: (slug: string) => createIRouteMap(`/blog/${slug}`, 'Détail du blog')
-
+            detail: (slug: string) => createIRouteMap(`/blog/${slug}`, 'Détail du blog'),
         },
+        appointment: createIRouteMap(route('appointments.create'), 'Prendre rendez-vous'),
     },
     auth: {
         login: createIRouteMap(route('login'), 'Connexion'),
@@ -167,5 +171,5 @@ export const ROUTE_MAP: IROUTE_MAP = {
             templates: createIRouteMap(route('dashboard.newsletter-templates.index'), 'Templates'),
             logs: createIRouteMap(route('dashboard.newsletter-logs.index'), 'Logs'),
         },
-    }
-}
+    },
+};

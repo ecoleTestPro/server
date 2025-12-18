@@ -5,9 +5,12 @@ namespace App\Http\Controllers\Public;
 use App\Http\Controllers\PublicAbstractController;
 use App\Models\Appointment;
 use App\Models\BusinessHours;
+use App\Mail\AppointmentConfirmation;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -21,8 +24,7 @@ class AppointmentController extends PublicAbstractController
         $data = $this->getDefaultData();
         $businessHours = BusinessHours::active()->get()->keyBy('day_of_week');
         $data['businessHours'] = $businessHours;
-        $data['appointmentTypes'] = $this->getAppointmentTypes();
-        
+
         // Sinon, utiliser le layout public
         return Inertia::render('public/appointment', [
             'data' => $data
@@ -40,9 +42,9 @@ class AppointmentController extends PublicAbstractController
 
         $date = Carbon::parse($request->date);
         $dayOfWeek = strtolower($date->format('l'));
-        
+
         $businessHours = BusinessHours::getForDay($dayOfWeek);
-        
+
         if (!$businessHours) {
             return response()->json([
                 'slots' => [],
@@ -51,10 +53,9 @@ class AppointmentController extends PublicAbstractController
         }
 
         $availableSlots = $businessHours->getAvailableSlots($date);
-        
+
         // Filtrer les créneaux déjà réservés
         $bookedSlots = Appointment::whereDate('appointment_date', $date)
-            ->whereIn('status', [Appointment::STATUS_PENDING, Appointment::STATUS_CONFIRMED])
             ->pluck('appointment_date')
             ->map(fn($datetime) => Carbon::parse($datetime)->format('H:i'))
             ->toArray();
@@ -81,28 +82,22 @@ class AppointmentController extends PublicAbstractController
      */
     public function store(Request $request): JsonResponse
     {
-        // Validation différente selon si l'utilisateur est connecté ou non
+        // Validation - type retiré et client_name ajouté
         $rules = [
-            'title' => 'required|string|max:255',
+            'title' => 'nullable|string|max:255',
             'description' => 'nullable|string|max:1000',
             'appointment_date' => 'required|date|after:now',
             'duration' => 'required|integer|min:15|max:240',
-            'type' => 'required|in:consultation,information,support,enrollment,other',
+            'client_name' => 'required|string|max:255',
+            'client_email' => 'required|email',
             'client_phone' => 'nullable|string|max:20',
             'metadata' => 'nullable|array'
         ];
 
-        // Si l'utilisateur n'est pas connecté, l'email est obligatoire
-        if (!auth()->check()) {
-            $rules['client_email'] = 'required|email';
-        } else {
-            $rules['client_email'] = 'nullable|email';
-        }
-
         $validated = $request->validate($rules);
 
         $appointmentDate = Carbon::parse($validated['appointment_date']);
-        
+
         // Vérifier que le créneau est disponible
         if (!$this->isSlotAvailable($appointmentDate, $validated['duration'])) {
             return response()->json([
@@ -111,25 +106,32 @@ class AppointmentController extends PublicAbstractController
             ], 422);
         }
 
+        // Préparer les données avec client_name dans metadata
+        $metadata = $validated['metadata'] ?? [];
+        $metadata['client_name'] = $validated['client_name'];
+        
         $appointment = Appointment::create([
-            'user_id' => auth()->id(), // null si non connecté
-            'title' => $validated['title'],
-            'description' => $validated['description'],
+            'title' => $validated['title'] ?? 'Rendez-vous de ' . $validated['client_name'],
+            'description' => $validated['description'] ?? null,
             'appointment_date' => $appointmentDate,
             'duration' => $validated['duration'],
-            'type' => $validated['type'],
-            'client_email' => $validated['client_email'] ?? (auth()->user()?->email ?? null),
-            'client_phone' => $validated['client_phone'],
-            'metadata' => $validated['metadata'] ?? [],
-            'status' => Appointment::STATUS_PENDING
+            'client_email' => $validated['client_email'],
+            'client_phone' => $validated['client_phone'] ?? null,
+            'metadata' => $metadata,
         ]);
 
-        // Notifier les admins
-        // TODO: Envoyer notification
+        // Envoyer l'email de confirmation
+        try {
+            Mail::to($appointment->client_email)->send(new AppointmentConfirmation($appointment));
+            Log::info('Email de confirmation envoyé pour le rendez-vous ID: ' . $appointment->id);
+        } catch (\Exception $e) {
+            Log::error('Erreur lors de l\'envoi de l\'email de confirmation: ' . $e->getMessage());
+            // Ne pas bloquer la création du RDV si l'email échoue
+        }
 
         return response()->json([
-            'message' => 'Rendez-vous créé avec succès',
-            'appointment' => $appointment->load(['user', 'adminUser'])
+            'message' => 'Rendez-vous créé avec succès. Un email de confirmation a été envoyé.',
+            'appointment' => $appointment
         ], 201);
     }
 
@@ -138,21 +140,19 @@ class AppointmentController extends PublicAbstractController
      */
     public function cancel(Request $request, Appointment $appointment): JsonResponse
     {
-        if ($appointment->user_id !== auth()->id()) {
+        // Vérifier l'autorisation via l'email
+        if ($appointment->client_email !== $request->input('client_email')) {
             return response()->json(['message' => 'Non autorisé'], 403);
-        }
-
-        if (!$appointment->isCancellable()) {
-            return response()->json([
-                'message' => 'Ce rendez-vous ne peut plus être annulé'
-            ], 422);
         }
 
         $validated = $request->validate([
             'reason' => 'nullable|string|max:500'
         ]);
 
-        $appointment->cancel($validated['reason']);
+        $appointment->update([
+            'cancellation_reason' => $validated['reason'] ?? 'Annulé par le client'
+        ]);
+        $appointment->delete();
 
         return response()->json([
             'message' => 'Rendez-vous annulé avec succès'
@@ -166,26 +166,12 @@ class AppointmentController extends PublicAbstractController
     {
         $dayOfWeek = strtolower($dateTime->format('l'));
         $businessHours = BusinessHours::getForDay($dayOfWeek);
-        
+
         if (!$businessHours || !$businessHours->isSlotAvailable($dateTime)) {
             return false;
         }
 
         // Vérifier les conflits avec d'autres rendez-vous
         return !Appointment::hasConflict($dateTime, $duration);
-    }
-
-    /**
-     * Obtient les types de rendez-vous disponibles
-     */
-    private function getAppointmentTypes(): array
-    {
-        return [
-            Appointment::TYPE_CONSULTATION => 'Consultation',
-            Appointment::TYPE_INFORMATION => 'Demande d\'information',
-            Appointment::TYPE_SUPPORT => 'Support technique',
-            Appointment::TYPE_ENROLLMENT => 'Inscription formation',
-            Appointment::TYPE_OTHER => 'Autre'
-        ];
     }
 }

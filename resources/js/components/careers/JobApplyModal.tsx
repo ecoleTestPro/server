@@ -1,12 +1,12 @@
 import { IJobApplication } from '@/types';
+import axios from 'axios';
+import { Loader2, Upload } from 'lucide-react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import axios from 'axios';
 import { Button } from '../ui/button/button';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '../ui/dialog';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '../ui/dialog';
-import { Loader2, Upload } from 'lucide-react';
 
 interface Props {
     jobId: number;
@@ -58,12 +58,17 @@ export default function JobApplyModal({ jobId, open, onClose }: Props) {
                     cv: null,
                 });
             }
-        } catch (error: any) {
-            if (error.response?.status === 422) {
-                // Validation errors
-                const validationErrors = error.response.data.errors || {};
-                setErrors(validationErrors);
-                toast.error('Veuillez corriger les erreurs dans le formulaire');
+        } catch (error: unknown) {
+            if (error && typeof error === 'object' && 'response' in error) {
+                const axiosError = error as { response?: { status: number; data: { errors?: Record<string, string[]> } } };
+                if (axiosError.response?.status === 422) {
+                    // Validation errors
+                    const validationErrors = axiosError.response.data.errors || {};
+                    setErrors(validationErrors as Partial<IJobApplication>);
+                    toast.error('Veuillez corriger les erreurs dans le formulaire');
+                } else {
+                    toast.error("Erreur lors de l'envoi de la candidature");
+                }
             } else {
                 toast.error("Erreur lors de l'envoi de la candidature");
             }
@@ -90,7 +95,7 @@ export default function JobApplyModal({ jobId, open, onClose }: Props) {
                 <DialogHeader>
                     <DialogTitle className="text-center">Postuler à cette offre</DialogTitle>
                 </DialogHeader>
-                
+
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="space-y-4">
                         <div className="space-y-2">
@@ -155,26 +160,21 @@ export default function JobApplyModal({ jobId, open, onClose }: Props) {
                             </div>
                             {form.cv && (
                                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                    <span className="truncate">{form.cv?.name}</span>
-                                    <span>({Math.round(form.cv?.size / 1024 || 0)} KB)</span>
+                                    <span className="truncate">{form.cv.name}</span>
+                                    <span>({Math.round((form.cv.size || 0) / 1024)} KB)</span>
                                 </div>
                             )}
-                            {errors.cv && <p className="text-sm text-destructive">{errors.cv}</p>}
+                            {errors?.cv && <p className="text-sm text-destructive">{errors?.cv}</p>}
                             <p className="text-xs text-muted-foreground">Taille maximale: 5MB</p>
                         </div>
                     </div>
 
                     <DialogFooter className="gap-3">
-                        <Button 
-                            type="button" 
-                            variant="outline" 
-                            onClick={onClose}
-                            disabled={isSubmitting}
-                        >
+                        <Button type="button" variant="outline" onClick={onClose} disabled={isSubmitting}>
                             Annuler
                         </Button>
-                        <Button 
-                            type="submit" 
+                        <Button
+                            type="submit"
                             disabled={isSubmitting || !form.name || !form.email || !form.phone || !form.cv}
                             className="min-w-[100px]"
                         >

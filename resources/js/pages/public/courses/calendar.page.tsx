@@ -7,10 +7,14 @@ import { ICourse, ICourseSession } from '@/types/course';
 import { ROUTE_MAP } from '@/utils/route.util';
 import { Link } from '@inertiajs/react';
 import axios from 'axios';
+import { fr } from 'date-fns/locale';
 import { useEffect, useState } from 'react';
-import Calendar from 'react-calendar';
-import 'react-calendar/dist/Calendar.css';
+import DatePicker, { registerLocale } from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import { useTranslation } from 'react-i18next';
+
+// Enregistrer la locale française
+registerLocale('fr', fr);
 
 interface SessionWithCourse extends ICourseSession {
     course: ICourse;
@@ -33,20 +37,20 @@ export default function TrainingCalendarPage() {
             .catch(() => {});
     }, []);
 
-    const onDayClick = (value: Date) => {
-        setSelectedDate(value);
-        const daySessions = sessions.filter((s) => new Date(s.start_date).toDateString() === value.toDateString());
-        setSelectedSessions(daySessions);
+    const onDateChange = (date: Date | null) => {
+        if (date) {
+            setSelectedDate(date);
+            const daySessions = sessions.filter((s) => new Date(s.start_date).toDateString() === date.toDateString());
+            setSelectedSessions(daySessions);
+        }
     };
 
-    const tileContent = ({ date, view }: { date: Date; view: string }) => {
-        if (view === 'month') {
-            const daySessions = sessions.filter((s) => new Date(s.start_date).toDateString() === date.toDateString());
-            if (daySessions.length > 0) {
-                return <span className="block w-2 h-2 rounded-full bg-green-500 mx-auto mt-1" />;
-            }
+    const dayClassName = (date: Date) => {
+        const daySessions = sessions.filter((s) => new Date(s.start_date).toDateString() === date.toDateString());
+        if (daySessions.length > 0) {
+            return 'has-sessions';
         }
-        return null;
+        return '';
     };
 
     const breadcrumbItems: IHeroBreadcrumbItems[] = [
@@ -75,7 +79,22 @@ export default function TrainingCalendarPage() {
 
                     <div className="flex flex-col md:flex-row gap-4">
                         <div className="md:w-1/3">
-                            <Calendar onClickDay={onDayClick} tileContent={tileContent} className="w-full" />
+                            <style>{`
+                                .has-sessions {
+                                    background-color: #10B981 !important;
+                                    color: white !important;
+                                    border-radius: 50% !important;
+                                }
+                            `}</style>
+                            <DatePicker
+                                selected={selectedDate}
+                                onChange={onDateChange}
+                                locale="fr"
+                                inline
+                                dayClassName={dayClassName}
+                                className="w-full"
+                                calendarStartDay={1}
+                            />
                         </div>
                         <div className="md:w-2/3">
                             <h3 className="text-xl font-semibold mb-4">{t('CALENDAR.SESSIONS_LIST', 'Liste des sessions')}</h3>

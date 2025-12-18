@@ -19,7 +19,7 @@ export default function CourseDetailAccordion({ section, sectionTitle, toggleSec
                 className="flex justify-between items-center w-full text-lg font-medium text-black dark:text-white mb-2"
             >
                 <div className="cursor-pointer flex w-full justify-between items-center px-[20px] py-[13px] text-base font-medium md:px-[25px] md:text-[15px] ltr:text-left ">
-                    <span className="text-2xl capitalize font-bold text-black dark:text-white">
+                    <span className="text-xl capitalize font-semibold text-gray-600 dark:text-white">
                         {sectionTitle ?? t(`COURSE.DETAIL.${section.toUpperCase()}`, section)}
                     </span>
                     <span className={`transform transition-transform ${isOpen[section] ? 'rotate-180' : ''}`}>
@@ -37,10 +37,11 @@ export default function CourseDetailAccordion({ section, sectionTitle, toggleSec
                 </div>
             </button>
             {isOpen[section] && (
-                <div className="toc-accordion-collapse px-[20px] pb-[20px] md:px-[25px]" id="detail-course-html">
+                <div className="toc-accordion-collapse px-[20px] pb-[20px] md:px-[25px] dark:text-white" id="detail-course-html">
                     {content}
                 </div>
             )}
+            <div className="divider bg-gray-200 dark:bg-gray-700 h-[2px] my-2"></div>
         </div>
     );
 }

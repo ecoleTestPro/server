@@ -1,6 +1,3 @@
-
-
-
 export class Logger {
     static showLog: boolean = true;
 
@@ -9,24 +6,28 @@ export class Logger {
         Logger.showLog = showLog;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static log(message: string, ...optionalParams: any[]) {
         if (Logger.showLog) {
-            console.log("[LOG] " + message, ...optionalParams);
+            console.log('[LOG] ' + message, ...optionalParams);
         }
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static warn(message: string, ...optionalParams: any[]) {
         if (Logger.showLog) {
-            console.warn("[WARN] " + message, ...optionalParams);
+            console.warn('[WARN] ' + message, ...optionalParams);
         }
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static error(message: string, ...optionalParams: any[]) {
         if (Logger.showLog) {
-            console.error("[ERROR] " + message, ...optionalParams);
+            console.error('[ERROR] ' + message, ...optionalParams);
         }
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static table(data: any, columns?: string[]) {
         if (Logger.showLog) {
             if (columns) {
@@ -36,5 +37,4 @@ export class Logger {
             }
         }
     }
-
 }

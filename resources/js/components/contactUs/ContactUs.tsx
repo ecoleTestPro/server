@@ -39,7 +39,7 @@ const ContactUs: React.FC = () => {
 
     const { data: dataShared } = usePage<SharedData>().props;
 
-    const handleSubmit = (data: ContactFormData, e: React.FormEvent) => {
+    const handleSubmit = (data: ContactFormData) => {
         setLoading(true);
 
         axios

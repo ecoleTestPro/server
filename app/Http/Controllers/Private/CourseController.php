@@ -3,26 +3,19 @@
 namespace App\Http\Controllers\Private;
 
 use App\Enum\MediaTypeEnum;
-use App\Enum\NotificationTypeEnum;
-use App\Events\NotifyEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CourseStoreRequest;
 use App\Http\Requests\CourseUpdateRequest;
 use App\Http\Requests\CoursePartnerSyncRequest;
 use App\Models\Course;
 use App\Models\Partner;
-use App\Models\User;
 use App\Repositories\CategoryRepository;
 use App\Repositories\ContentRepository;
 use App\Repositories\CourseRepository;
 use App\Repositories\InstructorRepository;
-use App\Repositories\NotificationInstanceRepository;
-use App\Repositories\NotificationRepository;
 use App\Repositories\PartnerRepository;
-use App\Repositories\UserRepository;
 use App\Services\Notification\CourseStoreNotificationService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class CourseController extends Controller
@@ -197,6 +190,34 @@ class CourseController extends Controller
         }
     }
 
+    public function getCoursePartners(string $slug)
+    {
+        try {
+            $course = CourseRepository::findBySlug($slug);
+            if (!$course) {
+                return response()->json([
+                    'message' => 'Course not found',
+                    'status'  => 404,
+                ], 404);
+            }
+
+            // Charger les partenaires associés avec leurs médias
+            $course->load(['partners.media']);
+
+            return response()->json([
+                'partners' => $course->partners,
+                'reference_tag' => $course->reference_tag,
+                'course_id' => $course->id,
+                'course_title' => $course->title
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error fetching course partners: ' . $e->getMessage(),
+                'status'  => 500,
+            ], 500);
+        }
+    }
+
     public function syncPartners(CoursePartnerSyncRequest $request, string $slug)
     {
         try {
@@ -231,14 +252,48 @@ class CourseController extends Controller
      * @param \App\Models\Course $course
      * @return \Illuminate\Http\JsonResponse
      */
+    /**
+     * Get the enrollment count for a course
+     *
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getEnrollmentCount(int $id)
+    {
+        try {
+            $count = \App\Models\Enrollment::where('course_id', $id)->count();
+            return response()->json([
+                'count' => $count,
+                'status' => 200,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'count' => 0,
+                'status' => 500,
+                'message' => 'Error fetching enrollment count'
+            ]);
+        }
+    }
+
     public function delete(int $id)
     {
         try {
             $course = CourseRepository::query()->findOrFail($id);
-            $course->delete();
+
+            // Check if there are any enrollments for this course
+            $enrollmentCount = \App\Models\Enrollment::where('course_id', $id)->count();
+
+            // Use soft delete to update deleted_at
+            $course->delete(); // This will soft delete because the model uses SoftDeletes trait
+
+            // Return success with enrollment warning if applicable
             return response()->json([
-                'message' => 'Course deleted successfully',
+                'message' => $enrollmentCount > 0
+                    ? "Formation supprimée avec succès. Attention : {$enrollmentCount} utilisateur(s) étaient inscrits à cette formation."
+                    : 'Formation supprimée avec succès',
                 'status' => 200,
+                'hadEnrollments' => $enrollmentCount > 0,
+                'enrollmentCount' => $enrollmentCount
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -263,5 +318,24 @@ class CourseController extends Controller
         $course->save();
 
         return to_route('course.index')->withSuccess('Course updated');
+    }
+
+    public function toggleFeatured($id)
+    {
+        try {
+            $course = Course::findOrFail($id);
+            $course->is_featured = !$course->is_featured;
+            $course->save();
+
+            return response()->json([
+                'message' => $course->is_featured ? 'Formation mise en avant' : 'Formation retirée de la mise en avant',
+                'is_featured' => $course->is_featured,
+                'course' => $course
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erreur lors de la mise à jour: ' . $e->getMessage(),
+            ], 500);
+        }
     }
 }

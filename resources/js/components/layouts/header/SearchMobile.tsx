@@ -1,10 +1,10 @@
 'use client';
 
+import AppLogo from '@/components/app-logo';
 import { Link, router } from '@inertiajs/react';
 import { XIcon } from 'lucide-react';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import AppLogo from '@/components/app-logo';
 import HeaderSearch from './header-search';
 
 interface SearchMobileProps {
@@ -58,23 +58,23 @@ export default function SearchMobile({ isOpen, onClose, className }: SearchMobil
     return (
         <div className={`fixed inset-0 z-50 ${className} ${isOpen ? 'block' : 'hidden'}`}>
             {/* Overlay */}
-            <div 
-                className={`fixed inset-0 bg-black transition-opacity duration-300 ${
-                    isOpen ? 'bg-opacity-50' : 'bg-opacity-0'
-                }`}
+            <div
+                className={`fixed inset-0 bg-black transition-opacity duration-300 ${isOpen ? 'bg-opacity-50' : 'bg-opacity-0'}`}
                 onClick={onClose}
             />
-            
+
             {/* Search Sidebar */}
-            <div className={`fixed left-0 top-0 h-full w-full max-w-sm bg-white shadow-xl dark:bg-gray-900 transform transition-transform duration-300 ease-in-out ${
-                isOpen ? 'translate-x-0' : '-translate-x-full'
-            }`}>
+            <div
+                className={`fixed left-0 top-0 h-full w-full max-w-sm bg-white shadow-xl dark:bg-gray-900 transform transition-transform duration-300 ease-in-out ${
+                    isOpen ? 'translate-x-0' : '-translate-x-full'
+                }`}
+            >
                 {/* Header de la recherche mobile */}
                 <div className="flex items-center justify-between border-b border-gray-200 px-4 py-3 dark:border-gray-700">
                     <Link href="/" onClick={onClose} className="flex items-center">
                         <AppLogo width={120} height={48} className="" />
                     </Link>
-                    
+
                     <button
                         onClick={onClose}
                         className="rounded-lg p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200"
@@ -87,16 +87,14 @@ export default function SearchMobile({ isOpen, onClose, className }: SearchMobil
                 {/* Zone de recherche principale */}
                 <div className="p-4">
                     <div className="mb-4">
-                        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                            {t('HEADER.SEARCH_TITLE', 'Rechercher')}
-                        </h2>
+                        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">{t('HEADER.SEARCH_TITLE', 'Rechercher')}</h2>
                         <p className="text-sm text-gray-600 dark:text-gray-400">
                             {t('HEADER.SEARCH_DESCRIPTION', 'Trouvez des formations, des cours et des ressources')}
                         </p>
                     </div>
-                    
+
                     <HeaderSearch className="w-full mb-6" />
-                    
+
                     {/* Suggestions de recherche rapide */}
                     <div className="space-y-4">
                         <div>
@@ -134,11 +132,9 @@ export default function SearchMobile({ isOpen, onClose, className }: SearchMobil
                                 </Link>
                             </div>
                         </div>
-                        
+
                         <div>
-                            <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-2">
-                                {t('HEADER.QUICK_ACCESS', 'Accès rapide')}
-                            </h3>
+                            <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-2">{t('HEADER.QUICK_ACCESS', 'Accès rapide')}</h3>
                             <div className="space-y-2">
                                 <Link
                                     href="/calendrier"

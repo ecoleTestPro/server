@@ -1,14 +1,14 @@
+import InputError from '@/components/input-error';
+import { Button } from '@/components/ui/button/button';
+import { Input } from '@/components/ui/input';
+import { InputFile } from '@/components/ui/inputFile';
+import { Label } from '@/components/ui/label';
+import TagInput from '@/components/ui/tag-input';
+import { IPartner } from '@/types/partner';
 import { router, useForm } from '@inertiajs/react';
 import { FormEventHandler, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import InputError from '@/components/input-error';
-import { Button } from '@/components/ui/button/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { InputFile } from '@/components/ui/inputFile';
-import TagInput from '@/components/ui/tag-input';
-import { IPartner } from '@/types/partner';
 
 interface PartnerFormProps {
     closeDrawer?: () => void;
@@ -93,7 +93,7 @@ export default function PartnerForm({ closeDrawer, initialData }: PartnerFormPro
                     multiple={false}
                     disabled={processing}
                 />
-                <InputError message={errors.picture} /> 
+                <InputError message={errors.picture} />
             </div>
             <Button type="submit" className="mt-2 w-full" disabled={processing}>
                 {initialData?.id ? t('Update', 'Mettre à jour') : t('Create', 'Créer')}

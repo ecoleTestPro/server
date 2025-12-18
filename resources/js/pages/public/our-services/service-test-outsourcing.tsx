@@ -28,7 +28,7 @@ const feature: { title: string; description: string; image: string }[] = [
 ];
 
 export default function ServiceTestOutsourcing() {
-    const { auth, data } = usePage<SharedData>().props;
+    const {} = usePage<SharedData>().props;
     const { t } = useTranslation();
 
     const pageTitle = t('PAGES.SERVICES.TEST_OUTSOURCING', 'Services d’Externalisation des Tests');
@@ -190,7 +190,7 @@ export default function ServiceTestOutsourcing() {
         );
     };
 
-    const BlockThree = () => {
+    /* const BlockThree = () => {
         return (
             <motion.section
                 className={`body-font ${CLASS_NAME.bgWhite}`}
@@ -260,9 +260,9 @@ export default function ServiceTestOutsourcing() {
                 </div>
             </motion.section>
         );
-    };
+    }; */
 
-    const BlockFour = () => {
+    /* const BlockFour = () => {
         return (
             <motion.section
                 className={`body-font ${CLASS_NAME.bgWhite}`}
@@ -325,7 +325,7 @@ export default function ServiceTestOutsourcing() {
                 </div>
             </motion.section>
         );
-    };
+    }; */
 
     return (
         <DefaultLayout title={pageTitle}>

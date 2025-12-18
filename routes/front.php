@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CourseQuestionController;
 use App\Http\Controllers\Private\NewsletterController;
 use App\Http\Controllers\Public\AppointmentController;
 use App\Http\Controllers\Public\ContactUsController;
@@ -89,6 +90,14 @@ Route::group(["prefix" => "/"], function () {
     Route::get('formations-calendar', [PublicFormationController::class, 'calendar'])->name('courses.calendar');
     Route::get('formations-calendar/sessions', [PublicFormationSessionController::class, 'listSessions'])->name('courses.calendar.sessions');
     Route::get('timeline-sessions', [SessionsTimelineController::class, 'index'])->name('sessions.timeline');
+    
+    // API endpoint pour les formations featured
+    Route::get('api/courses/featured', [PublicFormationController::class, 'getFeaturedCourses'])->name('api.courses.featured');
+
+    /**
+     * Course Questions routes
+     */
+    Route::post('course-questions', [CourseQuestionController::class, 'store'])->name('course.questions.store');
 
     /** 
      * formation routes

@@ -1,15 +1,15 @@
 import AppointmentCalendar from '@/components/appointments/AppointmentCalendar';
 import Hero from '@/components/hero/hearo';
+import Social from '@/components/layouts/footer/social';
 import DefaultLayout from '@/layouts/public/front.layout';
 import { Head } from '@inertiajs/react';
 import React from 'react';
 
 interface PublicAppointmentCreateProps {
     businessHours?: any;
-    appointmentTypes?: any;
 }
 
-const PublicAppointmentCreate: React.FC<PublicAppointmentCreateProps> = ({ businessHours, appointmentTypes }) => {
+const PublicAppointmentCreate: React.FC<PublicAppointmentCreateProps> = ({ businessHours }) => {
     return (
         <DefaultLayout>
             <Head title="Prendre un rendez-vous - EcoleTestPro" />
@@ -104,51 +104,7 @@ const PublicAppointmentCreate: React.FC<PublicAppointmentCreateProps> = ({ busin
                         Notre équipe est à votre disposition pour répondre à toutes vos questions.
                     </p>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-                            <div className="flex items-center justify-center w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg mx-auto mb-4">
-                                <svg className="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                                    />
-                                </svg>
-                            </div>
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Téléphone</h3>
-                            <p className="text-gray-600 dark:text-gray-300 mb-2">Du lundi au vendredi</p>
-                            <p className="text-gray-600 dark:text-gray-300 mb-2">8h00 - 18h00</p>
-                            <a
-                                href="tel:+2250787654321"
-                                className="text-blue-600 dark:text-blue-400 font-medium hover:text-blue-800 dark:hover:text-blue-300"
-                            >
-                                +225 07 87 65 43 21
-                            </a>
-                        </div>
-
-                        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-                            <div className="flex items-center justify-center w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg mx-auto mb-4">
-                                <svg className="w-6 h-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                                    />
-                                </svg>
-                            </div>
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Email</h3>
-                            <p className="text-gray-600 dark:text-gray-300 mb-2">Réponse sous 24h</p>
-                            <p className="text-gray-600 dark:text-gray-300 mb-2">En jours ouvrés</p>
-                            <a
-                                href="mailto:info@ecoletestpro.com"
-                                className="text-blue-600 dark:text-blue-400 font-medium hover:text-blue-800 dark:hover:text-blue-300"
-                            >
-                                info@ecoletestpro.com
-                            </a>
-                        </div>
-                    </div>
+                    <Social variant="two" />
                 </div>
             </section>
         </DefaultLayout>

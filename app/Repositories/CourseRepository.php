@@ -62,7 +62,6 @@ class CourseRepository extends Repository
                         });
                 })
                 ->latest('id')
-                ->withTrashed()
                 ->get();
         } catch (\Exception $e) {
             throw new \Exception('Error fetching courses: ' . $e->getMessage());
@@ -127,7 +126,7 @@ class CourseRepository extends Repository
     }
 
     /**
-     * Get all courses by category id.
+     * Get all courses by category id that have sessions.
      *
      * @param int $categoryId
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
@@ -135,14 +134,47 @@ class CourseRepository extends Repository
     public static function findAllByCategoryId($categoryId, $limit = 10)
     {
         try {
-
             return static::queryBase()
                 ->where('category_id', $categoryId)
+                ->whereHas('course_sessions') // Only courses with sessions
                 ->latest('id')
                 ->take($limit)
                 ->get();
         } catch (\Exception $e) {
             throw new \Exception('Error fetching courses by category: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Get all courses by category id that have sessions, sorted by nearest session date.
+     *
+     * @param int $categoryId
+     * @param int $limit
+     * @return \Illuminate\Support\Collection
+     */
+    public static function findAllByCategoryIdWithSessions($categoryId, $limit = 10)
+    {
+        try {
+            return static::queryBase()
+                ->where('category_id', $categoryId)
+                ->whereHas('course_sessions', function($query) {
+                    // Filtrer seulement les sessions futures ou en cours
+                    $query->where('start_date', '>=', now()->subDays(7));
+                })
+                ->with(['course_sessions' => function($query) {
+                    $query->where('start_date', '>=', now()->subDays(7))
+                          ->orderBy('start_date', 'asc');
+                }])
+                ->get()
+                ->sortBy(function($course) {
+                    // Trier par la date de la prochaine session
+                    $nextSession = $course->course_sessions->first();
+                    return $nextSession ? $nextSession->start_date : now()->addYears(10);
+                })
+                ->take($limit)
+                ->values();
+        } catch (\Exception $e) {
+            throw new \Exception('Error fetching courses with sessions by category: ' . $e->getMessage());
         }
     }
 
@@ -243,22 +275,28 @@ class CourseRepository extends Repository
         $is_published = (bool) $request->is_published;
 
         $course = self::create([
-            'category_id'   => $request->category_id,
-            'title'         => $request->title,
-            'slug'          => str($request->title)->slug(),
-            'excerpt'       => $request->excerpt,
-            'media_id'      => $media ? $media->id : null,
-            'logo_id'       => $logo ? $logo->id : null,
+            'category_id'          => $request->category_id,
+            'title'                => $request->title,
+            'slug'                 => str($request->title)->slug(),
+            'excerpt'              => $request->excerpt,
+            'media_id'             => $media ? $media->id : null,
+            'logo_id'              => $logo ? $logo->id : null,
             'organization_logo_id' => $organizationLogo ? $organizationLogo->id : null,
-            'video_id'      => $video ? $video->id : null,
-            'reference_tag' => $request->reference_tag,
-            'description'   => $request->description ?? "", // json_encode($request->description)
-            'regular_price' => $request->regular_price,
-            'price'         => $request->price,
-            'instructor_id' => $instructor ? $instructor->id : null, // $request->instructor_id,
+            'video_id'             => $video ? $video->id : null,
+            'reference_tag'        => $request->reference_tag,
+            'location_mode'        => $request->location_mode ?? 'En présentiel ou à distance',
+            'periodicity_unit'     => $request->periodicity_unit,
+            'periodicity_value'    => $request->periodicity_value,
+            'duration'             => $request->duration,
+            'attachment'           => $request->attachment,
+            'lectures'             => $request->lectures,
+            'description'          => $request->description ?? "", // json_encode($request->description)
+            'regular_price'        => $request->regular_price,
+            'price'                => $request->price,
+            'instructor_id'        => $instructor ? $instructor->id : null, // $request->instructor_id,
+            'is_published'         => $is_published,
+            'published_at'         => $request->is_active ? now() : null
             //'is_active'     => $isActive,
-            'is_published'  => $is_published,
-            'published_at'  => $request->is_active ? now() : null
         ]);
 
         foreach ($request->chapters ?? [] as $requestChapter) {
@@ -305,15 +343,15 @@ class CourseRepository extends Repository
                 $isActive = $request->is_active === "on" ?? true;
             }
 
-        $media = $course->media;
-        if ($request->hasFile('media')) {
-            $media = MediaRepository::updateOrCreateByRequest(
-                $request->file('media'),
-                'course/thumbnail',
-                $media,
-                MediaTypeEnum::IMAGE
-            );
-        }
+            $media = $course->media;
+            if ($request->hasFile('media')) {
+                $media = MediaRepository::updateOrCreateByRequest(
+                    $request->file('media'),
+                    'course/thumbnail',
+                    $media,
+                    MediaTypeEnum::IMAGE
+                );
+            }
 
             $video = $course->video;
             if ($request->hasFile('video')) {
@@ -376,24 +414,28 @@ class CourseRepository extends Repository
             }
 
             return self::update($course, [
-                'category_id'   => $request->category_id ?? $course->category_id,
-                'title'         => $request->title ?? $course->title,
-                'slug'          => str($request->title)->slug(),
-                'excerpt'       => $request->excerpt,
-                'media_id'      => $media ? $media->id : $course->media_id,
-                'logo_id'       => $logo ? $logo->id : $course->logo_id,
+                'category_id'          => $request->category_id ?? $course->category_id,
+                'title'                => $request->title ?? $course->title,
+                'slug'                 => str($request->title)->slug(),
+                'excerpt'              => $request->excerpt,
+                'media_id'             => $media ? $media->id : $course->media_id,
+                'logo_id'              => $logo ? $logo->id : $course->logo_id,
                 'organization_logo_id' => $organizationLogo ? $organizationLogo->id : $course->organization_logo_id,
-                'video_id'      => $video ? $video->id : null,
-                'reference_tag' => $request->reference_tag ?? $course->reference_tag,
-                // description is already sent as a JSON string from the form
-                // so we store it directly without re-encoding it to avoid
-                // nested JSON strings
-                'description'   => $request->description ?? $course->description,
-                'regular_price' => $request->regular_price ?? null,
-                'price'         => $request->price,
-                'instructor_id' => $request->instructor_id ?? $course->instructor_id,
-                'is_active'     => $isActive,
-                'published_at'  => $request->is_active == 'on' ? now() : null
+                'video_id'             => $video ? $video->id : null,
+                'reference_tag'        => $request->reference_tag ?? $course->reference_tag,
+                'location_mode'        => $request->location_mode ?? $course->location_mode ?? 'En présentiel ou à distance',
+                'periodicity_unit'     => $request->periodicity_unit ?? $course->periodicity_unit,
+                'periodicity_value'    => $request->periodicity_value ?? $course->periodicity_value,
+                'duration'             => $request->duration ?? $course->duration,
+                'attachment'           => $request->attachment ?? $course->attachment,
+                'lectures'             => $request->lectures ?? $course->lectures,
+                'description'          => $request->description ?? $course->description,
+                'regular_price'        => $request->regular_price ?? null,
+                'price'                => $request->price,
+                'instructor_id'        => $request->instructor_id ?? $course->instructor_id,
+                'is_active'            => $isActive,
+                'is_featured'          => filter_var($request->is_featured, FILTER_VALIDATE_BOOLEAN),
+                'published_at'         => $request->is_active == 'on' ? now() : null
             ]);
         } catch (\Exception $e) {
             throw new \Exception('Error updating course: ' . $e->getMessage());
@@ -420,5 +462,30 @@ class CourseRepository extends Repository
         }
 
         return $mediaType;
+    }
+
+    /**
+     * Get related courses based on category and tags
+     *
+     * @param Course $course
+     * @param int $limit
+     * @return \Illuminate\Support\Collection
+     */
+    public static function getRelatedCourses(Course $course, $limit = 4)
+    {
+        try {
+            return static::queryBase()
+                ->where('id', '!=', $course->id) // Exclude current course
+                ->where('category_id', $course->category_id) // Same category
+                ->whereHas('course_sessions', function($query) {
+                    // Only courses with upcoming sessions
+                    $query->where('start_date', '>=', now()->subDays(7));
+                })
+                ->latest('id')
+                ->limit($limit)
+                ->get();
+        } catch (\Exception $e) {
+            throw new \Exception('Error fetching related courses: ' . $e->getMessage());
+        }
     }
 }

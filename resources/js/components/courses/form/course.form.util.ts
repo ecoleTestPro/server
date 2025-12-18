@@ -1,5 +1,5 @@
-import { ICourseDescription } from "@/types/course";
-import { Logger } from "@/utils/console.util";
+import { ICourseDescription } from '@/types/course';
+import { Logger } from '@/utils/console.util';
 
 export enum PeriodicityUnitEnum {
     DAY = 'DAY',
@@ -40,7 +40,9 @@ export type ICourseRequest = {
 
     partner_ids?: number[];
     reference_tag?: string;
+    location_mode?: string;
 
+    is_featured: boolean;
     is_published?: boolean; // Indicate if the course is published or a draft
 };
 
@@ -71,6 +73,7 @@ export type ICourseForm = {
 
     partner_ids?: number[];
     reference_tag?: string;
+    location_mode: string;
 
     media?: File | null; // For thumbnail
     logo: File | null; // For course logo
@@ -167,14 +170,13 @@ export const COURSE_DEFAULT_VALUES: ICourseForm = {
 
     partner_ids: [],
     reference_tag: '',
+    location_mode: 'En présentiel ou à distance',
 
     logo: null,
     organization_logo: null,
     media: null,
     video: null,
 };
-
-
 
 export const createPayload = (data: ICourseForm, draft: boolean): ICourseRequest => {
     try {
@@ -202,25 +204,27 @@ export const createPayload = (data: ICourseForm, draft: boolean): ICourseRequest
             periodicity_value: data.periodicity_value || 1,
             price: data.price
                 ? Number(
-                    data.price
-                        .toString()
-                        .replace(/\s/g, '')
-                        .replace(/[^0-9]/g, ''),
-                )
+                      data.price
+                          .toString()
+                          .replace(/\s/g, '')
+                          .replace(/[^0-9]/g, ''),
+                  )
                 : 0,
             regular_price: data.regular_price
                 ? Number(
-                    data.regular_price
-                        .toString()
-                        .replace(/\s/g, '')
-                        .replace(/[^0-9]/g, ''),
-                )
+                      data.regular_price
+                          .toString()
+                          .replace(/\s/g, '')
+                          .replace(/[^0-9]/g, ''),
+                  )
                 : 0,
             title: data.title || '',
             attachment: data.attachment || '',
             is_published: !draft,
             partner_ids: data.partner_ids && data.partner_ids.length > 0 ? data.partner_ids : [],
             reference_tag: data.reference_tag || '',
+            location_mode: data.location_mode || 'En présentiel ou à distance',
+            is_featured: data.is_featured || false,
         };
 
         Logger.log('[CREATE_PAYLOAD]', payload);

@@ -56,38 +56,41 @@ export default function AboutUsServices() {
     ];
     return (
         <MotionSection>
-            <section className="relative z-10 pb-6 md:pb-16">
-                <div className="container mx-auto px-4">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <section className="relative z-10 pb-8 md:pb-20">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 xl:gap-16">
                         <div className="h-full flex items-center ">
                             <div className="space-y-6" data-aos="fade-right" data-aos-duration="1500" data-aos-offset="50">
-                                <div className="space-y-3">
-                                    <span className="inline-block text-sm font-semibold text-gray-600 dark:text-white mb-2">Nos Services</span>
-                                    <h2 className="text-3xl md:text-4xl font-bold leading-tight">
+                                <div className="space-y-3 pt-[12px]">
+                                    {/* <span className="inline-block text-sm font-semibold text-gray-600 dark:text-white mb-2">Nos Services</span> */}
+                                    <h2 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold leading-tight">
                                         Collaborez avec des entreprises leaders du secteur
                                     </h2>
                                 </div>
-                                <p className="text-gray-600 dark:text-white">
+                                <p className="text-gray-600 dark:text-gray-300 text-base md:text-lg leading-relaxed">
                                     Nous accompagnons nos clients dans la professionnalisation de leurs activités liées au Test et à l'Ingénierie des
                                     Exigences.
                                 </p>
-                                <p className="text-gray-600 dark:text-white">
+                                <p className="text-gray-600 dark:text-gray-300 text-base md:text-lg leading-relaxed">
                                     Faites-nous confiance pour être votre partenaire dans votre transformation numérique. Nos solutions de test
                                     garantissent qualité, efficacité et innovation pour mener vos projets au succès.
                                 </p>
                                 <BtnSecondary href={ROUTE_MAP.public.aboutUs.link} label="En savoir plus sur nous" />
                                 <div
-                                    className="grid grid-cols-1 lg:grid-cols-2 gap-6"
+                                    className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8"
                                     data-aos="fade-right"
                                     data-aos-duration="1500"
                                     data-aos-offset="50"
                                 >
                                     {services.map((service, index) => (
-                                        <div key={index} className="space-y-3">
+                                        <div
+                                            key={index}
+                                            className="space-y-4 p-4 bg-white/50 dark:bg-gray-800/50 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300"
+                                        >
                                             <div className="text-2xl text-secondary">
                                                 <i className="flaticon-experts" />
                                             </div>
-                                            <h5 className="font-semibold text-lg">
+                                            <h5 className="font-semibold text-xl md:text-2xl">
                                                 <Link
                                                     className="hover:text-primary hover:underline transition-all duration-100 ease-in "
                                                     href={service.link}
@@ -96,8 +99,8 @@ export default function AboutUsServices() {
                                                 </Link>
                                             </h5>
                                             {service.services.map((item, idx) => (
-                                                <div className="mb-4">
-                                                    <p className="text-gray-600 dark:text-white mb-1">
+                                                <div key={idx} className="mb-4">
+                                                    <p className="text-gray-600 dark:text-gray-300 mb-1">
                                                         <strong>
                                                             <Link
                                                                 className="hover:text-primary hover:underline transition-all duration-100 ease-in "
@@ -107,7 +110,9 @@ export default function AboutUsServices() {
                                                             </Link>
                                                         </strong>
                                                     </p>
-                                                    {item.description && <p className="text-gray-600 dark:text-white">{item.description}</p>}
+                                                    {item.description && (
+                                                        <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">{item.description}</p>
+                                                    )}
                                                 </div>
                                             ))}
                                         </div>

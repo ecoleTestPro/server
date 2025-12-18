@@ -1,5 +1,4 @@
 import { IJobOffer } from '@/types';
-import { useState } from 'react';
 import BtnSecondary from '../ui/button/btn-secondary';
 
 export const JobTable: React.FC<{
@@ -12,8 +11,17 @@ export const JobTable: React.FC<{
     setDetailSelected: React.Dispatch<React.SetStateAction<number | null>>;
     openDetailModal: boolean;
     setOpenDetailModal: React.Dispatch<React.SetStateAction<boolean>>;
-}> = ({ jobs, setApplySelected, applySelected, openApplyModal, setOpenApplyModal, detailSelected, setDetailSelected, openDetailModal, setOpenDetailModal }) => {
-
+}> = ({
+    jobs,
+    setApplySelected,
+    // applySelected,
+    // openApplyModal,
+    setOpenApplyModal,
+    // detailSelected,
+    setDetailSelected,
+    // openDetailModal,
+    setOpenDetailModal,
+}) => {
     return (
         <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">

@@ -10,14 +10,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 import { InputFile } from '@/components/ui/inputFile';
-import SelectCustom from '@/components/ui/select-custom';
 import { SharedData } from '@/types';
 import { ICourseCategory } from '@/types/course';
-import { lazy } from 'react';
-import 'react-quill/dist/quill.snow.css';
+import 'react-quill-new/dist/quill.snow.css';
 
-// const ReactQuill = lazy(() => import('react-quill'));
-const ReactQuill = lazy(() => import('react-quill-new'));
+// // const ReactQuill = lazy(() => import('react-quill'));
+// const ReactQuill = lazy(() => import('react-quill-new'));
 
 // export type ICategoryForm = {
 export type ICategoryForm = {
@@ -58,14 +56,33 @@ const defaultValues: ICategoryForm = {
 interface CategoryFormProps {
     closeDrawer?: () => void;
     initialData?: ICategoryForm;
+    isSubcategoryMode?: boolean;
+    parentCategoryId?: number;
+    parentCategoryName?: string;
 }
 
-function CategoryForm({ closeDrawer, initialData }: CategoryFormProps) {
+function CategoryForm({ closeDrawer, initialData, isSubcategoryMode = false, parentCategoryId, parentCategoryName }: CategoryFormProps) {
     const { data: catData } = usePage<SharedData>().props;
     const { t } = useTranslation();
     const [file, setFile] = React.useState<File | null>(null);
 
-    const { data, setData, post, processing, errors, reset } = useForm<ICategoryForm>(initialData || defaultValues);
+    // Initialisation des données en fonction du mode
+    const getInitialFormData = (): ICategoryForm => {
+        if (initialData) {
+            return initialData;
+        }
+
+        const baseData = { ...defaultValues };
+
+        // Si on est en mode sous-catégorie, pré-sélectionner la catégorie parent
+        if (isSubcategoryMode && parentCategoryId) {
+            baseData.parent_id = parentCategoryId;
+        }
+
+        return baseData;
+    };
+
+    const { data, setData, processing, errors, reset } = useForm<ICategoryForm>(getInitialFormData());
 
     /**
      * Soumet le formulaire pour créer ou mettre à jour une catégorie
@@ -75,46 +92,61 @@ function CategoryForm({ closeDrawer, initialData }: CategoryFormProps) {
      * @remarks
      * Si {@link initialData} est défini, la route `category.update` sera utilisée.
      * Sinon, la route `category.store` sera utilisée.
-     *
-     * @throws {Error} Si l'image n'est pas définie et que {@link initialData} n'a pas de champ `media`
+     * L'image et la catégorie parent sont optionnelles.
      */
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
 
-        if (!file && !initialData?.media) {
-            toast.error(t('courses.category.mediaRequired', 'Veuillez sélectionner une image.'));
-            return;
-        }
+        // L'image n'est plus obligatoire
+        // if (!file && !initialData?.media) {
+        //     toast.error(t('courses.category.mediaRequired', 'Veuillez sélectionner une image.'));
+        //     return;
+        // }
 
-        const routeName = initialData?.id ? 'category.update' : 'category.store';
         const routeUrl = initialData?.id ? 'categories/update' : 'categories/store';
 
-        const formData = new FormData();
-        formData.append('title', data.title);
-        formData.append('is_featured', data.is_featured ? '1' : '0');
-        if (data.parent_id) {
-            formData.append('parent_id', data.parent_id.toString());
+        // Préparer les données à envoyer
+        const requestData: { [key: string]: any } = {
+            title: data.title,
+            is_featured: data.is_featured ? '1' : '0',
+        };
+
+        // Ajouter l'ID pour la mise à jour
+        if (initialData?.id) {
+            requestData.id = initialData.id;
         }
+
+        // Ajouter parent_id s'il existe (soit depuis le formulaire, soit depuis le mode sous-catégorie)
+        const effectiveParentId = data.parent_id || (isSubcategoryMode ? parentCategoryId : null);
+        if (effectiveParentId) {
+            requestData.parent_id = effectiveParentId.toString();
+        }
+
+        // Ajouter le fichier s'il existe
         if (file) {
-            formData.append('media', file);
+            requestData.media = file;
         }
 
         router.visit(routeUrl, {
             method: 'post',
-            data: {
-                title: data.title,
-                is_featured: data.is_featured ? '1' : '0',
-                parent_id: data.parent_id,
-                ...(file && { media: file }),
-            },
+            data: requestData,
             forceFormData: true, // Important pour envoyer des fichiers
             onSuccess: () => {
-                toast.success(t('courses.category.updateSuccess', 'Catégorie mise à jour avec succès !'));
+                toast.success(
+                    initialData?.id
+                        ? t('courses.category.updateSuccess', 'Catégorie mise à jour avec succès !')
+                        : t('courses.category.createSuccess', 'Catégorie créée avec succès !'),
+                );
                 reset();
                 closeDrawer?.();
             },
             onError: (errors) => {
-                toast.error(t('courses.category.updateError', 'Erreur lors de la mise à jour de la catégorie'));
+                console.error('Erreurs de validation:', errors);
+                toast.error(
+                    initialData?.id
+                        ? t('courses.category.updateError', 'Erreur lors de la mise à jour de la catégorie')
+                        : t('courses.category.createError', 'Erreur lors de la création de la catégorie'),
+                );
             },
             preserveScroll: true,
         });
@@ -122,7 +154,11 @@ function CategoryForm({ closeDrawer, initialData }: CategoryFormProps) {
 
     return (
         <form className="mx-auto flex max-w-xl flex-col gap-8" onSubmit={submit}>
-            <legend className="px-2 text-base font-semibold">{t('courses.mainInfo', 'Informations principales')}</legend>
+            <legend className="px-2 text-base font-semibold">
+                {isSubcategoryMode
+                    ? t('courses.subcategoryInfo', 'Informations de la sous-catégorie')
+                    : t('courses.mainInfo', 'Informations principales')}
+            </legend>
             <div className="grid gap-4">
                 <div className="grid gap-2">
                     <Label htmlFor="title">{t('courses.title', 'Titre')}</Label>
@@ -140,28 +176,21 @@ function CategoryForm({ closeDrawer, initialData }: CategoryFormProps) {
                 </div>
             </div>
 
-            <div className="grid gap-2">
-                <Label htmlFor="parent_id">{t('courses.parentCategory', 'Catégorie parente')}</Label>
-                <SelectCustom
-                    data={
-                        catData.categories_with_courses &&
-                        catData.categories_with_courses.map((category) => ({
-                            id: category.id!,
-                            title: category.title,
-                            value: category.id!.toString(),
-                        }))
-                    }
-                    selectLabel={t('courses.category', 'Catégorie')}
-                    processing={processing}
-                    onValueChange={(value) => setData('parent_id', value)}
-                    value={data.parent_id?.toString()}
-                    required
-                />
-                <InputError message={errors.parent_id} />
-            </div>
+            {/* Afficher la catégorie parente si nous sommes en mode sous-catégorie */}
+            {isSubcategoryMode && parentCategoryName && (
+                <div className="grid gap-2">
+                    <Label htmlFor="parent_id">{t('courses.parentCategory', 'Catégorie parente')}</Label>
+                    <div className="flex items-center gap-2 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-md">
+                        <span className="text-blue-600 dark:text-blue-400 font-medium">{parentCategoryName}</span>
+                    </div>
+                    <InputError message={errors.parent_id} />
+                </div>
+            )}
 
             <div className="grid gap-2">
-                <Label htmlFor="image">{t('courses.image', 'Image')}</Label>
+                <Label htmlFor="image">
+                    {t('courses.image', 'Image')} <span className="text-sm text-gray-500">(optionnel)</span>
+                </Label>
                 <InputFile
                     id="image"
                     onFilesChange={(files) => {
@@ -192,9 +221,28 @@ function CategoryForm({ closeDrawer, initialData }: CategoryFormProps) {
                 <InputError message={errors.media} />
             </div>
 
+            <div className="grid gap-2">
+                <div className="flex items-center space-x-2">
+                    <input
+                        type="checkbox"
+                        id="is_featured"
+                        checked={data.is_featured}
+                        onChange={(e) => setData('is_featured', e.target.checked)}
+                        disabled={processing}
+                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    />
+                    <Label htmlFor="is_featured">{t('courses.featured', 'Catégorie mise en avant')}</Label>
+                </div>
+                <InputError message={errors.is_featured} />
+            </div>
+
             <Button type="submit" className="mt-2 w-full" disabled={processing}>
                 {processing && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
-                {initialData?.id ? t('courses.update', 'Mettre à jour la catégorie') : t('courses.create', 'Créer la catégorie')}
+                {initialData?.id
+                    ? t('courses.update', 'Mettre à jour la catégorie')
+                    : isSubcategoryMode
+                      ? t('courses.createSubcategory', 'Créer la sous-catégorie')
+                      : t('courses.create', 'Créer la catégorie')}
             </Button>
         </form>
     );

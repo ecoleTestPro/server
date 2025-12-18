@@ -49,17 +49,17 @@
         "emailPlaceholder": "email@example.com",
         "submit": "Email password reset link",
         "orReturn": "Or, return to",
-  "login": "log in"
-  },
-  "CALENDAR": {
-    "TITLE": "Training calendar",
-    "DESCRIPTION": "Check our upcoming sessions and register.",
-    "CONTACT_US": "Request another date",
-    "SESSIONS": "Available sessions",
-    "SESSIONS_DESCRIPTION": "Select a date to view available sessions.",
-    "SESSIONS_LIST": "Sessions list",
-    "NO_SESSIONS": "No sessions scheduled for this date.",
-    "VIEW_COURSE": "View course",
-    "COURSE_DETAIL": "Course details"
-  }
+        "login": "log in"
+    },
+    "CALENDAR": {
+        "TITLE": "Training calendar",
+        "DESCRIPTION": "Check our upcoming sessions and register.",
+        "CONTACT_US": "Request another date",
+        "SESSIONS": "Available sessions",
+        "SESSIONS_DESCRIPTION": "Select a date to view available sessions.",
+        "SESSIONS_LIST": "Sessions list",
+        "NO_SESSIONS": "No sessions scheduled for this date.",
+        "VIEW_COURSE": "View course",
+        "COURSE_DETAIL": "Course details"
+    }
 }

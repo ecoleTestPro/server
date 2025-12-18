@@ -6,32 +6,41 @@ import { ICourse, ICourseCategory } from '@/types/course';
 import { ROUTE_MAP } from '@/utils/route.util';
 import { createCoursesFromCategory } from '@/utils/utils';
 import { usePage } from '@inertiajs/react';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ListCourseByCategory } from './ListCourseByCategory';
 import SidebarFilter from './SidebarFilter';
-import { Logger } from '@/utils/console.util';
 
-interface IOurCurrentCoursesProps {
+interface ICoursesIndexProps {
     coursesData?: ICourseCategory[];
     coursesDataSlice?: number;
     showSidebar?: boolean;
     showViewAllButton?: boolean;
 }
 
-const OurCurrentCourses = ({ coursesData, showSidebar = false, coursesDataSlice, showViewAllButton }: IOurCurrentCoursesProps) => {
+const CoursesIndex = ({ coursesData, showSidebar = false, coursesDataSlice, showViewAllButton }: ICoursesIndexProps) => {
     const { t } = useTranslation();
-    const { auth, data, url } = usePage<SharedData>().props;
-    
+    const { auth, url } = usePage<SharedData>().props;
+
     // Déterminer si on est sur la page d'accueil
     const isHomePage = url === '/' || url === '/home';
     const shouldShowButton = showViewAllButton !== undefined ? showViewAllButton : isHomePage;
 
-    const [courses, setCourses] = useState<ICourseCategory[] | undefined>(undefined);
-    const [filteredCourses, setFilteredCourses] = useState<ICourseCategory[] | undefined>(undefined);
-    const [loading, setLoading] = useState<boolean>(false);
-    const [error, setError] = useState<string | null>(null);
+    // Calculer les cours avec useMemo pour éviter les recalculs inutiles
+    const courses = useMemo(() => {
+        if (coursesData && coursesData.length > 0) {
+            return createCoursesFromCategory(coursesData, coursesDataSlice);
+        }
+        return undefined;
+    }, [coursesData, coursesDataSlice]);
+
+    const [filteredCourses, setFilteredCourses] = useState<ICourseCategory[] | undefined>(courses);
     const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
+
+    // Mettre à jour filteredCourses quand courses change
+    useEffect(() => {
+        setFilteredCourses(courses);
+    }, [courses]);
 
     // Extraire tous les cours pour le filtre
     const allCourses: ICourse[] = courses?.flatMap((category) => category.courses || []) ?? [];
@@ -50,30 +59,12 @@ const OurCurrentCourses = ({ coursesData, showSidebar = false, coursesDataSlice,
         }
     };
 
-    // Gérer le chargement des cours
-    useEffect(() => {
-        Logger.log("[OurCurrentCourses] courses: #0", {courses, loading});
-        if (coursesData && coursesData.length > 0 && !courses && !loading) {
-            setLoading(true);
-            setError(null);
-
-            const newCourses = createCoursesFromCategory(coursesData, coursesDataSlice);
-            setCourses(newCourses);
-            setFilteredCourses(newCourses);
-
-            setLoading(false);
-        }
-        Logger.log("[OurCurrentCourses] courses:", {courses, loading});
-
-    }, [coursesData, data, courses, coursesDataSlice, loading]);
-
-
     // Basculer l'affichage de la barre latérale
     const toggleSidebar = () => {
         setIsSidebarOpen(!isSidebarOpen);
     };
 
-    if (loading) {
+    if (!coursesData) {
         return (
             <div className="container mx-auto p-4">
                 <div className="text-center text-3xl text-gray-500 dark:text-gray-400">{t('COURSE.TABLE.LOADING', 'Chargement des cours...')}</div>
@@ -82,21 +73,12 @@ const OurCurrentCourses = ({ coursesData, showSidebar = false, coursesDataSlice,
         );
     }
 
-    if (courses && courses.length === 0) {
+    if (!courses || courses.length === 0) {
         return (
             <div className="container mx-auto p-4">
                 <div className="text-center text-3xl text-gray-500 dark:text-gray-400">
                     {t('COURSE.TABLE.NO_COURSES', 'Aucun cours disponible pour le moment.')}
                 </div>
-            </div>
-        );
-    }
-
-    if (!courses) {
-        return (
-            <div className="container mx-auto p-4">
-                <div className="text-center text-3xl text-gray-500 dark:text-gray-400">{t('COURSE.TABLE.LOADING', 'Chargement des cours...')}</div>
-                <Skeleton className="mb-4" />
             </div>
         );
     }
@@ -142,4 +124,4 @@ const OurCurrentCourses = ({ coursesData, showSidebar = false, coursesDataSlice,
     );
 };
 
-export default OurCurrentCourses;
+export default CoursesIndex;

@@ -1,0 +1,90 @@
+@keyframes pulse {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+@keyframes bounce {
+    0%,
+    100% {
+        transform: translateY(-25%);
+        animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+    }
+    50% {
+        transform: translateY(0);
+        animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    }
+}
+
+.animate-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-bounce {
+    animation: bounce 1s infinite;
+}
+
+.animation-delay-200 {
+    animation-delay: 200ms;
+}
+
+/* Gradient Animations - Soft transitions staying close to base colors */
+@keyframes gradient-shift-1 {
+    0%,
+    100% {
+        background: linear-gradient(135deg, rgb(204 251 241) 0%, rgb(153 246 228) 50%, rgb(94 234 212) 100%);
+    }
+    50% {
+        background: linear-gradient(225deg, rgb(186 250 244) 0%, rgb(134 239 221) 50%, rgb(115 248 226) 100%);
+    }
+}
+
+@keyframes gradient-shift-2 {
+    0%,
+    100% {
+        background: linear-gradient(135deg, rgb(219 234 254) 0%, rgb(147 197 253) 50%, rgb(96 165 250) 100%);
+    }
+    50% {
+        background: linear-gradient(225deg, rgb(199 210 254) 0%, rgb(129 181 253) 50%, rgb(118 185 252) 100%);
+    }
+}
+
+@keyframes gradient-shift-3 {
+    0%,
+    100% {
+        background: linear-gradient(135deg, rgb(243 232 255) 0%, rgb(196 181 253) 50%, rgb(147 51 234) 100%);
+    }
+    50% {
+        background: linear-gradient(225deg, rgb(233 213 255) 0%, rgb(183 162 251) 50%, rgb(168 135 249) 100%);
+    }
+}
+
+@keyframes gradient-shift-default {
+    0%,
+    100% {
+        background: linear-gradient(135deg, rgb(243 244 246) 0%, rgb(209 213 219) 50%, rgb(156 163 175) 100%);
+    }
+    50% {
+        background: linear-gradient(225deg, rgb(229 231 235) 0%, rgb(190 197 208) 50%, rgb(174 176 184) 100%);
+    }
+}
+
+.animate-gradient-shift-1 {
+    animation: gradient-shift-1 15s ease-in-out infinite;
+}
+
+.animate-gradient-shift-2 {
+    animation: gradient-shift-2 18s ease-in-out infinite;
+}
+
+.animate-gradient-shift-3 {
+    animation: gradient-shift-3 20s ease-in-out infinite;
+}
+
+.animate-gradient-shift-default {
+    animation: gradient-shift-default 22s ease-in-out infinite;
+}

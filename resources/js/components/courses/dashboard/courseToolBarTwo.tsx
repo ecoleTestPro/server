@@ -5,9 +5,9 @@ import { CLASS_NAME } from '@/data/styles/style.constant';
 import { DashbordCourseView } from '@/pages/dashboard/courses';
 import { ICourse } from '@/types/course';
 import { Link, router } from '@inertiajs/react';
-import { Filter, LayoutGrid, PlusSquare, TableOfContents, RefreshCw } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
+import { Filter, LayoutGrid, PlusSquare, RefreshCw, TableOfContents } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 // import DashboardCategoryList from '../categories/dashboardCategoryList';
 
 interface ICategoryToolBarProps {
@@ -121,6 +121,7 @@ export default function CourseToolBarTwo({ setSearchTerm, searchTerm, viewMode, 
                                         <SelectCustom
                                             selectLabel="Filtrer par"
                                             data={filterSelectList}
+                                            defaultValue="all"
                                             processing={false}
                                             onValueChange={handleOnChangeValueFilter}
                                         />
@@ -139,7 +140,7 @@ export default function CourseToolBarTwo({ setSearchTerm, searchTerm, viewMode, 
                     </div>
 
                     <div className="flex items-center justify-end space-x-2">
-                        <button 
+                        <button
                             onClick={handleRefresh}
                             disabled={isRefreshing}
                             className={`cursor-pointer bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 flex items-center px-3 py-2 rounded-md transition-all hover:bg-gray-300 dark:hover:bg-gray-600`}

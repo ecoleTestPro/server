@@ -1,14 +1,14 @@
+import ReferenceDataTable from '@/components/references/referenceDataTable';
+import ReferenceForm from '@/components/references/referenceForm';
+import ReferenceToolBar from '@/components/references/referenceToolBar';
+import { ConfirmDialog } from '@/components/ui/confirmDialog';
 import AppLayout from '@/layouts/dashboard/app-layout';
 import { SharedData, type BreadcrumbItem } from '@/types';
+import { IPartner } from '@/types/partner';
 import { Head, router, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import ReferenceForm from '@/components/references/referenceForm';
-import ReferenceToolBar from '@/components/references/referenceToolBar';
-import ReferenceDataTable from '@/components/references/referenceDataTable';
-import { IPartner } from '@/types/partner';
-import { ConfirmDialog } from '@/components/ui/confirmDialog';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -57,8 +57,17 @@ export default function DashboardReferences() {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
+                {/* En-tête avec description et aide */}
                 <ReferenceToolBar
-                    FormComponent={<ReferenceForm closeDrawer={() => setOpenForm(false)} initialData={selected} />}
+                    FormComponent={
+                        <ReferenceForm
+                            closeDrawer={() => setOpenForm(false)}
+                            initialData={selected}
+                            onSuccess={() => {
+                                router.reload();
+                            }}
+                        />
+                    }
                     open={openForm}
                     setOpen={(o) => {
                         setOpenForm(o);
@@ -69,7 +78,7 @@ export default function DashboardReferences() {
                 <ConfirmDialog
                     open={showConfirm}
                     title={t('Delete reference', 'Supprimer la référence')}
-                    description={t('Are you sure?', 'Voulez-vous vraiment supprimer cette référence ?')}
+                    description={t('Are you sure?', 'Voulez-vous vraiment supprimer cette référence ? Cette action est irréversible.')}
                     confirmLabel={t('Delete', 'Supprimer')}
                     cancelLabel={t('Cancel', 'Annuler')}
                     onConfirm={handleDelete}

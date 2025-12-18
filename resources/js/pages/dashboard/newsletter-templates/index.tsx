@@ -1,14 +1,14 @@
+import TemplateDataTable from '@/components/newsletter/templateDataTable';
+import TemplateForm from '@/components/newsletter/templateForm';
+import TemplateToolBar from '@/components/newsletter/templateToolBar';
+import { ConfirmDialog } from '@/components/ui/confirmDialog';
 import AppLayout from '@/layouts/dashboard/app-layout';
 import { SharedData, type BreadcrumbItem } from '@/types';
+import { INewsletterTemplate } from '@/types/newsletterTemplate';
 import { Head, router, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import TemplateForm from '@/components/newsletter/templateForm';
-import TemplateToolBar from '@/components/newsletter/templateToolBar';
-import TemplateDataTable from '@/components/newsletter/templateDataTable';
-import { INewsletterTemplate } from '@/types/newsletterTemplate';
-import { ConfirmDialog } from '@/components/ui/confirmDialog';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {

@@ -48,7 +48,8 @@ class Category extends Model
      */
     public function imagePath(): Attribute
     {
-        $image = 'https://placehold.co/512x512';
+        $image = '';
+        // $image = 'https://placehold.co/512x512';
 
         if ($this->image && Storage::disk('public')->exists($this->image->src)) {
             $image = Storage::disk('public')->url($this->image->src);

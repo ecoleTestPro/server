@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CourseQuestionController;
 use App\Http\Controllers\Private\BlogCategoryController;
 use App\Http\Controllers\Private\BlogController;
 use App\Http\Controllers\Private\CategoryController;
@@ -17,6 +18,8 @@ use App\Http\Controllers\Private\PartnerController;
 use App\Http\Controllers\Private\JobOfferController;
 use App\Http\Controllers\Private\EnrollmentController;
 use App\Http\Controllers\Private\NotificationController;
+use App\Http\Controllers\Private\NotificationStreamController;
+use App\Http\Controllers\TestNotificationController;
 use App\Http\Controllers\Settings\PasswordController;
 use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\Admin\BusinessHoursController;
@@ -36,6 +39,17 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
 
     // NOTIFICATIONS
     Route::get('notifications', [NotificationController::class, 'index'])->name('dashboard.notifications.index');
+    Route::get('notifications/all', [NotificationController::class, 'all'])->name('dashboard.notifications.all');
+    Route::put('notifications/{id}/mark-as-read', [NotificationController::class, 'markAsRead'])->name('dashboard.notifications.mark-as-read');
+    Route::put('notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('dashboard.notifications.mark-all-as-read');
+    Route::delete('notifications/{id}', [NotificationController::class, 'delete'])->name('dashboard.notifications.delete');
+    Route::delete('notifications/clear-all', [NotificationController::class, 'clearAll'])->name('dashboard.notifications.clear-all');
+    Route::get('notifications/count', [NotificationStreamController::class, 'count'])->name('dashboard.notifications.count');
+    Route::get('notifications/check-new', [NotificationStreamController::class, 'checkNew'])->name('dashboard.notifications.check-new');
+
+    // Test routes (remove in production)
+    Route::post('test/notification', [TestNotificationController::class, 'createTestNotification'])->name('test.notification');
+    Route::post('test/notification-general', [TestNotificationController::class, 'createGeneralTestNotification'])->name('test.notification.general');
 
 
     // COURSE MANAGEMENT
@@ -48,10 +62,17 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
         Route::get('create',            [CourseController::class, 'create'])->name('dashboard.course.create');
         Route::post('create',           [CourseController::class, 'store'])->name('dashboard.course.store');
         Route::put('update/{slug}',     [CourseController::class, 'update'])->name('dashboard.course.update');
+        Route::get('partners/{slug}',   [CourseController::class, 'getCoursePartners'])->name('dashboard.course.partners.get');
         Route::post('partners/{slug}',  [CourseController::class, 'syncPartners'])->name('dashboard.course.partners.sync');
+        Route::get('{id}/enrollments/count', [CourseController::class, 'getEnrollmentCount'])->name('dashboard.course.enrollments.count');
+        Route::patch('{id}/toggle-featured', [CourseController::class, 'toggleFeatured'])->name('dashboard.course.toggle-featured');
         Route::delete('delete/{id}',    [CourseController::class, 'delete'])->name('dashboard.course.delete');
         Route::post('{course}/sessions', [CourseSessionController::class, 'store'])->name('dashboard.course.session.store');
         Route::put('sessions/{session}', [CourseSessionController::class, 'update'])->name('dashboard.course.session.update');
+        Route::patch('sessions/{session}/toggle-confirmed', [CourseSessionController::class, 'toggleConfirmed'])->name('dashboard.course.session.toggle-confirmed');
+        Route::patch('sessions/batch/confirm', [CourseSessionController::class, 'confirmMultiple'])->name('dashboard.course.session.confirm.batch');
+        Route::delete('sessions/batch', [CourseSessionController::class, 'destroyMultiple'])->name('dashboard.course.session.delete.batch');
+        Route::delete('sessions/{session}', [CourseSessionController::class, 'destroy'])->name('dashboard.course.session.delete');
     });
 
     // CATEGORY COURSE MANAGEMENT
@@ -71,6 +92,15 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
     ], function () {
         Route::get('', [EnrollmentController::class, 'index'])->name('dashboard.enrollment.index');
         Route::delete('delete/{enrollment}', [EnrollmentController::class, 'destroy'])->name('dashboard.enrollment.delete');
+    });
+
+    // COURSE QUESTIONS MANAGEMENT
+    Route::group([
+        'prefix' => 'course-questions',
+    ], function () {
+        Route::get('', [CourseQuestionController::class, 'index'])->name('dashboard.course-questions.index');
+        Route::post('{question}/answer', [CourseQuestionController::class, 'answer'])->name('dashboard.course-questions.answer');
+        Route::delete('{question}', [CourseQuestionController::class, 'destroy'])->name('dashboard.course-questions.delete');
     });
 
 
@@ -125,6 +155,7 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
         Route::post('create',        [TestimonialController::class, 'store'])->name('dashboard.testimonial.store');
         Route::put('update/{testimonial}', [TestimonialController::class, 'update'])->name('dashboard.testimonial.update');
         Route::delete('delete/{testimonial}', [TestimonialController::class, 'destroy'])->name('dashboard.testimonial.delete');
+        Route::post('toggle/{testimonial}', [TestimonialController::class, 'toggle'])->name('dashboard.testimonial.toggle');
         Route::post('restore/{testimonial}', [TestimonialController::class, 'restore'])->name('dashboard.testimonial.restore');
     });
 
@@ -242,14 +273,24 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
 });
 
 /**
- * Routes admin pour les horaires d'ouverture
+ * Routes admin pour les horaires d'ouverture et rendez-vous
  */
 Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
+    // Business Hours
     Route::prefix('business-hours')->group(function () {
         Route::get('/', [BusinessHoursController::class, 'index'])->name('admin.business-hours.index');
         Route::patch('/', [BusinessHoursController::class, 'update'])->name('admin.business-hours.update');
         Route::post('/copy', [BusinessHoursController::class, 'copyToOtherDays'])->name('admin.business-hours.copy');
         Route::get('/preview-slots', [BusinessHoursController::class, 'previewSlots'])->name('admin.business-hours.preview-slots');
         Route::post('/reset', [BusinessHoursController::class, 'resetToDefaults'])->name('admin.business-hours.reset');
+    });
+    
+    // Admin Appointments Management
+    Route::prefix('appointments')->group(function () {
+        Route::get('/', [App\Http\Controllers\Admin\AppointmentController::class, 'index'])->name('admin.appointments.index');
+        Route::get('/{appointment}', [App\Http\Controllers\Admin\AppointmentController::class, 'show'])->name('admin.appointments.show');
+        Route::put('/{appointment}/status', [App\Http\Controllers\Admin\AppointmentController::class, 'updateStatus'])->name('admin.appointments.update-status');
+        Route::delete('/{appointment}', [App\Http\Controllers\Admin\AppointmentController::class, 'destroy'])->name('admin.appointments.destroy');
+        Route::get('/export', [App\Http\Controllers\Admin\AppointmentController::class, 'export'])->name('admin.appointments.export');
     });
 });

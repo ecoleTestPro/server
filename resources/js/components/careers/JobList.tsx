@@ -13,7 +13,18 @@ export const JobList: React.FC<{
     setDetailSelected: React.Dispatch<React.SetStateAction<number | null>>;
     openDetailModal: boolean;
     setOpenDetailModal: React.Dispatch<React.SetStateAction<boolean>>;
-}> = ({ jobs, view = 'card', applySelected, setApplySelected, openApplyModal, setOpenApplyModal, detailSelected, setDetailSelected, openDetailModal, setOpenDetailModal }) => {
+}> = ({
+    jobs,
+    view = 'card',
+    applySelected,
+    setApplySelected,
+    openApplyModal,
+    setOpenApplyModal,
+    detailSelected,
+    setDetailSelected,
+    openDetailModal,
+    setOpenDetailModal,
+}) => {
     if (view === 'list') {
         return (
             <JobTable
@@ -33,14 +44,20 @@ export const JobList: React.FC<{
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {jobs.length > 0 ? (
-                jobs.map((job) => <JobCard key={job.id} job={job} setApplySelected={setApplySelected}
-                applySelected={applySelected}
-                openApplyModal={openApplyModal}
-                setOpenApplyModal={setOpenApplyModal}
-                detailSelected={detailSelected}
-                setDetailSelected={setDetailSelected}
-                openDetailModal={openDetailModal}
-                setOpenDetailModal={setOpenDetailModal} />)
+                jobs.map((job) => (
+                    <JobCard
+                        key={job.id}
+                        job={job}
+                        setApplySelected={setApplySelected}
+                        applySelected={applySelected}
+                        openApplyModal={openApplyModal}
+                        setOpenApplyModal={setOpenApplyModal}
+                        detailSelected={detailSelected}
+                        setDetailSelected={setDetailSelected}
+                        openDetailModal={openDetailModal}
+                        setOpenDetailModal={setOpenDetailModal}
+                    />
+                ))
             ) : (
                 <p className="text-center text-gray-600 dark:text-gray-300 col-span-full">Aucune offre trouvée.</p>
             )}

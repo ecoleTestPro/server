@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers\Public;
 
-use App\Http\Controllers\Controller;
 use App\Http\Controllers\PublicAbstractController;
 use App\Http\Requests\SettingUpdateRequest;
 use App\Repositories\BlogCategoryRepository;
 use App\Repositories\BlogRepository;
-use App\Repositories\CategoryRepository;
 use App\Repositories\CourseRepository;
 use App\Repositories\PartnerRepository;
 use App\Repositories\SettingRepository;
@@ -15,11 +13,7 @@ use App\Repositories\SocialMediaRepository;
 use Exception;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
-
-use function Pest\Laravel\json;
 
 class PublicController extends PublicAbstractController
 {
@@ -30,6 +24,7 @@ class PublicController extends PublicAbstractController
     {
         $this->default_data = $this->getDefaultData();
     }
+    
     public function index()
     {
         $data = $this->default_data;
@@ -173,8 +168,9 @@ class PublicController extends PublicAbstractController
 
     public function faqs()
     {
+        $data = $this->default_data;
         return Inertia::render('public/faqs', [
-            ...$this->default_data,
+            'data' => $data,
         ]);
     }
 

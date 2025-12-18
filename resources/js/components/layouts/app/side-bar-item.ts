@@ -1,6 +1,20 @@
-import { NavItem } from "@/types";
-import { BookOpen, FileStack, Folder, HomeIcon, LayoutGrid, List, ClipboardPlus, Settings2, ListTodo, BookAIcon, ListChecks, Mail, Calendar, CalendarDays, CalendarCheck } from 'lucide-react';
-
+import { NavItem } from '@/types';
+import {
+    BookAIcon,
+    BookOpen,
+    Calendar,
+    CalendarCheck,
+    ClipboardPlus,
+    FileStack,
+    Folder,
+    HelpCircle,
+    HomeIcon,
+    LayoutGrid,
+    List,
+    ListChecks,
+    ListTodo,
+    Mail,
+} from 'lucide-react';
 
 export const MAIN_NAV_ITEMS: NavItem[] = [
     {
@@ -19,16 +33,21 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
                 icon: List,
             },
             {
+                title: 'Inscriptions',
+                href: route('dashboard.enrollment.index'),
+                icon: ListChecks,
+            },
+            {
                 title: 'Catégories',
                 href: route('dashboard.category.index'),
                 icon: ListTodo,
             },
+            {
+                title: 'Questions',
+                href: route('dashboard.course-questions.index'),
+                icon: HelpCircle,
+            },
         ],
-    },
-    {
-        title: 'Inscriptions',
-        href: route('dashboard.enrollment.index'),
-        icon: ListChecks,
     },
     // {
     //     title: 'Partenaires',
@@ -41,7 +60,7 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
         icon: FileStack,
     },
     {
-        title: 'Offres d\'emploi',
+        title: "Offres d'emploi",
         href: route('dashboard.job-offers.index'),
         icon: ClipboardPlus,
     },
@@ -69,11 +88,6 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
                 title: 'Liste des RDV',
                 href: route('dashboard.appointments.index'),
                 icon: List,
-            },
-            {
-                title: 'Types de RDV',
-                href: route('dashboard.appointments.settings.types'),
-                icon: Settings2,
             },
             {
                 title: 'Horaires',

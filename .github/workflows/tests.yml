@@ -3,11 +3,13 @@ name: tests
 on:
   push:
     branches:
-      - develop
+      # - develop/develop-v100
+      - release/release-v100
       - main
   pull_request:
     branches:
-      - develop
+      # - develop/develop-v100
+      - release/release-v100
       - main
 
 jobs:

@@ -1,36 +1,74 @@
-import { Button } from '@/components/ui/button/button';
+import { ConfirmDialog } from '@/components/ui/confirmDialog';
 import Drawer from '@/components/ui/drawer';
-import { Input } from '@/components/ui/input';
 import { ICourseSession } from '@/types/course';
 import { Logger } from '@/utils/console.util';
 import axios from 'axios';
-import { Plus, Save, Trash2, CalendarPlus, Copy, Edit2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
+import SessionForm, { SessionFormData } from './SessionForm';
+import SessionList from './SessionList';
 
+/**
+ * Props du composant CourseSessionCreateDrawer
+ */
 interface CourseSessionCreateDrawerProps {
+    /** État d'ouverture du drawer */
     open: boolean;
+    /** Fonction pour changer l'état d'ouverture */
     setOpen: (open: boolean) => void;
+    /** ID du cours pour lequel créer des sessions */
     courseId?: number;
+    /** Titre du cours */
+    courseTitle?: string;
 }
 
-interface SessionForm {
-    start_date: string;
-    end_date: string;
-    location: string;
-}
+/** Structure d'une session vide */
+const emptySession: SessionFormData = { start_date: '', end_date: '', location: '' };
 
-const emptySession: SessionForm = { start_date: '', end_date: '', location: '' };
-
-export default function CourseSessionCreateDrawer({ open, setOpen, courseId }: CourseSessionCreateDrawerProps) {
+/**
+ * Composant principal pour gérer les sessions de cours
+ *
+ * @component
+ * @description Drawer permettant de créer, éditer, confirmer et supprimer des sessions de formation.
+ * Utilise plusieurs sous-composants spécialisés pour une meilleure séparation des responsabilités.
+ */
+export default function CourseSessionCreateDrawer({ open, setOpen, courseId, courseTitle }: CourseSessionCreateDrawerProps) {
     const { t } = useTranslation();
-    const [sessions, setSessions] = useState<SessionForm[]>([{ ...emptySession }]);
+
+    // États pour la gestion du formulaire
+    /** Liste des sessions en cours de création/édition */
+    const [sessions, setSessions] = useState<SessionFormData[]>([{ ...emptySession }]);
+    /** Indique si une requête est en cours */
     const [loading, setLoading] = useState(false);
-    const [existingSessions, setExistingSessions] = useState<ICourseSession[]>([]);
-    const [searchDate, setSearchDate] = useState<string>('');
+    /** ID de la session en cours d'édition */
     const [editingSessionId, setEditingSessionId] = useState<number | null>(null);
 
+    // États pour la liste des sessions existantes
+    /** Sessions existantes du cours */
+    const [existingSessions, setExistingSessions] = useState<ICourseSession[]>([]);
+    /** Date de recherche pour filtrer les sessions */
+    const [searchDate, setSearchDate] = useState<string>('');
+    /** IDs des sessions sélectionnées */
+    const [selectedSessions, setSelectedSessions] = useState<number[]>([]);
+
+    // États pour les dialogs de confirmation
+    /** Indique si une suppression est en cours */
+    const [isDeleting, setIsDeleting] = useState(false);
+    /** Dialog de confirmation pour suppression individuelle */
+    const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+    /** Dialog de confirmation pour suppression groupée */
+    const [showBatchConfirmDialog, setShowBatchConfirmDialog] = useState(false);
+    /** Dialog de confirmation pour confirmation/retrait groupé */
+    const [showBatchConfirmConfirmDialog, setShowBatchConfirmConfirmDialog] = useState(false);
+    /** Action de confirmation groupée (confirm/unconfirm) */
+    const [batchConfirmAction, setBatchConfirmAction] = useState<'confirm' | 'unconfirm'>('confirm');
+    /** ID de la session à supprimer */
+    const [sessionToDelete, setSessionToDelete] = useState<number | null>(null);
+
+    /**
+     * Charge les sessions existantes du cours à l'ouverture du drawer
+     */
     useEffect(() => {
         if (!open || !courseId) return;
         axios
@@ -39,10 +77,8 @@ export default function CourseSessionCreateDrawer({ open, setOpen, courseId }: C
                 const all: ICourseSession[] = res.data.sessions ?? [];
                 const filtered = all.filter((s) => {
                     if ('course' in s && s.course) {
-                        // When course relation is provided
                         return s.course.id === courseId;
                     }
-                    // fallback if course_id is provided directly
                     return (s as any).course_id === courseId;
                 });
                 setExistingSessions(filtered);
@@ -50,23 +86,62 @@ export default function CourseSessionCreateDrawer({ open, setOpen, courseId }: C
             .catch((e) => Logger.error('fetch sessions', e));
     }, [open, courseId]);
 
+    /**
+     * Recharge les sessions depuis le serveur
+     */
+    const refreshSessions = async () => {
+        try {
+            const res = await axios.get(route('courses.calendar.sessions'));
+            const all: ICourseSession[] = res.data.sessions ?? [];
+            const filtered = all.filter((s) => {
+                if ('course' in s && s.course) {
+                    return s.course.id === courseId;
+                }
+                return (s as any).course_id === courseId;
+            });
+            setExistingSessions(filtered);
+        } catch (error) {
+            Logger.error('refresh sessions', error);
+        }
+    };
+
+    // ========== Gestion du formulaire ==========
+
+    /**
+     * Ajoute une nouvelle session vide au formulaire
+     */
     const handleAdd = () => setSessions([...sessions, { ...emptySession }]);
+
+    /**
+     * Supprime une session du formulaire
+     * @param idx - Index de la session à supprimer
+     */
     const handleRemove = (idx: number) => {
         const copy = [...sessions];
         copy.splice(idx, 1);
         setSessions(copy.length ? copy : [{ ...emptySession }]);
     };
-    const handleChange = (idx: number, field: keyof SessionForm, value: string) => {
+
+    /**
+     * Met à jour un champ d'une session
+     * @param idx - Index de la session
+     * @param field - Champ à modifier
+     * @param value - Nouvelle valeur
+     */
+    const handleChange = (idx: number, field: keyof SessionFormData, value: string) => {
         const copy = [...sessions];
         copy[idx][field] = value;
         setSessions(copy);
     };
 
+    /**
+     * Soumet le formulaire pour créer ou modifier des sessions
+     */
     const handleSubmit = () => {
         setLoading(true);
-        
-        // Si on est en mode édition, on met à jour la session
+
         if (editingSessionId) {
+            // Mode édition
             axios
                 .put(route('dashboard.course.session.update', { session: editingSessionId }), {
                     ...sessions[0],
@@ -74,18 +149,16 @@ export default function CourseSessionCreateDrawer({ open, setOpen, courseId }: C
                 })
                 .then(() => {
                     toast.success(t('course.session.update.success', 'Session modifiée avec succès'));
-                    setOpen(false);
                     setSessions([{ ...emptySession }]);
                     setEditingSessionId(null);
-                    // Recharger les sessions
-                    window.location.reload();
+                    refreshSessions();
                 })
                 .catch(() => {
                     toast.error(t('course.session.update.error', 'Erreur lors de la modification'));
                 })
                 .finally(() => setLoading(false));
         } else {
-            // Mode création normale
+            // Mode création
             axios
                 .post(route('dashboard.course.session.store', { course: courseId }), {
                     sessions: sessions.map((s) => ({
@@ -93,38 +166,52 @@ export default function CourseSessionCreateDrawer({ open, setOpen, courseId }: C
                         course_id: courseId,
                     })),
                 })
-                .then((response) => {
+                .then(() => {
                     toast.success(t('course.session.create.success', 'Sessions créées avec succès'));
-                    setOpen(false);
                     setSessions([{ ...emptySession }]);
+                    refreshSessions();
                 })
-                .catch((e) => {
+                .catch(() => {
                     toast.error(t('course.session.create.error', 'Erreur lors de la création des sessions'));
                 })
                 .finally(() => setLoading(false));
         }
     };
 
-    // Fonction pour formater une date pour un input datetime-local
+    /**
+     * Annule l'édition en cours
+     */
+    const handleCancel = () => {
+        setSessions([{ ...emptySession }]);
+        setEditingSessionId(null);
+        setSelectedSessions([]);
+        setOpen(false);
+    };
+
+    // ========== Gestion des actions sur les sessions existantes ==========
+
+    /**
+     * Formate une date pour un input datetime-local
+     * @param dateString - Date à formater
+     * @returns Date formatée pour l'input
+     */
     const formatDateForInput = (dateString: string): string => {
         if (!dateString) return '';
-        
-        // Si la date est déjà au format ISO, on la convertit
         const date = new Date(dateString);
-        
-        // Formater en YYYY-MM-DDTHH:MM pour datetime-local
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
         const hours = String(date.getHours()).padStart(2, '0');
         const minutes = String(date.getMinutes()).padStart(2, '0');
-        
         return `${year}-${month}-${day}T${hours}:${minutes}`;
     };
 
-    // Fonction pour dupliquer une session existante
+    /**
+     * Duplique une session existante
+     * @param session - Session à dupliquer
+     */
     const handleDuplicate = (session: ICourseSession) => {
-        const newSession: SessionForm = {
+        const newSession: SessionFormData = {
             start_date: formatDateForInput(session.start_date),
             end_date: formatDateForInput(session.end_date),
             location: session.location || '',
@@ -133,9 +220,12 @@ export default function CourseSessionCreateDrawer({ open, setOpen, courseId }: C
         toast.success(t('course.session.duplicated', 'Session dupliquée'));
     };
 
-    // Fonction pour éditer une session existante
+    /**
+     * Active le mode édition pour une session
+     * @param session - Session à éditer
+     */
     const handleEdit = (session: ICourseSession) => {
-        const sessionToEdit: SessionForm = {
+        const sessionToEdit: SessionFormData = {
             start_date: formatDateForInput(session.start_date),
             end_date: formatDateForInput(session.end_date),
             location: session.location || '',
@@ -145,268 +235,262 @@ export default function CourseSessionCreateDrawer({ open, setOpen, courseId }: C
         toast(t('course.session.editing', 'Mode édition activé'));
     };
 
-    // Fonction pour trier et filtrer les sessions
-    const getSortedAndFilteredSessions = () => {
-        const now = new Date();
-        
-        // Filtrer par date de recherche si une recherche est active
-        let filtered = existingSessions;
-        if (searchDate) {
-            const searchDateObj = new Date(searchDate);
-            filtered = existingSessions.filter(s => {
-                const startDate = new Date(s.start_date);
-                const endDate = new Date(s.end_date);
-                return startDate.toDateString() === searchDateObj.toDateString() || 
-                       endDate.toDateString() === searchDateObj.toDateString() ||
-                       (startDate <= searchDateObj && endDate >= searchDateObj);
-            });
-        }
-        
-        // Séparer les sessions passées et futures
-        const upcomingSessions = filtered.filter(s => new Date(s.end_date) >= now);
-        const pastSessions = filtered.filter(s => new Date(s.end_date) < now);
-        
-        // Trier chaque groupe par date de début
-        upcomingSessions.sort((a, b) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime());
-        pastSessions.sort((a, b) => new Date(b.start_date).getTime() - new Date(a.start_date).getTime());
-        
-        // Retourner les sessions futures d'abord, puis les passées
-        return [...upcomingSessions, ...pastSessions];
+    /**
+     * Ouvre le dialog de confirmation pour supprimer une session
+     * @param sessionId - ID de la session à supprimer
+     */
+    const handleDeleteSingle = (sessionId: number) => {
+        setSessionToDelete(sessionId);
+        setShowConfirmDialog(true);
     };
 
-    const sortedSessions = getSortedAndFilteredSessions();
+    /**
+     * Confirme et exécute la suppression d'une session
+     */
+    const confirmDeleteSingle = async () => {
+        if (!sessionToDelete) return;
+        setIsDeleting(true);
+        try {
+            await axios.delete(route('dashboard.course.session.delete', { session: sessionToDelete }));
+            toast.success(t('course.session.delete.success', 'Session supprimée avec succès'));
+            await refreshSessions();
+        } catch (error) {
+            toast.error(t('course.session.delete.error', 'Erreur lors de la suppression'));
+        } finally {
+            setIsDeleting(false);
+            setShowConfirmDialog(false);
+            setSessionToDelete(null);
+        }
+    };
+
+    /**
+     * Change le statut de confirmation d'une session
+     * @param sessionId - ID de la session
+     */
+    const handleToggleConfirmed = async (sessionId: number) => {
+        try {
+            const response = await axios.patch(route('dashboard.course.session.toggle-confirmed', { session: sessionId }));
+            if (response.data.session) {
+                toast.success(
+                    response.data.session.is_confirmed
+                        ? t('course.session.confirmed_success', 'Session confirmée avec succès')
+                        : t('course.session.unconfirmed_success', 'Confirmation retirée avec succès'),
+                );
+                refreshSessions();
+            }
+        } catch (error) {
+            toast.error(t('course.session.toggle_confirmed_error', 'Erreur lors de la modification du statut de confirmation'));
+            Logger.error('toggle confirmed', error);
+        }
+    };
+
+    // ========== Gestion de la sélection multiple ==========
+
+    /**
+     * Bascule la sélection d'une session
+     * @param sessionId - ID de la session
+     */
+    const toggleSessionSelection = (sessionId: number) => {
+        setSelectedSessions((prev) => (prev.includes(sessionId) ? prev.filter((id) => id !== sessionId) : [...prev, sessionId]));
+    };
+
+    /**
+     * Sélectionne ou désélectionne toutes les sessions visibles
+     */
+    const selectAllSessions = () => {
+        const visibleSessionIds = existingSessions.map((s) => s.id);
+        setSelectedSessions((prev) => (prev.length === visibleSessionIds.length ? [] : visibleSessionIds));
+    };
+
+    /**
+     * Ouvre le dialog de suppression groupée
+     */
+    const handleDeleteMultiple = () => {
+        if (selectedSessions.length === 0) {
+            toast.error(t('course.session.delete.no_selection', 'Aucune session sélectionnée'));
+            return;
+        }
+        setShowBatchConfirmDialog(true);
+    };
+
+    /**
+     * Confirme et exécute la suppression groupée
+     */
+    const confirmDeleteMultiple = async () => {
+        if (selectedSessions.length === 0) return;
+        setIsDeleting(true);
+        try {
+            await axios.delete(route('dashboard.course.session.delete.batch'), {
+                data: { session_ids: selectedSessions },
+            });
+            toast.success(t('course.session.delete.multiple_success', `${selectedSessions.length} session(s) supprimée(s) avec succès`));
+            await refreshSessions();
+            setSelectedSessions([]);
+        } catch (error: any) {
+            Logger.error('delete multiple sessions', error);
+            if (error?.response?.data?.error) {
+                toast.error(error.response.data.error);
+            } else {
+                toast.error(t('course.session.delete.multiple_error', 'Erreur lors de la suppression groupée'));
+            }
+        } finally {
+            setIsDeleting(false);
+            setShowBatchConfirmDialog(false);
+        }
+    };
+
+    /**
+     * Ouvre le dialog de confirmation/retrait de confirmation groupée
+     * @param action - Action à effectuer (confirm/unconfirm)
+     */
+    const handleConfirmMultiple = (action: 'confirm' | 'unconfirm') => {
+        if (selectedSessions.length === 0) {
+            toast.error(t('course.session.confirm.no_selection', 'Aucune session sélectionnée'));
+            return;
+        }
+        setBatchConfirmAction(action);
+        setShowBatchConfirmConfirmDialog(true);
+    };
+
+    /**
+     * Confirme et exécute la confirmation/retrait groupé
+     */
+    const confirmConfirmMultiple = async () => {
+        if (selectedSessions.length === 0) return;
+        try {
+            await axios.patch(route('dashboard.course.session.confirm.batch'), {
+                session_ids: selectedSessions,
+                is_confirmed: batchConfirmAction === 'confirm',
+            });
+            toast.success(
+                batchConfirmAction === 'confirm'
+                    ? t('course.session.confirm.multiple_success', `${selectedSessions.length} session(s) confirmée(s) avec succès`)
+                    : t('course.session.unconfirm.multiple_success', `Confirmation retirée pour ${selectedSessions.length} session(s)`),
+            );
+            await refreshSessions();
+            setSelectedSessions([]);
+        } catch (error: any) {
+            Logger.error('confirm multiple sessions', error);
+            toast.error(t('course.session.confirm.multiple_error', 'Erreur lors de la modification du statut de confirmation'));
+        } finally {
+            setShowBatchConfirmConfirmDialog(false);
+        }
+    };
 
     return (
-        <Drawer
-            title={editingSessionId ? t('course.session.edit_title', 'Modifier la session') : t('course.session.create', 'Créer des sessions')}
-            open={open}
-            setOpen={(isOpen) => {
-                setOpen(isOpen);
-                if (!isOpen) {
-                    setEditingSessionId(null);
-                    setSessions([{ ...emptySession }]);
+        <>
+            <Drawer
+                maxWidth="w-[80%] lg:max-w-3xl"
+                title={
+                    editingSessionId
+                        ? t('course.session.edit_title', 'Modifier la session')
+                        : t('course.session.create', 'Créer des sessions pour la formation "' + courseTitle + '"')
                 }
-            }}
-            component={
-                <div className="space-y-4">
-                    {existingSessions.length > 0 && (
-                        <div className="space-y-2">
-                            <div className="flex justify-between items-center">
-                                <h3 className="text-sm font-semibold">{t('course.session.existing', 'Sessions enregistrées')}</h3>
-                                <Input
-                                    type="date"
-                                    value={searchDate}
-                                    onChange={(e) => setSearchDate(e.target.value)}
-                                    placeholder={t('course.session.search_date', 'Rechercher par date')}
-                                    className="w-48"
-                                />
-                            </div>
-                            <ul className="space-y-1 max-h-60 overflow-y-auto border rounded-md p-2">
-                                {sortedSessions.length === 0 ? (
-                                    <li className="text-sm text-gray-500 text-center py-2">
-                                        {t('course.session.no_results', 'Aucune session trouvée pour cette date')}
-                                    </li>
-                                ) : (
-                                    sortedSessions.map((s) => {
-                                        const isPast = new Date(s.end_date) < new Date();
-                                        const isToday = new Date(s.start_date).toDateString() === new Date().toDateString();
-                                        return (
-                                            <li key={s.id} className={`group hover:shadow-md transition-shadow text-sm border rounded p-2 ${isPast ? 'bg-gray-50' : 'bg-white'} ${isToday ? 'border-blue-400' : ''}`}>
-                                                <div className="flex justify-between items-start">
-                                                    <div className="flex-1">
-                                                        <div className="font-medium">
-                                                            {new Date(s.start_date).toLocaleDateString('fr-FR', { 
-                                                                weekday: 'short', 
-                                                                year: 'numeric', 
-                                                                month: 'short', 
-                                                                day: 'numeric' 
-                                                            })}
-                                                            {' - '}
-                                                            {new Date(s.end_date).toLocaleDateString('fr-FR', { 
-                                                                weekday: 'short', 
-                                                                year: 'numeric', 
-                                                                month: 'short', 
-                                                                day: 'numeric' 
-                                                            })}
-                                                        </div>
-                                                        <div className="text-gray-600">
-                                                            📍 {s.location || t('course.session.no_location', 'Lieu non défini')}
-                                                        </div>
-                                                    </div>
-                                                    <div className="flex items-start gap-2">
-                                                        <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                            <Button
-                                                                variant="ghost"
-                                                                size="sm"
-                                                                onClick={() => handleDuplicate(s)}
-                                                                title={t('course.session.duplicate', 'Dupliquer cette session')}
-                                                                className="p-1 h-7 w-7"
-                                                            >
-                                                                <Copy className="w-3 h-3" />
-                                                            </Button>
-                                                            <Button
-                                                                variant="ghost"
-                                                                size="sm"
-                                                                onClick={() => handleEdit(s)}
-                                                                title={t('course.session.edit', 'Modifier cette session')}
-                                                                className="p-1 h-7 w-7"
-                                                                disabled={isPast}
-                                                            >
-                                                                <Edit2 className="w-3 h-3" />
-                                                            </Button>
-                                                        </div>
-                                                        <span className={`px-2 py-1 rounded text-xs font-semibold ${
-                                                            isPast ? 'bg-red-100 text-red-700' : 
-                                                            isToday ? 'bg-blue-100 text-blue-700' : 
-                                                            'bg-green-100 text-green-700'
-                                                        }`}>
-                                                            {isPast ? t('past', 'Passée') : 
-                                                             isToday ? t('today', "Aujourd'hui") :
-                                                             t('upcoming', 'À venir')}
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        );
-                                    })
-                                )}
-                            </ul>
-                            {searchDate && (
-                                <Button 
-                                    variant="ghost" 
-                                    size="sm" 
-                                    onClick={() => setSearchDate('')}
-                                    className="text-sm"
-                                >
-                                    {t('course.session.clear_search', 'Effacer la recherche')}
-                                </Button>
-                            )}
-                        </div>
-                    )}
-
-                    {/* Section pour les nouvelles sessions à créer */}
-                    <div className={`${editingSessionId ? 'bg-yellow-50 border-yellow-200' : 'bg-blue-50 border-blue-200'} border rounded-lg p-4`}>
-                        <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                            {editingSessionId ? <Edit2 className="w-4 h-4" /> : <CalendarPlus className="w-4 h-4" />}
-                            {editingSessionId ? t('course.session.edit_session', 'Modifier la session') : t('course.session.new_sessions', 'Nouvelles sessions à créer')}
-                        </h3>
-                        
-                        {sessions.map((session, index) => (
-                            <div key={index} className="space-y-2 bg-white rounded-lg p-3 mb-3 border border-gray-200">
-                                <div className="flex justify-between items-center mb-2">
-                                    <span className="text-sm font-medium text-gray-700">
-                                        {t('course.session.session_number', 'Session')} {index + 1}
-                                    </span>
-                                    {sessions.length > 1 && (
-                                        <Button 
-                                            variant="ghost" 
-                                            size="sm"
-                                            type="button" 
-                                            className="text-red-500 hover:text-red-700 hover:bg-red-50" 
-                                            onClick={() => handleRemove(index)}
-                                        >
-                                            <Trash2 className="w-4 h-4 mr-1" />
-                                            {t('remove', 'Retirer')}
-                                        </Button>
-                                    )}
-                                </div>
-                                <div className="grid grid-cols-2 gap-2">
-                                    <div>
-                                        <label className="block text-sm font-medium mb-1">{t('start_date', 'Date de début')}</label>
-                                        <Input
-                                            type="datetime-local"
-                                            value={session.start_date}
-                                            onChange={(e) => handleChange(index, 'start_date', e.target.value)}
-                                            className="text-sm"
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium mb-1">{t('end_date', 'Date de fin')}</label>
-                                        <Input
-                                            type="datetime-local"
-                                            value={session.end_date}
-                                            onChange={(e) => handleChange(index, 'end_date', e.target.value)}
-                                            className="text-sm"
-                                        />
-                                    </div>
-                                    <div className="col-span-2">
-                                        <label className="block text-sm font-medium mb-1">{t('location', 'Lieu')}</label>
-                                        <Input 
-                                            type="text" 
-                                            value={session.location} 
-                                            onChange={(e) => handleChange(index, 'location', e.target.value)}
-                                            placeholder={t('course.session.location_placeholder', 'Ex: Paris, Salle A')}
-                                            className="text-sm"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                        
-                        {/* Bouton pour ajouter une nouvelle ligne de session - masqué en mode édition */}
-                        {!editingSessionId && (
-                            <Button 
-                                variant="outline" 
-                                type="button" 
-                                onClick={handleAdd}
-                                className="w-full border-dashed border-2 border-blue-300 hover:border-blue-400 hover:bg-blue-50"
-                            >
-                                <Plus className="w-4 h-4 mr-2" />
-                                {t('course.session.add_another', 'Ajouter une autre session')}
-                            </Button>
+                open={open}
+                setOpen={(isOpen) => {
+                    setOpen(isOpen);
+                    if (!isOpen) {
+                        setEditingSessionId(null);
+                        setSessions([{ ...emptySession }]);
+                        setSelectedSessions([]);
+                    }
+                }}
+                component={
+                    <div className="space-y-4">
+                        {/* Liste des sessions existantes */}
+                        {existingSessions.length > 0 && (
+                            <SessionList
+                                sessions={existingSessions}
+                                selectedSessions={selectedSessions}
+                                searchDate={searchDate}
+                                isDeleting={isDeleting}
+                                onSearchDateChange={setSearchDate}
+                                onToggleSelection={toggleSessionSelection}
+                                onToggleSelectAll={selectAllSessions}
+                                onDuplicateSession={handleDuplicate}
+                                onEditSession={handleEdit}
+                                onDeleteSession={handleDeleteSingle}
+                                onToggleConfirmed={handleToggleConfirmed}
+                                onConfirmSelected={() => handleConfirmMultiple('confirm')}
+                                onUnconfirmSelected={() => handleConfirmMultiple('unconfirm')}
+                                onDeleteSelected={handleDeleteMultiple}
+                            />
                         )}
+
+                        {/* Formulaire de création/édition */}
+                        <SessionForm
+                            sessions={sessions}
+                            isEditing={!!editingSessionId}
+                            loading={loading}
+                            onSessionChange={handleChange}
+                            onAddSession={handleAdd}
+                            onRemoveSession={handleRemove}
+                            onSubmit={handleSubmit}
+                            onCancel={handleCancel}
+                        />
                     </div>
-                    
-                    {/* Zone des boutons d'action avec séparation claire */}
-                    <div className="bg-gray-50 border-t-2 border-gray-200 -mx-4 px-4 py-4 -mb-4">
-                        <div className="flex justify-between items-center gap-4">
-                            <div className="text-sm text-gray-600">
-                                {editingSessionId 
-                                    ? t('course.session.edit_ready', 'Modifications prêtes à être enregistrées')
-                                    : sessions.length === 1 
-                                        ? t('course.session.one_session_ready', '1 session prête à être enregistrée')
-                                        : t('course.session.multiple_sessions_ready', `${sessions.length} sessions prêtes à être enregistrées`)
-                                }
-                            </div>
-                            <div className="flex gap-2">
-                                <Button 
-                                    variant="outline" 
-                                    type="button" 
-                                    onClick={() => {
-                                        setSessions([{ ...emptySession }]);
-                                        setEditingSessionId(null);
-                                        setOpen(false);
-                                    }}
-                                    disabled={loading}
-                                >
-                                    {t('cancel', 'Annuler')}
-                                </Button>
-                                <Button 
-                                    type="button" 
-                                    onClick={handleSubmit} 
-                                    disabled={loading || sessions.every(s => !s.start_date)}
-                                    className={editingSessionId ? "bg-yellow-600 hover:bg-yellow-700 text-white" : "bg-green-600 hover:bg-green-700 text-white"}
-                                >
-                                    {loading ? (
-                                        <>
-                                            <span className="animate-spin mr-2">⏳</span>
-                                            {editingSessionId ? t('updating', 'Modification...') : t('creating', 'Enregistrement...')}
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Save className="w-4 h-4 mr-2" />
-                                            {editingSessionId 
-                                                ? t('course.session.save_changes', 'Enregistrer les modifications')
-                                                : t('course.session.save_all', 'Enregistrer toutes les sessions')
-                                            }
-                                        </>
-                                    )}
-                                </Button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            }
-        />
+                }
+            />
+
+            {/* Dialog de confirmation pour suppression individuelle */}
+            <ConfirmDialog
+                open={showConfirmDialog}
+                title={t('course.session.delete.confirm_title', 'Supprimer la session')}
+                description={t(
+                    'course.session.delete.confirm_description',
+                    'Êtes-vous sûr de vouloir supprimer cette session ? Cette action est irréversible.',
+                )}
+                confirmLabel={t('course.session.delete.confirm_button', 'Supprimer')}
+                cancelLabel={t('cancel', 'Annuler')}
+                onConfirm={confirmDeleteSingle}
+                onCancel={() => {
+                    setShowConfirmDialog(false);
+                    setSessionToDelete(null);
+                }}
+                loading={isDeleting}
+            />
+
+            {/* Dialog de confirmation pour suppression groupée */}
+            <ConfirmDialog
+                open={showBatchConfirmDialog}
+                title={t('course.session.delete.confirm_multiple_title', 'Supprimer les sessions')}
+                description={t(
+                    'course.session.delete.confirm_multiple_description',
+                    `Êtes-vous sûr de vouloir supprimer ${selectedSessions.length} session(s) ? Cette action est irréversible.`,
+                )}
+                confirmLabel={t('course.session.delete.confirm_button', 'Supprimer')}
+                cancelLabel={t('cancel', 'Annuler')}
+                onConfirm={confirmDeleteMultiple}
+                onCancel={() => setShowBatchConfirmDialog(false)}
+                loading={isDeleting}
+            />
+
+            {/* Dialog de confirmation pour confirmation/retrait groupé */}
+            <ConfirmDialog
+                open={showBatchConfirmConfirmDialog}
+                title={
+                    batchConfirmAction === 'confirm'
+                        ? t('course.session.confirm.confirm_multiple_title', 'Confirmer les sessions')
+                        : t('course.session.unconfirm.confirm_multiple_title', 'Retirer la confirmation des sessions')
+                }
+                description={
+                    batchConfirmAction === 'confirm'
+                        ? t('course.session.confirm.confirm_multiple_description', `Voulez-vous confirmer ${selectedSessions.length} session(s) ?`)
+                        : t(
+                              'course.session.unconfirm.confirm_multiple_description',
+                              `Voulez-vous retirer la confirmation de ${selectedSessions.length} session(s) ?`,
+                          )
+                }
+                confirmLabel={
+                    batchConfirmAction === 'confirm'
+                        ? t('course.session.confirm.confirm_button', 'Confirmer')
+                        : t('course.session.unconfirm.confirm_button', 'Retirer la confirmation')
+                }
+                cancelLabel={t('cancel', 'Annuler')}
+                onConfirm={confirmConfirmMultiple}
+                onCancel={() => setShowBatchConfirmConfirmDialog(false)}
+                loading={false}
+            />
+        </>
     );
 }

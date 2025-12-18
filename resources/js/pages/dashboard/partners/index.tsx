@@ -1,14 +1,14 @@
+import PartnerDataTable from '@/components/partners/partnerDataTable';
+import PartnerForm from '@/components/partners/partnerForm';
+import PartnerToolBar from '@/components/partners/partnerToolBar';
+import { ConfirmDialog } from '@/components/ui/confirmDialog';
 import AppLayout from '@/layouts/dashboard/app-layout';
 import { SharedData, type BreadcrumbItem } from '@/types';
+import { IPartner } from '@/types/partner';
 import { Head, router, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import PartnerForm from '@/components/partners/partnerForm';
-import PartnerToolBar from '@/components/partners/partnerToolBar';
-import PartnerDataTable from '@/components/partners/partnerDataTable';
-import { IPartner } from '@/types/partner';
-import { ConfirmDialog } from '@/components/ui/confirmDialog';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {

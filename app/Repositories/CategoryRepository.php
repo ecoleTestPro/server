@@ -69,7 +69,7 @@ class CategoryRepository extends Repository
         return $categories;
     }
 
-    public static function findChildrenByParentId($parentId, $limit = 10)
+    public static function findChildrenByParentId($parentId)
     {
         return static::getRecursiveTree(true, $parentId);
     }
@@ -131,7 +131,15 @@ class CategoryRepository extends Repository
                         'src' => $category->imagePath,
                     ];
                     $node['children'] = $buildTree($category->id);
-                    $node['courses'] = $includeCourses ? CourseRepository::findAllByCategoryId($category->id) : [];
+                    
+                    // Récupérer les cours avec sessions et les trier par date de session
+                    if ($includeCourses) {
+                        $courses = CourseRepository::findAllByCategoryIdWithSessions($category->id);
+                        $node['courses'] = $courses;
+                    } else {
+                        $node['courses'] = [];
+                    }
+                    
                     $tree[] = $node;
                 }
             }
@@ -150,7 +158,7 @@ class CategoryRepository extends Repository
                     'src' => $rootCategory->imagePath,
                 ];
                 $rootNode['children'] = $childrenTree;
-                $rootNode['courses'] = $includeCourses ? CourseRepository::findAllByCategoryId($rootCategory->id) : [];
+                $rootNode['courses'] = $includeCourses ? CourseRepository::findAllByCategoryIdWithSessions($rootCategory->id) : [];
 
                 return [$rootNode];
             }
@@ -198,7 +206,7 @@ class CategoryRepository extends Repository
         $isFeatured = false;
 
         if (isset($request->is_featured)) {
-            $isFeatured = $request->is_featured == 'on' ? true : false;
+            $isFeatured = $request->is_featured == '1' || $request->is_featured == 'on' || $request->is_featured === true;
         }
 
         $media = $request->hasFile('media') ? MediaRepository::storeByRequest(
@@ -211,9 +219,9 @@ class CategoryRepository extends Repository
             'title'       => $request->title,
             'slug'        => Str::slug($request->title),
             'media_id'    => $media ? $media->id : null,
-            'parent_id'   => $request->parent_id,
+            'parent_id'   => $request->parent_id ?? null,
             'is_featured' => $isFeatured,
-            'color'       => $request->color,
+            'color'       => $request->color ?? null,
         ]);
     }
 
@@ -229,7 +237,7 @@ class CategoryRepository extends Repository
         $isFeatured = false;
 
         if (isset($request->is_featured)) {
-            $isFeatured = $request->is_featured == 'on' ? true : false;
+            $isFeatured = $request->is_featured == '1' || $request->is_featured == 'on' || $request->is_featured === true;
         }
 
         if ($category->image) {
@@ -250,7 +258,7 @@ class CategoryRepository extends Repository
         return self::update($category, [
             'title'       => $request->title ?? $category->title,
             'slug'        => $request->title ? Str::slug($request->title) : $category->slug,
-            'media_id'    => $media ? $media->id : null,
+            'media_id'    => $media ? $media->id : $category->media_id,
             'parent_id'   => $request->parent_id ?? $category->parent_id,
             'is_featured' => $isFeatured,
             'color'       => $request->color ?? $category->color,

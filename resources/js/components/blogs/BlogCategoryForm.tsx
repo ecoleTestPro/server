@@ -4,14 +4,14 @@ import { IBlogCategory } from '@/types/blogs';
 import { Logger } from '@/utils/console.util';
 import { router, useForm } from '@inertiajs/react';
 import axios from 'axios';
-import { useState } from 'react';
+// import { useState } from 'react'; // Unused
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { Button } from '../ui/button/button';
 
 export interface BlogCategoryForm {
     name: string;
-    [key: string]: any; // Allow additional properties
+    [key: string]: string | boolean | number | null | undefined;
 }
 
 const createDefaultValues = (category: IBlogCategory | null): BlogCategoryForm => {
@@ -34,12 +34,12 @@ interface BlogCategoryFormProps {
 export const BlogCategoryForm = ({ category = null, onCancel, categories = [] }: BlogCategoryFormProps) => {
     const { t } = useTranslation();
 
-    const { data, setData, post, processing, errors, reset } = useForm<BlogCategoryForm>(createDefaultValues(category));
-    const [tag, setTag] = useState<string>('');
-    const [tags, setTags] = useState<string[]>([]);
+    const { data, setData, errors, reset } = useForm<BlogCategoryForm>(createDefaultValues(category));
+    // const [tag, setTag] = useState<string>(''); // Unused
+    // const [tags, setTags] = useState<string[]>([]); // Unused
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        // e.preventDefault();
+    const handleSubmit = () => {
+        // Form submission logic
         axios
             .post(route('dashboard.blogs.category.store'), data)
             .then((response) => {

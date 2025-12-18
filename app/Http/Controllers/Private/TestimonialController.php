@@ -72,6 +72,26 @@ class TestimonialController extends Controller
     }
 
     /**
+     * Toggle the active status of the specified testimonial.
+     *
+     * @param  Testimonial $testimonial
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function toggle(Testimonial $testimonial)
+    {
+        $testimonial->is_active = !$testimonial->is_active;
+        $testimonial->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => $testimonial->is_active 
+                ? 'Témoignage activé avec succès' 
+                : 'Témoignage désactivé avec succès',
+            'is_active' => $testimonial->is_active
+        ]);
+    }
+
+    /**
      * Restore the specified testimonial from the trash.
      *
      * @param  int  $testimonial

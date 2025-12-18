@@ -1,7 +1,7 @@
 import { FaClock, FaMapMarkerAlt } from 'react-icons/fa';
 
 interface CourseDurationBlockProps {
-    duration?: string;
+    duration?: string | boolean;
     location?: string;
 }
 

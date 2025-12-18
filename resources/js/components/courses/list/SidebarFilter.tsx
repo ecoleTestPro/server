@@ -21,28 +21,24 @@ export default function SidebarFilter({ courses, onFilterChange }: SidebarFilter
 
         // Filtre par titre
         if (title.trim()) {
-            filteredCourses = filteredCourses.filter((course) =>
-                course.title.toLowerCase().includes(title.toLowerCase()),
-            );
+            filteredCourses = filteredCourses.filter((course) => course.title.toLowerCase().includes(title.toLowerCase()));
         }
 
         // Filtre par prix
-        filteredCourses = filteredCourses.filter(
-            (course) => course.price >= priceRange[0] && course.price <= priceRange[1],
-        );
+        filteredCourses = filteredCourses.filter((course) => course.price >= priceRange[0] && course.price <= priceRange[1]);
 
         // Filtre par prochaine session
         if (nextSession.trim()) {
             filteredCourses = filteredCourses.filter((course) => {
                 if (!course.course_sessions || course.course_sessions.length === 0) return false;
-                
+
                 const now = new Date();
                 const upcomingSession = course.course_sessions
                     .filter((session) => new Date(session.start_date) > now)
                     .sort((a, b) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime())[0];
-                
+
                 if (!upcomingSession) return false;
-                
+
                 const sessionDate = upcomingSession.start_date;
                 return sessionDate.toLowerCase().includes(nextSession.toLowerCase());
             });
@@ -84,7 +80,7 @@ export default function SidebarFilter({ courses, onFilterChange }: SidebarFilter
             {/* Filtre par prix */}
             <div className="mb-4">
                 <label className="block text-sm font-medium mb-1 text-black dark:text-white">
-                    {t('FILTER.PRICE_LABEL', 'Plage de prix (FCFA)')}: {priceRange[0]*100 / 100} - {priceRange[1]*100 / 100}
+                    {t('FILTER.PRICE_LABEL', 'Plage de prix (FCFA)')}: {(priceRange[0] * 100) / 100} - {(priceRange[1] * 100) / 100}
                 </label>
                 <div className="gird grid-cols-1 gap-2">
                     <input
