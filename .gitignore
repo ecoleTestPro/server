@@ -24,3 +24,4 @@ yarn-error.log
 /.zed
 storage/record.txt
 public/mix-manifest.json
+.env.local

@@ -375,7 +375,7 @@ const AppointmentCalendar: React.FC = () => {
                                             <p className="text-muted-foreground text-sm">Sélectionnez un jour disponible pour votre rendez-vous</p>
                                         </CardHeader>
                                         <CardContent className="flex justify-center pb-6">
-                                            <div className="datepicker-container w-full max-w-md">
+                                            <div className="datepicker-container w-full max-w-md flex justify-center ">
                                                 <DatePicker
                                                     selected={selectedDate}
                                                     onChange={handleDateChange}

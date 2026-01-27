@@ -87,7 +87,7 @@ services:
       PMA_PASSWORD: ${DB_PASSWORD:-secret}
       UPLOAD_LIMIT: 100M
     ports:
-      - "8080:80"
+      - "8099:80"
     depends_on:
       - mysql
     networks:
