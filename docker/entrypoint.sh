@@ -1,82 +1,65 @@
 #!/bin/sh
+# Entrypoint pour EcoleTestPro LMS
 
-set -e
+echo "========================================"
+echo "  EcoleTestPro LMS - Starting..."
+echo "  Environment: ${APP_ENV:-local}"
+echo "========================================"
 
-echo "🚀 Starting EcoleTestPro Application..."
-
-# Attendre que MySQL soit prêt (limité à 30 secondes)
-echo "⏳ Waiting for MySQL to be ready..."
-counter=0
-until [ $counter -gt 15 ] || mysql -h"${DB_HOST:-mysql}" -u"${DB_USERNAME:-root}" -p"${DB_PASSWORD:-secret}" --skip-ssl -e "SELECT 1" > /dev/null 2>&1; do
-  echo "MySQL is unavailable - sleeping (attempt $counter/15)"
-  sleep 2
-  counter=$((counter+1))
+# Attendre MySQL (max 60s)
+echo "Waiting for MySQL..."
+timeout=60
+while [ $timeout -gt 0 ]; do
+    if php -r "new PDO('mysql:host=${DB_HOST:-mysql};port=3306', '${DB_USERNAME:-root}', '${DB_PASSWORD:-secret}');" 2>/dev/null; then
+        echo "MySQL is ready!"
+        break
+    fi
+    echo -n "."
+    sleep 2
+    timeout=$((timeout - 2))
 done
 
-if [ $counter -gt 15 ]; then
-  echo "⚠️ MySQL connection timeout - continuing anyway..."
-else
-  echo "✅ MySQL is ready!"
+if [ $timeout -le 0 ]; then
+    echo ""
+    echo "Warning: MySQL timeout - continuing anyway..."
 fi
 
-# Générer la clé d'application si elle n'existe pas
-if [ ! -f ".env" ]; then
-    echo "📝 Creating .env file from .env.example..."
+# Setup .env si nécessaire
+if [ ! -f ".env" ] && [ -f ".env.example" ]; then
+    echo "Creating .env..."
     cp .env.example .env
 fi
 
-# Générer une clé d'application si nécessaire
-if ! grep -q "^APP_KEY=base64:" .env; then
-    echo "🔑 Generating application key..."
-    php artisan key:generate --force
+# Générer la clé si nécessaire
+if ! grep -q "^APP_KEY=base64:" .env 2>/dev/null; then
+    echo "Generating app key..."
+    php artisan key:generate --force || true
 fi
 
-# Optimiser l'application
-echo "🔧 Optimizing application..."
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
+# Storage link
+php artisan storage:link 2>/dev/null || true
 
-# Exécuter les migrations
-echo "📊 Running database migrations..."
-php artisan migrate --force
-
-# Seed la base de données (optionnel, commentez si non nécessaire)
-# echo "🌱 Seeding database..."
-# php artisan db:seed --force
-
-# Créer le lien symbolique pour le storage
-echo "🔗 Creating storage link..."
-php artisan storage:link || true
-
-# Installer et compiler les assets si nécessaire
-if [ "$APP_ENV" = "local" ] || [ "$APP_ENV" = "development" ]; then
-    echo "📦 Installing Node dependencies..."
-    npm install
-    
-    echo "🏗️ Building assets..."
-    npm run build
+# Migrations (sauf si SKIP_MIGRATIONS=true)
+if [ "${SKIP_MIGRATIONS}" != "true" ]; then
+    echo "Running migrations..."
+    php artisan migrate --force || echo "Migrations failed"
 fi
 
-# Nettoyer les caches
-echo "🧹 Clearing caches..."
-php artisan cache:clear
-php artisan config:clear
-php artisan route:clear
-php artisan view:clear
+# Cache selon environnement
+if [ "${APP_ENV}" = "production" ]; then
+    echo "Optimizing for production..."
+    php artisan optimize || true
+else
+    echo "Clearing caches for dev..."
+    php artisan optimize:clear || true
+fi
 
-# Recréer les caches optimisés
-echo "🚀 Creating optimized caches..."
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
+# Permissions
+chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache 2>/dev/null || true
 
-# Définir les permissions correctes
-echo "🔒 Setting permissions..."
-chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
-chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+echo ""
+echo "Application ready! Starting services..."
+echo ""
 
-echo "✨ Application is ready!"
-
-# Exécuter la commande passée en paramètre
+# Lancer la commande (supervisord)
 exec "$@"

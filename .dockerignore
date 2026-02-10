@@ -1,38 +1,110 @@
-node_modules
-npm-debug.log
-yarn-error.log
+# =============================================================================
+# .dockerignore pour EcoleTestPro LMS
+# Exclut les fichiers inutiles du contexte de build Docker
+# =============================================================================
 
-vendor
+# -----------------------------------------------------------------------------
+# Dépendances et builds
+# -----------------------------------------------------------------------------
+node_modules/
+vendor/
+public/build/
+public/hot
+public/storage
+
+# -----------------------------------------------------------------------------
+# Fichiers de configuration locale
+# -----------------------------------------------------------------------------
 .env
+.env.local
+.env.*.local
 .env.backup
-.phpunit.result.cache
+*.env
 
+# -----------------------------------------------------------------------------
+# Git
+# -----------------------------------------------------------------------------
+.git/
+.gitignore
+.gitattributes
+
+# -----------------------------------------------------------------------------
+# IDE et éditeurs
+# -----------------------------------------------------------------------------
+.idea/
+.vscode/
+.vagrant/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+Homestead.json
+Homestead.yaml
+
+# -----------------------------------------------------------------------------
+# Logs et fichiers temporaires
+# -----------------------------------------------------------------------------
+*.log
+*.cache
 storage/*.key
-storage/app/public/*
+storage/logs/*
 storage/framework/cache/*
 storage/framework/sessions/*
 storage/framework/testing/*
 storage/framework/views/*
-storage/logs/*
+storage/app/public/*
 
-public/hot
-public/storage
-public/build
+# -----------------------------------------------------------------------------
+# Tests
+# -----------------------------------------------------------------------------
+tests/
+phpunit.xml
+.phpunit.result.cache
+coverage/
 
-.idea
-.vscode
-.vagrant
-Homestead.json
-Homestead.yaml
+# -----------------------------------------------------------------------------
+# Documentation
+# -----------------------------------------------------------------------------
+*.md
+docs/
 
-.git
-.gitignore
-.gitattributes
-
+# -----------------------------------------------------------------------------
+# Docker (évite les boucles de contexte)
+# -----------------------------------------------------------------------------
+docker-compose*.yml
+!docker/
 docker/mysql/data
 docker/redis/data
 
-*.log
-*.cache
-.DS_Store
-Thumbs.db
+# -----------------------------------------------------------------------------
+# CI/CD
+# -----------------------------------------------------------------------------
+.github/
+.gitlab-ci.yml
+.travis.yml
+Jenkinsfile
+
+# -----------------------------------------------------------------------------
+# Divers
+# -----------------------------------------------------------------------------
+Makefile
+*.sql
+*.sqlite
+*.sqlite3
+npm-debug.log
+yarn-error.log
+yarn-debug.log*
+.npm
+.yarn
+.pnpm-store
+
+# -----------------------------------------------------------------------------
+# Fichiers sensibles (sécurité)
+# -----------------------------------------------------------------------------
+*.pem
+*.key
+*.crt
+*.p12
+secrets/
+credentials/

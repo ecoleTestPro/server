@@ -1,95 +1,151 @@
-# Makefile pour simplifier les commandes Docker
+# Makefile pour EcoleTestPro LMS
 
-.PHONY: help build up down restart logs shell migrate seed fresh test npm-install npm-dev npm-build composer-install clean
+.DEFAULT_GOAL := help
 
-help: ## Afficher cette aide
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+# Variables
+COMPOSE := docker compose -f docker-compose.yml
+COMPOSE_DEV := $(COMPOSE) --profile dev
+EXEC := $(COMPOSE) exec
+EXEC_APP := $(EXEC) app
 
-build: ## Construire les images Docker
-	docker-compose build --no-cache
+# Couleurs
+BLUE := \033[0;34m
+GREEN := \033[0;32m
+YELLOW := \033[1;33m
+NC := \033[0m
 
-up: ## Démarrer tous les services
-	docker-compose up -d
-	@echo "✅ Application disponible sur http://localhost:8000"
-	@echo "📊 phpMyAdmin disponible sur http://localhost:8080"
-	@echo "📧 MailHog disponible sur http://localhost:8025"
+.PHONY: dev prod stop build clean status logs logs-app logs-mysql logs-redis shell \
+        up-app up-mysql up-redis up-phpmyadmin up-mailhog \
+        migrate fresh seed test tinker cache-clear optimize \
+        composer-install npm-install npm-build npm-dev install help
 
-down: ## Arrêter tous les services
-	docker-compose down
+# =============================================================================
+##@ Docker
+# =============================================================================
 
-restart: down up ## Redémarrer tous les services
+dev: ## Démarrer en mode développement
+	@echo "$(BLUE)Starting dev...$(NC)"
+	$(COMPOSE_DEV) up -d
+	@echo "$(GREEN)Ready!$(NC)"
+	@echo "   App:        http://localhost"
+	@echo "   phpMyAdmin: http://localhost:8099"
+	@echo "   MailHog:    http://localhost:8025"
 
-logs: ## Voir les logs de tous les services
-	docker-compose logs -f
+prod: ## Démarrer en mode production
+	@echo "$(BLUE)Starting prod...$(NC)"
+	$(COMPOSE) up -d app mysql redis
+	@echo "$(GREEN)Production ready!$(NC)"
 
-logs-app: ## Voir les logs de l'application
-	docker-compose logs -f app
+stop: ## Arrêter tous les conteneurs
+	$(COMPOSE_DEV) down
+	@echo "$(GREEN)Stopped$(NC)"
 
-shell: ## Accéder au shell du conteneur app
-	docker-compose exec app sh
+build: ## Construire les images
+	$(COMPOSE) build --no-cache
 
-shell-mysql: ## Accéder au shell MySQL
-	docker-compose exec mysql mysql -u root -psecret ecoletestpro
+clean: ## Nettoyer volumes et conteneurs
+	$(COMPOSE_DEV) down -v --remove-orphans
+	docker system prune -f
+	@echo "$(GREEN)Cleaned$(NC)"
 
-migrate: ## Exécuter les migrations
-	docker-compose exec app php artisan migrate
+status: ## Statut des conteneurs
+	$(COMPOSE) ps -a
 
-migrate-fresh: ## Réinitialiser la base de données et exécuter les migrations
-	docker-compose exec app php artisan migrate:fresh
+logs: ## Logs de tous les services
+	$(COMPOSE) logs -f
 
-seed: ## Exécuter les seeders
-	docker-compose exec app php artisan db:seed
+logs-app: ## Logs app
+	$(COMPOSE) logs -f app
 
-fresh: ## Réinitialiser la BDD avec les seeders
-	docker-compose exec app php artisan migrate:fresh --seed
+logs-mysql: ## Logs mysql
+	$(COMPOSE) logs -f mysql
 
-test: ## Exécuter les tests
-	docker-compose exec app php artisan test
+logs-redis: ## Logs redis
+	$(COMPOSE) logs -f redis
 
-npm-install: ## Installer les dépendances NPM
-	docker-compose exec app npm install
+shell: ## Shell dans le conteneur app
+	$(EXEC_APP) sh
 
-npm-dev: ## Lancer le serveur de développement Vite
-	docker-compose exec node npm run dev
+# =============================================================================
+##@ Services individuels
+# =============================================================================
 
-npm-build: ## Builder les assets pour la production
-	docker-compose exec app npm run build
+up-app: ## Démarrer app
+	$(COMPOSE) up -d app
 
-composer-install: ## Installer les dépendances Composer
-	docker-compose exec app composer install
+up-mysql: ## Démarrer MySQL
+	$(COMPOSE) up -d mysql
 
-composer-update: ## Mettre à jour les dépendances Composer
-	docker-compose exec app composer update
+up-redis: ## Démarrer Redis
+	$(COMPOSE) up -d redis
 
-cache-clear: ## Vider tous les caches
-	docker-compose exec app php artisan cache:clear
-	docker-compose exec app php artisan config:clear
-	docker-compose exec app php artisan route:clear
-	docker-compose exec app php artisan view:clear
+up-phpmyadmin: ## Démarrer phpMyAdmin
+	$(COMPOSE_DEV) up -d phpmyadmin
+
+up-mailhog: ## Démarrer MailHog
+	$(COMPOSE_DEV) up -d mailhog
+
+# =============================================================================
+##@ Laravel
+# =============================================================================
+
+migrate: ## Migrations
+	$(EXEC_APP) php artisan migrate
+
+fresh: ## Reset BDD + migrations + seeders
+	$(EXEC_APP) php artisan migrate:fresh --seed
+
+seed: ## Seeders
+	$(EXEC_APP) php artisan db:seed
+
+test: ## Tests
+	$(EXEC_APP) php artisan test
+
+tinker: ## Tinker
+	$(EXEC_APP) php artisan tinker
+
+cache-clear: ## Vider les caches
+	$(EXEC_APP) php artisan optimize:clear
 
 optimize: ## Optimiser l'application
-	docker-compose exec app php artisan config:cache
-	docker-compose exec app php artisan route:cache
-	docker-compose exec app php artisan view:cache
+	$(EXEC_APP) php artisan optimize
 
-storage-link: ## Créer le lien symbolique pour le storage
-	docker-compose exec app php artisan storage:link
+# =============================================================================
+##@ Dépendances
+# =============================================================================
 
-queue-work: ## Lancer le worker de queue
-	docker-compose exec app php artisan queue:work
+composer-install: ## Installer dépendances PHP
+	$(EXEC_APP) composer install
 
-tinker: ## Lancer Tinker
-	docker-compose exec app php artisan tinker
+npm-install: ## Installer dépendances Node
+	$(EXEC_APP) npm install --legacy-peer-deps
 
-clean: ## Nettoyer les volumes Docker
-	docker-compose down -v
-	docker system prune -f
+npm-build: ## Build assets production
+	$(EXEC_APP) npm run build
 
-install: build up migrate seed storage-link npm-install npm-build ## Installation complète
-	@echo "✨ Installation terminée !"
-	@echo "🌐 Application : http://localhost:8000"
-	@echo "📊 phpMyAdmin : http://localhost:8080"
-	@echo "📧 MailHog : http://localhost:8025"
+npm-dev: ## Lancer Vite dev server
+	$(EXEC_APP) npm run dev
 
-status: ## Vérifier le statut des conteneurs
-	docker-compose ps
+# =============================================================================
+##@ Installation
+# =============================================================================
+
+install: build dev ## Installation complète
+	@echo "$(YELLOW)Waiting for services...$(NC)"
+	@sleep 15
+	$(MAKE) composer-install
+	$(MAKE) npm-install
+	$(MAKE) migrate
+	$(MAKE) seed
+	$(EXEC_APP) php artisan storage:link
+	$(MAKE) npm-build
+	@echo "$(GREEN)Installation complete!$(NC)"
+
+# =============================================================================
+##@ Aide
+# =============================================================================
+
+help: ## Afficher cette aide
+	@awk 'BEGIN {FS = ":.*##"; printf "\n$(BLUE)Usage:$(NC) make $(GREEN)<target>$(NC)\n"} \
+		/^[a-zA-Z_-]+:.*?##/ { printf "  $(GREEN)%-16s$(NC) %s\n", $$1, $$2 } \
+		/^##@/ { printf "\n$(YELLOW)%s$(NC)\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
