@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\CourseQuestionController;
-use App\Http\Controllers\Private\NewsletterController;
+use App\Http\Controllers\Public\NewsletterController;
 use App\Http\Controllers\Public\AppointmentController;
 use App\Http\Controllers\Public\ContactUsController;
 use App\Http\Controllers\Public\EnrollController;
